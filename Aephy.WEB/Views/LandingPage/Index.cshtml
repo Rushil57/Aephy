@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+}
+<style>
+    .search-form {
+        width: 100%;
+    }
+
+        .search-form input {
+            border: 0;
+            font-size: 14px;
+            color: #012970;
+            border: 1px solid rgba(1, 41, 112, 0.2);
+            padding: 7px 38px 7px 8px;
+            border-radius: 3px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+            .search-form input:focus,
+            .search-form input:hover {
+                outline: none;
+                box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+                border: 1px solid rgba(1, 41, 112, 0.3);
+            }
+
+        .search-form button {
+            height: fit-content;
+            border: 0;
+            margin-left: -50px;
+        }
+
+            .search-form button i {
+                color: #012970;
+            }
+
+        h4{
+            color:white;
+        }
+</style>
+<main id="main" class="main">
+
+@*    <div class="pagetitle">
+        <h1>Form Elements</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+                <li class="breadcrumb-item">Forms</li>
+                <li class="breadcrumb-item active">Elements</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->*@
+
+    <!--Section Search-->
+    <section id="Search">
+        <div class="container searchContainer">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 py-5">
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="info-box">
+                                <div class="ms-4">
+                                    <h4>
+                                        The Gateway to AI solutions
+                                    </h4>
+                                    <p>
+                                        Get ahead of the competition and transform your business with affordable, high-quality AI solutions, tailored to your needs by industry experts
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="info-box">
+                                <div class="ms-4">
+                                    <div class="search-bar">
+                                        <form class="search-form d-flex align-items-center" method="POST" action="#">
+                                            <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                            <button type="submit" title="Search"><i class="bi bi-search"></i></button><!--<i class="bi bi-search"></i>-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                            <div class="info-box">
+                                <div class="col-4 ms-4">
+                                    <h5 style="color:white;">Popular : </h5>
+                                </div>
+                                <div class="col-8 popular-labels">
+                                    <label>Deep Learning</label>
+                                    <label>Chatboats and virtual assistants</label>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 search-image">
+                    <img src="~/assets/img/icon-data-search-computer.png" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+

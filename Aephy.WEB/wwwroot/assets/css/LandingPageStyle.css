@@ -20,7 +20,7 @@
 
 body {
     font-family: "Open Sans", sans-serif;
-    background: #f6f9ff;
+    background: #ffffff;
     color: #444444;
 }
 
@@ -36,6 +36,74 @@ a:hover {
 
 .col-auto {
     align-self: center;
+}
+
+section{
+    padding:80px 0;
+    overflow:hidden;
+}
+
+.section-header {
+    text-align: center;
+    padding: 30px 0;
+    position: relative;
+}
+
+    .section-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        padding-bottom: 0;
+        color: #001973;
+        position: relative;
+        z-index: 2;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        position: relative;
+    }
+
+        .section-header h2:after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--color-primary);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+    .section-header span {
+        position: absolute;
+        top: 46px;
+        color: rgba(14, 29, 52, 0.06);
+        left: 0;
+        right: 0;
+        z-index: 1;
+        font-weight: 700;
+        font-size: 56px;
+        text-transform: uppercase;
+        line-height: 0;
+    }
+
+    .section-header p {
+        margin-bottom: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+@media (max-width: 640px) {
+    .section-header h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .section-header span {
+        font-size: 38px;
+    }
 }
 
 .navbar .navbar-nav .nav-link {
@@ -71,8 +139,8 @@ a:hover {
 }
 
     .btn-brand:hover {
-        background-color: #d64022;
-        border-color: #d64022;
+        background-color: #bd7635;
+        border-color: #bd7635;
         color: #fff;
     }
 
@@ -112,6 +180,206 @@ h6 {
         margin-bottom: 0;
         font-weight: 600;
         color: #012970;
+    }
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+.hero {
+    width: 100%;
+    min-height: 50vh;
+    background-color: var(--brand);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 120px 0 60px 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+    .hero h2 {
+        margin-bottom: 20px;
+        padding: 0;
+        font-size: 48px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+@media (max-width: 575px) {
+    .hero h2 {
+        font-size: 30px;
+    }
+}
+
+.hero p {
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 40px;
+}
+
+.hero form {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+    .hero form .form-control {
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border: none;
+        margin-right: 10px;
+        border: none !important;
+        background: none !important;
+    }
+
+        .hero form .form-control:hover,
+        .hero form .form-control:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+    .hero form .btn-primary {
+        background-color: var(--color-primary);
+        padding: 15px 30px;
+    }
+
+        .hero form .btn-primary:hover {
+            background-color: #2756ff;
+        }
+
+/*--------------------------------------------------------------
+# why Us Section
+--------------------------------------------------------------*/
+#why {
+    background-color: #dee0e3;
+}
+.why .content h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--brand);
+}
+
+.why .content ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .why .content ul li {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 40px;
+    }
+
+    .why .content ul i {
+        flex-shrink: 0;
+        font-size: 48px;
+        color: var(--brand);
+        margin-right: 20px;
+        line-height: 0;
+    }
+
+    .why .content ul h5 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #19335c;
+    }
+
+    .why .content ul p {
+        font-size: 15px;
+    }
+
+.why .content p:last-child {
+    margin-bottom: 0;
+}
+
+/*--------------------------------------------------------------
+# Ai Section
+--------------------------------------------------------------*/
+#Ai {
+    background-color: #f5f5f5;
+}
+
+.Ai {
+    width: 100%;
+    min-height: 50vh;
+    background-color: #f5f5f5;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 120px 0 60px 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+    .Ai h2 {
+        margin-bottom: 20px;
+        padding: 0;
+        font-size: 48px;
+        font-weight: 700;
+        color: #414141;
+    }
+
+@media (max-width: 575px) {
+    .Ai h2 {
+        font-size: 30px;
+    }
+}
+
+.Ai p {
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    color: #5C5959;
+}
+
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+.services .card {
+    border: 1px solid rgba(14, 29, 52, 0.15);
+    background: #fff;
+    position: relative;
+    border-radius: 0;
+    height: 100%;
+}
+
+    .services .card .card-img {
+        overflow: hidden;
+        margin-bottom: 15px;
+        border-radius: 0;
+    }
+
+        .services .card .card-img img {
+            transition: 0.3s ease-in-out;
+        }
+
+    .services .card h3 {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 5px;
+        padding: 10px 30px;
+        text-transform: uppercase;
+    }
+
+    .services .card a {
+        color: #001973;
+        transition: 0.3;
+    }
+
+        .services .card a:hover {
+            color: var(--color-primary);
+        }
+
+    .services .card p {
+        padding: 0 30px;
+        margin-bottom: 30px;
+        color: var(--color-secondary);
+        font-size: 15px;
+    }
+
+    .services .card:hover .card-img img {
+        transform: scale(1.1);
     }
 
 /*--------------------------------------------------------------
@@ -358,6 +626,16 @@ h6 {
     width: -webkit-fill-available;
     height: fit-content;
 }
+
+.info-box {
+    align-items: center;
+    display: flex;
+}
+
+    .info-box img {
+        width: 90px;
+    }
+
 /* Breadcrumbs */
 .breadcrumb {
     font-size: 14px;

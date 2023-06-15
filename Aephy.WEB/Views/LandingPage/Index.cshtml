@@ -3,41 +3,29 @@
     Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 }
 <style>
-    .search-form {
-        width: 100%;
-    }
-
-        .search-form input {
-            border: 0;
-            font-size: 14px;
-            color: #012970;
-            border: 1px solid rgba(1, 41, 112, 0.2);
-            padding: 7px 38px 7px 8px;
-            border-radius: 3px;
-            transition: 0.3s;
-            width: 100%;
-        }
-
-            .search-form input:focus,
-            .search-form input:hover {
-                outline: none;
-                box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
-                border: 1px solid rgba(1, 41, 112, 0.3);
-            }
-
-        .search-form button {
-            height: fit-content;
-            border: 0;
-            margin-left: -50px;
-        }
-
-            .search-form button i {
-                color: #012970;
-            }
-
-        h4{
+        h2{
             color:white;
+            padding-top:8px;
+            padding-bottom:8px;
         }
+
+    .box{
+        border: 1px solid #727375;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        margin-top: -1px; /* Prevent double borders */
+        margin-left:3px;
+        padding-left: 5px;
+        padding-right:5px;
+        /*background-color: #f6f6f6; /* Grey background color */*/
+        text-decoration: none; /* Remove default text underline */
+        font-size: 16px; /* Increase the font-size */
+        color: black; /* Add a black text color */
+        display: block; /* Make it into a block element to fill the whole list */
+        cursor:pointer;
+
+    }   
+
 </style>
 <main id="main" class="main">
 
@@ -53,10 +41,10 @@
     </div><!-- End Page Title -->*@
 
     <!--Section Search-->
-    <section id="Search">
+    @*<section id="Search">
         <div class="container searchContainer">
             <div class="row justify-content-center">
-                <div class="col-lg-5 py-5">
+                <div class="col-lg-6 py-5" style="vertical-align:middle">
                     <div class="row">
 
                         <div class="col-12">
@@ -73,38 +61,224 @@
                             </div>
                         </div>
                         <div class="col-12 mt-4">
-                            <div class="info-box">
-                                <div class="ms-4">
-                                    <div class="search-bar">
-                                        <form class="search-form d-flex align-items-center" method="POST" action="#">
-                                            <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                                            <button type="submit" title="Search"><i class="bi bi-search"></i></button><!--<i class="bi bi-search"></i>-->
+                                        <form class="form-inline my-2 my-lg-0" method="POST" action="#">
+                                        <div class="d-flex flex-row">
+                                            <input class="form-control mr-sm-2 mx-1" type="search" placeholder="Search" aria-label="Search">
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                        </div>
                                         </form>
-                                    </div>
-                                </div>
+                                            @*<input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                            <button type="submit" title="Search"><i class="bi bi-search"></i></button>*@
+                        @*</div>
+                        <div class="col-12 mt-4">
+                            <div class="d-flex flex-row">
+                                <h5 style="color:white;">Popular : </h5>
+                                <div class="box">Deep Learning</div>
+                                <div class="box">Chatboats and virtual assistants</div>
                             </div>
                         </div>
-                        <div class="col-12 mt-4">
-                            <div class="row">
-                            <div class="info-box">
-                                <div class="col-4 ms-4">
-                                    <h5 style="color:white;">Popular : </h5>
-                                </div>
-                                <div class="col-8 popular-labels">
-                                    <label>Deep Learning</label>
-                                    <label>Chatboats and virtual assistants</label>
-                                </div>
-                            </div>
+
+                </div>
+                </div>
+                <div class="col-lg-6 search-image">
+                    <img src="~/assets/img/icon-data-search-computer.png" />
+                </div>
+        </div>
+        </div>
+    </section>*@
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+        <div class="container">
+            <div class="row gy-4 d-flex justify-content-center" style="background-color:#d49255;">
+                <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center" style="justify-content:center;">
+                    <h2 data-aos="fade-up">The Gateway to AI solutions</h2>
+                    <p data-aos="fade-up" data-aos-delay="100">
+                        Get ahead of the competition and transform your business with affordable, high-quality AI solutions, tailored to your needs by industry experts
+                    </p>
+
+                    <form action="#" class="form-search d-flex align-items-stretch mb-3 mt-4" data-aos="fade-up" data-aos-delay="200">
+                        <input type="text" class="form-control" placeholder='Try "building mobile app"'>
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </form>
+
+                    <div class="row gy-2 mt-2" data-aos="fade-up" data-aos-delay="400">
+                        <div class="col-lg-2 col-4">
+                            <div class="d-flex flex-row">
+                                <p>Popular :</p>
+                            </div>   
+                        </div><!-- End Stats Item -->
+
+                        <div class="col-lg-10 col-8">
+                            <div class="d-flex flex-row">
+                                <div class="box">Deep Learning</div>
+                                <div class="box">Chatboats and virtual assistants</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 search-image">
-                    <img src="~/assets/img/icon-data-search-computer.png" />
+
+                <div class="col-lg-1 order-2 order-lg-2">
                 </div>
+
+                <div class="col-lg-5 order-1 order-lg-3 hero-img" data-aos="zoom-out">
+                    <img src="~/assets/img/undraw_web_search.svg" class="img-fluid mb-3 mb-lg-0" alt="">
+                </div>
+
             </div>
         </div>
-    </section>
+    </section><!-- End Hero Section -->
+    <!-- ======= why Us Section ======= -->
+
+    <section id="why" class="why pt-0">
+        <div class="container pt-5" data-aos="fade-up">
+
+            <div class="row gy-4">
+                <div class="col-lg-6 position-relative align-self-center order-lg-first order-first">
+                    <img src="~/assets/img/howuserimage.png" class="img-fluid" alt="">
+                    @*<a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox play-btn"></a>*@
+                    <a class="btn btn-brand ms-lg-3 m-4" href="#">Learn more</a>
+                </div>
+                <div class="col-lg-6 content order-last order-lg-last">
+                    <h3>Find your AI solution</h3>
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-search"></i>
+                            <div>
+                                <h5>Browse</h5>
+                                <p>
+                                    Find the type of project you need, clearly defined and ready to start.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-sliders"></i>
+                            <div>
+                                <h5>Personalise</h5>
+                                <p>
+                                    Talk to our executives in case further project personalization needed, set the requirements and team size.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-credit-card-2-back"></i>
+                            <div>
+                                <h5>Purchase</h5>
+                                <p>
+                                    Work begins as soon as you buy the project and project fees are securely frozen until the end of the project.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-shield-check"></i>
+                            <div>
+                                <h5>Approve</h5>
+                                <p>
+                                    Review your project. Your fees will be released once you’ve approved it and requirements have been met.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section><!-- End why Us Section -->
+
+    <!-- ======= AI Section ======= -->
+
+    <section id="Ai" class="Ai pt-0">
+        <div class="container">
+            <div class="row gy-4 d-flex justify-content-center mt-4">
+                <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center" style="justify-content:center;">
+                    <h2 data-aos="fade-up">
+                        Unlock Your Business Potential with Our Affordable AI Solutions and Experts
+                    </h2>
+                    <p data-aos="fade-up" data-aos-delay="100">
+                        Looking to stay ahead of the competition in the digital age? Our AI service platform provides affordable, customized solutions that cater to the specific needs of each project, ensuring our clients receive the highest quality results that optimize their operations and drive growth. Our team of expert freelancers, consisting of associates, experts, and executives, are equipped with a diverse skillset and experience in AI services.
+
+                        By leveraging our AI services, businesses can automate processes, streamline operations, and make data-driven decisions that improve their overall efficiency and competitiveness. Our platform is designed to enhance operational efficiency, optimize decision-making, and provide businesses with a competitive edge in their respective industries. With our affordable AI solutions, businesses can tap into the full potential of AI without breaking the bank.
+                    </p>
+                </div>
+
+                <div class="col-lg-1 order-2 order-lg-2">
+                </div>
+
+                <div class="col-lg-5 order-1 order-lg-3 justify-content-center">
+                    <h2 data-aos="fade-up">
+                        Learn more about AI
+                    </h2>
+                    <a class="btn btn-brand ms-lg-3" href="#">Services</a>
+                    <a class="btn btn-brand ms-lg-3" href="#">Industries</a>
+                </div>
+
+            </div>
+        </div>
+    </section><!-- End Ai Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="service" class="services pt-0">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-header">
+                <span>Our Services</span>
+                <h2>Our Services</h2>
+
+            </div>
+
+            <div class="row gy-4">
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card">
+                        <div class="card-img">
+                            <img src="~/assets/img/popularsolutions/popularservicesnlp.png" alt="" class="img-fluid">
+                        </div>
+                        <h3>
+                            <a href="service-details.html" class="stretched-link">
+                                Natural Language Processing (NLP)
+                            </a>
+                        </h3>
+                        <p>
+                            Enhance communication with customers and improve customer service by enabling machines to understand and interpret human language.
+                        </p>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card">
+                        <div class="card-img">
+                            <img src="~/assets/img/popularsolutions/popularservicesspeechreco.png" alt="" class="img-fluid">
+                        </div>
+                        <h3>
+                            <a href="service-details.html" class="stretched-link">
+                                Speech Recognition
+                            </a>
+                        </h3>
+                        <p>
+                            Enhance communication with customers and improve customer service by enabling machines to interpret and respond to human speech.
+                        </p>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card">
+                        <div class="card-img">
+                            <img src="~/assets/img/popularsolutions/popularservicescomputervision.png" alt="" class="img-fluid">
+                        </div>
+                        <h3>
+                            <a href="service-details.html" class="stretched-link">
+                                Computer Vision
+                            </a>
+                        </h3>
+                        <p>
+                            Improve accuracy and speed of visual data analysis, unlocking new insights and opportunities for your organization.
+                        </p>
+                    </div>
+                </div><!-- End Card Item -->
+            </div>
+
+        </div>
+    </section><!-- End Services Section -->
 
 </main><!-- End #main -->
 

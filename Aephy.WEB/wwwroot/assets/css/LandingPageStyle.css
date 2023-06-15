@@ -119,6 +119,22 @@ section{
         color: var(--brand);
     }
 
+.nav-link {
+    color: var(--dark);
+    align-items: center;
+}
+
+    .nav-link:hover {
+        color: var(--brand);
+    }
+
+    .nav-link.active {
+        color: var(--brand);
+    }
+    .nav-link:active{
+        color: var(--brand)
+    }
+
 .navbar-brand {
     font-size: 28px;
     font-weight: 700;
@@ -223,10 +239,10 @@ h6 {
 }
 
     .hero form .form-control {
-        padding-top: 18px;
-        padding-bottom: 18px;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
         border: none;
         margin-right: 10px;
         border: none !important;
@@ -241,7 +257,7 @@ h6 {
 
     .hero form .btn-primary {
         background-color: var(--color-primary);
-        padding: 15px 30px;
+        padding: 10px 20px;
     }
 
         .hero form .btn-primary:hover {
@@ -352,6 +368,7 @@ h6 {
 
         .services .card .card-img img {
             transition: 0.3s ease-in-out;
+            align-self:center;
         }
 
     .services .card h3 {
@@ -381,6 +398,105 @@ h6 {
     .services .card:hover .card-img img {
         transform: scale(1.1);
     }
+
+    /*---------------------------------------------------------
+        # Clients Review
+     ----------------------------------------------------------
+    */
+
+.box {
+    background: #fff;
+    margin: 10px !important;
+    padding: 20px !important;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+    .box .content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        padding-top: 10px;
+    }
+
+    .box .info .name {
+        font-weight: 600;
+        font-size: 17px;
+    }
+
+    .box .title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--brand);
+        padding-bottom:10px;
+    }
+
+.content .image img {
+    object-fit: cover;
+    border-radius: 50%;
+    height:45px;
+    width:45px;
+    border: 2px solid #fff;
+    margin-right:5px;
+}
+
+.content .stars i {
+    flex-shrink: 0;
+    color: var(--brand);
+    margin-right: 2px;
+    line-height: 0;
+}
+
+/*---------------------------------------------------------
+        # Clients Short Reviews
+     ----------------------------------------------------------
+    */
+
+.shortreviews .box {
+    background: var(--brand);
+    min-height:500px;
+    margin: 10px !important;
+    padding: 20px !important;
+    border-radius: 8%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+    .shortreviews .box .content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        padding-top: 10px;
+    }
+
+    .shortreviews .box .info .name {
+        font-weight: 600;
+        font-size: 17px;
+    }
+
+    .shortreviews .box .title {
+        font-size: 16px;
+        font-weight: 800;
+        color: #fff;
+        padding-bottom: 10px;
+    }
+
+.shortreviews .content .image img {
+    object-fit: cover;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    border: 2px solid #fff;
+    margin-right: 5px;
+}
+
+.shortreviews .content .stars i {
+    flex-shrink: 0;
+    color: var(--brand);
+    margin-right: 2px;
+    line-height: 0;
+}
 
 /*--------------------------------------------------------------
 # Back to top button

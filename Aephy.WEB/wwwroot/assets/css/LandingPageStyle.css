@@ -7,11 +7,14 @@
 */
 
 /*--------------------------------------------------------------
-# General
+# General  #c27714 #d68315 #c78228 #c28029
 --------------------------------------------------------------*/
 :root {
     scroll-behavior: smooth;
-    --brand: #d49255;
+    --brand: #d38b4e;
+    --gray: #a6a6a6;
+    --aephy: #c27714;
+    --btnbrand: #d49255;
     --dark: #092032;
     --body: #516171;
     --border: rgba(0,0,0,0.08);
@@ -31,7 +34,7 @@ a {
 }
 
 a:hover {
-    color: var(--brand);
+    color: var(--btnbrand);
 }
 
 .col-auto {
@@ -155,8 +158,8 @@ section{
 }
 
     .btn-brand:hover {
-        background-color: #bd7635;
-        border-color: #bd7635;
+        background-color: var(--aephy);
+        border-color: var(--aephy);
         color: #fff;
     }
 
@@ -264,6 +267,25 @@ h6 {
             background-color: #2756ff;
         }
 
+.hero .pop-box {
+    border: 1px solid #fff;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    margin-top: -1px; /* Prevent double borders */
+    margin-left: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    /*background-color: #f6f6f6; /* Grey background color */
+    text-decoration: none;
+    /* Remove default text underline */
+    font-size: 18px; /* Increase the font-size */
+    color: #fff; /* Add a black text color */
+    display: block; /* Make it into a block element to fill the whole list */
+    cursor: pointer;
+}  
+
 /*--------------------------------------------------------------
 # why Us Section
 --------------------------------------------------------------*/
@@ -331,14 +353,14 @@ h6 {
     .Ai h2 {
         margin-bottom: 20px;
         padding: 0;
-        font-size: 48px;
+        font-size: 38px;
         font-weight: 700;
         color: #414141;
     }
 
 @media (max-width: 575px) {
     .Ai h2 {
-        font-size: 30px;
+        font-size: 20px;
     }
 }
 
@@ -455,9 +477,10 @@ h6 {
 
 .shortreviews .box {
     background: var(--brand);
-    min-height:500px;
+    min-height: 500px;
     margin: 10px !important;
     padding: 20px !important;
+    position: relative;
     border-radius: 8%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -470,13 +493,14 @@ h6 {
         padding-top: 10px;
     }
 
-    .shortreviews .box .info .name {
+    .shortreviews .box .name {
         font-weight: 600;
-        font-size: 17px;
+        font-size: 20px;
+        color:#fff;
     }
 
     .shortreviews .box .title {
-        font-size: 16px;
+        font-size: 22px;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
@@ -491,13 +515,150 @@ h6 {
     margin-right: 5px;
 }
 
-.shortreviews .content .stars i {
+.shortreviews .content .sub div{
     flex-shrink: 0;
-    color: var(--brand);
+    color: #fff;
     margin-right: 2px;
-    line-height: 0;
+}
+.shortreviews .content i {
+    color: #fff;
+    margin-right: 2px;
+    line-height: 1;
+}
+.child {
+    padding-top:10px;
+    position:absolute;
+    background-color:var(--brand);
+    bottom: 20px;
+}
+.middle-child {
+    padding-top: 10px;
+    position: absolute;
+    background-color: var(--gray);
+    bottom: 20px;
+}
+.content .right-info {
+    position: absolute;
+    right: 0px;
+}
+.shortreviews .box .icon-msg i {
+    flex-shrink: 0;
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    padding-bottom: 10px;
+    line-height:0;
+}
+.shortreviews .box .description{
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    padding: 10px;
 }
 
+/*--------------------------------------------------------------
+# why Aephy Section
+--------------------------------------------------------------*/
+/*#whyAephy {
+    background-color: #dee0e3;
+}*/
+.whyAephy .row {
+    overflow: hidden;
+}
+
+.whyAephy [class*="col-"] {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+.right-box {
+    background-color: var(--brand);
+    padding:20px;
+}
+    .right-box p {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+    }
+.left-box {
+    background-color: #dee0e3;
+    padding:20px;
+}
+.whyAephy .content h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--brand);
+}
+
+.whyAephy .content ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .whyAephy .content ul li {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 40px;
+    }
+
+    .whyAephy .content ul i {
+        flex-shrink: 0;
+        font-size: 38px;
+        margin-right: 20px;
+        line-height: 0;
+    }
+
+    .whyAephy .content ul h5 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #19335c;
+    }
+
+    .whyAephy .content ul p {
+        font-size: 15px;
+    }
+
+.whyAephy .content p:last-child {
+    margin-bottom: 0;
+}
+
+/*--------------------------------------------------------------
+# Ai Gigs Section
+--------------------------------------------------------------*/
+/*#whyAephy {
+    background-color: #dee0e3;
+}*/
+.ForAiGigs .row {
+    overflow: hidden;
+}
+
+.ForAiGigs [class*="col-"] {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+.ForAiGigs .right-box {
+    background-color: #dee0e3;
+    padding: 20px;
+}
+
+    .ForAiGigs .right-box p {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+.left-box {
+    background-color: #dee0e3;
+    padding: 20px;
+}
+
+.ForAiGigs h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--brand);
+}
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -829,7 +990,7 @@ h6 {
 .header {
     transition: all 0.5s;
     z-index: 997;
-    height: 180px;
+    height: auto;
     box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
     background-color: #fff;
     padding-left: 20px;

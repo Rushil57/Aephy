@@ -3,72 +3,13 @@
     Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 }
 <style>
-        h2{
-            color:white;
-            padding-top:8px;
-            padding-bottom:8px;
-        } 
+    h2 {
+        color: white;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
 </style>
 <main id="main" class="main">
-
-@*    <div class="pagetitle">
-        <h1>Form Elements</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-                <li class="breadcrumb-item">Forms</li>
-                <li class="breadcrumb-item active">Elements</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->*@
-
-    <!--Section Search-->
-    @*<section id="Search">
-        <div class="container searchContainer">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 py-5" style="vertical-align:middle">
-                    <div class="row">
-
-                        <div class="col-12">
-                            <div class="info-box">
-                                <div class="ms-4">
-                                    <h4>
-                                        The Gateway to AI solutions
-                                    </h4>
-                                    <p>
-                                        Get ahead of the competition and transform your business with affordable, high-quality AI solutions, tailored to your needs by industry experts
-
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-4">
-                                        <form class="form-inline my-2 my-lg-0" method="POST" action="#">
-                                        <div class="d-flex flex-row">
-                                            <input class="form-control mr-sm-2 mx-1" type="search" placeholder="Search" aria-label="Search">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                                        </div>
-                                        </form>
-                                            @*<input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                                            <button type="submit" title="Search"><i class="bi bi-search"></i></button>*@
-                        @*</div>
-                        <div class="col-12 mt-4">
-                            <div class="d-flex flex-row">
-                                <h5 style="color:white;">Popular : </h5>
-                                <div class="box">Deep Learning</div>
-                                <div class="box">Chatboats and virtual assistants</div>
-                            </div>
-                        </div>
-
-                </div>
-                </div>
-                <div class="col-lg-6 search-image">
-                    <img src="~/assets/img/icon-data-search-computer.png" />
-                </div>
-        </div>
-        </div>
-    </section>*@
-
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero d-flex align-items-center">
         <div class="container">
@@ -88,7 +29,7 @@
                         <div class="col-lg-2 col-4">
                             <div class="d-flex flex-row">
                                 <h5>Popular :</h5>
-                            </div>   
+                            </div>
                         </div><!-- End Stats Item -->
 
                         <div class="col-lg-10 col-8">
@@ -112,7 +53,7 @@
     </section><!-- End Hero Section -->
     <!-- ======= why Us Section ======= -->
 
-    <section id="why" class="why pt-0">
+    <section id="why" class="why pt-0 mt-3">
         <div class="container pt-5" data-aos="fade-up">
 
             <div class="row gy-4">
@@ -166,10 +107,9 @@
 
         </div>
     </section><!-- End why Us Section -->
-
     <!-- ======= AI Section ======= -->
 
-    <section id="Ai" class="Ai pt-0">
+    <section id="Ai" class="Ai pt-0 mt-3">
         <div class="container">
             <div class="row gy-4 d-flex justify-content-center mt-4">
                 <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center" style="justify-content:center;">
@@ -186,7 +126,8 @@
                 <div class="col-lg-1 order-2 order-lg-2">
                 </div>
 
-                <div class="col-lg-5 align-items-center order-1 order-lg-3 justify-content-center"> <!--Add d-flex-->
+                <div class="col-lg-5 align-items-center order-1 order-lg-3 justify-content-center">
+                    <!--Add d-flex-->
                     <h2 data-aos="fade-up">Learn more about AI</h2>
                     <a class="btn btn-brand ms-lg-3" href="#">Services</a>
                     <a class="btn btn-brand ms-lg-3" href="#">Industries</a>
@@ -194,14 +135,13 @@
             </div>
         </div>
     </section><!-- End Ai Section -->
-
     <!-- ======= Popular AI Solutions ======= -->
-    <section id="service" class="services pt-0">
+    <section id="service" class="services pt-0 mt-3">
         <div class="container" data-aos="fade-up">
 
             <div class="section-header">
-                <span>Our Services</span>
-                <h2>Our Services</h2>
+                <span>Popular AI Solutions</span>
+                <h2>Popular AI Solutions</h2>
 
             </div>
 
@@ -225,7 +165,7 @@
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="card">
-                        <div class="card-img">
+                        <div class="card-img PopularImagesolutionImage">
                             <img src="~/assets/img/popularsolutions/popularservicesspeechreco.png" alt="" class="img-fluid" data-aos="zoom-out">
                         </div>
                         <h3>
@@ -241,7 +181,7 @@
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="card">
-                        <div class="card-img">
+                        <div class="card-img PopularImagesolutionImage">
                             <img src="~/assets/img/popularsolutions/popularservicescomputervision.png" alt="" class="img-fluid" data-aos="zoom-out">
                         </div>
                         <h3>
@@ -258,121 +198,106 @@
 
         </div>
     </section><!-- End Services Section -->
-
-
     <!-- ======= Client Reviews Section ======= -->
-    <section id="reviews" class="reviews pt-0">
+    <section id="reviews" class="reviews pt-0 mt-3" style="background-color: #d3d3d329;">
         <div class="container" data-aos="fade-up">
-
             <div class="section-header">
                 @*<span>Top professionals in our platform</span>*@
                 <h2 class="border-bottom border-black">Top professionals in our platform</h2>
 
             </div>
-
-            <div class="row gy-4 pt-5">
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="box">
-                        <div class="title">
-                            Michael – Project leader Anomaly Detection
-                        </div>
-                        <div>
-                            Michael is a highly skilled professional with expertise in anomaly detection for manufacturing. He has excellent communication skills and a track record of identifying and resolving critical issues in production processes. Mike's experience and dedication have helped companies reduce waste and increase efficiency.
-                        </div>
-                        <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
-                                <div class="name">Michael Rose</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="box">
-                        <div class="title">
-                            Amir – Expert Data Strategy Development
-                        </div>
-                        <div>
-                            Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
-                        </div>
-                        <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
-                                <div class="name">
-                                    Amir Khan
-                                </div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="box">
-                        <div class="title">
-                            Anna – Expert AI Roadmap Development
-                        </div>
-                        <div>
-                            Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
-                        </div>
-                        <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
-                                <div class="name">
-                                    Anna Lakhani
-                                </div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="box">
-                        <div class="title">
-                            Zahir – Expert Computer Vision
-                        </div>
-                        <div>
-                            Zahir is an expert in computer vision with a strong focus on marketing analytics. He has helped numerous clients achieve better audience segmentation and content personalization, resulting in significant improvements in customer engagement.
-                        </div>
-                        <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>
-                            <div class="info">
-                                <div class="name">
-                                    Zahir Modi
-                                </div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-            </div>
-
         </div>
-    </section><!-- End Services Section -->
 
+        <div class="float-child"id="leftReview">
+            <div class="box">
+                <div class="title">
+                    Michael – Project leader Anomaly Detection
+                </div>
+                <div class="detailReview">
+                    Michael is a highly skilled professional with expertise in anomaly detection for manufacturing. He has excellent communication skills and a track record of identifying and resolving critical issues in production processes. Mike's experience and dedication have helped companies reduce waste and increase efficiency.
+                </div>
+            </div>
+            <div class="content">
+                <span class="image"><img src="~/assets/img/man_profile_1.jpg"></span>
+                <span class="info">
+                    <span class="name">Michael Rose</span>
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.9 / 5</span>
+                    </div>
+                </span>
+            </div>
+            <div class="box">
+                <div class="title">
+                    Amir – Expert Data Strategy Development
+                </div>
+                <div class="detailReview">
+                    Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
+                </div>
+            </div>
+            <div class="content">
+                <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>
+                <span class="info">
+                    <span class="name">Amir Khan</span>
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                      <span>4.7 / 5</span>
+                    </div>
+                </span>
+            </div>
+        </div>
+
+        <div class="float-child" id="RightReview">
+            <div class="box">
+                <div class="title">
+                    Anna – Expert AI Roadmap Development
+                </div>
+                <div class="detailReview">
+                    Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
+                </div>
+            </div>
+            <div class="content">
+                <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>                            
+                <span class="info">
+                    <span class="name">   Anna Lakhani</span>
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                       <span>4.8/5</span>
+                    </div>
+                </span>
+            </div>
+            <div class="box">
+                <div class="title">
+                    Zahir – Expert Computer Vision
+                </div>
+                <div class="detailReview">
+                    Zahir is an expert in computer vision with a strong focus on marketing analytics. He has helped numerous clients achieve better audience segmentation and content personalization, resulting in significant improvements in customer engagement.
+                </div>
+            </div>
+            <div class="content">
+                <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>
+                <span class="info">
+                    <span class="name">Zahir Modi</span>
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.9 / 5</span>
+                    </div>
+                </span>
+            </div>
+        </div>
+
+
+    </section><!-- End Services Section -->
     <!-- ======= Shorted clients reviews Section ======= -->
-    <section id="shortreviews" class="shortreviews pt-0">
+    <section id="shortreviews" class="shortreviews pt-0 mt-3">
         <div class="container" data-aos="fade-up">
 
             <div class="section-header">
@@ -384,7 +309,6 @@
             </div>
 
             <div class="row gy-4 pt-5">
-
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="box">
                         <div class="icon-msg">
@@ -483,6 +407,6 @@
         </div>
     </section><!-- End Services Section -->
 
-    
+
 
 </main><!-- End #main -->

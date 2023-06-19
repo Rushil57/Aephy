@@ -2,8 +2,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 }
+<link href="~/assets/css/homestylesheet.css" rel="stylesheet" />
 <style>
-        h2{
+        .hero h2{
             color:white;
             padding-top:8px;
             padding-bottom:8px;
@@ -200,13 +201,11 @@
         <div class="container" data-aos="fade-up">
 
             <div class="section-header">
-                <span>Our Services</span>
-                <h2>Our Services</h2>
-
+                @*<span>Our Services</span>*@
+                <h2 class="border-bottom border-black">Our Services</h2>
             </div>
 
             <div class="row gy-4">
-
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-img justify-content-lg-center">
@@ -281,7 +280,8 @@
                             Michael is a highly skilled professional with expertise in anomaly detection for manufacturing. He has excellent communication skills and a track record of identifying and resolving critical issues in production processes. Mike's experience and dedication have helped companies reduce waste and increase efficiency.
                         </div>
                         <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>     
+                            <div class="info">
                                 <div class="name">Michael Rose</div>
                                 <div class="stars">
                                     <i class="bi bi-star-fill"></i>
@@ -303,7 +303,8 @@
                             Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
                         </div>
                         <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            
+                            <div class="info">
                                 <div class="name">
                                     Amir Khan
                                 </div>
@@ -327,7 +328,8 @@
                             Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
                         </div>
                         <div class="content">
-                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            <div class="info">
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>                            
+                            <div class="info">
                                 <div class="name">
                                     Anna Lakhani
                                 </div>
@@ -483,6 +485,153 @@
         </div>
     </section><!-- End Services Section -->
 
-    
+    <!-- ======= Why Aephy Section ======= -->
+    <section id="whyAephy" class="whyAephy pt-4">
+        <div class="container">
+            <div class="section-header">
+                @*<span>Why us</span>*@
+                <h2 class="border-bottom border-black">Why Us</h2>
+
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 order-lg-last order-last mx-3 right-box d-flex">
+                    <div class="align-self-center position-relative d-flex">
+                        <p>
+                            Our goal is to offer businesses access to top-notch AI expertise and specialized skills while maintaining affordable pricing, with the aim of becoming a go-to platform for businesses seeking AI-related services
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-8 content order-first order-lg-first left-box mx-3">
+                    <h3>
+                        Why Businesses select Aephy
+                    </h3>
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-check-square"></i>
+                            <div>
+                                <h5>Efficiency</h5>
+                                <p>
+                                    The platform streamlines the process of outsourcing projects, allowing businesses to save time and resources.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-check-square"></i>
+                            <div>
+                                <h5>
+                                    Quality assurance
+                                </h5>
+                                <p>
+                                    Projects undertaken by prescreened highly qualified freelancers. Clients pay only if project requirements have met.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-check-square"></i>
+                            <div>
+                                <h5>
+                                    Cost-effectiveness
+                                </h5>
+                                <p>
+                                    Projects offered on the platform at the most competitive rates, allowing businesses to access high-quality solutions at a lower cost.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-check-square"></i>
+                            <div>
+                                <h5>
+                                    Safe and secure
+                                </h5>
+                                <p>
+                                    Data and privacy is strictly protected.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a class="btn btn-brand ms-lg-3 m-4" href="#">Learn more</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======= For Ai Gigs Section ======= -->
+    <section id="ForAiGigs" class="ForAiGigs pt-4">
+        <div class="container">
+            @*<div class="section-header">
+                <span>Why us</span>
+                <h2 class="border-bottom border-black">Why Us</h2>
+
+            </div>*@
+            <div class="row justify-content-center">
+                <div class="col-lg-7 order-lg-last order-last right-box">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <h2 data-aos="fade-up" style="color:#19335c;">
+                        For AI Gigs
+                        </h2>
+                    <p class="align-self-center border-bottom border-black" style="text-align:center; color:#444444; padding:80px 120px 80px 120px;">
+                        Meet clients you’re excited to work with and take
+                        your career to new heights.
+                    </p>
+                    <div class="row align-self-center position-relative d-flex">
+                        <div class="col-4">
+                            <label class="btn ms-lg-3" href="#">
+                                Find opportunities
+                            </label>
+                        </div>
+                        <div class="col-4">
+                            <label class="btn ms-lg-3" href="#">
+                                Grow your career
+                            </label>
+                        </div>
+                        <div class="col-4">
+                            <label class="btn ms-lg-3" href="#">
+                                Level up
+                            </label>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <a class="btn btn-brand ms-lg-3" href="#">Learn more</a>
+                        <a class="btn btn-brand ms-lg-3" href="#">Open gig roles</a>
+                    </div>
+                </div>
+                <div class="col-lg-5 content order-first order-lg-first left-box">
+                    <img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= Always Evolving Section ======= -->
+    <section id="AlwaysEvolving" class="AlwaysEvolving pt-4">
+        <div class="container">
+            @*<div class="section-header">
+            <span>Why us</span>
+            <h2 class="border-bottom border-black">Why Us</h2>
+
+            </div>*@
+            <div class="row justify-content-center">
+                <div class="col-lg-5 content">
+                    <img src="~/assets/img/contact-laptop.png" class=" img-fluid" alt="">
+                </div>
+                <div class="col-lg-7 px-lg-5">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <h2 data-aos="fade-up">
+                        Always Evolving
+                    </h2>
+                    <p class="align-self-center border-black" style="text-align:left; color:#444444; padding:80px 0px 80px 0px;">
+                        Keep up with our constant growth and new features by following us on social media. You'll be the first to know whenever we release something new!
+                    </p>
+                    <div class="social-links d-flex mt-4">
+                        <a href="https://www.linkedin.com/company/aephy/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 </main><!-- End #main -->

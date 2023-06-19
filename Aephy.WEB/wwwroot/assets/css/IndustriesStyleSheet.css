@@ -1,0 +1,280 @@
+﻿/**
+* Template Name: NiceAdmin
+* Updated: May 30 2023 with Bootstrap v5.3.0
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+*/
+
+/*--------------------------------------------------------------
+# General  #c27714 #d68315 #c78228 #c28029
+--------------------------------------------------------------*/
+:root {
+    scroll-behavior: smooth;
+    --brand: #d38b4e;
+    --gray: #a6a6a6;
+    --aephy: #c27714;
+    --btnbrand: #d49255;
+    --dark: #092032;
+    --body: #516171;
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0px 6px 30px rgba(0, 0, 0, 0.08);
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background: #ffffff;
+    color: #444444;
+}
+
+a {
+    color: var(--dark);
+    transition: all 0.4s ease;
+    font-weight: 500;
+}
+
+    a:hover {
+        color: var(--btnbrand);
+    }
+
+.col-auto {
+    align-self: center;
+}
+
+.base-section {
+    padding-top: 80px;
+    padding-bottom: 200px;
+    overflow: hidden;
+    display: block;
+}
+
+.section-header {
+    text-align: center;
+    padding: 30px 0;
+    position: relative;
+}
+
+    .section-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        padding-bottom: 0;
+        color: #001973;
+        position: relative;
+        z-index: 2;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        position: relative;
+    }
+
+        .section-header h2:after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--color-primary);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+    .section-header span {
+        position: absolute;
+        top: 46px;
+        color: rgba(14, 29, 52, 0.06);
+        left: 0;
+        right: 0;
+        z-index: 1;
+        font-weight: 700;
+        font-size: 56px;
+        text-transform: uppercase;
+        line-height: 0;
+    }
+
+    .section-header p {
+        margin-bottom: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+@media (max-width: 640px) {
+    .section-header h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .section-header span {
+        font-size: 38px;
+    }
+}
+
+.btn {
+    padding: 8px 26px;
+}
+
+.btn-brand {
+    border-color: var(--brand);
+    background-color: var(--brand);
+    color: #fff;
+}
+
+    .btn-brand:hover {
+        background-color: var(--aephy);
+        border-color: var(--aephy);
+        color: #fff;
+    }
+
+.btn-white {
+    background-color: #fff;
+    color: #444444;
+}
+
+    .btn-white:hover {
+        background-color: #fff;
+        border: 1px inset #444444;
+        color: #444444;
+    }
+
+.hero-img {
+    object-fit: cover;
+    transition: 0.3s ease-in-out;
+    align-self: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Nunito", sans-serif;
+}
+
+/*--------------------------------------------------------------
+# Main
+--------------------------------------------------------------*/
+#main {
+    margin-top: 180px;
+    padding: 20px 30px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 1199px) {
+    #main {
+        padding: 20px;
+    }
+}
+
+/*--------------------------------------------------------------
+# Page Title
+--------------------------------------------------------------*/
+.pagetitle {
+    margin-bottom: 10px;
+}
+
+    .pagetitle h1 {
+        font-size: 24px;
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #012970;
+    }
+
+/*--------------------------------------------------------------
+# industries Section
+--------------------------------------------------------------*/
+.industries{
+    display:block;
+    margin-top:-200px;
+}
+.industries .card {
+    border: 1px solid rgba(14, 29, 52, 0.15);
+    background: #fff;
+    position: relative;
+    border-radius: 7px;
+    height: 100%;
+}
+
+    .industries .card .card-img {
+        overflow: hidden;
+        margin-top:15px;
+        margin-bottom: 15px;
+        border-radius: 7px;
+    }
+
+        .industries .card .card-img img {
+            height:100%;
+            width:100%;
+            object-fit: cover;
+            transition: 0.3s ease-in-out;
+            align-self: center;
+        }
+    .industries .card .stretched-link {
+        color: #001973;
+        transition: 0.3;
+        text-decoration: none;
+    }
+
+    .industries .card h3 a{
+        font-weight: 900;
+        font-size: 20px;
+        margin-bottom: 5px;
+        padding: 0 0;
+        text-transform: uppercase;
+        text-decoration:none;
+    }
+
+        .industries .card a:hover {
+            color: var(--color-primary);
+        }
+
+    .industries .card p {
+        padding: 0 0;
+        margin-bottom: 30px;
+        color: var(--color-secondary);
+        font-size: 17px;
+    }
+
+    .industries .card:hover .card-img img {
+        transform: scale(1.2);
+    }
+
+.card-body a{
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brand);
+    transition:0.3;
+    text-decoration: none;
+}
+.card-body .more i{
+    font-weight: 700;
+    font-size: 18px;
+    padding-left:5px;
+    color: var(--brand);
+    transition: 0.3;
+    text-decoration: none;
+}
+
+/*--------------------------------------------------------------
+# AI Intro Section
+--------------------------------------------------------------*/
+#AiIntro {
+    background-color: #dee0e3;
+}
+
+.AiIntro .content h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: #444444;
+}
+
+    .AiIntro .content {
+        margin-top: 40px;
+    }
+
+    .AiIntro .content p {
+        font-size: 15px;
+    }

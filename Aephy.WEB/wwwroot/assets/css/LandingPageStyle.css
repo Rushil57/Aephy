@@ -390,10 +390,7 @@ h6 {
 
         .services .card .card-img img {
             transition: 0.3s ease-in-out;
-            align-self: center;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            align-self:center;
         }
 
     .services .card h3 {
@@ -431,21 +428,19 @@ h6 {
 
 .box {
     background: #fff;
-    /* margin: 15px !important;*/
-    margin-top: 5%;
-    padding: 13px !important;
+    margin: 10px !important;
+    padding: 20px !important;
     border-radius: 3px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
-    width: 84%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-    /*.box .content {
+    .box .content {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: left;
         padding-top: 10px;
-    }*/
+    }
 
     .box .info .name {
         font-weight: 600;
@@ -453,7 +448,7 @@ h6 {
     }
 
     .box .title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 800;
         color: var(--brand);
         padding-bottom:10px;
@@ -462,10 +457,10 @@ h6 {
 .content .image img {
     object-fit: cover;
     border-radius: 50%;
-    height: 50%;
-    width: 20%;
+    height:45px;
+    width:45px;
     border: 2px solid #fff;
-    margin-right: 5px;
+    margin-right:5px;
 }
 
 .content .stars i {
@@ -475,33 +470,11 @@ h6 {
     line-height: 0;
 }
 
-#reviews .float-child {
-    width: 50%;
-    float: left;
-    padding: 20px;
-}
-
-#reviews #RightReview {
-    margin-top: 5%;
-}
-
-.float-child .content {
-    margin-left: 10%;
-    margin-top: 1%;
-}
-
-    .float-child .content .stars {
-        margin-left: 22%;
-        margin-top: -7%;
-    }
-
-.detailReview{
-    font-size : 20px;
-}
 /*---------------------------------------------------------
         # Clients Short Reviews
      ----------------------------------------------------------
     */
+
 .shortreviews .box {
     background: var(--brand);
     min-height: 500px;
@@ -1708,4 +1681,3 @@ h6 {
         font-size: 13px;
         color: #012970;
     }
-

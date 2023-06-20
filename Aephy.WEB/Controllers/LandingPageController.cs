@@ -14,5 +14,14 @@ namespace Aephy.WEB.Controllers
         {
             return View();
         }
+
+        public ActionResult Services()
+        {
+            return View();
+        }
+
+        public ActionResult WhyAephy() {
+            return View();
+        }
     }
 }

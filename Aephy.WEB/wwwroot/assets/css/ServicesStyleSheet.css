@@ -94,6 +94,7 @@ a {
         font-size: 20px;
         margin-bottom: 10px;
     }
+
     .section-header {
         text-align: left;
         padding: 30px 0 30px 10px;
@@ -175,11 +176,12 @@ h6 {
 /*--------------------------------------------------------------
 # industries Section
 --------------------------------------------------------------*/
-.industries{
-    display:block;
-    margin-top:-200px;
+.services {
+    display: block;
+    margin-top: -200px;
 }
-.industries .card {
+
+.services .card {
     border: 1px solid rgba(14, 29, 52, 0.15);
     background: #fff;
     position: relative;
@@ -187,61 +189,63 @@ h6 {
     height: 100%;
 }
 
-    .industries .card .card-img {
-        overflow: hidden;
-        margin-top:15px;
-        margin-bottom: 15px;
-        border-radius: 7px;
-    }
+.services .card .card-img {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 7px;
+}
 
-        .industries .card .card-img img {
-            height:100%;
-            width:100%;
-            object-fit: cover;
-            transition: 0.3s ease-in-out;
-            align-self: center;
-        }
-    .industries .card .stretched-link {
-        color: #001973;
-        transition: 0.3;
-        text-decoration: none;
-    }
+.services .card .card-img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: 0.3s ease-in-out;
+    align-self: center;
+}
 
-    .industries .card h3 a{
-        font-weight: 900;
-        font-size: 20px;
-        margin-bottom: 5px;
-        padding: 0 0;
-        text-transform: uppercase;
-        text-decoration:none;
-    }
+.services .card .stretched-link {
+    color: #001973;
+    transition: 0.3;
+    text-decoration: none;
+}
 
-        .industries .card a:hover {
-            color: var(--color-primary);
-        }
+.services .card h3 a {
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 5px;
+    padding: 0 0;
+    text-transform: uppercase;
+    text-decoration: none;
+}
 
-    .industries .card p {
-        padding: 0 0;
-        margin-bottom: 30px;
-        color: var(--color-secondary);
-        font-size: 17px;
-    }
+.services .card a:hover {
+    color: var(--color-primary);
+}
 
-    .industries .card:hover .card-img img {
-        transform: scale(1.2);
-    }
+.services .card p {
+    padding: 0 0;
+    margin-bottom: 30px;
+    color: var(--color-secondary);
+    font-size: 17px;
+}
 
-.card-body a{
+.services .card:hover .card-img img {
+    transform: scale(1.2);
+}
+
+.card-body a {
     font-weight: 700;
     font-size: 18px;
     color: var(--brand);
-    transition:0.3;
+    transition: 0.3;
     text-decoration: none;
 }
-.card-body .more i{
+
+.card-body .more i {
     font-weight: 700;
     font-size: 18px;
-    padding-left:5px;
+    padding-left: 5px;
     color: var(--brand);
     transition: 0.3;
     text-decoration: none;
@@ -261,12 +265,12 @@ h6 {
     color: #444444;
 }
 
-    .AiIntro .content {
-        margin-top: 40px;
-    }
+.AiIntro .content {
+    margin-top: 40px;
+}
 
     .AiIntro .content p {
-        padding:30px 0;
+        padding: 30px 0;
         font-size: 15px;
     }
 
@@ -274,37 +278,45 @@ h6 {
 /*--------------------------------------------------------------
 # Industries more info Section
 --------------------------------------------------------------*/
-#IndustriesInfo {
+#ServicesInfo {
     background-color: #fff;
 }
 
-.IndustriesInfo .content h4 {
+.ServicesInfo .content h4 {
     font-weight: 700;
     font-size: 25px;
     font-family: var(--font-secondary);
     color: #444444;
 }
 
-.IndustriesInfo .content h3 {
+.ServicesInfo .content h3 {
     font-weight: 700;
     font-size: 25px;
     font-family: var(--font-secondary);
     color: rgba(68,68,68,0.5);
 }
 
-.IndustriesInfo .content {
+.ServicesInfo .content {
     margin-top: 40px;
 }
 
-    .IndustriesInfo .content p {
-        padding: 30px 0;
-        font-size: 15px;
-    }
+.ServicesInfo .content p {
+    padding: 30px 0;
+    font-size: 15px;
+}
 
-.IndustriesInfo .Getready div {
+.ServicesInfo .Getready div {
     text-align: center;
     justify-content: center;
     padding: 120px 0;
     background-color: rgba(68,68,68,0.1);
     position: relative;
+}
+
+.ServicesInfo img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: 0.3s ease-in-out;
+    align-self: center;
 }

@@ -28,5 +28,10 @@ namespace Aephy.WEB.Controllers
         {
             return View();
         }
+
+        public ActionResult OpenGigRoles()
+        {
+            return View();
+        }
     }
 }

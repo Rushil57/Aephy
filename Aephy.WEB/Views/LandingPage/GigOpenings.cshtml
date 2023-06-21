@@ -1,1 +1,284 @@
-﻿
+﻿@{
+    ViewData["Title"] = "GigOpenings";
+    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+}
+
+<link href="../assets/css/gigopenings.css" rel="stylesheet" />
+
+<main id="main" class="main">
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+        <div class="container">
+            <!--Row 1-->
+            <div class="row d-flex first-row" style="background-image: url('../assets/img/gig openings/gigopenings-banner.png');">
+                <div class="col-7 justify-content-center d-flex flex-column py-4 highlightCol">
+                    <h2 data-aos="fade-up">
+                        Discover a new career path
+                    </h2>
+                    <div class="gy-2 mt-2" data-aos="fade-up" data-aos-delay="400" style="text-align:center;">
+                        <a href="~/LandingPage/OpenGigRoles" class="btn btn-white">
+                            Open Gig Roles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Hero Section -->
+
+    <!-- ======= Careers Section ======= -->
+    <section id="JoinUs" class="JoinUs pt-0">
+        <div class="container" data-aos="fade-up">
+            @*<div class="section-header">
+                <hr />
+                <h3 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">How</label></h3>
+            </div>*@
+
+            <!--Row 2 Join Us-->
+            <div class="row justify-content-center" style="padding:50px 0;">
+                <div class="col-lg-6 content order-lg-last order-first">
+                    <img src="../assets/img/gig openings/gigopenings-join-us.png" class=" img-fluid" alt="">
+                </div>
+                <div class="col-lg-6 px-lg-5 order-lg-first order-last">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <div class="title">
+                        <label style="font-weight:600; font-size:28px;">
+                            Join Us and Drive Innovation with Us
+                        </label>
+                    </div>
+                    <div class="description">
+                        <p>
+                            At our AI-driven platform, we are dedicated to utilizing cutting-edge technologies to revolutionize businesses and transform lives. Our team is committed to creating bespoke AI solutions that help our clients reach their objectives and increase profitability.
+                            <br /><br />
+                            As a valued member of our freelance team, focused on AI, you will have the chance to work remotely on challenging and innovative projects while collaborating with a talented and diverse group of AI experts from across the globe. Our team consists of individuals from various backgrounds and experiences who share a common objective of delivering exceptional AI solutions to our clients.
+                            <br /><br />
+                            We prioritize creativity, collaboration, and a drive for excellence, and we provide a supportive and inclusive work environment that enables you to develop your AI skills and build your portfolio. Additionally, we offer flexible scheduling options, allowing you to customize your calendar to fit your unique needs. Furthermore, our freelancers receive competitive compensation for their work.
+                            <br /><br />
+                            Join us and become a part of the forefront of AI innovation in the world of freelancing and outsourcing.
+                            <br /><br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!--Row 3 Personalize Project-->
+            <div class="row justify-content-center" style="padding:50px 0;">
+                <div class="col-lg-6 content order-lg-first order-first">
+                    <img src="../assets/img/gig openings/gigopenings-working-with-us.png" class=" img-fluid" alt="">
+                </div>
+                <div class="col-lg-6 px-lg-5 order-lg-last order-last">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <h3>
+                        Working with us
+                    </h3>
+                        <ul>
+                            <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-caret-right-fill"></i>
+                                <div>
+                                <h5>Apply</h5>
+                                    <p>
+                                    If you are interested in joining our team of freelancers, you can submit your. application for the specific solution / solutions you are interested in through our website. We offer opportunities for project leaders, experts, and associates, so you can choose the role that best fits your skills and experience. For people with a wide range of skills they can be members of more than one solution.
+                                </p>
+                                </div>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-caret-right-fill"></i>                               
+                            <div>
+                                <h5>
+                                    Interview Process
+                                </h5>
+                                    <p>
+                                    Once we receive your application, we will review it and, if we think you might be a good fit for our platform, we will invite you to an interview. The interview process will typically involve a video call or chat, where we will ask you about your experience, skills, and working style. We may also ask you to complete a skills test or provide references.
+                                </p>
+                                </div>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-caret-right-fill"></i>                                
+                            <div>
+                                <h5>
+                                    Project Assignment
+                                </h5>
+                                    <p>
+                                    When a project becomes available, freelancers will be selected by our platform. Our goal is to ensure that every member of our team is given the opportunity to work on projects that are both challenging and rewarding, while also contributing to the overall success of the team and the organization.
+                                </p>
+                                </div>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-caret-right-fill"></i>                               
+                            <div>
+                                <h5>
+                                    Accept a project
+                                </h5>
+                                    <p>
+                                    We prioritize work flexibility and ensure that our freelancers have the autonomy to accept projects based on their availability. Before accepting a project, our freelancers must indicate their schedule and availability, allowing them to work on projects only when they have the flexibility to do so. This approach promotes a healthy work-life balance and helps our freelancers produce high-quality work while maintaining their well-being.
+                                </p>
+                                </div>
+                            </li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= Gig Levels Section ======= -->
+    <section id="GigLevels" class="GigLevels pt-0">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <hr />
+                <h3 class="justify-content-start align-items-center">
+                    <label style="background-color:#fff; padding:0 1.3em 0 1.3em;">
+                        Gig levels
+                    </label>
+                </h3>
+            </div>
+            <div class="row gy-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Project Architect
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-diagram-3"></i>
+                        </div>
+                        <div class="description">
+                            Our skilled freelance Project Architects excel in project management, defining scopes timelines, and milestones for projects of small, medium, and large sizes. Being a project manager within our platform a prerequisite for joining this esteemed role. With their expertise, our architects provide essential guidance for seamless project definition an exceeding client expectations
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Project Manager
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-diagram-2"></i>
+                        </div>
+                        <div class="description">
+                            Our Project Managers are highly experienced freelancers who have a proven track record of successful project delivery. They are responsible for communicating with clients, signing agreements. and leading one or more projects. They ensure that the project is delivered on time, within budget, and to the client's satisfaction.
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Expert
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-person-gear"></i>
+                        </div>
+                        <div class="description">
+                            Our Experts are professionals who are highly skilled in a particular area of expertise. They work on a single project and provide their specialized knowledge and experience to ensure its success. They collaborate closely with the project manager and the client to deliver the project to the highest standard
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Associate
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-star"></i>
+                        </div>
+                        <div class="description">
+                            Our Associates are entry level professionals who support the expert and project manager on a project. They are responsible for completing assigned tasks and helping to ensure that the project is delivered on time and to the client's satisfaction. They work under the guidance of the expert and project managers and have the opportunity to learn from their experience
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+            </div>
+        </div>
+    </section><!-- End Services Section -->
+    <!-- ======= Gig Compensation Section ======= -->
+    <section id="GigCompensation" class="GigCompensation pt-0">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <hr />
+                <h3 class="justify-content-start align-items-center">
+                    <label style="background-color:#fff; padding:0 1.3em 0 1.3em;">
+                        Gig Compensation
+                    </label>
+                </h3>
+            </div>
+            <div class="row gy-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Project Architect
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-diagram-3"></i>
+                        </div>
+                        <div class="description">
+                            Our project architects are integral to Aephy's success. They expertly define and shape projects of all sizes. ensuring their seamless execution from start to finish In recognition of their invaluable contributions. project architects receive a bonus of 3%-4% of total project fees. Their visionary approach drives the trajectory of each endeavor, delivering optimal outcomes and client satisfaction.
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Project Manager
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-diagram-2"></i>
+                        </div>
+                        <div class="description">
+                            Our project managers have th freedom to set their own hourly rates, with minor applicable restrictions. We value their contributions and compensate them accordingly Our compensation structure motivates them to deliver high-quality projects and maintain excellent client relationships, recognizing their leadership role and impact on successful outcomes
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Expert
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-person-gear"></i>
+                        </div>
+                        <div class="description">
+                            We value our experts' skills and contributions. They set their own hourly rates based on their expertise, minor restrictions may apply. Our compensation structure rewards and motivates them. ensuring fair pay. This flexibility empowers experts to deliver quality projects and build strong client relationships
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <div class="title border-bottom">
+                            Associate
+                        </div>
+                        <div class="icon-msg py-3">
+                            <i class="bi bi-star"></i>
+                        </div>
+                        <div class="description">
+                            Our associates set their own rates, minor restrictions may apply, and gain valuable experience in their fields. We recognize and reward their contributions, motivating high-quality project delivery and strong client relationships. This fosters skill enhancement and meaningful impact in their chosen areas of expertise.
+                        </div>
+                    </div>
+                </div><!-- End Card Item -->
+            </div>
+
+            <div class="row gy-4 mt-5" style="padding:50px 0;">
+                <div class="col-lg-5 position-relative align-self-center order-lg-first order-first">
+                    <div style="text-align:center;">
+                        <img src="../assets/img/gig openings/services-homepage.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-7 d-flex flex-column content order-last order-lg-last" style="position:relative; justify-content:center; align-items:center;">
+                    <div style="text-align:center;">
+                        <h3>
+                            Join us
+                        </h3>
+                    </div>
+                    <div style="text-align:center;">
+                        <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
+                        <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section><!-- End Services Section -->
+
+</main>

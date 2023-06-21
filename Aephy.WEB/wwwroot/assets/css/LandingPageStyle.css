@@ -1200,7 +1200,7 @@ h6 {
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
-.footer {
+/*.footer {
     padding: 20px 0;
     font-size: 14px;
     transition: all 0.3s;
@@ -1217,4 +1217,239 @@ h6 {
         text-align: center;
         font-size: 13px;
         color: #012970;
+    }*/
+
+/*/ Main Footer /*/
+
+.main-footer {
+    position: relative;
+    color: #142149;
+    background-color: #c27714cf;
+}
+
+.main-footer.sp-two .widgets-section a {
+    color: white;
+    text-decoration: none;
+    font-size: 19px;
+}
+
+.main-footer.sp-two .widgets-section p {
+    color: white;
+}
+
+.main-footer .widgets-section {
+    position: relative;
+    padding: 100px 0px 30px;
+}
+
+.main-footer.sp-two .widgets-section {
+    padding: 50px 0px 0px;
+}
+
+    .main-footer.sp-two .widgets-section.mt-190 {
+        padding: 190px 0px 30px;
     }
+
+.main-footer.sp-three .widgets-section {
+    padding: 135px 0px 30px;
+}
+
+.main-footer .column {
+    position: relative;
+}
+
+.main-footer .footer-widget {
+    position: relative;
+}
+
+    .main-footer .footer-widget .widget-content .title,
+    .main-footer .footer-widget .widget-content .title + a {
+        font-size: 14px;
+    }
+
+        .main-footer .footer-widget .widget-content .title + a {
+            font-weight: 600;
+        }
+
+.main-footer .widget-title {
+    position: relative;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.main-footer .footer-logo {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 40px;
+}
+
+.main-footer .logo-widget h3 {
+    position: relative;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+}
+
+.main-footer .logo-widget .link-btn {
+    position: relative;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+    .main-footer .logo-widget .link-btn i {
+        margin-right: 10px;
+    }
+
+.footer-widget .widget-content .title-lbl {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.number,
+.office-mail,
+.address {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.num-icon,
+.mail-icon,
+.address-icon {
+    min-width: 35px;
+}
+
+    .num-icon i,
+    .mail-icon i,
+    .address-icon i {
+        color: white;
+        font-size: 20px;
+    }
+
+.address p {
+    color: white;
+    font-size: 19px;
+}
+
+.phone a,
+.email a {
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    color: #5e7290;
+    display: block;
+    -webkit-transition: all 0.5s ease-out 0s;
+    -moz-transition: all 0.5s ease-out 0s;
+    -ms-transition: all 0.5s ease-out 0s;
+    -o-transition: all 0.5s ease-out 0s;
+    transition: all 0.5s ease-out 0s;
+}
+
+/*/ Link Widget /*/
+
+.links-widget .widget-content {
+    position: relative;
+    margin-left: -8%;
+}
+
+.links-widget ul li {
+    position: relative;
+    margin-bottom: 0;
+    list-style: none
+}
+
+    .links-widget ul li a {
+        position: relative;
+        color: #5e7290;
+        font-weight: 400;
+        font-size: 14px;
+        -webkit-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+
+        .links-widget ul li a:hover {
+            color: #007bfc;
+        }
+
+.links-widget .social-links li a:hover {
+    background-color: #142149;
+    color: #f2f5fe;
+}
+
+/*/ Footer Bottom /*/
+
+.footer-bottom {
+    position: relative;
+    padding: 20px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.footer-bottom .scroll-to-top-two {
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+    .footer-bottom .scroll-to-top-two i {
+        margin-right: 5px;
+    }
+
+.links-widget .social-links {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+    .links-widget .social-links li {
+        position: relative;
+        margin-right: 8px;
+        margin-bottom: 10px;
+        display: inline-block;
+        background: #c27714cf;
+        border-radius: 50%;
+    }
+
+        .links-widget .social-links li a {
+            position: relative;
+            display: block;
+            color: #f2f5fe;
+            font-size: 14px;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            border-radius: 50%;
+            -webkit-transition: all 300ms ease;
+            -o-transition: all 300ms ease;
+            transition: all 300ms ease;
+        }
+
+.social-links li a span {
+    position: relative;
+}
+
+.footer-bottom .copyright {
+    position: relative;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    color: white;
+}
+
+    .footer-bottom .copyright a {
+        font-weight: 500;
+        color: white;
+    }
+
+ul.social-links.clearfix li {
+    list-style: none
+}
+
+/*/ Main Footer /*/

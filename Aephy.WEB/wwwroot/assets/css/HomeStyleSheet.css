@@ -390,9 +390,9 @@ h6 {
 
 /*---------------------------------------------------------
         # Clients Review
-     ----------------------------------------------------------
-    */
-
+ ----------------------------------------------------------
+*/
+/* 
 .reviews .box {
     background: #fff;
     margin: 10px !important;
@@ -436,6 +436,81 @@ h6 {
     color: var(--brand);
     margin-right: 2px;
     line-height: 0;
+} */
+     
+/*---------------------------------------------------------
+        # Clients Review
+     ----------------------------------------------------------
+*/
+
+.reviews .box {
+    background: #fff;
+    /*  margin: 10px !important;*/
+    margin-top: 5%;
+    padding: 13px !important;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
+    width: 100%;
+}
+
+    /*  .reviews .box .content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        padding-top: 10px;
+    }*/
+
+    .reviews .box .info .name {
+        font-weight: 600;
+        font-size: 17px;
+    }
+
+    .reviews .box .title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--brand);
+        padding-bottom: 10px;
+    }
+
+.reviews .content .image img {
+    object-fit: cover;
+    border-radius: 50%;
+    height: 50%;
+    width: 20%;
+    border: 2px solid #fff;
+    margin-right: 5px;
+}
+
+.reviews .content .stars i {
+    flex-shrink: 0;
+    color: var(--brand);
+    margin-right: 2px;
+    line-height: 0;
+}
+
+#reviews .float-child {
+    width: 50%;
+    float: left;
+    padding: 20px;
+}
+
+#reviews #RightReview {
+    margin-top: 5%;
+}
+
+.float-child .content {
+    margin-left: 10%;
+    margin-top: 1%;
+}
+
+    .float-child .content .stars {
+        margin-left: 22%;
+        margin-top: -7%;
+    }
+
+.detailReview {
+    font-size: 20px;
 }
 
 /*---------------------------------------------------------

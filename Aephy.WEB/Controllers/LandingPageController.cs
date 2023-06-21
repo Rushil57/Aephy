@@ -23,5 +23,10 @@ namespace Aephy.WEB.Controllers
         public ActionResult WhyAephy() {
             return View();
         }
+
+        public ActionResult GigOpenings()
+        {
+            return View();
+        }
     }
 }

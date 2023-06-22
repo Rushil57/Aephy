@@ -64,8 +64,18 @@
                             <div class="col-8 d-flex flex-column" style="align-items:end;">
                             <div class="collapse navbar-collapse" id="navbarNav">
                                 <ul class="navbar-nav">
-                                    <li class="nav-item mx-2">
-                                        <div class="btn btn-brand ms-lg-3" onclick="getStarted();">Get Started</div>
+                                    <li class="nav-item mx-2 dropdown pe-3">
+                                            <a class="btn btn-brand" href="#" data-bs-toggle="dropdown">
+                                                Get Started
+                                            </a><!-- End Profile Iamge Icon -->
+
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <li class="dropdown-item">
+                                                    <a href="#" class="btn btn-brand">Browse Solutions</a>
+                                                </li>
+
+                                                <li class="dropdown-item"><a href="#" class="btn btn-brand">Post your request</a></li>
+                                            </ul>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="~/LandingPage/Services">Services</a>

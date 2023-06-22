@@ -25,99 +25,108 @@
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
+
+    <style>
+        #external-buttons {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex"> 
+    <header id="header" class="header fixed-top">
         <div class="container">
             <div class="row align-items-center">
-            <div class="col-auto">
-            <div class="d-flex align-items-center justify-content-between">
-                <a href="/LandingPage/Index" class="logo d-flex align-items-center">
-                    <img src="~/assets/img/Logo1.png" alt="">
-                    @*<span class="d-none d-lg-block">NiceAdmin</span>*@
-                </a>
-                @*<i class="bi bi-list toggle-sidebar-btn"></i>*@
-            </div><!-- End Logo -->
-                </div>
-                <div class="col-auto" style="align-items:center;">
-                    <div class="search-bar">
-                        <form class="search-form d-flex align-items-center" method="POST" action="#">
-                            <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                        </form>
-                    </div><!-- End Search Bar -->
-                </div>
-                <div class="col-auto">
+                <div class="col-flued align-items-end">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top" style="padding-right:1rem;">
+                        <div class="container">
+                            <div class="col-1">
+                                <div style="display: flex;flex-direction: column;">
+                                    <a href="/LandingPage/Index" class="logo" style="display: flex;align-items: flex-start;margin-bottom: 25px;">
+                                        <img src="~/assets/img/Logo1.png" alt="" style="width: 125px;height: auto;">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                            <div class="search-bar">
+                                <form class="search-form d-flex align-items-center" method="POST" action="#">
+                                    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                </form>
+                            </div><!-- End Search Bar -->
+                            </div>
 
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top" style="margin-left:auto; padding-right:1rem;">
-                <div class="container">
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
+                            <div class="col-8 d-flex flex-column" style="align-items:end;">
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item mx-2">
+                                        <div class="btn btn-brand ms-lg-3" onclick="getStarted();">Get Started</div>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="~/LandingPage/Services">Services</a>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link" href="~/LandingPage/Industries">Industries</a>
-                            </li>
-                            <li class="nav-item">
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="~/LandingPage/Industries">Industries</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="~/LandingPage/WhyAephy">Why Aephy</a>
-                            </li>
-                            <li class="nav-item">
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="~/LandingPage/GigOpenings">Gig Openings</a>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link" href="#About">About</a>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                            </li>
-                        </ul>
-                        @*<a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-brand ms-lg-3">Contact</a>*@
-                    </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#About">About</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                    </li>
+                                </ul>
+                                @*<a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-brand ms-lg-3">Contact</a>*@
+                            </div>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </nav>
-        </div>
             </div>
-    <div class="row-lg-auto row-sm-12 row-md-12">
-        <div class="nav-scroller bg-white">
-            <nav class="nav nav-underline">
-                <a class="btn btn-brand ms-lg-3" href="#">Browse Solutions</a>
-                <a class="btn btn-brand ms-lg-3" href="#">
-                    Post your Request
-                </a>
-            </nav>
-        </div>
-        </div>
-        <div class="row-lg-auto row-sm-12 row-md-12">
+            <div class="row-lg-auto row-sm-12 row-md-12" id="external-buttons">
+                <div class="nav-scroller bg-white">
+                    <nav class="nav nav-underline">
+                        <a class="btn btn-brand ms-lg-3" href="#">Browse Solutions</a>
+                        <a class="btn btn-brand ms-lg-3" href="#">
+                            Post your Request
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            <div class="row-lg-auto row-sm-12 row-md-12">
                 <div class="nav-scroller bg-white">
                     <nav class="nav">
-                <a class="nav-link" href="#">Strategy & Consulting</a>
-                <a class="nav-link" href="#">
-                    AI Engineering
-                </a>
-                <a class="nav-link" href="#">
-                    Data Science & Analytics
-                </a>
-                <a class="nav-link" href="#">
-                    AI Operations
-                </a>
-                
-            </nav>
-        </div>
-        </div>
+                        <a class="nav-link" href="#">Strategy & Consulting</a>
+                        <a class="nav-link" href="#">
+                            AI Engineering
+                        </a>
+                        <a class="nav-link" href="#">
+                            Data Science & Analytics
+                        </a>
+                        <a class="nav-link" href="#">
+                            AI Operations
+                        </a>
+
+                    </nav>
+                </div>
+            </div>
         </div>
     </header>
 
-        @RenderBody()
+    @RenderBody()
 
     <footer class="main-footer sp-two">
         <div class="container">
@@ -249,7 +258,19 @@
     <script src="~/assets/js/main.js"></script>
 
     <script>
+        function getStarted() {
+            var displayStatus = $("#external-buttons").css("display");
+
+            if (displayStatus == "none") {
+                $("#external-buttons").css("display", "block");
+            }
+            else {
+                $("#external-buttons").css("display", "none");
+            }
+        }
+
         $(function () {
+
             $(".carousel-control-prev").css("display", "none");
             $('.carousel').carousel({
                 pause: true,

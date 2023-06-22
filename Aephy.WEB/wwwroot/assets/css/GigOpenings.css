@@ -444,3 +444,47 @@ h6 {
 }
 
 
+/*---------------------------------------------------------
+    Open Gig Roles
+-----------------------------------------------------------
+*/
+
+.OpenRolesTable{
+    margin:50px 0;
+}
+
+.table-OpenRoles th {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.table-OpenRoles td {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+table tr:nth-child(even) {
+    background-color: #BEF2F5
+}
+
+.pagination li:hover {
+    cursor: pointer;
+}
+
+table tbody tr {
+    display: none;
+}
+
+@media(max-width:652px) {
+
+    .table-OpenRoles th{
+        font-size:8px;
+        font-weight:500;
+    }
+    .table-OpenRoles tr td{
+        font-size: 8px;
+        font-weight: 300;
+    }
+}

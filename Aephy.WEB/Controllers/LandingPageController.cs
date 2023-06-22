@@ -33,5 +33,10 @@ namespace Aephy.WEB.Controllers
         {
             return View();
         }
+
+        public ActionResult AboutUs()
+        {
+            return View();
+        }
     }
 }

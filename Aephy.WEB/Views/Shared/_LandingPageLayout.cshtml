@@ -25,12 +25,6 @@
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
-
-    <style>
-        #external-buttons {
-            display: none;
-        }
-    </style>
 </head>
 <body>
 
@@ -89,8 +83,21 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="~/LandingPage/GigOpenings">Gig Openings</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#About">About</a>
+                                    <li class="nav-item dropdown">
+                                            <a class="nav-link" href="~/LandingPage/AboutUs" data-bs-toggle="dropdown">
+                                                <span>About</span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+                                            </a><!-- End Profile Iamge Icon -->
+
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <li class="dropdown-item">
+                                                    <a href="~/LandingPage/AboutUs" class="nav-link">About Us</a>
+                                                </li>
+
+                                                <li class="dropdown-item"><a href="#" class="nav-link">Careers</a></li>
+                                                <li class="dropdown-item">
+                                                    <a href="#" class="nav-link">Contact</a>
+                                                </li>
+                                            </ul>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
@@ -268,17 +275,6 @@
     <script src="~/assets/js/main.js"></script>
 
     <script>
-        function getStarted() {
-            var displayStatus = $("#external-buttons").css("display");
-
-            if (displayStatus == "none") {
-                $("#external-buttons").css("display", "block");
-            }
-            else {
-                $("#external-buttons").css("display", "none");
-            }
-        }
-
         $(function () {
 
             $(".carousel-control-prev").css("display", "none");

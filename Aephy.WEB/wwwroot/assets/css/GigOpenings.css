@@ -488,3 +488,23 @@ table tbody tr {
         font-weight: 300;
     }
 }
+
+.btn-dropdown {
+    padding: 8px 26px;
+    border-color: #6c757d;
+    background-color: #fff;
+    color: #6c757d;
+    font-weight:400;
+    border-radius:10px;
+    margin:5px;
+}
+
+    .btn-dropdown:hover {
+        padding: 8px 26px;
+        border-color: #515457;
+        background-color: #fff;
+        color: #515457;
+        font-weight:700;
+        border-radius: 10px;
+        margin: 5px;
+    }

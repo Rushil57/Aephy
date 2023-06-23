@@ -43,20 +43,20 @@ a {
 
 .section-header {
     text-align: left;
-    padding: 30px 0 30px 90px;
+    padding: 30px 0 30px 0px;
     position: relative;
 }
 
     .section-header h3 {
-        font-size: 25px;
+        font-size: 30px;
         font-weight: 700;
         text-transform: uppercase;
-        margin-bottom: 18px;
+        /*margin-bottom: 18px;*/
         padding-bottom: 0;
-        color: #001973;
+        color: black;
         position: relative;
         z-index: 2;
-        padding-bottom: 20px;
+        /*padding-bottom: 20px;*/
         position: relative;
     }
 
@@ -84,8 +84,8 @@ a {
 
 @media (max-width: 640px) {
     .section-header h3 {
-        font-size: 20px;
-        margin-bottom: 10px;
+        font-size: 26px;
+       /* margin-bottom: 10px;*/
     }
 
     .section-header {
@@ -114,8 +114,8 @@ a {
 .btn-white {
     padding: 10px;
     border: 1px solid rgba(68,68,68,0.1);
-    background-color: var(--aephy);
-    color: #fff;
+    background-color: white;
+    color: black;
 }
 
     .btn-white:hover {
@@ -254,7 +254,7 @@ h6 {
     font-weight: 700;
     font-size: 32px;
     font-family: var(--font-secondary);
-    color: #19335c;
+    color: black;
 }
 
 .JoinUs img {

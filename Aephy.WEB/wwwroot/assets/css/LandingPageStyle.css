@@ -40,69 +40,53 @@ a:hover {
 .col-auto {
     align-self: center;
 }
-
-.section-header {
-    text-align: center;
-    padding: 30px 0;
-    position: relative;
+/*--------------------------------------------------------------
+# Preloader
+--------------------------------------------------------------*/
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.6s ease-out;
+    width: 100%;
+    height: 100vh;
 }
 
-    .section-header h2 {
-        font-size: 32px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        padding-bottom: 0;
-        color: #001973;
-        position: relative;
-        z-index: 2;
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        position: relative;
-    }
-
-        .section-header h2:after {
-            content: "";
-            position: absolute;
-            display: block;
-            width: 50px;
-            height: 3px;
-            background: var(--color-primary);
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-        }
-
-    .section-header span {
+    #preloader:before,
+    #preloader:after {
+        content: "";
         position: absolute;
-        top: 46px;
-        color: rgba(14, 29, 52, 0.06);
-        left: 0;
-        right: 0;
-        z-index: 1;
-        font-weight: 700;
-        font-size: 56px;
-        text-transform: uppercase;
-        line-height: 0;
+        border: 4px solid var(--brand);
+        border-radius: 50%;
+        animation: animate-preloader 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
     }
 
-    .section-header p {
-        margin-bottom: 0;
-        position: relative;
-        z-index: 2;
+    #preloader:after {
+        animation-delay: -0.5s;
     }
 
-@media (max-width: 640px) {
-    .section-header h2 {
-        font-size: 28px;
-        margin-bottom: 15px;
+@keyframes animate-preloader {
+    0% {
+        width: 10px;
+        height: 10px;
+        top: calc(50% - 5px);
+        left: calc(50% - 5px);
+        opacity: 1;
     }
 
-    .section-header span {
-        font-size: 38px;
+    100% {
+        width: 72px;
+        height: 72px;
+        top: calc(50% - 36px);
+        left: calc(50% - 36px);
+        opacity: 0;
     }
 }
+
+/*----------------------------------------------------------------*/
+
 
 .navbar .navbar-nav .nav-link {
     color: var(--dark);
@@ -576,8 +560,8 @@ h6 {
     .header .search-form input {
         border: 0;
         font-size: 14px;
-        color: #012970;
-        border: 1px solid rgba(1, 41, 112, 0.2);
+        color: #38393b; /* blue : #012970*/
+        border: 1px solid rgba(56, 57, 59, 0.2);
         padding: 7px 38px 7px 8px;
         border-radius: 3px;
         transition: 0.3s;
@@ -588,7 +572,7 @@ h6 {
         .header .search-form input:hover {
             outline: none;
             box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
-            border: 1px solid rgba(1, 41, 112, 0.3);
+            border: 1px solid rgba(56, 57, 59, 0.3);
         }
 
     .header .search-form button {
@@ -599,7 +583,7 @@ h6 {
     }
 
         .header .search-form button i {
-            color: #012970;
+            color: #38393b;
         }
 
 /*--------------------------------------------------------------

@@ -39,13 +39,13 @@
                     </form>
 
                     <div class="row gy-2 mt-2" data-aos="fade-up" data-aos-delay="400">
-                        <div class="col-lg-2 col-4">
-                            <div class="d-flex flex-row">
+                        <div class="col-auto">
+                            <div class="d-flex flex-row pop-title">
                                 <h5>Popular :</h5>
                             </div>
                         </div><!-- End Stats Item -->
 
-                        <div class="col-lg-10 col-8">
+                        <div class="col-auto">
                             <div class="d-flex flex-row">
                                 <div class="pop-box">Deep Learning</div>
                                 <div class="pop-box">Chatboats and virtual assistants</div>
@@ -70,12 +70,12 @@
         <div class="container pt-5" data-aos="fade-up">
 
             <div class="row gy-4">
-                <div class="col-lg-6 position-relative align-self-center order-lg-first order-first">
-                    <img src="~/assets/img/howuserimage.png" class="img-fluid" alt="">
+                <div class="col-lg-6 position-relative align-self-center order-lg-first order-last" style="text-align:center;">
+                    <img src="~/assets/img/howuserimage.png" class="img-fluid" alt="" style="width:90%;">
                     @*<a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox play-btn"></a>*@
                     <a class="btn btn-brand ms-lg-3 m-4" href="#">Learn more</a>
                 </div>
-                <div class="col-lg-6 content order-last order-lg-last">
+                <div class="col-lg-6 content order-first order-lg-last">
                     <h3>Find your AI solution</h3>
                     <ul>
                         <li data-aos="fade-up" data-aos-delay="100">
@@ -124,7 +124,7 @@
     <section id="Ai" class="Ai pt-0">
         <div class="container">
             <div class="row gy-4 d-flex justify-content-center mt-4">
-                <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center" style="justify-content:center;">
+                <div class="col-lg-6 order-1 order-lg-1 d-flex flex-column justify-content-center order-lg-first order-md-first" style="justify-content:center;">
                     <h2 data-aos="fade-up">
                         Unlock Your Business Potential with Our Affordable AI Solutions and Experts
                     </h2>
@@ -138,10 +138,10 @@
                 <div class="col-lg-1 order-2 order-lg-2">
                 </div>
 
-                <div class="col-lg-5 align-items-center order-1 order-lg-3 justify-content-center" style="position:relative;">
+                <div class="col-lg-5 align-items-center order-3 order-lg-3 justify-content-center order-lg-first order-md-first" style="position:relative;">
                     <!--Add d-flex-->
                     <div style="text-align:center;">
-                        <h2 data-aos="fade-up">Learn more about AI</h2>
+                        <h2 data-aos="fade-up">Start exploring</h2>
                     </div>
                     <div style="text-align:center;">
                         <a class="btn btn-brand ms-lg-3" href="#">Services</a>
@@ -160,55 +160,7 @@
                 @*<span>Our Services</span>*@
                 <h2 class="border-bottom border-black">Popular AI Solutions</h2>
             </div>
-
             <div class="row gy-4">
-                @*<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="card">
-                <div class="card-img justify-content-lg-center">
-                <img src="~/assets/img/popularsolutions/popularservicesnlp.png" alt="" class="img-fluid" data-aos="zoom-out">
-                </div>
-                <h3>
-                <a href="service-details.html" class="stretched-link">
-                Natural Language Processing (NLP)
-                </a>
-                </h3>
-                <p>
-                Enhance communication with customers and improve customer service by enabling machines to understand and interpret human language.
-                </p>
-                </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="card">
-                <div class="card-img">
-                <img src="~/assets/img/popularsolutions/popularservicesspeechreco.png" alt="" class="img-fluid" data-aos="zoom-out">
-                </div>
-                <h3>
-                <a href="service-details.html" class="stretched-link">
-                Speech Recognition
-                </a>
-                </h3>
-                <p>
-                Enhance communication with customers and improve customer service by enabling machines to interpret and respond to human speech.
-                </p>
-                </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="card">
-                <div class="card-img">
-                <img src="~/assets/img/popularsolutions/popularservicescomputervision.png" alt="" class="img-fluid" data-aos="zoom-out">
-                </div>
-                <h3>
-                <a href="service-details.html" class="stretched-link">
-                Computer Vision
-                </a>
-                </h3>
-                <p>
-                Improve accuracy and speed of visual data analysis, unlocking new insights and opportunities for your organization.
-                </p>
-                </div>
-                </div><!-- End Card Item -->*@
                 <div id="popularAISolutionscarousel" class="carousel slide" data-bs-interval="false">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -368,7 +320,7 @@
 
             </div>
 
-            <div class="row gy-4 pt-5">
+            <div class="row">
                 <div class="float-child" id="leftReview">
                     <div class="col" data-aos="fade-up" data-aos-delay="100">
                         <div class="box">
@@ -380,16 +332,16 @@
                             </div>
                         </div>
                         <div class="content">
-                            <span class="image"><img src="~/assets/img/man_profile_1.jpg"></span>
-                            <span class="info">
-                                <span class="name">Michael Rose</span>
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>
+                            <div class="info">
+                                <div class="name">Michael Rose</div>
                                 <div class="stars">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
-                                    <span>4.9 / 5</span>
+                                    <label> 4.9 / 5 </label>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -403,16 +355,16 @@
                             </div>
                         </div>
                         <div class="content">
-                            <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>
-                            <span class="info">
-                                <span class="name">Amir Khan</span>
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>
+                            <div class="info">
+                                <div class="name">Amir Khan</div>
                                 <div class="stars">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
-                                    <span>4.7 / 5</span>
+                                    <label>4.7 / 5</label>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -429,16 +381,16 @@
                             </div>
                         </div>
                         <div class="content">
-                            <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>
-                            <span class="info">
-                                <span class="name">   Anna Lakhani</span>
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>
+                            <div class="info">
+                                <div class="name">   Anna Lakhani</div>
                                 <div class="stars">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
-                                    <span>4.8/5</span>
+                                    <label>4.8/5</label>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -452,16 +404,16 @@
                             </div>
                         </div>
                         <div class="content">
-                            <span class="image"><img src="~/assets/img/man_profile_1.jpg" /></span>
-                            <span class="info">
-                                <span class="name">Zahir Modi</span>
+                            <div class="image"><img src="~/assets/img/man_profile_1.jpg" /></div>
+                            <div class="info">
+                                <div class="name">Zahir Modi</div>
                                 <div class="stars">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
-                                    <span>4.9 / 5</span>
+                                    <label>4.9 / 5</label>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                     </div>
 
@@ -483,7 +435,7 @@
 
             </div>
 
-            <div class="row gy-4 pt-5">
+            <div class="row">
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="box">
@@ -493,7 +445,7 @@
                         <div class="description">
                             “ Aephy has been a game-changer for my business. I was able to find a project that not only met but exceeded my expectations. I am extremely happy with the outcome. I would definitely use this platform again in the future.”
                         </div>
-                        <div class="child col-lg-10 col-md-8 mx-2">
+                        <div class="child col-10 mx-2">
                             <div class="title border-bottom">
                                 Results
                             </div>
@@ -523,7 +475,7 @@
                         <div class="description">
                             "Thanks to Aephy, we were able to complete our project within budget and ahead of schedule. We saved over $10,000 and finished 2 weeks earlier than anticipated. The freelancers we hired ware a perfect fit for our needs and the platform made it easy to find them."
                         </div>
-                        <div class="middle-child col-lg-10 col-md-8 mx-2">
+                        <div class="middle-child col-10 mx-2">
                             <div class="title border-bottom">
                                 Results
                             </div>
@@ -557,7 +509,7 @@
                         <div class="description">
                             We had been struggling to find the right AI solution for our company until we stumbled upon this platform. The project provided by the freelancers was exceptional.
                         </div>
-                        <div class="child col-lg-10 col-md-8 mx-2">
+                        <div class="child col-10 mx-2">
                             <div class="title border-bottom">
                                 Results
                             </div>
@@ -664,13 +616,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7 order-lg-last order-last right-box">
                     @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
-                    <h2 data-aos="fade-up" style="color:#19335c;">
+                    <h2 data-aos="fade-up" style="color:#414141;">
                         For AI Gigs
                     </h2>
-                    <p class="align-self-center border-bottom border-black" style="text-align:center; color:#444444; padding:80px 120px 80px 120px;">
-                        Meet clients you’re excited to work with and take
-                        your career to new heights.
-                    </p>
+                    <div class="description">
+                        <p class="align-self-center border-bottom border-black">
+                            Meet clients you’re excited to work with and take
+                            your career to new heights.
+                        </p>
+                    </div>
                     <div class="row align-self-center position-relative d-flex">
                         <div class="col-4">
                             <label class="btn ms-lg-3" href="#">
@@ -688,7 +642,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="pt-4">
+                    <div class="pt-4 extra-options">
                         <a class="btn btn-brand ms-lg-3" href="#">Learn more</a>
                         <a class="btn btn-brand ms-lg-3" href="#">Open gig roles</a>
                     </div>

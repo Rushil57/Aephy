@@ -19,6 +19,8 @@
     --body: #516171;
     --border: rgba(0,0,0,0.08);
     --shadow: 0px 6px 30px rgba(0, 0, 0, 0.08);
+    --font-title: #414141;
+    --font-title-hover: #272729;
 }
 
 body {
@@ -49,7 +51,7 @@ section {
 
 .section-header {
     text-align: left;
-    padding: 30px 0;
+    padding: 10px 0;
     position: relative;
 }
 
@@ -58,10 +60,10 @@ section {
         font-weight: 700;
         text-transform: uppercase;
         margin-bottom: 20px;
-        color: #001973;
+        color: var(--font-title);  /*#001973*/
         position: relative;
         z-index: 2;
-        padding: 20px;
+        padding: 10px;
     }
 
         .section-header h2:after {
@@ -115,12 +117,12 @@ section {
     border-color: var(--brand);
     background-color: var(--brand);
     color: #fff;
+    margin:5px;
 }
 
     .btn-brand:hover {
         background-color: var(--aephy);
         border-color: var(--aephy);
-        color: #fff;
     }
 
 h1,
@@ -240,10 +242,31 @@ h6 {
     /*background-color: #f6f6f6; /* Grey background color */
     text-decoration: none;
     /* Remove default text underline */
-    font-size: 18px; /* Increase the font-size */
+    font-size: 15px; /* Increase the font-size */
     color: #fff; /* Add a black text color */
     display: block; /* Make it into a block element to fill the whole list */
     cursor: pointer;
+}
+
+.hero .pop-title h5{
+    font-size: 16px; /* Increase the font-size */
+}
+
+@media (max-width: 770px) {
+    .hero .pop-box {
+        font-size: 12px; /* Increase the font-size */
+    }
+    .hero .pop-title h5{
+        font-size: 16px; /* Increase the font-size */
+    }
+}
+@media (max-width: 545px) {
+    .hero .pop-box {
+        font-size: 10px; /* Increase the font-size */
+    }
+    .hero .pop-title h5{
+        font-size: 11px; /* Increase the font-size */
+    }
 }
 
 /*--------------------------------------------------------------
@@ -282,7 +305,7 @@ h6 {
     .why .content ul h5 {
         font-size: 18px;
         font-weight: 700;
-        color: #19335c;
+        color: var(--font-title);
     }
 
     .why .content ul p {
@@ -316,7 +339,7 @@ h6 {
         padding: 0;
         font-size: 38px;
         font-weight: 700;
-        color: #414141;
+        color: var(--font-title);
     }
 
 @media (max-width: 575px) {
@@ -366,12 +389,13 @@ h6 {
     }
 
     .services .card a {
-        color: #001973;
+        color: var(--font-title);/*#001973*/ 
+        text-decoration:none;
         transition: 0.3;
     }
 
         .services .card a:hover {
-            color: var(--color-primary);
+            color: var(--font-title-hover);
         }
 
     .services .card p {
@@ -443,27 +467,29 @@ h6 {
 .reviews .box {
     background: #fff;
     /*  margin: 10px !important;*/
-    margin-top: 5%;
+    margin-top: 0;
     padding: 13px !important;
     border-radius: 3px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
     width: 100%;
 }
 
-    /*  .reviews .box .content {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: left;
-        padding-top: 10px;
-    }*/
+.reviews .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    padding-top: 10px;
+    margin-left: 10%;
+    margin-top: 1%;
+}
 
-    .reviews .box .info .name {
+    .reviews .info .name {
         font-weight: 600;
         font-size: 17px;
     }
 
-    .reviews .box .title {
+    .reviews .title {
         font-size: 16px;
         font-weight: 800;
         color: var(--brand);
@@ -473,8 +499,8 @@ h6 {
 .reviews .content .image img {
     object-fit: cover;
     border-radius: 50%;
-    height: 50%;
-    width: 20%;
+    height: 65px;
+    width: 65px;
     border: 2px solid #fff;
     margin-right: 5px;
 }
@@ -496,14 +522,13 @@ h6 {
     margin-top: 5%;
 }
 
-.float-child .content {
+/*.float-child .content {
     margin-left: 10%;
     margin-top: 1%;
-}
+}*/
 
     .float-child .content .stars {
-        margin-left: 22%;
-        margin-top: -7%;
+        
     }
 
 .detailReview {
@@ -637,7 +662,7 @@ h6 {
     font-weight: 700;
     font-size: 32px;
     font-family: var(--font-secondary);
-    color: var(--brand);
+    color: var(--font-title);
 }
 
 .whyAephy .content ul {
@@ -656,12 +681,13 @@ h6 {
         font-size: 38px;
         margin-right: 20px;
         line-height: 0;
+        color:var(--brand);
     }
 
     .whyAephy .content ul h5 {
         font-size: 18px;
         font-weight: 700;
-        color: #19335c;
+        color: var(--font-title);
     }
 
     .whyAephy .content ul p {
@@ -702,21 +728,36 @@ h6 {
     font-weight: 700;
     font-size: 32px;
     font-family: var(--font-secondary);
-    color: var(--brand);
+    color: var(--font-title);
 }
 
+.ForAiGigs .description p{
+    position:relative;
+    text-align: center;
+    color: #444444;
+    padding: 80px 120px;
+}
+
+.ForAiGigs .extra-options {
+    position: relative;
+    text-align: center;
+}
+
+@media(max-width:770px){
+    .ForAiGigs .description p{
+        padding: 80px 0;
+    }
+}
 /*--------------------------------------------------------------
 # Always Evolving Section
 --------------------------------------------------------------*/
 /*.AlwaysEvolving .row {
     overflow: hidden;
 }*/
-
 /*.AlwaysEvolving [class*="col-"] {
     margin-bottom: -99999px;
     padding-bottom: 99999px;
 }*/
-
 .AlwaysEvolving h2 {
     font-weight: 700;
     font-size: 25px;

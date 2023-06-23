@@ -446,22 +446,22 @@ h6 {
   width: 100%;
 }
 
-.header .search-form input {
-  border: 0;
-  font-size: 14px;
-  color: #012970;
-  border: 1px solid rgba(1, 41, 112, 0.2);
-  padding: 7px 38px 7px 8px;
-  border-radius: 3px;
-  transition: 0.3s;
-  width: 100%;
-}
+    .header .search-form input {
+        border: 0;
+        font-size: 14px;
+        color: #38393b; /* blue : #012970*/
+        border: 1px solid rgba(56, 57, 59, 0.2);
+        padding: 7px 38px 7px 8px;
+        border-radius: 3px;
+        transition: 0.3s;
+        width: 100%;
+    }
 
 .header .search-form input:focus,
 .header .search-form input:hover {
   outline: none;
   box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
-  border: 1px solid rgba(1, 41, 112, 0.3);
+  border: 1px solid rgba(56, 57, 59, 0.3);
 }
 
 .header .search-form button {
@@ -471,9 +471,9 @@ h6 {
   background: none;
 }
 
-.header .search-form button i {
-  color: #012970;
-}
+    .header .search-form button i {
+        color: #38393b;
+    }
 
 /*--------------------------------------------------------------
 # Header Nav

@@ -149,6 +149,14 @@ h6 {
 
 @media (max-width: 1199px) {
     #main {
+        margin-top: 220px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 380px) {
+    #main {
+        margin-top: 340px;
         padding: 20px;
     }
 }

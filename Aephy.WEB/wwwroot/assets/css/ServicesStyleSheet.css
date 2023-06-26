@@ -42,6 +42,7 @@ a {
 }
 
 .base-section {
+    margin-top:20px !important;
     padding-top: 80px;
     padding-bottom: 200px;
     overflow: hidden;
@@ -142,21 +143,6 @@ h4,
 h5,
 h6 {
     font-family: "Nunito", sans-serif;
-}
-
-/*--------------------------------------------------------------
-# Main
---------------------------------------------------------------*/
-#main {
-    margin-top: 180px;
-    padding: 20px 30px;
-    transition: all 0.3s;
-}
-
-@media (max-width: 1199px) {
-    #main {
-        padding: 20px;
-    }
 }
 
 /*--------------------------------------------------------------

@@ -180,7 +180,7 @@ h6 {
 # Main
 --------------------------------------------------------------*/
 #main {
-    margin-top: 180px;
+    margin-top: 110px;
     padding: 20px 30px;
     transition: all 0.3s;
 }
@@ -188,6 +188,7 @@ h6 {
 @media (max-width: 1199px) {
     #main {
         padding: 20px;
+        margin-top:70px;
     }
 }
 
@@ -275,7 +276,7 @@ h6 {
 
     .dropdown-menu .dropdown-item {
         font-size: 14px;
-        padding: 10px 15px;
+        padding: 0 6px;
         transition: 0.3s;
     }
 

@@ -40,7 +40,11 @@ a {
 .col-auto {
     align-self: center;
 }
-
+section {
+    padding-top: 0 !important;
+    margin-top: 20px;
+    overflow: hidden;
+}
 .section-header {
     text-align: left;
     padding: 30px 0 30px 0px;
@@ -132,30 +136,6 @@ h5,
 h6 {
     font-family: "Nunito", sans-serif;
 }
-
-/*--------------------------------------------------------------
-# Main
---------------------------------------------------------------*/
-#main {
-    margin-top: 180px;
-    padding: 20px 30px;
-    transition: all 0.3s;
-}
-
-@media (max-width: 1199px) {
-    #main {
-        margin-top:220px;
-        padding: 20px;
-    }
-}
-
-@media (max-width: 380px){
-    #main {
-        margin-top:340px;
-        padding:20px;
-    }
-}
-
 
 /*--------------------------------------------------------------
 # Page Title

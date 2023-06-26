@@ -302,28 +302,20 @@
             }
         });
 
-        $(function () {
+        let items = document.querySelectorAll('.carousel .carousel-item')
 
-            $(".carousel-control-prev").css("display", "none");
-            $('.carousel').carousel({
-                pause: true,
-                interval: false,
-                wrap: false
-            }).on('slid.bs.carousel', function () {
-                curSlide = $('.active');
-                if (curSlide.is(':first-child')) {
-                    $('.carousel-control-prev').hide();
-                    return
+        items.forEach((el) => {
+            const minPerSlide = 4
+            let next = el.nextElementSibling
+            for (var i = 1; i < minPerSlide; i++) {
+                if (!next) {
+                    // wrap carousel by using first child
+                    next = items[0]
                 }
-                else if (curSlide.is(':last-child')) {
-                    $('.carousel-control-next').hide();
-                    return;
-                }
-                else {
-                    $('.carousel-control-next').show();
-                    $('.carousel-control-prev').show();
-                }
-            });
+                let cloneChild = next.cloneNode(true)
+                el.appendChild(cloneChild.children[0])
+                next = next.nextElementSibling
+            }
         })
     </script>
 </body>

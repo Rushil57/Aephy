@@ -1231,6 +1231,19 @@ h6 {
 
 /*/ Main Footer /*/
 
+@media (max-width: 1100px) {
+    ul.social-links {
+        padding-left: 0;
+    }
+
+        ul.social-links.clearfix li {
+            list-style: none;
+            display: inline-block;
+            padding: 10px;
+        }
+}
+
+
 .main-footer {
     position: relative;
     color: #142149;

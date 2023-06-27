@@ -512,12 +512,21 @@ h6 {
         padding-bottom: 10px;
     }
 
-.reviews .content .image img {
+.reviews .content .image div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     object-fit: cover;
+    font-size:18px;
+    color: #fff;
+    background-color: var(--brand);
     border-radius: 50%;
     height: 65px;
     width: 65px;
     border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
     margin-right: 5px;
 }
 
@@ -541,7 +550,6 @@ h6 {
     margin-left: 10%;
     margin-top: 1%;
 }*/
-
     .float-child .content .stars {
         
     }

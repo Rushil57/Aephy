@@ -170,7 +170,7 @@ h6 {
     .hero .first-row {
         text-align: center;
         min-height: 50vh;
-        background-color: #fff;
+        background-color: var(--brand);
         background-size: cover;
         background-position: center;
         position: relative;
@@ -216,6 +216,67 @@ h6 {
     }
 
 /*--------------------------------------------------------------
+# JoinUs Section
+--------------------------------------------------------------*/
+
+.title label {
+    font-weight: 600;
+    font-size: 28px;
+    padding: 20px 0;
+}
+
+@media(max-width:530px){
+    .title label {
+        font-size: 24px;
+        padding: 0 0 18px 0;
+    }
+}
+
+@media(max-width:390px) {
+    .title label {
+        font-size: 20px;
+        padding: 0 0 18px 0;
+    }
+}
+
+.JoinUs h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: black;
+}
+
+.JoinUs .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    padding-top: 10px;
+    margin-left: 0%;
+    margin-top: 1%;
+}
+
+.JoinUs .info{
+    margin-left:10px;
+}
+
+.JoinUs .info .name {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.JoinUs .content .image img {
+    object-fit: cover;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    border: 4px solid var(--gray); /*border: 2px solid #fff;*/
+    /*outline: 3px inset #3b96eb;*/
+    /*outline-offset: -8px;*/
+    margin-right: 5px;
+}
+
+/*--------------------------------------------------------------
 # last Section
 --------------------------------------------------------------*/
 
@@ -226,11 +287,8 @@ h6 {
     color: #444444;
 }
 
-.content {
-    margin-top: 40px;
+.content p {
+    padding: 30px 0;
+    font-size: 15px;
 }
 
-    .content p {
-        padding: 30px 0;
-        font-size: 15px;
-    }

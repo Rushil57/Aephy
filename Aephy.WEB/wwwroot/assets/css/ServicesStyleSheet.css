@@ -159,6 +159,33 @@ h6 {
         color: #012970;
     }
 
+.hero .infoCol {
+    justify-content: center;
+}
+
+    .hero .infoCol h4 {
+        align-self: start;
+        color: #fff;
+        text-align: left;
+    }
+
+    .hero .infoCol .infoBtn {
+        align-self: start;
+    }
+
+@media(max-width:992px) {
+    .hero .infoCol h4 {
+        margin-top: -50px;
+    }
+
+    .hero .infoCol .infoBtn {
+        align-self: center;
+    }
+    .hero .barCol {
+        width: 180px;
+    }
+}
+
 /*--------------------------------------------------------------
 # industries Section
 --------------------------------------------------------------*/

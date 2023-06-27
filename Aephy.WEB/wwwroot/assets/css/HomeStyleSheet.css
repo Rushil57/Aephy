@@ -274,6 +274,15 @@ h6 {
         font-size: 11px; /* Increase the font-size */
     }
 }
+@media(max-width:380px){
+    .hero .pop-box {
+        font-size: 8px; /* Increase the font-size */
+    }
+
+    .hero .pop-title h5 {
+        font-size: 10px; /* Increase the font-size */
+    }
+}
 
 /*--------------------------------------------------------------
 # why Us Section

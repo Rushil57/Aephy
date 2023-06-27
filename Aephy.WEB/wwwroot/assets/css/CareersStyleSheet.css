@@ -169,7 +169,7 @@ h6 {
 
     .hero .first-row {
         text-align: center;
-        min-height: 50vh;
+        /*min-height: 50vh;*/
         background-color: #fff;
         background-size: cover;
         background-position: center;
@@ -178,6 +178,12 @@ h6 {
         /*padding: 40px 10px 40px 10px;*/
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero .hero-img img {
+        object-fit: cover;
+        height: auto;
+        width: 100%;
     }
 
     .hero h2 {
@@ -196,9 +202,9 @@ h6 {
 
 @media only screen and (max-width: 1000px) {
     .hero-img {
-        margin-top: 0;
-        padding-right: 0;
-        padding-left: 0;
+        margin-top: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .hero .first-row {
@@ -302,6 +308,24 @@ h6 {
     align-self: center;
 }
 
+.JoinUs .image div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    font-size: 18px;
+    color: #fff;
+    background-color: var(--brand);
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
+    margin-right: 5px;
+}
+
 .JoinUs ul {
     list-style: none;
     padding: 0;
@@ -335,3 +359,69 @@ h6 {
 .JoinUs p:last-child {
     margin-bottom: 0;
 }
+
+/*---------------------------------------------------------
+    Open Roles
+-----------------------------------------------------------
+*/
+.OpenRolesTable {
+    margin: 50px 0;
+}
+
+.table-OpenRoles th {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.table-OpenRoles td {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+table tr:nth-child(even) {
+    background-color: #BEF2F5
+}
+
+.pagination li:hover {
+    cursor: pointer;
+}
+
+table tbody tr {
+    display: none;
+}
+
+@media(max-width:652px) {
+
+    .table-OpenRoles th {
+        font-size: 8px;
+        font-weight: 500;
+    }
+
+    .table-OpenRoles tr td {
+        font-size: 8px;
+        font-weight: 300;
+    }
+}
+
+.btn-dropdown {
+    padding: 8px 26px;
+    border-color: #6c757d;
+    background-color: #fff;
+    color: #6c757d;
+    font-weight: 400;
+    border-radius: 10px;
+    margin: 5px;
+    width: 170px;
+}
+
+    .btn-dropdown:hover {
+        padding: 8px 26px;
+        border-color: #515457;
+        background-color: #fff;
+        color: #515457;
+        font-weight: 700;
+        border-radius: 10px;
+        margin: 5px;
+    }

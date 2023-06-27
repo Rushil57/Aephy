@@ -1,0 +1,231 @@
+﻿@{
+    ViewData["Title"] = "CareerOpenRoles";
+    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+}
+
+@*<link href="../assets/css/gigopenings.css" rel="stylesheet" />*@
+<link href="../assets/css/careersstylesheet.css" rel="stylesheet" />
+
+<main id="main" class="main">
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+        <div class="container">
+            <!--Row 1-->
+            <div class="row d-flex justify-content-center first-row" style="background-color:#d38b4e">
+                <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center" style="justify-content:center;">
+                    <div class="left-data">
+                        <h2 data-aos="fade-up">
+                            Open roles
+                        </h2>
+                        <h5>
+                            Join our team and become a part of shaping the future of AI consulting services
+                        </h5>
+                    </div>
+                </div>
+
+                @*<div class="col-lg-1 order-2 order-lg-2">
+                    </div>*@
+
+                <div class="col-lg-6 order-1 order-lg-3 hero-img p-lg-5 p-4" data-aos="zoom-out">
+                    <img src="../assets/img/About/careers/Careers-OpenRoles-banner.png" class="img-banner" alt="">
+                </div>
+            </div>
+        </div>
+    </section><!-- End Hero Section -->
+
+    <section id="OpenRolesTable" class="OpenRolesTable">
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-12 d-block my-2">
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="departments" id="select-departments">
+                        <option value="5000">All Departments</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="locations" id="select-locations">
+                        <option value="5000">All Locations</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="state" id="maxRows">
+                        <option value="5000">Show ALL Rows</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-class" id="table-OpenRoles">
+
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Title</th>
+                            <th>Location</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                        <tr>
+                            <td>NA</td>
+                            <td>NA</td>
+                            <td>NA</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+
+                <!-- Start Pagination -->
+                <div class='pagination-container'>
+                    <nav>
+                        <ul class="pagination">
+
+                            <li data-page="prev" class="btn bg-black bg-opacity-10 m-1">
+                                <span> < <span class="sr-only"></span></span>
+                            </li>
+                            <!--	Here the JS Function Will Add the Rows -->
+                            <li data-page="next" id="prev" class="btn bg-black bg-opacity-10 m-1">
+                                <span> > <span class="sr-only"></span></span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div> 
+        <!--  Developed By Yasser Mas -->
+    </section>
+
+    <section id="JoinUs" class="JoinUs">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 content order-lg-first order-first">
+                    <img src="../assets/img/about/careers/careers-hiring-responsibilities.png" class=" img-fluid" alt="">
+                </div>
+                <div class="col-lg-6 px-lg-5 order-lg-last order-last">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <h3>
+                        Our Hiring Responsibility
+                    </h3>
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>Diversity and inclusion</h5>
+                                <p>
+                                    We are committed to building a diverse and inclusive team, and we actively seek out candidates from all backgrounds and walks of life.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>
+                                    Ongoing training and development
+                                </h5>
+                                <p>
+                                    We believe in investing in our employees and providing ongoing training and development opportunities to help them grow and advance in their careers.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>
+                                    Competitive compensation and benefits
+                                </h5>
+                                <p>
+                                    We offer competitive compensation packages and a range of benefits to attract and retain top talent.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>
+                                    Open communication and collaboration
+                                </h5>
+                                <p>
+                                    We foster a culture of open communication and collaboration, where everyone's ideas and contributions are valued and respected.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>
+                                    Flexibility and work-life balance
+                                </h5>
+                                <p>
+                                    We understand the importance of work-life balance and offer flexible working arrangements to help our employees achieve their personal and professional goals.
+                                </p>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <i class="bi bi-caret-right-fill"></i>
+                            <div>
+                                <h5>
+                                    Rigorous screening
+                                </h5>
+                                <p>
+                                    We take our hiring process seriously and make sure that all candidates go through a thorough screening process to ensure that we only hire the best talent.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div> <!-- 		End of Container -->
+    </section>
+</main>
+
+<script src="~/assets/js/opengigroles.js"></script>
+
+

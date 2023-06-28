@@ -48,5 +48,20 @@ namespace Aephy.WEB.Controllers
         {
             return View();
         }
+
+        public ActionResult Contact()
+        {
+            return View();
+        }
+
+        public ActionResult PostYourRequest()
+        {
+            return View();
+        }
+
+        public ActionResult BrowseSolution()
+        {
+            return View();
+        }
     }
 }

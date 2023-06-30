@@ -1,0 +1,409 @@
+﻿/**
+* Template Name: NiceAdmin
+* Updated: May 30 2023 with Bootstrap v5.3.0
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+*/
+
+/*--------------------------------------------------------------
+# General  #c27714 #d68315 #c78228 #c28029
+--------------------------------------------------------------*/
+:root {
+    scroll-behavior: smooth;
+    --brand: #d38b4e;
+    --gray: #a6a6a6;
+    --aephy: #c27714;
+    --btnbrand: #d49255;
+    --dark: #092032;
+    --body: #516171;
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0px 6px 30px rgba(0, 0, 0, 0.08);
+    --font-title: #414141;
+    --font-title-hover: #272729;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background: #ffffff;
+    color: #444444;
+}
+
+a {
+    color: var(--dark);
+    transition: all 0.4s ease;
+    font-weight: 500;
+}
+
+    a:hover {
+        color: var(--btnbrand);
+    }
+
+.col-auto {
+    align-self: center;
+}
+
+section {
+    padding: 0;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.section-header {
+    text-align: left;
+    padding: 10px 0;
+    position: relative;
+}
+
+    .section-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 20px;
+        color: var(--font-title); /*#001973*/
+        position: relative;
+        z-index: 2;
+        padding: 10px;
+    }
+
+        .section-header h2:after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--color-primary);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+    .section-header span {
+        position: absolute;
+        top: 46px;
+        color: rgba(14, 29, 52, 0.06);
+        left: 0;
+        right: 0;
+        z-index: 1;
+        font-weight: 700;
+        font-size: 56px;
+        text-transform: uppercase;
+        line-height: 0;
+    }
+
+    .section-header p {
+        margin-bottom: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+@media (max-width: 640px) {
+    .section-header h2 {
+        font-size: 28px;
+        margin-top: 15px;
+    }
+
+    .section-header span {
+        font-size: 38px;
+    }
+}
+
+.btn {
+    padding: 8px 26px;
+}
+
+.btn-white {
+    width:100%;
+    height:150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid rgba(68,68,68,0.1);
+    background-color: white;
+    color: black;
+}
+
+    .btn-white:hover {
+        background-color: var(--aephy);
+        border: 1px solid rgba(68,68,68,0.7);
+        color: #fff;
+    }
+
+
+@media(max-width:500px){
+    .btn-white {
+        height: 100px;
+    }
+}
+
+@media(max-width:400px) {
+    .btn-white {
+        height: 80px;
+    }
+}
+
+.btn-brand {
+    border-color: var(--brand);
+    background-color: var(--brand);
+    color: #fff;
+    margin: 10px;
+    font-size: 16px;
+}
+
+    .btn-brand:hover {
+        background-color: var(--aephy);
+        border-color: var(--aephy);
+    }
+
+@media(max-width:400px) {
+    .btn-brand {
+        border-color: var(--brand);
+        background-color: var(--brand);
+        color: #fff;
+        margin: 5px;
+        font-size: 12px;
+    }
+}
+
+@media(max-width:390px) {
+    .btn-brand {
+        border-color: var(--brand);
+        background-color: var(--brand);
+        color: #fff;
+        margin: 5px;
+        font-size: 10px;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Nunito", sans-serif;
+}
+
+/*--------------------------------------------------------------
+# Page Title
+--------------------------------------------------------------*/
+.pagetitle {
+    margin-bottom: 10px;
+}
+
+    .pagetitle h1 {
+        font-size: 24px;
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #012970;
+    }
+/*---------------------------------------------------------
+        # Clients Short Reviews
+     ----------------------------------------------------------
+    */
+
+.shortreviews .box {
+    background: var(--brand);
+    min-height: 500px;
+    margin: 10px !important;
+    padding: 20px !important;
+    position: relative;
+    border-radius: 8%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+    .shortreviews .box .content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        padding-top: 10px;
+    }
+
+    .shortreviews .box .name {
+        font-weight: 600;
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .shortreviews .box .title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #fff;
+        padding-bottom: 10px;
+    }
+
+.shortreviews .content .image img {
+    object-fit: cover;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    border: 2px solid #fff;
+    margin-right: 5px;
+}
+
+.shortreviews .content .sub div {
+    flex-shrink: 0;
+    color: #fff;
+    margin-right: 2px;
+}
+
+.shortreviews .content i {
+    color: #fff;
+    margin-right: 2px;
+    line-height: 1;
+}
+
+.child {
+    padding-top: 10px;
+    position: absolute;
+    background-color: var(--brand);
+    bottom: 20px;
+}
+
+.middle-child {
+    padding-top: 10px;
+    position: absolute;
+    background-color: var(--gray);
+    bottom: 20px;
+}
+
+.content .right-info {
+    position: absolute;
+    right: 0px;
+}
+
+.shortreviews .box .icon-msg i {
+    flex-shrink: 0;
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    padding-bottom: 10px;
+    line-height: 0;
+}
+
+.shortreviews .box .description {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    padding: 10px;
+}
+
+/*--------------------------------------------------------------
+# Project Section
+--------------------------------------------------------------*/
+/*#whyAephy {
+    background-color: #dee0e3;
+}*/
+.Project .row {
+    overflow: hidden;
+}
+
+.Project .right-box {
+    background-color: #dee0e3;
+    padding: 20px;
+}
+
+    .Project .right-box p {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+.Project .left-box {
+    background-color: #dee0e3;
+    padding: 20px;
+}
+
+.Project h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--font-title);
+}
+
+@media(max-width:640px){
+    .Project h3 {
+        font-size: 28px;
+    }
+}
+
+@media(max-width:500px) {
+    .Project h3 {
+        font-size: 22px;
+    }
+}
+
+@media(max-width:500px) {
+    .Project h3 {
+        font-size: 20px;
+    }
+}
+
+.Project .description p {
+    position: relative;
+    text-align: center;
+    color: #444444;
+    padding: 80px 120px;
+}
+
+.Project .extra-options {
+    position: relative;
+    text-align: center;
+}
+
+@media(max-width:770px) {
+    .Project .description p {
+        padding: 80px 0;
+    }
+}
+
+.Project .detailRow{
+    margin:10px;
+}
+
+.Project .val {
+    position: absolute;
+    right: 0;
+    display:contents;
+}
+
+.Project .radio-inline h4 {
+    font-size: 20px;
+}
+
+.Project .radio-inline h5 {
+    font-size:18px;
+    opacity:0.5;
+}
+
+@media(max-width:450px){
+    .Project .radio-inline h4{
+        font-size:18px;
+    }
+    .Project .radio-inline h5 {
+        font-size: 16px;
+    }
+}
+
+@media(max-width:350px) {
+    .Project .radio-inline h4 {
+        font-size: 17px;
+    }
+
+    .Project .radio-inline h5 {
+        font-size: 14px;
+    }
+}
+
+@media(max-width:300px) {
+    .Project .radio-inline h4 {
+        font-size: 16px;
+    }
+
+    .Project .radio-inline h5 {
+        font-size: 12px;
+    }
+}

@@ -61,6 +61,36 @@ namespace Aephy.WEB.Controllers
 
         public ActionResult BrowseSolution()
         {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult BrowseSolution(string service,string solution,string industry)
+        {
+            string pagePath;
+            if (string.IsNullOrEmpty(service) && string.IsNullOrEmpty(solution) && string.IsNullOrEmpty(solution))
+            {
+                return View();
+            }
+            else
+            {
+                if (service != "default" && solution != "default" && industry != "default")
+                {
+                    pagePath = service + " > " + solution + " ( " + industry + " ) ";
+
+                    ViewBag.pagePath = pagePath;
+
+                    TempData["pagePath"] = pagePath;
+
+                    return View("Project");
+                }
+            }
+            return View();
+        }
+
+        public ActionResult Project()
+        {
             return View();
         }
     }

@@ -191,11 +191,7 @@ h6 {
 
     .hero .highlightCol {
         justify-content: center;
-        position: absolute;
-        right: 0;
-        height: 100%;
         background-color: rgba(211, 139, 78,0.7);
-        border-radius: 0 10px 10px 0;
     }
 
     .hero h2 {
@@ -213,6 +209,15 @@ h6 {
     .hero .highlightCol {
         bottom: 0;
     }
+}
+
+@media(max-width:993px){
+    .hero .highlightCol {
+        height:50%;
+        position:absolute;
+        bottom:0;
+    }
+
 }
 
 .hero p {

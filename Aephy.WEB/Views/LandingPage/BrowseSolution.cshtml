@@ -77,6 +77,8 @@
                                 <i class="bi bi-shop-window"></i>
                                 <label>Retail</label>
                                 <i class="bi bi-credit-card"></i>
+                                <label>Finance</label>
+                                <label class="pl-5">+ 7 more</label>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -111,6 +113,8 @@
                                 <i class="bi bi-shop-window"></i>
                                 <label>Retail</label>
                                 <i class="bi bi-credit-card"></i>
+                                <label>Finance</label>
+                                <label class="pl-5">+ 7 more</label>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -145,6 +149,8 @@
                                 <i class="bi bi-shop-window"></i>
                                 <label>Retail</label>
                                 <i class="bi bi-credit-card"></i>
+                                <label>Finance</label>
+                                <label class="pl-5">+ 7 more</label>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -192,8 +198,8 @@
                                 {
                                     <div class="col d-flex flex-column">
                                         <label data-aos="fade-up">Select Service</label>
-                                        <select class="dropdown btn-dropdown form-select" name="service" id="confirm-services" placeholder="Select Services">
-                                            <option value="default">Select Service</option>
+                                        <select class="dropdown btn-dropdown form-select" name="service" id="confirm-services" title="Select Services" required>
+                                            @*<option value="default" selected disabled>Select Service</option>*@
                                             <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
                                             <option value="AI Engineering">AI Engineering</option>
                                             <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
@@ -203,8 +209,8 @@
 
                                     <div class="col d-flex flex-column">
                                         <label data-aos="fade-up">Select Solution</label>
-                                        <select class="dropdown btn-dropdown form-select" name="solution" id="confirm-solutions" placeholder="Select Solutions">
-                                            <option value="default">Select Solution</option>
+                                        <select class="dropdown btn-dropdown form-select" name="solution" id="confirm-solutions" title="Select Solutions" required>
+                                            @*<option value="default" selected disabled>Select Solution</option>*@
                                             <option value="AI Roadmap Development">AI Roadmap Development</option>
                                             <option value="AI Readiness Assessment">AI Readiness Assessment</option>
                                             <option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
@@ -215,8 +221,9 @@
 
                                     <div class="col d-flex flex-column">
                                         <label data-aos="fade-up">Select Industry</label>
-                                        <select class="dropdown btn-dropdown form-select" name="industry" id="confirm-industries" placeholder="Select Industry">
-                                            <option value="default">Select Industry</option>
+                                        <select class="dropdown btn-dropdown form-select" name="industry" id="confirm-industries" title="Select Industry" required>
+                                            Select Industry
+                                            @*<option value="default" selected disabled>Select Industry</option>*@
                                             <option value="Retail">Retail</option>
                                             <option value="Finance">Finance</option>
                                             <option value="Healthcare">Healthcare</option>
@@ -296,7 +303,7 @@
         }
     }
 
-    function callProjectPage(){
+   /* function callProjectPage(){
 
         var pagePath;
 
@@ -318,5 +325,5 @@
         }else{
             alert('please select a solution..')
         }
-    }
+    } */
 </script>

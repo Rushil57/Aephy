@@ -58,7 +58,7 @@ section {
     .section-header h2 {
         font-size: 32px;
         font-weight: 700;
-        text-transform: uppercase;
+       /* text-transform: uppercase;*/
         margin-top: 20px;
         color: var(--brand); /*#001973*/
         position: relative;

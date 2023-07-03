@@ -77,7 +77,7 @@ namespace Aephy.WEB.Controllers
             {
                 if (service != "default" && solution != "default" && industry != "default")
                 {
-                    pagePath = service + " > " + solution + " ( " + industry + " ) ";
+                    pagePath = service + " > " + solution + " / " + industry ;
 
                     ViewBag.pagePath = pagePath;
 

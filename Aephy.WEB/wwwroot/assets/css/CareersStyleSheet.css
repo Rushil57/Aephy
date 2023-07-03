@@ -247,7 +247,7 @@ h6 {
     font-weight: 600;
     font-size: 28px;
     padding: 20px 0;
-    color:var(--brand)
+    color: black;
 }
 
 @media(max-width:530px) {
@@ -318,8 +318,8 @@ h6 {
     color: #fff;
     background-color: var(--brand);
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
+    height: 70px;
+    width: 70px;
     border: 2px solid #fff;
     outline: 2px solid #fff;
     outline-offset: -8px;

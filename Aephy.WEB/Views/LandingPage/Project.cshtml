@@ -13,6 +13,7 @@
                 <h4>@ViewBag.pagePath</h4>
                 @*<h4>@TempData["pagePath"]</h4>*@
             </div>
+            <!-- First Row -->
             <div class="row justify-content-center mx-lg-4">
                 <!-- first column -->
                 <div class="col-lg-5 order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
@@ -24,12 +25,12 @@
                             <input type="radio" name="preferOption" label="Customize Project" value="customize" />
                         </div>
                     </div>
-                    <div class="row m-lg-2 m-4 pt-4">
+                    <div class="row m-lg-2 pt-4">
                         <h5>
                             Select size and approximate price
                         </h5>
                     </div>
-                    <div class="row m-lg-2 m-4 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
+                    <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                         <div class="col-4">
                             <label class="radio-inline" style="text-align:center;">
                                 <input class="form-check-input" type="radio" name="projType" value="small" checked/>
@@ -82,6 +83,16 @@
                     <p>
                         Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
                     </p>
+                </div>
+            </div>
+
+            <!-- Second Row for description -->
+            <div class="row mx-lg-4 second-row">
+                <div class="col-lg-6 col-12 content mx-lg-4 px-4">
+                    <h3 class="pt-2">Solution</h3>
+                    <p>
+                        Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
+                    </p>
                     <div class="row m-lg-2 m-4 d-flex justify-content-center align-center align-items-center RButtons">
                         <div class="col-lg-4 col-md-4 d-flex justify-content-center">
                             <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked />
@@ -93,11 +104,11 @@
                             <input type="radio" id="projSize" name="projSize" label="Large" value="large" />
                         </div>
                     </div>
-                    <h3 class="pt-2">Description</h3>
-                    <p class="creaetdBy">Created by project architect</p>
-                    <p>
+                    <h4 class="pt-2">Description</h4>
+                    <h5 class="creaetdBy">Created by project architect</h5>
+                    <h5>
                         A general description created by project leader<br />Guidelines:<br />Paragraph 1: This description could focus on the benefits and outcomes that the project is expected to deliver. It could also highlight any unique features or advantages that make the project stand out from others in the same field.<br />Paragraph 2: Include a brief overview of the process that will be followed to complete the project, including any milestones or deliverables that are included.<br />Overall, the goal of summary should be to give potential clients a clear understanding of what they can expect to achieve by working with you and your team.<br />
-                    </p>
+                    </h5>
                 </div>
             </div>
         </div>
@@ -182,7 +193,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-8 d-flex justify-content-center">
+                        <div class="col-lg-6 col-md-6 d-flex justify-content-center">
                             <div class="cantent">
                                 <div class="image">
                                     <i class="bi bi-skip-forward"></i>
@@ -290,9 +301,10 @@
                 </div>
             </div>
 
-            <div class="row-12 justify-content-center mx-lg-4">
+            <!-- Successfull Projects row-->
+            <div class="row-12 justify-content-center mx-lg-4" id="successfullProjects">
                 <div class="col-lg-8 col-12 content mx-lg-4 px-4">
-                    <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
+                    <div class="row m-lg-2 d-flex justify-content-center align-center RButtons">
                         <h3 class="pt-2 justify-content-center">
                             Successful projects
                         </h3>
@@ -306,7 +318,7 @@
                                 <div class="description">
                                     Our team developed an AI strategy and roadmap for a retail bank that included implementing chatbots and voice assistants to automate customer service processes, improve response times, and reduce costs. Additionally, we identified opportunities to use machine learning algorithms to personalize marketing campaigns and product recommendations.
                                 </div>
-                                <div class="child col-10 mx-2">
+                                <div class="child col-10 mx-lg-2">
                                     <div class="title border-bottom">
                                         Results
                                     </div>
@@ -328,16 +340,16 @@
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                            <div class="box">
+                            <div class="box" style="background-color:#a6a6a6">
                                 <div class="icon-msg">
                                     <h3>
                                         Portfolio Management
                                     </h3>
                                 </div>
                                 <div class="description">
-                                    “ Aephy has been a game-changer for my business. I was able to find a project that not only met but exceeded my expectations. I am extremely happy with the outcome. I would definitely use this platform again in the future.”
+                                    An AI roadmap that included implementing natural language processing (NLP) and deep learning algorithms to analyze market data, identify trends and patterns, and provide investment recommendations. We also implemented a risk management system that used machine learning to monitor portfolio risk in real-time and provide alerts when necessary.
                                 </div>
-                                <div class="child col-10 mx-2">
+                                <div class="child col-10 mx-lg-2" style="background-color:#a6a6a6">
                                     <div class="title border-bottom">
                                         Results
                                     </div>
@@ -361,6 +373,127 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Reviews row -->
+            <div class="row-12 justify-content-center mx-lg-4 reviews">
+                <div class="col-lg-6 col-12 content mx-lg-5 mx-0" id="leftReview"`>
+                    <div class="col-12 my-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="box">
+                            <div class="title">
+                                Michael – Project Manager Anomaly Detection
+                            </div>
+                            <div class="detailReview">
+                                Michael is a highly skilled professional with expertise in anomaly detection for manufacturing. He has excellent communication skills and a track record of identifying and resolving critical issues in production processes. Mike's experience and dedication have helped companies reduce waste and increase efficiency.
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="image">
+                                <div>MR</div>
+                            </div>
+                            <div class="info">
+                                <div class="name">Michael Rose</div>
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <label> 4.9 / 5 </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 my-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="box">
+                            <div class="title">
+                                Anna – Expert AI Roadmap Development
+                            </div>
+                            <div class="detailReview">
+                                Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="image">
+                                <div>AL</div>
+                            </div>
+                            <div class="info">
+                                <div class="name">   Anna Lakhani</div>
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <label>4.8/5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Row 3 Personalize Project-->
+            <div class="row JoinUs" style="padding:50px 0;">
+                <div class="col-lg-6 px-lg-5">
+                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
+                    <h3>
+                        Client Guide
+                    </h3>
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bi bi-send"></i>
+                            <div>
+                                <h5>
+                                    After purchasing the project
+                                </h5>
+                                <p>
+                                    Upon purchase, the project will commence within 1-3 days or at a later date upon client request. The client has the flexibility to choose the frequency of communication with the team.
+                                    
+                                </p>
+                                <details>
+                                <summary class="collapsible">Expand</summary>
+                                <div class="content">
+                                        (Expand section updated by senior project leader)
+                                    </div>
+                                </details>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-send"></i>
+                            <div>
+                                <h5>
+                                    Additional information needed
+                                </h5>
+                                <p>
+                                    In order to ensure the delivery of thorough and precise projects, our team of experts will need the following information:
+                                    
+                                </p>
+                                <details>
+                                <summary class="collapsible">Expand</summary>
+                                <div class="content">
+                                        (Expand section updated by senior project leader)
+                                </div>
+                                </details>
+                            </div>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300">
+                            <i class="bi bi-send"></i>
+                            <div>
+                                <h5>
+                                    Review the project, release payment, and leave feedback
+                                </h5>
+                                <p>
+                                    Payment will be processed once the project requirements have been fulfilled and the client is satisfied with the outcome. 
+                                </p>
+                                <details>
+                                    <summary class="collapsible">Expand</summary>
+                                    <div class="content">
+                                            Our platform provides an escrow service to ensure that funds are held securely until a project is completed. Funds are released to the freelancer only when the client approves the completed project or when the dispute resolution process is successfully completed
+                                    </div>
+                                </details>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </section>
 </main>

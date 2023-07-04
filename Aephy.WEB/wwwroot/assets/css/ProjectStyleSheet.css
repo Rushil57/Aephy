@@ -596,17 +596,17 @@ h6 {
      ----------------------------------------------------------
     */
 
-.Project .box {
+#successfullProjects .box {
     background: var(--brand);
     min-height: 500px;
     margin: 10px !important;
     padding: 20px !important;
     position: relative;
-    border-radius: 8%;
+    border-radius: 30px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-    .Project .box .content {
+    #successfullProjects .box .content {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -614,31 +614,36 @@ h6 {
         padding-top: 10px;
     }
 
-    .Project .box .name {
+    #successfullProjects .box .name {
         font-weight: 600;
         font-size: 20px;
         color: #fff;
     }
 
-    .Project .box .title {
+    #successfullProjects .box .title {
         font-size: 22px;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
     }
+    #successfullProjects .box .sub-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+    }
 
-.box .sub div {
-    flex-shrink: 0;
-    color: #fff;
-    margin-right: 2px;
-    display:table-caption;
-}
+    #successfullProjects .box .sub div {
+        flex-shrink: 0;
+        color: #fff;
+        margin-right: 2px;
+        display: table-caption;
+    }
 
-.box i {
-    color: #fff;
-    margin-right: 2px;
-    line-height: 1;
-}
+    #successfullProjects .box i {
+        color: #fff;
+        margin-right: 2px;
+        line-height: 1;
+    }
 
 .child {
     padding-top: 10px;
@@ -647,31 +652,256 @@ h6 {
     bottom: 20px;
 }
 
-.middle-child {
+@media(max-width:350px){
+
+    #successfullProjects .box .name {
+        font-weight: 600;
+        font-size: 18px;
+        color: #fff;
+    }
+
+    #successfullProjects .box .title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        padding-bottom: 10px;
+    }
+    #successfullProjects .box .sub-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+    }
+}
+
+.Project .second-row h5 {
+    font-size: 16px;
+    font-weight: 500;
+}
+.Project .second-row h4 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--font-title);
+}
+
+@media(max-width:768px) {
+    .Project .left-box p{
+        display:none;
+    }
+    .Project .left-box h3{
+        display:none;
+    }
+    .Project .second-row p {
+        display: flex;
+    }
+
+    .Project .second-row h3 {
+        display: flex;
+    }
+}
+@media(min-width:769px) {
+    .Project .left-box p {
+        display: flex;
+    }
+
+    .Project .left-box h3 {
+        display: flex;
+    }
+    .Project .second-row p {
+        display: none;
+    }
+
+    .Project .second-row h3 {
+        display: none;
+    }
+}
+
+/*.middle-child {
     padding-top: 10px;
     position: absolute;
     background-color: var(--gray);
     bottom: 20px;
-}
+}*/
 
 .content .right-info {
     position: absolute;
     right: 0px;
 }
 
-.Project .box .icon-msg h3{
+#successfullProjects .box .icon-msg h3 {
     flex-shrink: 0;
     font-size: 20px;
     font-weight: 800;
     color: #fff;
     padding: 10px 10px 20px 10px;
     line-height: 0;
-    display:unset;
+    display: unset;
 }
 
-.Project .box .description {
+#successfullProjects .box .description {
     font-size: 17px;
     font-weight: 600;
     color: #fff;
-    padding: 10px;
+    padding: 10px 10px 150px 10px;
+}
+
+/*---------------------------------------------------------
+        # Clients Review
+     ----------------------------------------------------------
+*/
+
+.reviews .box {
+    background: #fff;
+    /*  margin: 10px !important;*/
+    margin-top: 0;
+    padding: 13px !important;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
+    width: 100%;
+    min-height: 250px;
+}
+
+.reviews .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    padding-top: 10px;
+    margin-left: 10%;
+    margin-top: 1%;
+}
+
+.reviews .info .name {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.reviews .title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--brand);
+    padding-bottom: 10px;
+}
+
+.reviews .content .image div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    font-size: 18px;
+    color: #fff;
+    background-color: var(--brand);
+    border-radius: 50%;
+    height: 65px;
+    width: 65px;
+    border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
+    margin-right: 5px;
+}
+
+.reviews .content .stars i {
+    flex-shrink: 0;
+    color: var(--brand);
+    margin-right: 2px;
+    line-height: 0;
+}
+
+#reviews .float-child {
+    float: left;
+    padding: 20px;
+}
+
+#reviews #RightReview {
+    margin-top: 5%;
+}
+
+/*.float-child .content {
+    margin-left: 10%;
+    margin-top: 1%;
+}*/
+.float-child .content .stars {
+}
+
+.detailReview {
+    font-size: 20px;
+}
+
+/*--------------------------------------------------------------
+# JoinUs Section
+--------------------------------------------------------------*/
+
+.title label {
+    font-weight: 600;
+    font-size: 28px;
+    padding: 20px 0;
+}
+
+.JoinUs h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: black;
+}
+
+.JoinUs img {
+    width: 100%;
+    height: 100%;
+    transition: 0.3s ease-in-out;
+    align-self: center;
+}
+
+.JoinUs ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .JoinUs ul li {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 40px;
+    }
+
+    .JoinUs ul i {
+        flex-shrink: 0;
+        font-size: 28px;
+        color: var(--brand);
+        margin-right: 20px;
+        line-height: 0;
+    }
+
+    .JoinUs ul h5 {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: var(--font-secondary);
+        color: var(--font-title);
+    }
+
+    .JoinUs ul p {
+        font-size: 15px;
+    }
+
+.JoinUs p:last-child {
+    margin-bottom: 0;
+}
+
+.JoinUs .collapsible {
+    color: var(--brand);
+    cursor: pointer;
+    padding: 5px 0;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    background-color:#fff;
+}
+
+.JoinUs .active .collapsible:hover {
+    color: var(--aephy);
+}
+
+.JoinUs .content {
+    overflow: hidden;
+    transition: all 0.4s ease;
 }

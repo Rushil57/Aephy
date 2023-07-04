@@ -69,7 +69,7 @@
                                                 </li>
 
                                                 <li class="dropdown-item">
-                                                    <a href="#" class="stretched-link" onclick="OpenPostModalPopup()" style="text-decoration: none;">
+                                                    <a href="#" onclick="OpenPostModalPopup()" style="text-decoration: none;">
                                                         Post Your Solutions
                                                     </a>
                                                 </li>
@@ -289,13 +289,13 @@
                         <i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
-                    <div class="container-fluid containerModel">
+                    <div class="container-fluid">
                         <div id="ServicesForm">
-                            <div class="container" style="padding:2%;">
+                            <div class="container">
                                 <form action="#">
                                     <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Select Service</label>
-                                        <select class="dropdown btn-dropdown form-select" name="service" id="select-services">
+                                        <select class="dropdown form-select" name="service" id="select-services">
                                             <option value="All">All Services</option>
                                             <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
                                             <option value="AI Engineering">AI Engineering</option>
@@ -304,9 +304,9 @@
                                         </select>
                                     </div>
 
-                                    <div class="col d-flex flex-column pt-3">
+                                    <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Select Industry</label>
-                                        <select class="dropdown btn-dropdown form-select" name="solution" id="select-solutions">
+                                        <select class="dropdown form-select" name="solution" id="select-solutions">
                                             <option value="All">All Solutions</option>
                                             <option value="AI Roadmap Development">AI Roadmap Development</option>
                                             <option value="AI Readiness Assessment">AI Readiness Assessment</option>
@@ -316,9 +316,9 @@
                                         </select>
                                     </div>
 
-                                    <div class="col d-flex flex-column pt-3">
+                                    <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Select Solution</label>
-                                        <select class="dropdown btn-dropdown form-select" name="level" id="select-levels">
+                                        <select class="dropdown form-select" name="level" id="select-levels">
                                             <option value="5000">All Levels</option>
                                             <option value="5">5</option>
                                             <option value="10">10</option>
@@ -333,24 +333,24 @@
                             </div>
                         </div>
                         <div style="display:none;" id="ClientForm">
-                            <div class="container" style="padding:2%;">
+                            <div class="container">
                                 <form action="#">
                                     <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">What's the project title</label>
                                         <input type="text" class="form-control" placeholder='Example: Create AI roadmap'>
                                     </div>
 
-                                    <div class="col d-flex flex-column pt-3">
+                                    <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Description</label>
                                         <input type="text" class="form-control" placeholder='Include all the relevant project details'>
                                     </div>
 
-                                    <div class="col d-flex flex-column pt-3">
+                                    <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Attach relevant file</label>
                                         <input type="file" class="form-control">
                                     </div>
 
-                                    <div class="col d-flex flex-column pt-3">
+                                    <div class="col d-flex flex-column pt-2">
                                         <label data-aos="fade-up">Delivery time</label>
                                         <input type="date" class="form-control">
                                     </div>

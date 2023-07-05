@@ -60,7 +60,7 @@ section {
         font-weight: 700;
        /* text-transform: uppercase;*/
         margin-top: 20px;
-        color: var(--brand); /*#001973*/
+        /*color: var(--brand);*/ /*#001973*/
         position: relative;
         z-index: 2;
         padding: 10px;
@@ -164,7 +164,6 @@ h6 {
 .AlwaysEvolving .first-row {
     text-align: center;
     min-height: 50vh;
-    background-color: #f5f5f5;
     background-size: cover;
     background-position: center;
     position: relative;

@@ -208,7 +208,7 @@ h6 {
         .industries .card .card-img img {
             height:100%;
             width:100%;
-            object-fit: cover;
+            object-fit: revert;
             transition: 0.3s ease-in-out;
             align-self: center;
         }

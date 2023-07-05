@@ -25,10 +25,11 @@
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
+    <link href="~/assets/css/open-accessibility.min.css" rel="stylesheet" />
 </head>
 <body>
     <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top">
+    <header id="header" class="header cls-fixed-top">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-flued align-items-end">
@@ -430,6 +431,8 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
+<script src="~/assets/js/open-accessibility.min.js"></script>
+    <script src="~/assets/js/locale.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -496,6 +499,42 @@
             $("#PreviousButton").css("display", "none")
             $("#PostButton").text("Next")
         }
+
+        $(function () {
+            //$('body').openAccessibility({
+            //    localization: ['en']
+            //});
+
+            $('body').openAccessibility({
+
+                // open the menu on page load
+                 Opened: false,
+
+                // enable the plugin on mobile
+                isMobileEnabled: false,
+
+                // override the settings of the Accessibility Tools
+                grayscale: 0,
+                brightness: 100,
+                contrast: 100,
+                maxZoomLevel: 3,
+                minZoomLevel: 0.5,
+                zoomStep: 0.2,
+                zoom: 1,
+                cursor: false,
+                invert: false,
+
+                // text selector
+                textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
+
+                // s(mall), m(edium), l(arge)
+                iconSize: 'm',
+
+                // local
+                localization: ['en'],
+
+        });
+        })
 
     </script>
 </body>

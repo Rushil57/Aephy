@@ -19,7 +19,7 @@
                 <div class="col-lg-5 order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
                     <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
                         <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                            <input type="radio" name="preferOption" label="Select Project" value="select" checked/>
+                            <input type="radio" name="preferOption" label="Select Project" value="select" checked />
                         </div>
                         <div class="col-lg-6 col-md-6 d-flex justify-content-center">
                             <input type="radio" name="preferOption" label="Customize Project" value="customize" />
@@ -33,7 +33,7 @@
                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                         <div class="col-4">
                             <label class="radio-inline" style="text-align:center;">
-                                <input class="form-check-input" type="radio" name="projType" value="small" checked/>
+                                <input class="form-check-input" type="radio" name="projType" value="small" checked />
                                 <h4>Small</h4>
                                 <h5 style="opacity:0.5;">$100</h5>
                             </label>
@@ -65,7 +65,7 @@
                         <div class="col key">
                             Add more (senior project leader can add up to 3 points here)
                         </div>
-                        <div class="col val"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore"/></div>
+                        <div class="col val"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
                     </div>
 
                     <div class="row m-lg-2 m-4 d-flex justify-content-center align-center">
@@ -78,7 +78,7 @@
 
                 <!-- Second column -->
                 <div class="col-lg-6 content order-first order-lg-first left-box">
-                    <img src="../assets/img/whyaephy/ai-roadmap.png" class="img-flued" style="width:100%"/>
+                    <img src="../assets/img/whyaephy/ai-roadmap.png" class="img-flued" style="width:100%" />
                     <h3 class="pt-2">Solution</h3>
                     <p>
                         Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
@@ -376,7 +376,7 @@
 
             <!-- Reviews row -->
             <div class="row-12 justify-content-center mx-lg-4 reviews">
-                <div class="col-lg-6 col-12 content mx-lg-5 mx-0" id="leftReview"`>
+                <div class="col-lg-6 col-12 content mx-lg-5 mx-0" id="leftReview">
                     <div class="col-12 my-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="box">
                             <div class="title">
@@ -429,6 +429,148 @@
                 </div>
             </div>
 
+            <!--Ratings Scorecard row-->
+            <div class="row mx-lg-4 ratingProgress">
+                <div class="section-header">
+                    <h3 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Solution Reviews</label></h3>
+                </div>
+                <!--col 1-->
+                <div class="col-lg-6 col-12 content">
+                    <div class="row mx-2">
+                        <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill"></i><label class="lblTotalRatings">4.9</label><label class="lblTotalReviews">109</label><label>reviews</label></div>
+                    </div>
+                    <div class="row mx-2 my-2">
+                        <div class="col ProgressTable">
+                            <table>
+                                <thead></thead>
+                                <tbody style="color:#d49255">
+                                    <tr>
+                                        <td>5 stars</td>
+                                        <td><progress id="progress" value="101" max="109"></progress></td>
+                                        <td><label>101</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 stars</td>
+                                        <td><progress id="progress" value="7" max="109"></progress></td>
+                                        <td><label>7</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 stars</td>
+                                        <td><progress id="progress" value="1" max="109"></progress></td>
+                                        <td><label>1</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2 stars</td>
+                                        <td><progress id="progress" value="0" max="109"></progress></td>
+                                        <td><label>0</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1 stars</td>
+                                        <td><progress id="progress" value="0" max="109"></progress></td>
+                                        <td><label>0</label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--col 2-->
+                <div class="col-lg-6 col-12 content ratingBreakdown">
+                    <div class="row mx-lg-0 mx-2"><h4>Rating breakdown</h4></div>
+                    <div class="row mx-lg-0 mx-2">
+                        <div class="col-lg-6 col-12">
+                            <table id="tableRatingBreakdown">
+                                <tbody>
+                                    <tr>
+                                        <td>Availability</td>
+                                        <td><i class="bi bi-star-fill"></i><label>4.9</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Skills</td>
+                                        <td><i class="bi bi-star-fill"></i><label>4.9</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Quality</td>
+                                        <td><i class="bi bi-star-fill"></i><label>4.8</label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <table id="tableRatingBreakdown">
+                                <tbody>
+                                    <tr>
+                                        <td>Deadlines</td>
+                                        <td><i class="bi bi-star-fill"></i><label>5.0</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cooperation</td>
+                                        <td><i class="bi bi-star-fill"></i><label>5.0</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Communication</td>
+                                        <td><i class="bi bi-star-fill"></i><label>4.9</label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <!--col 3-->
+                <div class="col-lg-6 col-12 content clientReviews">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="content">
+                                <div class="image">
+                                    <div>SK</div>
+                                </div>
+                                <div class="info">
+                                    <div class="name">Sean K.</div>
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <label>5.00</label>
+                                        <label class="date">Mar 24,2023</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="title">
+                                    Add excel document into Powerpoint
+                                </div>
+                                <div class="detailReview">
+                                    Did a good job putting an excel into a Powerpoint deck for me
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="content">
+                                <div class="image">
+                                    <div>EC</div>
+                                </div>
+                                <div class="info">
+                                    <div class="name">Eleonora C.</div>
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <label>5.00</label>
+                                        <lable class="date">Mar 23,2023</lable>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="title">
+                                    extra PPT as agreed
+                                </div>
+                                <div class="detailReview">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <!--Row 3 Personalize Project-->
             <div class="row JoinUs" style="padding:50px 0;">
                 <div class="col-lg-6 px-lg-5">
@@ -445,11 +587,11 @@
                                 </h5>
                                 <p>
                                     Upon purchase, the project will commence within 1-3 days or at a later date upon client request. The client has the flexibility to choose the frequency of communication with the team.
-                                    
+
                                 </p>
                                 <details>
-                                <summary class="collapsible">Expand</summary>
-                                <div class="content">
+                                    <summary class="collapsible">Expand</summary>
+                                    <div class="content">
                                         (Expand section updated by senior project leader)
                                     </div>
                                 </details>
@@ -463,13 +605,13 @@
                                 </h5>
                                 <p>
                                     In order to ensure the delivery of thorough and precise projects, our team of experts will need the following information:
-                                    
+
                                 </p>
                                 <details>
-                                <summary class="collapsible">Expand</summary>
-                                <div class="content">
+                                    <summary class="collapsible">Expand</summary>
+                                    <div class="content">
                                         (Expand section updated by senior project leader)
-                                </div>
+                                    </div>
                                 </details>
                             </div>
                         </li>
@@ -480,12 +622,12 @@
                                     Review the project, release payment, and leave feedback
                                 </h5>
                                 <p>
-                                    Payment will be processed once the project requirements have been fulfilled and the client is satisfied with the outcome. 
+                                    Payment will be processed once the project requirements have been fulfilled and the client is satisfied with the outcome.
                                 </p>
                                 <details>
                                     <summary class="collapsible">Expand</summary>
                                     <div class="content">
-                                            Our platform provides an escrow service to ensure that funds are held securely until a project is completed. Funds are released to the freelancer only when the client approves the completed project or when the dispute resolution process is successfully completed
+                                        Our platform provides an escrow service to ensure that funds are held securely until a project is completed. Funds are released to the freelancer only when the client approves the completed project or when the dispute resolution process is successfully completed
                                     </div>
                                 </details>
                             </div>

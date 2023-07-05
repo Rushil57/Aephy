@@ -967,9 +967,14 @@ progress::-webkit-progress-value {
     line-height: 0;
 }
 
-.ratingBreakdown #tableRatingBreakdown tr,td,thead{
-    color:var(--font-title);
-    width:60%;
+.ratingBreakdown #tableRatingBreakdown {
+    color: var(--font-title);
+    width:80%;
+}
+
+.ratingBreakdown #tableRatingBreakdown .rating {
+    color: var(--font-title);
+    text-align: end;
 }
 
 .ratingBreakdown h4{

@@ -338,11 +338,20 @@ h6 {
     margin:0 0 40px 0;
 }
 
+
+.How .fitImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 500px;
+}
+
     .How .card .card-img {
         overflow: hidden;
         margin-top: 15px;
         margin-bottom: 15px;
         border-radius: 7px;
+        height:180px;
     }
 
         .How .card .card-img img {

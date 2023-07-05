@@ -199,9 +199,10 @@ h6 {
 
     .industries .card .card-img {
         overflow: hidden;
-        margin-top:15px;
+        margin-top: 15px;
         margin-bottom: 15px;
         border-radius: 7px;
+        height: 180px;
     }
 
         .industries .card .card-img img {
@@ -286,6 +287,13 @@ h6 {
 --------------------------------------------------------------*/
 #IndustriesInfo {
     background-color: #fff;
+}
+
+.IndustriesInfo .fitImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 500px;
 }
 
 .IndustriesInfo .content h4 {

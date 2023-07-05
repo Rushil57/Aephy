@@ -271,6 +271,13 @@ h6 {
     color: black;
 }
 
+.JoinUs .fitImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 500px;
+}
+
 .JoinUs .content {
     display: flex;
     flex-wrap: wrap;

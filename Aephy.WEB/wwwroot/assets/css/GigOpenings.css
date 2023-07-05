@@ -185,8 +185,8 @@ h6 {
 
     .hero .hero-img .img-banner {
         object-fit: cover;
-        height: auto;
         width: 100%;
+        height:100%;
     }
 
     .hero .highlightCol {
@@ -240,6 +240,13 @@ h6 {
     font-size: 32px;
     font-family: var(--font-secondary);
     color: black;
+}
+
+.JoinUs .fitImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 500px;
 }
 
 .JoinUs img {
@@ -436,6 +443,13 @@ h6 {
 
 .OpenRolesTable{
     margin:50px 0;
+}
+
+.OpenRolesTable .fitImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 500px;
 }
 
 .table-OpenRoles th {

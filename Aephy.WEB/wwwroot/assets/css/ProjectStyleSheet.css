@@ -742,9 +742,6 @@ h6 {
     }
 }
 @media(min-width:992px){
-    .mainProject {
-        margin-top: -660px !important;
-    }
     .rightStickyRow {
         display: flex;
     }

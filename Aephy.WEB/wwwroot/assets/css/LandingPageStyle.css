@@ -1330,6 +1330,7 @@ h6 {
         position: relative;
         color: #142149;
         background-color: #c27714cf;
+        z-index:1000;
     }
 
         .main-footer.sp-two .widgets-section a {

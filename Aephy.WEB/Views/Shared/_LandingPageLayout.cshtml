@@ -38,7 +38,7 @@
                             <div class="col-1">
                                 <div style="display: flex;flex-direction: column;">
                                     <a href="/LandingPage/Index" class="logo" style="display: flex;align-items: flex-start;">
-                                        <img src="~/assets/img/Logo1.png" alt="" style="width: 125px;height: auto;">
+                                        <img src="~/assets/img/Logo1.png" alt="" class="mainLogo">
                                     </a>
                                 </div>
                             </div>
@@ -395,12 +395,22 @@
                                         <form action="#" style="padding-top: 3%;">
                                             <div class="col d-flex flex-column">
                                                 <label data-aos="fade-up">Working Days</label>
-                                                <input type="text" class="form-control" placeholder='5 days'>
+                                                <input type="date" class="form-control">
                                             </div>
 
                                             <div class="col d-flex flex-column pt-2">
                                                 <label data-aos="fade-up">Working Hours</label>
-                                                <input type="text" class="form-control" placeholder='21:00'>
+
+                                                <div class="row pt-2">
+                                                    <div class="col">
+                                                        <label>Start Hour : </label>
+                                                        <input type="text" class="form-control" placeholder='11:00'>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>End Hour : </label>
+                                                        <input type="text" class="form-control" placeholder='11:00'>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -431,8 +441,8 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
-<script src="~/assets/js/open-accessibility.min.js"></script>
-    <script src="~/assets/js/locale.min.js"></script>
+    @*<script src="~/assets/js/open-accessibility.min.js"></script>
+    <script src="~/assets/js/locale.min.js"></script>*@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -500,41 +510,41 @@
             $("#PostButton").text("Next")
         }
 
-        $(function () {
-            //$('body').openAccessibility({
-            //    localization: ['en']
-            //});
+                //$(function () {
+                //    //$('body').openAccessibility({
+                //    //    localization: ['en']
+                //    //});
 
-            $('body').openAccessibility({
+                //    $('body').openAccessibility({
 
-                // open the menu on page load
-                 Opened: false,
+                //        // open the menu on page load
+                //         Opened: false,
 
-                // enable the plugin on mobile
-                isMobileEnabled: false,
+                //        // enable the plugin on mobile
+                //        isMobileEnabled: false,
 
-                // override the settings of the Accessibility Tools
-                grayscale: 0,
-                brightness: 100,
-                contrast: 100,
-                maxZoomLevel: 3,
-                minZoomLevel: 0.5,
-                zoomStep: 0.2,
-                zoom: 1,
-                cursor: false,
-                invert: false,
+                //        // override the settings of the Accessibility Tools
+                //        grayscale: 0,
+                //        brightness: 100,
+                //        contrast: 100,
+                //        maxZoomLevel: 3,
+                //        minZoomLevel: 0.5,
+                //        zoomStep: 0.2,
+                //        zoom: 1,
+                //        cursor: false,
+                //        invert: false,
 
-                // text selector
-                textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
+                //        // text selector
+                //        textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
 
-                // s(mall), m(edium), l(arge)
-                iconSize: 'm',
+                //        // s(mall), m(edium), l(arge)
+                //        iconSize: 'm',
 
-                // local
-                localization: ['en'],
+                //        // local
+                //        localization: ['en'],
 
-        });
-        })
+                //});
+                //})
 
     </script>
 </body>

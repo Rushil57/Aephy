@@ -295,7 +295,7 @@ h6 {
     font-weight: 700;
     font-size: 32px;
     font-family: var(--font-secondary);
-    color: var(--brand);
+    color: var(--font-title);
 }
 
 .why .content ul {
@@ -790,7 +790,7 @@ h6 {
     font-weight: 700;
     font-size: 25px;
     font-family: var(--font-secondary);
-    color: var(--brand);
+    color: var(--font-title);
 }
 
 .AlwaysEvolving .social-links a {
@@ -813,7 +813,7 @@ h6 {
 }
 
 .AlwaysEvolving .fitImage img {
-    height: 75%;
+    height: 100%;
     width: 100%;
 }
 /*---------------------------------------------------------

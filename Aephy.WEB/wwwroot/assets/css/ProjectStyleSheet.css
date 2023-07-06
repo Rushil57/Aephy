@@ -293,10 +293,11 @@ h6 {
 
 .rightStickyRow {
     display:flex;
-    position: sticky !important;
+    position: fixed !important;
     right: 70px;
-    top: 120px;
-    z-index: 99999;
+    top: 90px;
+    z-index: 999;
+
 }
 
 .rightSticky-box {

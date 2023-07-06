@@ -40,6 +40,23 @@ a:hover {
 .col-auto {
     align-self: center;
 }
+
+.mainLogo{
+    width:-webkit-fill-available;
+    height:auto;
+}
+
+@media(max-width:1400px) {
+    .mainLogo {
+        width: 95px;
+    }
+}
+
+@media(max-width:1198px){
+    .mainLogo {
+        width: 125px;
+    }
+}
 /*--------------------------------------------------------------
 # Preloader
 --------------------------------------------------------------*/
@@ -420,7 +437,8 @@ h6 {
     border-color: #ebeef4;
     background-color: #fff;
     color: #798eb3;
-    padding: 15px;
+    /*padding: 15px;*/
+    height:11%;
 }
 
 .card-title {

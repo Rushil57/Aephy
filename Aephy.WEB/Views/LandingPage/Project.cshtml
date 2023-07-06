@@ -5,16 +5,81 @@
 
 <link href="../assets/css/projectstylesheet.css" rel="stylesheet" />
 <main class="main" id="main">
+
+    <!-- First Row -->
+    <div class="row justify-content-end mx-lg-4 rightStickyRow">
+        <!-- first column -->
+        <div class="col-lg-5 order-lg-last order-last rightSticky-box justify-content-center align-items-center" style="height:fit-content">
+            <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
+                <div class="col-lg-6 col-md-6 d-flex justify-content-center">
+                    <input type="radio" name="preferOption" label="Select Project" value="select" checked />
+                </div>
+                <div class="col-lg-6 col-md-6 d-flex justify-content-center">
+                    <input type="radio" name="preferOption" label="Customize Project" value="customize" />
+                </div>
+            </div>
+            <div class="row m-lg-2 pt-4">
+                <h5>
+                    Select size and approximate price
+                </h5>
+            </div>
+            <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
+                <div class="col-4">
+                    <label class="radio-inline" style="text-align:center;">
+                        <input class="form-check-input" type="radio" name="projType" value="small" checked />
+                        <h4>Small</h4>
+                        <h5 style="opacity:0.5;">$100</h5>
+                    </label>
+                </div>
+                <div class="col-4">
+                    <label class="radio-inline" style="text-align:center;">
+                        <input class="form-check-input" type="radio" name="projType" value="medium" />
+                        <h4>Medium</h4>
+                        <h5 style="opacity:0.5;">$200</h5>
+                    </label>
+                </div>
+                <div class="col-4">
+                    <label class="radio-inline" style="text-align:center;">
+                        <input class="form-check-input" type="radio" name="projType" value="large" />
+                        <h4>Large</h4>
+                        <h5 style="opacity:0.5;">$300</h5>
+                    </label>
+                </div>
+            </div>
+            <div class="row me-lg-2 me-4 detailRow">
+                <div class="col key">Duration</div>
+                <div class="col val">2 Weeks</div>
+            </div>
+            <div class="row me-lg-2 me-4 detailRow">
+                <div class="col key">Team Size</div>
+                <div class="col val">2</div>
+            </div>
+            <div class="row me-lg-2 me-4 detailRow">
+                <div class="col key">
+                    Add more (senior project leader can add up to 3 points here)
+                </div>
+                <div class="col val"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+            </div>
+
+            <div class="row m-lg-2 m-4 d-flex justify-content-center align-center">
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <a href="#" class="btn btn-brand" style="width:100%;">Buy($100)</a>
+                    <a href="#" class="btn btn-brand" style="width:100%;">Message</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ======= Project Section ======= -->
-    <section id="Project" class="Project pt-4">
-        <div class="container-flued">
+    <section id="Project" class="Project pt-4 mainProject">
+        <div class="container-flued projectBanner">
             <div class="section-header mx-lg-4">
                 @*<span>For Ai Gigs</span>*@
                 <h4>@ViewBag.pagePath</h4>
                 @*<h4>@TempData["pagePath"]</h4>*@
             </div>
             <!-- First Row -->
-            <div class="row justify-content-center mx-lg-4">
+            <div class="row justify-content-start mx-lg-4">
                 <!-- first column -->
                 <div class="col-lg-5 order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
                     <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
@@ -175,7 +240,7 @@
             </div>
 
             <div class="row-12 justify-content-center mx-lg-4 my-lg-5 my-3">
-                <div class="col-lg-8 col-12 content mx-lg-4 px-4">
+                <div class="col-lg-6 col-12 content">
                     <!-- first row -->
                     <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
                         <div class="col-lg-6 col-md-6 d-flex justify-content-center">
@@ -303,7 +368,7 @@
 
             <!-- Successfull Projects row-->
             <div class="row-12 justify-content-center mx-lg-4" id="successfullProjects">
-                <div class="col-lg-8 col-12 content mx-lg-4 px-4">
+                <div class="col-lg-6 col-12 content">
                     <div class="row m-lg-2 d-flex justify-content-center align-center RButtons">
                         <h3 class="pt-2 justify-content-center">
                             Successful Projects
@@ -434,8 +499,10 @@
                 <div class="section-header">
                     <h3 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Solution Reviews</label></h3>
                 </div>
-                <!--col 1-->
-                <div class="col-lg-6 col-12 content">
+                <div class="col-12 col-lg-6 col-md-6">
+                    <div class="row">
+                    <!--col 1-->
+                    <div class="col-6 content">
                     <div class="row mx-2">
                         <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill"></i><label class="lblTotalRatings">4.9</label><label class="lblTotalReviews">109</label><label>reviews</label></div>
                     </div>
@@ -474,8 +541,8 @@
                         </div>
                     </div>
                 </div>
-                <!--col 2-->
-                <div class="col-lg-6 col-12 content ratingBreakdown">
+                    <!--col 2-->
+                    <div class="col-6 content ratingBreakdown">
                     <div class="row mx-lg-0 mx-2"><h4>Rating breakdown</h4></div>
                     <div class="row mx-lg-0 mx-2">
                         <div class="col-lg-6 col-12">
@@ -518,8 +585,11 @@
 
                     </div>
                 </div>
+                    </div>
+                </div>
+                <div class="row mx-lg-4 ratingProgress">
                 <!--col 3-->
-                <div class="col-lg-6 col-12 content clientReviews">
+                    <div class="col-lg-6 col-12 content clientReviews">
                     <div class="row">
                         <div class="col-12">
                             <div class="content">
@@ -570,6 +640,7 @@
 
                     </div>
                 </div>
+                </div>
             </div>
             <!--Row 3 Personalize Project-->
             <div class="row JoinUs" style="padding:50px 0;">
@@ -586,7 +657,7 @@
                                     After purchasing the project
                                 </h5>
                                 <p>
-                                    Upon purchase, the project will commence within 1-3 days or at a later date upon client request. The client has the flexibility to choose the frequency of communication with the team.
+                                    Upon purchase, the project will commence within 2-4 days or at a later date upon client request. The client has the flexibility to choose the frequency of communication with the team.
 
                                 </p>
                                 <details>

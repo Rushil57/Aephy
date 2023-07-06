@@ -278,6 +278,12 @@ h6 {
     height: 500px;
 }
 
+@media(max-width:768px) {
+    .JoinUs .fitImage {
+        height: auto;
+    }
+}
+
 .JoinUs .content {
     display: flex;
     flex-wrap: wrap;
@@ -359,9 +365,9 @@ h6 {
         color: var(--brand);
     }
 
-    .JoinUs ul p {
+    /*.JoinUs ul p {
         font-size: 15px;
-    }
+    }*/
 
 .JoinUs p:last-child {
     margin-bottom: 0;

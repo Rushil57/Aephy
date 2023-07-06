@@ -317,6 +317,32 @@ h6 {
     color: rgba(68,68,68,0.5);
 }
 
+@media(max-width:768px) {
+    .ServicesInfo .fitImage {
+        height: auto;
+    }
+    .ServicesInfo .content h3 {
+        font-size: 20px;
+    }
+    .ServicesInfo .content h4 {
+        font-size: 20px;
+    }
+    .AiIntro .content h3 {
+        font-size: 28px;
+    }
+}
+
+@media(max-width:400px) {
+    .ServicesInfo .content h3 {
+        font-size: 18px;
+    }
+    .ServicesInfo .content h4 {
+        font-size: 18px;
+    }
+    .AiIntro .content h3 {
+        font-size: 24px;
+    }
+}
 .ServicesInfo .content {
     margin-top: 40px;
 }
@@ -326,12 +352,13 @@ h6 {
     font-size: 15px;
 }
 
-.ServicesInfo .Getready div {
+.ServicesInfo .Getready {
+    display:flex;
+    justify-content:center;
+    align-items:center;
     text-align: center;
-    justify-content: center;
     padding: 120px 0;
     background-color: rgba(68,68,68,0.1);
-    position: relative;
 }
 
 .ServicesInfo img {
@@ -340,4 +367,8 @@ h6 {
     object-fit: cover;
     transition: 0.3s ease-in-out;
     align-self: center;
+}
+.service-img {
+    width: 100%;
+    height: 100%;
 }

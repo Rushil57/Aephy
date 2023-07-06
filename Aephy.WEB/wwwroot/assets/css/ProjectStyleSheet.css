@@ -291,6 +291,26 @@ h6 {
     padding: 10px;
 }
 
+.rightStickyRow {
+    display:flex;
+    position: sticky !important;
+    right: 70px;
+    top: 120px;
+    z-index: 99999;
+}
+
+.rightSticky-box {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
+}
+    .rightSticky-box p {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+    }
+
 /*--------------------------------------------------------------
 # Project Section
 --------------------------------------------------------------*/
@@ -302,6 +322,7 @@ h6 {
 }
 
 .Project .right-box {
+    display:block;
     background-color: #fff;
     padding: 20px;
     margin: 20px;
@@ -341,12 +362,6 @@ h6 {
 @media(max-width:500px) {
     .Project h3 {
         font-size: 22px;
-    }
-}
-
-@media(max-width:500px) {
-    .Project h3 {
-        font-size: 20px;
     }
 }
 
@@ -576,7 +591,7 @@ h6 {
         position: absolute;
         top: 50%;
         left: 20%;
-        width:600px;
+        width:400px;
         z-index: 1;
         line-height: 0;
         height:12px;
@@ -712,6 +727,28 @@ h6 {
     }
 
     .Project .second-row h3 {
+        display: none;
+    }
+}
+
+@media(max-width:992px){
+    .rightStickyRow {
+        display: none;
+    }
+
+    .Project .right-box {
+        display: block;
+    }
+}
+@media(min-width:992px){
+    .mainProject {
+        margin-top: -660px !important;
+    }
+    .rightStickyRow {
+        display: flex;
+    }
+
+    .Project .right-box {
         display: none;
     }
 }

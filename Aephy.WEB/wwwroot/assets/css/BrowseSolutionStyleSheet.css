@@ -158,6 +158,18 @@ h6 {
     Dropdown 
 -----------------------------------------------------------
 */
+
+.browseSolutions .columnDdl{
+    display:block;
+    text-align:left;
+}
+
+@media(max-width:991px){
+    .browseSolutions .columnDdl {
+        text-align: center;
+    }
+}
+
 .browseSolutions .btn-dropdown {
     padding: 8px 26px;
     border-color: #6c757d;

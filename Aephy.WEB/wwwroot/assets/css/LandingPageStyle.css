@@ -240,7 +240,7 @@ h6 {
 @media (max-width: 1199px) {
     #main {
         padding: 20px;
-        margin-top:70px;
+        /*margin-top:70px;*/
     }
 }
 
@@ -1570,6 +1570,7 @@ h6 {
 .open-accessibility{
     z-index:100000 !important;
     top:141px !important;
+    position:sticky !important;
 }
 .cls-fixed-top {
     position: sticky;
@@ -1579,22 +1580,27 @@ h6 {
     z-index: 1030;
 }
 
-@media (max-width:980px) {
-    #ClientForm .ClientIntro {
-        text-align: center;
-        padding-top: 0%;
-    }
-
-    #Projectdescription {
-        border-left: 0px;
-    }
-
-    #workingForm {
-        border-left: 0px;
-    }
-
+.open-accessibility.open-accessibility-collapsed .open-accessibility-container {
+    background-color: #d38b4e !important;
+}
+.open-accessibility-container{
+    position:absolute !important;
 }
 
-/*------------------------------
+@media (max-width:980px) {
+    #ClientForm .ClientIntro {
+            text-align: center;
+            padding-top: 0%;
+        }
+
+        #Projectdescription {
+            border-left: 0px;
+        }
+
+        #workingForm {
+            border-left: 0px;
+        }
+    }
+    /*------------------------------
     POST YOUR REQUEST POPUP
 ------------------------------*/

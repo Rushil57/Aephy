@@ -43,10 +43,16 @@ a {
 
 .base-section {
     margin-top:20px !important;
-    padding-top: 20px;
+    padding-top: 80px;
     padding-bottom: 200px;
     overflow: hidden;
     display: block;
+}
+
+@media(max-width:992px){
+    .base-section {
+        padding-top: 20px;
+    }
 }
 
 .section-header {

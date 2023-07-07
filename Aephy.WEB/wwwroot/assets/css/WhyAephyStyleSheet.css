@@ -254,7 +254,12 @@ h6 {
 
 .whyaephyhomeImage {
     width: 100%;
-    height: -webkit-fill-available;
+    min-height: 50vh;
+}
+@media (max-width: 430px) {
+    .whyaephyhomeImage {
+        min-height: 30vh;
+    }
 }
 /*--------------------------------------------------------------
 # What Section

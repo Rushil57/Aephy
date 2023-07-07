@@ -42,11 +42,17 @@ a {
 }
 
 .base-section {
-    margin-top:20px !important;
+    margin-top: 20px !important;
     padding-top: 80px;
     padding-bottom: 200px;
     overflow: hidden;
     display: block;
+}
+
+@media(max-width:992px) {
+    .base-section {
+        padding-top: 20px;
+    }
 }
 
 .section-header {
@@ -157,9 +163,9 @@ h6 {
         color: #012970;
     }
 
-.hero .infoCol {
+/*.hero .infoCol {
     justify-content: center;
-}
+}*/
 
 .hero .infoCol h4 {
     align-self: start;

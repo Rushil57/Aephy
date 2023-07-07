@@ -10,6 +10,16 @@
         padding-bottom: 8px;
     }
 </style>
+<script>
+    function TrustedViewMore() {
+        $(".cls-trusted-btn").css("display", "none");
+        $(".cls-trusted-viewmore").css("display", "block");
+    }
+    function ProfessionalViewMore() {
+        $(".cls-professional-btn").css("display", "none");
+        $(".cls-professional-viewmore").css("display", "block");
+    }
+</script>
 <main id="main" class="main cls-fixed-common">
 
     @*    <div class="pagetitle">
@@ -318,7 +328,7 @@
                         </div>
                     </div>
 
-                    <div class="col my-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col my-4 cls-professional-viewmore" data-aos="fade-up" data-aos-delay="200">
                         <div class="box">
                             <div class="title">
                                 Amir – Expert Data Strategy Development
@@ -344,8 +354,8 @@
                     </div>
 
                 </div>
-
-                <div class="col-12 col-lg-6" id="RightReview">
+                <a class="cls-professional-btn" onclick="ProfessionalViewMore()" id="ProfessionalViewMore">View more</a>
+                <div class="col-12 col-lg-6 cls-professional-viewmore" id="RightReview">
                     <div class="col my-4" data-aos="fade-up" data-aos-delay="300">
                         <div class="box">
                             <div class="title">
@@ -445,7 +455,7 @@
                     </div>
                 </div><!-- End Card Item -->
 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-4 col-md-6 cls-trusted-viewmore" data-aos="fade-up" data-aos-delay="200">
                     <div class="box" style="background-color:#a6a6a6;">
                         <div class="icon-msg">
                             <i class="bi-chat-right-quote"></i>
@@ -479,7 +489,7 @@
                     </div>
                 </div><!-- End Card Item -->
 
-                <div class="col-lg-4 col-md-6 px-0" data-aos="fade-up" data-aos-delay="300">
+                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore" data-aos="fade-up" data-aos-delay="300">
                     <div class="box">
                         <div class="icon-msg">
                             <i class="bi-chat-right-quote"></i>
@@ -509,7 +519,7 @@
                     </div>
                 </div><!-- End Card Item -->
             </div>
-
+            <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View more</a>
         </div>
     </section><!-- End Services Section -->
     <!-- ======= Why Aephy Section ======= -->

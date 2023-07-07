@@ -1634,15 +1634,68 @@ h6 {
     background-color: #d38b4e;
 }
 
-@media only screen and (max-width: 600px) {
+.carousel-control-prev, .carousel-control-next {
+    height: 560px;
+}
+
+.cls-professional-btn {
+    display: none;
+}
+
+.cls-trusted-btn {
+    display: none;
+}
+
+@media only screen and (max-width: 640px) {
+    .cls-professional-viewmore {
+        display: none;
+    }
+
+    .cls-trusted-viewmore {
+        display: none;
+    }
+
+    .cls-professional-btn {
+        display: block;
+    }
+
+    .cls-trusted-btn {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 420px) and (min-width: 360px) {
     .carousel-control-prev-icon {
-        left: -22px;
-        font-size: 12px !important;
-        width: 25px;
+        left: -28px;
     }
 
     .carousel-control-next-icon {
-        right: -22px;
+        right: -28px;
+    }
+}
+
+@media only screen and (max-width: 530px) and (min-width: 420px) {
+    .carousel-control-prev-icon {
+        left: -38px;
+    }
+
+    .carousel-control-next-icon {
+        right: -38px;
+    }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 530px) {
+    .carousel-control-prev-icon {
+        left: -48px;
+    }
+
+    .carousel-control-next-icon {
+        right: -48px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .carousel-control-prev-icon, .carousel-control-next-icon {
         font-size: 12px !important;
         width: 25px;
     }

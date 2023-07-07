@@ -1718,3 +1718,19 @@ h6 {
         width: 25px;
     }
 }
+
+.open-accessibility-expand-button svg {
+    width: 26px !important;
+    height: 45px !important;
+}
+
+.open-accessibility-expand-button {
+    line-height: 0px !important;
+    width: 40px !important;
+    height: 40px !important;
+}
+
+.open-accessibility.open-accessibility-collapsed .open-accessibility-container {
+    width: 42px !important;
+    height: 40px !important;
+}

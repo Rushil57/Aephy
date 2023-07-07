@@ -249,9 +249,21 @@ h6 {
     height: 500px;
 }
 
+.JoinUs .listImage {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 100px;
+    width: 130px;
+}
+
 @media(max-width:768px){
     .JoinUs .fitImage {
         height: auto;
+    }
+    .JoinUs .listImage {
+        height: auto;
+        width: auto;
     }
 }
 
@@ -262,26 +274,7 @@ h6 {
     align-self: center;
 }
 
-.JoinUs ul {
-    list-style: none;
-    padding: 0;
-}
-
-    .JoinUs ul li {
-        display: flex;
-        align-items: flex-start;
-        margin-top: 40px;
-    }
-
-    .JoinUs ul i {
-        flex-shrink: 0;
-        font-size: 28px;
-        color: var(--brand);
-        margin-right: 20px;
-        line-height: 0;
-    }
-
-    .JoinUs ul h5 {
+    .JoinUs h5 {
         font-size: 18px;
         font-weight: 700;
         font-family: var(--font-secondary);

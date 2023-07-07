@@ -168,7 +168,7 @@
     }
 
 @media screen and (max-width:780px) {
-    .open-accessibility {
+   /* .open-accessibility {
         right: 0;
         top: 0
     }
@@ -217,5 +217,5 @@
         border-radius: 50% 0 0 50%;
         color: #fff;
         background-color: #2196F3
-    }
+    }*/
 }

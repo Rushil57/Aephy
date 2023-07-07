@@ -451,6 +451,12 @@ h6 {
     height: 500px;
 }
 
+@media(max-width:768px){
+    .OpenRolesTable .fitImage {
+        height: auto;
+    }
+}
+
 .table-OpenRoles th {
     text-align: center;
     font-size: 15px;

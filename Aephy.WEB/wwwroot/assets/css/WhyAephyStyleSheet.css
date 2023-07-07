@@ -517,3 +517,59 @@ h6 {
         font-size: 20px;
     }
 }
+.Why .cls-box {
+    margin: 10px !important;
+}
+.cls-whymobile-efficiency{
+    display:none;
+}
+.cls-why-efficiency {
+    display: block;
+}
+
+@media only screen and (max-width: 640px) {
+    .cls-whymobile-efficiency {
+        display: block;
+    }
+
+    .cls-why-efficiency {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 420px) and (min-width: 360px) {
+    .carousel-control-prev-icon {
+        left: -17px;
+    }
+
+    .carousel-control-next-icon {
+        right: -17px;
+    }
+}
+
+@media only screen and (max-width: 530px) and (min-width: 420px) {
+    .carousel-control-prev-icon {
+        left: -27px;
+    }
+
+    .carousel-control-next-icon {
+        right: -27px;
+    }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 530px) {
+    .carousel-control-prev-icon {
+        left: -37px;
+    }
+
+    .carousel-control-next-icon {
+        right: -37px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        font-size: 12px !important;
+        width: 25px;
+    }
+}

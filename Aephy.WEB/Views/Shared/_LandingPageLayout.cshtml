@@ -29,7 +29,7 @@
 </head>
 <body>
     <!-- ======= Header ======= -->
-    <header id="header" class="header cls-fixed-top">
+    <header id="header" class="header cls-fixed-top cls-fixed-common">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-flued align-items-end">
@@ -172,7 +172,7 @@
 
     @RenderBody()
 
-    <footer class="main-footer sp-two">
+    <footer class="main-footer sp-two cls-fixed-common">
         <div class="container">
             <div class="widgets-section">
                 <div class="row clearfix">
@@ -441,8 +441,8 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
-    @*<script src="~/assets/js/open-accessibility.min.js"></script>
-    <script src="~/assets/js/locale.min.js"></script>*@
+    <script src="~/assets/js/open-accessibility.min.js"></script>
+    <script src="~/assets/js/locale.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -510,41 +510,41 @@
             $("#PostButton").text("Next")
         }
 
-                //$(function () {
-                //    //$('body').openAccessibility({
-                //    //    localization: ['en']
-                //    //});
+                $(function () {
+                    //$('body').openAccessibility({
+                    //    localization: ['en']
+                    //});
 
-                //    $('body').openAccessibility({
+                    $('body').openAccessibility({
 
-                //        // open the menu on page load
-                //         Opened: false,
+                        // open the menu on page load
+                         Opened: false,
 
-                //        // enable the plugin on mobile
-                //        isMobileEnabled: false,
+                        // enable the plugin on mobile
+                        isMobileEnabled: false,
 
-                //        // override the settings of the Accessibility Tools
-                //        grayscale: 0,
-                //        brightness: 100,
-                //        contrast: 100,
-                //        maxZoomLevel: 3,
-                //        minZoomLevel: 0.5,
-                //        zoomStep: 0.2,
-                //        zoom: 1,
-                //        cursor: false,
-                //        invert: false,
+                        // override the settings of the Accessibility Tools
+                        grayscale: 0,
+                        brightness: 100,
+                        contrast: 100,
+                        maxZoomLevel: 3,
+                        minZoomLevel: 0.5,
+                        zoomStep: 0.2,
+                        zoom: 1,
+                        cursor: false,
+                        invert: false,
 
-                //        // text selector
-                //        textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
+                        // text selector
+                        textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
 
-                //        // s(mall), m(edium), l(arge)
-                //        iconSize: 'm',
+                        // s(mall), m(edium), l(arge)
+                        iconSize: 'm',
 
-                //        // local
-                //        localization: ['en'],
+                        // local
+                        localization: ['en'],
 
-                //});
-                //})
+                });
+                })
 
     </script>
 </body>

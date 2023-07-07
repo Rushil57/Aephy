@@ -1655,13 +1655,31 @@ h6 {
         display: none;
     }
 
-    .cls-professional-btn {
+    .cls-professional-btn, .cls-trusted-btn {
         display: block;
+        font-size: 16px;
+        border: 1px solid;
+        width: 40%;
+        text-decoration: none;
+        position: relative;
+        left: 60%;
+        color: #d38b4e;
+        border-radius: 4px;
+        text-align: center;
     }
 
-    .cls-trusted-btn {
+    /*.cls-trusted-btn {
         display: block;
-    }
+        font-size: 16px;
+        border: 1px solid;
+        width: 28%;
+        text-decoration: none;
+        position: relative;
+        left: 70%;
+        color: #d38b4e;
+        text-align: center;
+        border-radius: 4px;
+    }*/
 }
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {

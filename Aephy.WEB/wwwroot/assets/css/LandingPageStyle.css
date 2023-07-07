@@ -1623,3 +1623,27 @@ h6 {
     /*------------------------------
     POST YOUR REQUEST POPUP
 ------------------------------*/
+.carousel-control-prev-icon {
+    position: relative;
+    left: -108px;
+    background-color: #d38b4e;
+}
+.carousel-control-next-icon {
+    position: relative;
+    right: -108px;
+    background-color: #d38b4e;
+}
+
+@media only screen and (max-width: 600px) {
+    .carousel-control-prev-icon {
+        left: -22px;
+        font-size: 12px !important;
+        width: 25px;
+    }
+
+    .carousel-control-next-icon {
+        right: -22px;
+        font-size: 12px !important;
+        width: 25px;
+    }
+}

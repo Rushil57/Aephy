@@ -163,9 +163,9 @@ h6 {
         color: #012970;
     }
 
-/*.hero .infoCol {
+.hero .infoCol {
     justify-content: center;
-}*/
+}
 
 .hero .infoCol h4 {
     align-self: start;
@@ -179,13 +179,14 @@ h6 {
 
     @media(max-width:992px) {
         .hero .infoCol h4 {
-        margin-top:-50px;
+            margin-top: -50px;
+            align-self: center;
         }
         .hero .infoCol .infoBtn {
             align-self: center;
         }
         .hero .barCol {
-            width: 180px;
+            display:none;
         }
     }
 /*--------------------------------------------------------------

@@ -215,7 +215,7 @@ h6 {
         .industries .card .card-img img {
             height:100%;
             width:100%;
-            object-fit: revert;
+            object-fit: cover;
             transition: 0.3s ease-in-out;
             align-self: center;
         }
@@ -376,3 +376,35 @@ h6 {
     height: 100%;
     object-fit: cover;
 }
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 375px) {
+    .industries-mobile-img {
+        height: 25vh;
+    }
+}
+
+@media only screen and (min-device-width: 280px) and (max-device-width: 414px) {
+    .industries-mobile-img {
+        height: 30vh;
+    }
+}
+
+/*@media only screen and (min-device-width: 360px) and (max-device-width: 414px) {
+    .industries-mobile-img {
+        height: 30vh;
+    }
+}
+*/
+
+@media only screen and (min-device-width:912px) and (max-device-width: 768px) {
+    .industries-mobile-img {
+        height: 40vh;
+    }
+}
+
+@media only screen and (min-device-width:540px) and (max-device-width: 540px) {
+    .industries-mobile-img {
+        height: 40vh;
+    }
+}
+

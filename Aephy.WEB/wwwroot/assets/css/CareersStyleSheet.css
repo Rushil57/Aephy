@@ -174,7 +174,7 @@ h6 {
         background-size: cover;
         background-position: center;
         position: relative;
-        padding:0 20px;
+     /*   padding:0 20px;*/
         /*padding: 40px 10px 40px 10px;*/
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.8);
@@ -200,7 +200,7 @@ h6 {
     }
 }
 
-@media only screen and (max-width: 1000px) {
+/*@media only screen and (max-width: 1000px) {
     .hero-img {
         margin-top: 20px;
         padding-right: 10px;
@@ -210,7 +210,7 @@ h6 {
     .hero .first-row {
         padding-bottom: 40px;
     }
-}
+}*/
 
 .hero p {
     font-size: 15px;
@@ -439,3 +439,22 @@ table tbody tr {
         border-radius: 10px;
         margin: 5px;
     }
+
+@media only screen and (min-device-width:280px) and (max-device-width: 1000px) {
+
+    .hero .first-row{
+        padding: 0;
+    }
+
+    .hero-img{
+        padding-left: 0px;
+    }
+    .hero .hero-img img {
+        height: 30vh;
+    }
+
+    .cls-intropart{
+        margin-top: 3%;
+    }
+}
+

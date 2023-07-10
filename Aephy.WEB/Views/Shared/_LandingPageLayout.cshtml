@@ -388,10 +388,24 @@
                                         </div>
                                     </form>
                                 </div>
+                            </div>
+                        </div>
+                        <div style="display:none;border-radius:10px;" id="WorkingHourForm">
+                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
+                                <div class="col-lg-6 order-1 order-lg-1 cls-intro">
+                                    <h3 data-aos="fade-up">
+                                        Let’s start
+                                    </h3>
+                                    <p data-aos="fade-up" data-aos-delay="100">
+                                        Select the appropriate
+                                        options; Get a step closer to
+                                        transform your business.
+                                    </p>
+                                </div>
 
                                 <div class="col-lg-6 order-3 order-lg-3" id="workingForm">
-                                    <div style="padding-top: 9%;">
-                                        <label style="font-weight: bold;font-size: 20px;">Client Working Availbility</label>
+                                    <div>
+                                        @*<label style="font-weight: bold;font-size: 20px;">Client Working Availbility</label>*@
                                         <form action="#" style="padding-top: 3%;">
                                             <div class="col d-flex flex-column">
                                                 <label data-aos="fade-up">Working Days</label>
@@ -447,7 +461,7 @@
     <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
-    
+
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
     <script src="~/assets/js/open-accessibility.min.js"></script>
@@ -485,23 +499,40 @@
 
         function GetClientForm(data) {
             var Buttonclickvalue = $('#PostButton').text();
-            //var PreviousButtonClick = $("#")
             if (data.text == "Confirm") {
                 $("#confirmation").modal('hide')
             }
-            else {
-                if ($("#ClientForm").is(":visible")) {
+            if(data.text == "Previous"){
+                if ($("#ClientForm").is(":visible")){
                     $("#ServicesForm").css("display", "block")
                     $("#ClientForm").css("display", "none")
-                    $("#PostButton").text("Next")
                     $("#PreviousButton").css("display", "none")
-
+                    $("#PostButton").text("Next")
+                    $("#WorkingHourForm").css("display", "none")
                 }
-                else {
+                if ($("#WorkingHourForm").is(":visible")) {
                     $("#ServicesForm").css("display", "none")
                     $("#ClientForm").css("display", "block")
-                    $("#PostButton").text("Confirm")
+                    $("#PostButton").text("Next")
                     $("#PreviousButton").css("display", "block")
+                    $("#WorkingHourForm").css("display", "none")
+                }
+            }
+            else {
+                if ($("#ServicesForm").is(":visible")) {
+                    $("#ServicesForm").css("display", "none")
+                    $("#ClientForm").css("display", "block")
+                    $("#WorkingHourForm").css("display", "none")
+                    $("#PreviousButton").css("display", "block")
+                    $("#PostButton").text("Next")
+                    return
+                }
+                if ($("#ClientForm").is(":visible")){
+                    $("#ServicesForm").css("display", "none")
+                    $("#ClientForm").css("display", "none")
+                    $("#WorkingHourForm").css("display", "block")
+                    $("#PreviousButton").css("display", "block")
+                    $("#PostButton").text("Confirm")
                 }
             }
 
@@ -521,44 +552,45 @@
             $("#ServicesForm").css("display", "block")
             $("#ClientForm").css("display", "none")
             $("#PreviousButton").css("display", "none")
+            $("#WorkingHourForm").css("display", "none")
             $("#PostButton").text("Next")
         }
 
-                $(function () {
-                    //$('body').openAccessibility({
-                    //    localization: ['en']
-                    //});
+        $(function () {
+            //$('body').openAccessibility({
+            //    localization: ['en']
+            //});
 
-                    $('body').openAccessibility({
+            $('body').openAccessibility({
 
-                        // open the menu on page load
-                         Opened: false,
+                // open the menu on page load
+                Opened: false,
 
-                        // enable the plugin on mobile
-                        isMobileEnabled: true,
+                // enable the plugin on mobile
+                isMobileEnabled: true,
 
-                        // override the settings of the Accessibility Tools
-                        grayscale: 0,
-                        brightness: 100,
-                        contrast: 100,
-                        maxZoomLevel: 3,
-                        minZoomLevel: 0.5,
-                        zoomStep: 0.2,
-                        zoom: 1,
-                        cursor: false,
-                        invert: false,
+                // override the settings of the Accessibility Tools
+                grayscale: 0,
+                brightness: 100,
+                contrast: 100,
+                maxZoomLevel: 3,
+                minZoomLevel: 0.5,
+                zoomStep: 0.2,
+                zoom: 1,
+                cursor: false,
+                invert: false,
 
-                        // text selector
-                        textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
+                // text selector
+                textSelector: 'p,h1,div,h2,span,ol,li,ul,h3,h4,h5,h6,b,i,a',
 
-                        // s(mall), m(edium), l(arge)
-                        iconSize: 'm',
+                // s(mall), m(edium), l(arge)
+                iconSize: 'm',
 
-                        // local
-                        localization: ['en'],
+                // local
+                localization: ['en'],
 
-                });
-                })
+            });
+        })
 
     </script>
 </body>

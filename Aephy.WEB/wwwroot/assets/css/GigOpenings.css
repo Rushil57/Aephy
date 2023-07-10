@@ -446,7 +446,7 @@ h6 {
 
 .OpenRolesTable .fitImage {
     overflow: hidden;
-    margin-top: 15px;
+    margin-top: 5%;
     margin-bottom: 15px;
     height: 500px;
 }
@@ -513,3 +513,7 @@ table tbody tr {
         border-radius: 10px;
         margin: 5px;
     }
+
+.join-us-img{
+    height: 100%;
+}

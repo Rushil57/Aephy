@@ -121,12 +121,12 @@ section{
     padding: 10px;
     border: 1px solid rgba(68,68,68,0.1);
     background-color: #fff;
-    color: var(--aephy);
+    color: #444444;
 }
     .btn-white:hover {
         background-color: #fff;
         border: 1px solid rgba(68,68,68,0.7);
-        color: var(--brand);
+        color: #444444;
     }
 
 h1,
@@ -458,6 +458,7 @@ h6 {
 .how-label {
     font-weight: 600;
     font-size: 28px;
+    color: #444444;
 }
 
 @media only screen and (max-width: 500px) {
@@ -572,4 +573,8 @@ h6 {
         font-size: 12px !important;
         width: 25px;
     }
+}
+
+.box.even-box {
+    background: #808080ad;
 }

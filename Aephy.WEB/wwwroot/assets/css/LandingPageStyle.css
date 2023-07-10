@@ -1670,6 +1670,12 @@ ul.social-links.clearfix li {
 .cls-trusted-btn {
     display: none;
 }
+.cls-trusted-lessbtn{
+    display:none;
+}
+.cls-professional-lessbtn {
+    display: none;
+} 
 
 @media only screen and (max-width: 640px) {
     .cls-professional-viewmore {
@@ -1682,6 +1688,19 @@ ul.social-links.clearfix li {
 
     .cls-professional-btn, .cls-trusted-btn {
         display: block;
+        font-size: 16px;
+        border: 1px solid;
+        width: 40%;
+        text-decoration: none;
+        position: relative;
+        left: 60%;
+        color: #d38b4e;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .cls-professional-lessbtn, .cls-trusted-lessbtn {
+        display: none;
         font-size: 16px;
         border: 1px solid;
         width: 40%;

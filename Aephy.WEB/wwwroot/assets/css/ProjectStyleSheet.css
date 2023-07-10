@@ -650,22 +650,22 @@ h6 {
     border-left: 1px solid var(--gray);
 }
 
-    &:after {
-        content: counter(list);
-        position: absolute;
-        top: 12px;
-        left: -2.5rem;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: transparent;
-        color: var(--font-title);
-        font-weight: 400;
-        font-size: 13px;
-        line-height: 2rem;
-        text-align: center;
-        border: 1px solid var(--brand);
-    }
+&:after {
+    content: counter(list);
+    position: absolute;
+    top: 12px;
+    left: -2.5rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--font-title);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 26px;
+    text-align: center;
+    border: 1px solid var(--brand);
+}
 
     &:last-child {
         &:before

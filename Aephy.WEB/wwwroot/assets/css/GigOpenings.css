@@ -89,7 +89,7 @@ section {
 @media (max-width: 640px) {
     .section-header h3 {
         font-size: 26px;
-       /* margin-bottom: 10px;*/
+        /* margin-bottom: 10px;*/
     }
 
     .section-header {
@@ -274,14 +274,14 @@ h6 {
     align-self: center;
 }
 
-    .JoinUs h5 {
-        font-size: 18px;
-        font-weight: 700;
-        font-family: var(--font-secondary);
-        color: var(--brand);
-    }
+.JoinUs h5 {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--font-secondary);
+    color: var(--brand);
+}
 
-    /*.JoinUs ul p {
+/*.JoinUs ul p {
         font-size: 15px;
     }*/
 
@@ -299,10 +299,10 @@ h6 {
     color: #444444;
 }
 
-    .content p {
-        padding: 30px 0;
-        font-size: 15px;
-    }
+.content p {
+    padding: 30px 0;
+    font-size: 15px;
+}
 
 /*--------------------------------------------------------------
 # GigLevels Section
@@ -444,12 +444,12 @@ h6 {
     margin:50px 0;
 }
 
-.OpenRolesTable .fitImage {
-    overflow: hidden;
-    margin-top: 5%;
-    margin-bottom: 15px;
-    height: 500px;
-}
+    .OpenRolesTable .fitImage {
+        overflow: hidden;
+        margin-top: 5%;
+        margin-bottom: 15px;
+        height: 500px;
+    }
 
 @media(max-width:768px){
     .OpenRolesTable .fitImage {
@@ -516,4 +516,123 @@ table tbody tr {
 
 .join-us-img{
     height: 100%;
+}
+
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+}
+
+.carousel-inner .carousel-item.active {
+    display: flex;
+}
+
+/* medium and up screens */
+@media (min-width: 768px) {
+
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+        transform: translateX(25%);
+    }
+
+    .carousel-inner .carousel-item-start.active,
+    .carousel-inner .carousel-item-prev {
+        transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
+}
+
+@media only screen and (max-width: 420px) and (min-width: 360px) {
+    .carousel-control-prev-icon {
+        left: -17px;
+    }
+
+    .carousel-control-next-icon {
+        right: -17px;
+    }
+}
+
+@media only screen and (max-width: 530px) and (min-width: 420px) {
+    .carousel-control-prev-icon {
+        left: -27px;
+    }
+
+    .carousel-control-next-icon {
+        right: -27px;
+    }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 530px) {
+    .carousel-control-prev-icon {
+        left: -37px;
+    }
+
+    .carousel-control-next-icon {
+        right: -37px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        font-size: 12px !important;
+        width: 25px;
+    }
+
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: block;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 17px 0px 19px;
+    }
+
+    .carousel-control-next-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        background-color: #d38b4e;
+        margin-left:-25px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right:-30px;
+        background-color: #d38b4e;
+    }
+    .cls-gigopening-m-carousel{
+        margin-left:36px;
+    }
+    .carousel-item > .carousel-control-prev-icon {
+        display: none !important;
+    }
+    .carousel-item > .carousel-control-next-icon {
+        display: none !important;
+    }
+}
+
+.cls-gigopening-m-carousel {
+    padding-right: 18px;
+}
+
+.carousel-control-next-icon {
+    display: none;
+}
+
+.carousel-control-prev-icon {
+    display: none;
 }

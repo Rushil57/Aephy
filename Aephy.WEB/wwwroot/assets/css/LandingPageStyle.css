@@ -1649,13 +1649,13 @@ padding-top: 5%;
 /*------------------------------
     POST YOUR REQUEST POPUP
 ------------------------------*/
-.carousel-control-prev-icon {
+#recipeCarousel > .carousel-control-prev > .carousel-control-prev-icon {
     position: relative;
     left: -108px;
     background-color: #d38b4e;
 }
 
-.carousel-control-next-icon {
+#recipeCarousel > .carousel-control-next > .carousel-control-next-icon {
     position: relative;
     right: -108px;
     background-color: #d38b4e;
@@ -1729,11 +1729,11 @@ padding-top: 5%;
 }
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {
-    .carousel-control-prev-icon {
+    #recipeCarousel > .carousel-control-prev > .carousel-control-prev-icon {
         left: -28px;
     }
 
-    .carousel-control-next-icon {
+    #recipeCarousel > .carousel-control-next > .carousel-control-next-icon {
         right: -28px;
     }
 }
@@ -1743,23 +1743,23 @@ padding-top: 5%;
         left: -38px;
     }
 
-    .carousel-control-next-icon {
+    #recipeCarousel > .carousel-control-next > .carousel-control-next-icon {
         right: -38px;
     }
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
-    .carousel-control-prev-icon {
+    #recipeCarousel > .carousel-control-prev > .carousel-control-prev-icon {
         left: -48px;
     }
 
-    .carousel-control-next-icon {
+    #recipeCarousel > .carousel-control-next > .carousel-control-next-icon {
         right: -48px;
     }
 }
 
 @media only screen and (max-width: 768px) {
-    .carousel-control-prev-icon, .carousel-control-next-icon {
+    #recipeCarousel > .carousel-control-prev > .carousel-control-prev-icon, #recipeCarousel > .carousel-control-next > .carousel-control-next-icon {
         font-size: 12px !important;
         width: 25px;
     }

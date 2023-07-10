@@ -14,10 +14,22 @@
     function TrustedViewMore() {
         $(".cls-trusted-btn").css("display", "none");
         $(".cls-trusted-viewmore").css("display", "block");
+        $(".cls-trusted-lessbtn").css("display", "block");
     }
     function ProfessionalViewMore() {
         $(".cls-professional-btn").css("display", "none");
         $(".cls-professional-viewmore").css("display", "block");
+        $(".cls-professional-lessbtn").css("display", "block");
+    }
+    function TrustedViewLess() {
+        $(".cls-trusted-btn").css("display", "block");
+        $(".cls-trusted-viewmore").css("display", "none");
+        $(".cls-trusted-lessbtn").css("display", "none");
+    }
+    function ProfessionalViewLess() {
+        $(".cls-professional-btn").css("display", "block");
+        $(".cls-professional-viewmore").css("display", "none");
+        $(".cls-professional-lessbtn").css("display", "none");
     }
 </script>
 <main id="main" class="main cls-fixed-common">
@@ -407,7 +419,8 @@
 
                 </div>
             </div>
-            <a class="cls-professional-btn" onclick="ProfessionalViewMore()" id="ProfessionalViewMore">View more</a>
+            <a class="cls-professional-btn" onclick="ProfessionalViewMore()" id="ProfessionalViewMore">View More</a>
+            <a class="cls-professional-lessbtn" onclick="ProfessionalViewLess()" id="ProfessionalViewLess">View Less</a>
 
         </div>
     </section><!-- End Services Section -->
@@ -519,7 +532,8 @@
                     </div>
                 </div><!-- End Card Item -->
             </div>
-            <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View more</a>
+            <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View More</a>
+            <a class="cls-trusted-lessbtn" onclick="TrustedViewLess()" id="TrustedViewLess">View Less</a>
         </div>
     </section><!-- End Services Section -->
     <!-- ======= Why Aephy Section ======= -->

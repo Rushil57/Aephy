@@ -212,7 +212,7 @@ h6 {
 .hero p {
     font-size: 15px;
     font-weight: 400;
-    margin-bottom: 40px;
+    /*margin-bottom: 40px;*/
 }
 
 .hero .btn-choice {
@@ -324,7 +324,7 @@ h6 {
 }
 .Why .box .icon-msg i {
     flex-shrink: 0;
-    font-size: 48px;
+    font-size: 48px !important;
     font-weight: 800;
     color: #fff;
     line-height: 0;

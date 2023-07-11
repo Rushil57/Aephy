@@ -1691,26 +1691,26 @@ padding-top: 5%;
     .cls-professional-btn, .cls-trusted-btn {
         display: block;
         font-size: 16px;
-        border: 1px solid;
+        /*border: 1px solid;*/
         width: 40%;
-        text-decoration: none;
+        /*text-decoration: none;*/
         position: relative;
         left: 60%;
         color: #d38b4e;
-        border-radius: 4px;
+        /*border-radius: 4px;*/
         text-align: center;
     }
 
     .cls-professional-lessbtn, .cls-trusted-lessbtn {
         display: none;
         font-size: 16px;
-        border: 1px solid;
+        /*border: 1px solid;*/
         width: 40%;
-        text-decoration: none;
+        /*text-decoration: none;*/
         position: relative;
         left: 60%;
         color: #d38b4e;
-        border-radius: 4px;
+        /*border-radius: 4px;*/
         text-align: center;
     }
 
@@ -1763,6 +1763,21 @@ padding-top: 5%;
         font-size: 12px !important;
         width: 25px;
     }
+    .cls-professional-lessbtn > .bi-triangle-fill::before {
+        transform: rotate(90deg);
+    }
+    .cls-trusted-lessbtn > .bi-triangle-fill::before {
+        transform: rotate(90deg);
+    }
+    .cls-trusted-btn > .bi-triangle-fill::before {
+        transform: rotate(180deg) !important;
+    }
+    .cls-professional-btn > .bi-triangle-fill::before {
+        transform: rotate(180deg) !important;
+    }
+    .bi-triangle-fill {
+        color: #d49255;
+    }
 }
 
 .open-accessibility-expand-button svg {
@@ -1791,4 +1806,7 @@ padding-top: 5%;
 
 .section-detail-size {
     font-size: 17px !important;
+}
+.cls-level-up{
+    padding-left:0px !important;
 }

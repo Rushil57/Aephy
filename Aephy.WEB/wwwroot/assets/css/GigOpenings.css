@@ -600,31 +600,79 @@ table tbody tr {
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {
     .carousel-control-prev-icon {
-        left: -17px;
+        margin-left: -25px;
     }
 
     .carousel-control-next-icon {
-        right: -17px;
+        margin-right: -25px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 26px;
+    }
+
+    .JoinUs .listImage img {
+        width: 60%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 40%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
 @media only screen and (max-width: 530px) and (min-width: 420px) {
     .carousel-control-prev-icon {
-        left: -27px;
+        margin-left: -28px;
     }
 
     .carousel-control-next-icon {
-        right: -27px;
+        margin-right: -28px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
     .carousel-control-prev-icon {
-        left: -37px;
+        margin-left: -50px;
     }
 
     .carousel-control-next-icon {
-        right: -37px;
+        margin-right: -50px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
@@ -689,7 +737,7 @@ table tbody tr {
 
     .cls-gigopening-working-mobile {
         width: 34%;
-        float: right;
+        float: left;
         margin-top: 80px;
         text-align: center;
     }

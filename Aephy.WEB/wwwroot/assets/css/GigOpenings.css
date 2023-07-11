@@ -623,6 +623,25 @@ table tbody tr {
     .carousel-item > .carousel-control-next-icon {
         display: none !important;
     }
+    .cls-gigopening-working-mobile {
+        display: block !important;
+    }
+
+    .cls-gigopening-working-desktop {
+        display: none !important;
+    }
+
+    .JoinUs img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
+    }
 }
 
 .cls-gigopening-m-carousel {
@@ -654,4 +673,11 @@ table tbody tr {
     .cls-intropart {
         margin-top: 3%;
     }
+}
+.cls-gigopening-working-mobile {
+    display: none;
+}
+
+.cls-gigopening-working-desktop {
+    display: block;
 }

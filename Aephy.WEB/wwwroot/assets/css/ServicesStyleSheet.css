@@ -165,9 +165,9 @@ h6 {
         color: #012970;
     }
 
-.hero .infoCol {
+/*.hero .infoCol {
     justify-content: center;
-}
+}*/
 
     .hero .infoCol h4 {
         align-self: start;
@@ -176,7 +176,7 @@ h6 {
     }
 
     .hero .infoCol .infoBtn {
-        align-self: start;
+        align-self: center;
     }
 
 @media(max-width:992px) {
@@ -221,7 +221,7 @@ h6 {
 .services .card .card-img img {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    /*object-fit: cover;*/
     transition: 0.3s ease-in-out;
     align-self: center;
 }
@@ -372,7 +372,7 @@ h6 {
 .ServicesInfo img {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+/*    object-fit: cover;*/
     transition: 0.3s ease-in-out;
     align-self: center;
 }

@@ -166,7 +166,7 @@ h6 {
 
     .hero .first-row {
         text-align: center;
-        min-height: 65vh;
+        min-height: 50vh;
         background-color: #fff;
         background-size: cover;
         background-position: center;
@@ -635,4 +635,23 @@ table tbody tr {
 
 .carousel-control-prev-icon {
     display: none;
+}
+
+@media only screen and (min-device-width:280px) and (max-device-width: 1000px) {
+
+    .hero .first-row {
+        padding: 0;
+    }
+
+    .hero-img {
+        padding-left: 0px;
+    }
+
+    .hero .hero-img img {
+        height: 30vh;
+    }
+
+    .cls-intropart {
+        margin-top: 3%;
+    }
 }

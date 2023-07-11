@@ -1780,3 +1780,15 @@ padding-top: 5%;
     width: 42px !important;
     height: 40px !important;
 }
+
+.label-title-size {
+    font-size: 32px !important;
+}
+
+.section-title-size {
+    font-size: 18px !important;
+}
+
+.section-detail-size {
+    font-size: 17px !important;
+}

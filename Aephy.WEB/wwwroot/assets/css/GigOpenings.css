@@ -342,7 +342,7 @@ h6 {
     }
 
     .GigLevels .box .title {
-        font-size: 22px;
+        font-size: 18px !important;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
@@ -363,7 +363,7 @@ h6 {
 }
 
 .GigLevels .box .description {
-    font-size: 17px;
+    font-size: 16px !important;
     font-weight: 600;
     color: #fff;
     padding: 10px;
@@ -407,7 +407,7 @@ h6 {
     }
 
     .GigCompensation .box .title {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
@@ -428,7 +428,7 @@ h6 {
 }
 
 .GigCompensation .box .description {
-    font-size: 17px;
+    font-size: 16px !important;
     font-weight: 600;
     color: #fff;
     padding: 10px;

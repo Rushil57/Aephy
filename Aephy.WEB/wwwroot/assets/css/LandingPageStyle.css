@@ -1810,3 +1810,11 @@ padding-top: 5%;
 .cls-level-up{
     padding-left:0px !important;
 }
+
+.section-detail-size {
+    font-size: 16px !important;
+}
+
+.service-title-size {
+    font-size: 25px !important;
+}

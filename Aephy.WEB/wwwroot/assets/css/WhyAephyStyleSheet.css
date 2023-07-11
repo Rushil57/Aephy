@@ -41,10 +41,10 @@ a {
     align-self: center;
 }
 
-section{
-    padding-top:0 !important;
-    margin-top:20px;
-    overflow:hidden;
+section {
+    padding-top: 0 !important;
+    margin-top: 20px;
+    overflow: hidden;
 }
 
 .section-header {
@@ -123,6 +123,7 @@ section{
     background-color: #fff;
     color: #444444;
 }
+
     .btn-white:hover {
         background-color: #fff;
         border: 1px solid rgba(68,68,68,0.7);
@@ -165,15 +166,16 @@ h6 {
     padding: 0;
     color: rgba(255, 255, 255, 0.8);
 }
+
     .hero .first-row {
-        text-align:center;
+        text-align: center;
         min-height: 50vh;
         background-color: #fff;
         background-size: cover;
         background-position: center;
         position: relative;
-      /*  padding: 40px 10px 40px 10px;*/
-        border-radius:10px;
+        /*  padding: 40px 10px 40px 10px;*/
+        border-radius: 10px;
         color: rgba(255, 255, 255, 0.8);
     }
 
@@ -225,11 +227,12 @@ h6 {
     color: #444444;
 }
 
-.hero .btn-choice:hover {
-    background-color: var(--brand);
-    border-color: rgba(68,68,68,0.5);
-    color: #fff;
-}
+    .hero .btn-choice:hover {
+        background-color: var(--brand);
+        border-color: rgba(68,68,68,0.5);
+        color: #fff;
+    }
+
 .hero .first-row h2 {
     margin-bottom: 20px;
     padding: 0;
@@ -245,17 +248,19 @@ h6 {
     font-weight: 700;
     color: #444444;
 }
+
 .hero .third-row p {
     font-size: 15px;
     font-weight: 400;
     margin-bottom: 40px;
-    color:#444444;
+    color: #444444;
 }
 
 .whyaephyhomeImage {
     width: 100%;
     min-height: 50vh;
 }
+
 @media (max-width: 430px) {
     .whyaephyhomeImage {
         min-height: 30vh;
@@ -322,6 +327,7 @@ h6 {
     margin-right: 2px;
     line-height: 1;
 }
+
 .Why .box .icon-msg i {
     flex-shrink: 0;
     font-size: 48px !important;
@@ -340,6 +346,30 @@ h6 {
 /*--------------------------------------------------------------
 # How Section
 --------------------------------------------------------------*/
+@media(max-width:992px) {
+    .How .titleOutside {
+        display: block;
+    }
+
+    .How .titleInside {
+        display: none;
+    }
+}
+
+@media(min-width:993px) {
+    .How .titleOutside {
+        display: none;
+    }
+
+    .How .titleInside {
+        display: flex;
+    }
+}
+
+.How .whyAephyImg {
+    width: 100%;
+    height: 100%;
+}
 
 .How .card {
     border: 1px solid rgba(14, 29, 52, 0.15);
@@ -347,9 +377,18 @@ h6 {
     position: relative;
     border-radius: 7px;
     height: 100%;
-    margin:0 0 40px 0;
+    margin: 0 0 40px 0;
 }
 
+.How .HideInSmall {
+    display: flex;
+}
+
+@media(max-width:992px) {
+    .How .HideInSmall {
+        display: none;
+    }
+}
 
 .How .fitImage {
     overflow: hidden;
@@ -364,66 +403,66 @@ h6 {
     }
 }
 
-    .How .card .card-img {
-        overflow: hidden;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        border-radius: 7px;
-        height:180px;
+.How .card .card-img {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 7px;
+    height: 180px;
+}
+
+    .How .card .card-img img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: 0.3s ease-in-out;
+        align-self: center;
     }
 
-        .How .card .card-img img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            transition: 0.3s ease-in-out;
-            align-self: center;
-        }
+.How .card .stretched-link {
+    color: #001973;
+    transition: 0.3;
+    text-decoration: none;
+}
 
-    .How .card .stretched-link {
-        color: #001973;
-        transition: 0.3;
-        text-decoration: none;
+.How .card h3 a {
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 5px;
+    padding: 0 0;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.How .card a:hover {
+    color: var(--color-primary);
+}
+
+.How .card p {
+    padding: 0 0;
+    margin-bottom: 30px;
+    color: var(--color-secondary);
+    font-size: 17px;
+}
+
+.How .card:hover .card-img img {
+    transform: scale(1.2);
+}
+
+.How .card-footer {
+    display: flex;
+}
+
+    .How .card-footer .like {
+        position: absolute;
+        right: 0px;
+        padding: 0 20px 0 10px;
     }
 
-    .How .card h3 a {
-        font-weight: 900;
-        font-size: 20px;
-        margin-bottom: 5px;
-        padding: 0 0;
-        text-transform: uppercase;
-        text-decoration: none;
-    }
-
-    .How .card a:hover {
-        color: var(--color-primary);
-    }
-
-    .How .card p {
-        padding: 0 0;
-        margin-bottom: 30px;
-        color: var(--color-secondary);
-        font-size: 17px;
-    }
-
-    .How .card:hover .card-img img {
-        transform: scale(1.2);
-    }
-
-    .How .card-footer{
-        display:flex;
-    }
-
-    .How .card-footer .like{
-        position:absolute;
-        right:0px;
-        padding:0 20px 0 10px;
-    }
-
-.How .icon-image{
-    position:absolute;
-    bottom:0;
-    padding-bottom:55px;
+.How .icon-image {
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 55px;
 }
 
     .How .icon-image i {
@@ -442,9 +481,9 @@ h6 {
         padding-right: 10px;
     }
 
-    .How .icon{
-        padding:20px 0;
-    }
+.How .icon {
+    padding: 20px 0;
+}
 
     .How .icon i {
         flex-shrink: 0;
@@ -452,7 +491,7 @@ h6 {
         font-weight: 800;
         color: var(--brand);
         line-height: 0;
-        padding:0 10px;
+        padding: 0 10px;
     }
 
 .how-label {
@@ -482,29 +521,30 @@ h6 {
 }
 
 
-    /*--------------------------------------------------------------
+/*--------------------------------------------------------------
 # last Section
 --------------------------------------------------------------*/
-    .content h3 {
-        font-weight: 700;
-        font-size: 25px;
-        font-family: var(--font-secondary);
-        color: #444444;
-    }
+.content h3 {
+    font-weight: 700;
+    font-size: 25px;
+    font-family: var(--font-secondary);
+    color: #444444;
+}
 
-    .content {
-        margin-top: 8%;
-    }
+.content {
+    margin-top: 8%;
+}
 
-        .content p {
-            padding: 30px 0;
-            font-size: 15px;
-        }
+    .content p {
+        padding: 30px 0;
+        font-size: 15px;
+    }
 
 @media(max-width:768px) {
     .hero .first-row h2 {
         font-size: 26px;
     }
+
     .how-label {
         font-size: 24px;
     }
@@ -514,10 +554,12 @@ h6 {
     .hero .first-row h2 {
         font-size: 24px;
     }
+
     .how-label {
         font-size: 20px;
     }
 }
+
 .Why .cls-box {
     margin: 10px !important;
 }
@@ -529,7 +571,7 @@ h6 {
 }*/
 
 @media only screen and (max-width: 640px) {
-   /* .cls-whymobile-efficiency {
+    /* .cls-whymobile-efficiency {
         display: block;
     }
 
@@ -573,6 +615,7 @@ h6 {
         font-size: 12px !important;
         width: 25px;
     }
+
     .carousel-inner .carousel-item > div {
         display: none;
     }
@@ -581,6 +624,7 @@ h6 {
             display: block;
         }
 }
+
 @media (min-width: 768px) {
 
     .carousel-inner .carousel-item-end.active,
@@ -593,6 +637,7 @@ h6 {
         transform: translateX(-25%);
     }
 }
+
 .carousel-inner .carousel-item.active {
     display: flex;
 }
@@ -716,4 +761,35 @@ h6 {
 
 .carousel-control-prev-icon {
     display: none;
+}
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 375px) {
+    .whyAephy-mobile-img {
+        height: 25vh !important;
+    }
+}
+
+@media only screen and (min-device-width: 280px) and (max-device-width: 414px) {
+    .whyAephy-mobile-img {
+        height: 30vh !important;
+    }
+}
+
+/*@media only screen and (min-device-width: 360px) and (max-device-width: 414px) {
+    .whyAephy-mobile-img {
+        height: 30vh;
+    }
+}
+*/
+
+@media only screen and (min-device-width:912px) and (max-device-width: 768px) {
+    .whyAephy-mobile-img {
+        height: 40vh !important;
+    }
+}
+
+@media only screen and (min-device-width:540px) and (max-device-width: 540px) {
+    .whyAephy-mobile-img {
+        height: 40vh !important;
+    }
 }

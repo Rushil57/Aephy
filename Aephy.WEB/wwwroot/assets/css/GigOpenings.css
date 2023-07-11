@@ -40,11 +40,13 @@ a {
 .col-auto {
     align-self: center;
 }
+
 section {
     padding-top: 0 !important;
     margin-top: 20px;
     overflow: hidden;
 }
+
 .section-header {
     text-align: left;
     padding: 30px 0 30px 0px;
@@ -174,19 +176,19 @@ h6 {
         padding: 0;
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.8);
-        overflow:hidden;
+        overflow: hidden;
     }
 
-    .hero .left-data{
-        position:relative;
-        align-content:center;
-        justify-content:center;
+    .hero .left-data {
+        position: relative;
+        align-content: center;
+        justify-content: center;
     }
 
     .hero .hero-img .img-banner {
         object-fit: cover;
         width: 100%;
-        height:100%;
+        height: 100%;
     }
 
     .hero .highlightCol {
@@ -206,18 +208,18 @@ h6 {
     .hero h2 {
         font-size: 20px;
     }
+
     .hero .highlightCol {
         bottom: 0;
     }
 }
 
-@media(max-width:993px){
+@media(max-width:993px) {
     .hero .highlightCol {
-        height:50%;
-        position:absolute;
-        bottom:0;
+        height: 50%;
+        position: absolute;
+        bottom: 0;
     }
-
 }
 
 .hero p {
@@ -229,12 +231,32 @@ h6 {
 /*--------------------------------------------------------------
 # JoinUs Section
 --------------------------------------------------------------*/
+@media(max-width:992px) {
+    .titleOutside {
+        display: block;
+    }
+
+    .titleInside {
+        display: none;
+    }
+}
+
+@media(min-width:993px) {
+    .titleOutside {
+        display: none;
+    }
+
+    .titleInside {
+        display: flex;
+    }
+}
 
 .title label {
     font-weight: 600;
     font-size: 28px;
-    padding:20px 0;
+    padding: 20px 0;
 }
+
 .JoinUs h3 {
     font-weight: 700;
     font-size: 32px;
@@ -257,10 +279,11 @@ h6 {
     width: 130px;
 }
 
-@media(max-width:768px){
+@media(max-width:768px) {
     .JoinUs .fitImage {
         height: auto;
     }
+
     .JoinUs .listImage {
         height: auto;
         width: auto;
@@ -440,8 +463,8 @@ h6 {
 -----------------------------------------------------------
 */
 
-.OpenRolesTable{
-    margin:50px 0;
+.OpenRolesTable {
+    margin: 50px 0;
 }
 
     .OpenRolesTable .fitImage {
@@ -451,7 +474,7 @@ h6 {
         height: 500px;
     }
 
-@media(max-width:768px){
+@media(max-width:768px) {
     .OpenRolesTable .fitImage {
         height: auto;
     }
@@ -483,11 +506,12 @@ table tbody tr {
 
 @media(max-width:652px) {
 
-    .table-OpenRoles th{
-        font-size:8px;
-        font-weight:500;
+    .table-OpenRoles th {
+        font-size: 8px;
+        font-weight: 500;
     }
-    .table-OpenRoles tr td{
+
+    .table-OpenRoles tr td {
         font-size: 8px;
         font-weight: 300;
     }
@@ -498,10 +522,10 @@ table tbody tr {
     border-color: #6c757d;
     background-color: #fff;
     color: #6c757d;
-    font-weight:400;
-    border-radius:10px;
-    margin:5px;
-    width:16%;
+    font-weight: 400;
+    border-radius: 10px;
+    margin: 5px;
+    width: 16%;
 }
 
     .btn-dropdown:hover {
@@ -509,12 +533,12 @@ table tbody tr {
         border-color: #515457;
         background-color: #fff;
         color: #515457;
-        font-weight:700;
+        font-weight: 700;
         border-radius: 10px;
         margin: 5px;
     }
 
-.join-us-img{
+.join-us-img {
     height: 100%;
 }
 
@@ -576,75 +600,31 @@ table tbody tr {
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {
     .carousel-control-prev-icon {
-        margin-left: -25px;
+        left: -17px;
     }
 
     .carousel-control-next-icon {
-        margin-right: -25px;
-    }
-    .cls-gigopening-m-carousel {
-        margin: 0px 10px 0px 26px;
-    }
-    .JoinUs .listImage img {
-        width: 60%;
-        height: 200px;
-    }
-
-    .cls-gigopening-working-mobile {
-        width: 40%;
-        float: left;
-        margin-top: 80px;
-        text-align: center;
+        right: -17px;
     }
 }
 
 @media only screen and (max-width: 530px) and (min-width: 420px) {
     .carousel-control-prev-icon {
-        margin-left: -28px;
+        left: -27px;
     }
 
     .carousel-control-next-icon {
-        margin-right: -28px;
-    }
-
-    .cls-gigopening-m-carousel {
-        margin: 0px 10px 0px 29px;
-    }
-    .JoinUs .listImage img {
-        width: 66%;
-        height: 200px;
-    }
-
-    .cls-gigopening-working-mobile {
-        width: 34%;
-        float: left;
-        margin-top: 80px;
-        text-align: center;
+        right: -27px;
     }
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
     .carousel-control-prev-icon {
-        margin-left: -50px;
+        left: -37px;
     }
 
     .carousel-control-next-icon {
-        margin-right: -50px;
-    }
-
-    .cls-gigopening-m-carousel {
-        margin: 0px 10px 0px 29px;
-    }
-    .JoinUs .listImage img {
-        width: 66%;
-        height: 200px;
-    }
-
-    .cls-gigopening-working-mobile {
-        width: 34%;
-        float: left;
-        margin-top: 80px;
-        text-align: center;
+        right: -37px;
     }
 }
 
@@ -660,9 +640,9 @@ table tbody tr {
         display: block;
     }
 
-    /*.cls-gigopening-m-carousel {
+    .cls-gigopening-m-carousel {
         margin: 0px 17px 0px 19px;
-    }*/
+    }
 
     .carousel-control-next-icon {
         display: block !important;
@@ -674,31 +654,44 @@ table tbody tr {
 
     .carousel-control-prev-icon {
         background-color: #d38b4e;
-        /*margin-left:-25px;*/
+        margin-left: -25px;
     }
 
     .carousel-control-next-icon {
-        /*margin-right:-30px;*/
+        margin-right: -30px;
         background-color: #d38b4e;
     }
-    /*.cls-gigopening-m-carousel{
-        margin-left:36px;
-    }*/
-    /*.cls-gigopening-m-carousel {
-        margin-left: 27px;
-    }*/
+
+    .cls-gigopening-m-carousel {
+        margin-left: 36px;
+    }
+
     .carousel-item > .carousel-control-prev-icon {
         display: none !important;
     }
+
     .carousel-item > .carousel-control-next-icon {
         display: none !important;
     }
+
     .cls-gigopening-working-mobile {
         display: block !important;
     }
 
     .cls-gigopening-working-desktop {
         display: none !important;
+    }
+
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
@@ -731,10 +724,12 @@ table tbody tr {
     .cls-intropart {
         margin-top: 3%;
     }
+
     .btn-dropdown {
         width: 100%;
     }
 }
+
 .cls-gigopening-working-mobile {
     display: none;
 }

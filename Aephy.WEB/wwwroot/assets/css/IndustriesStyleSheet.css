@@ -303,16 +303,16 @@ h6 {
     height: 500px;
 }
 
-.IndustriesInfo .content h4 {
+.IndustriesInfo h4 {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 25px !important;
     font-family: var(--font-secondary);
     color: #444444;
 }
 
-.IndustriesInfo .content h3 {
+.IndustriesInfo h3 {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 25px !important;
     font-family: var(--font-secondary);
     color: rgba(68,68,68,0.5);
 }
@@ -321,35 +321,71 @@ h6 {
     .IndustriesInfo .fitImage {
         height: auto;
     }
-    .IndustriesInfo .content h3 {
-        font-size: 20px;
+    .IndustriesInfo h3 {
+        font-size: 20px !important;
     }
-    .IndustriesInfo .content h4 {
-        font-size: 20px;
+    .IndustriesInfo h4 {
+        font-size: 20px !important;
     }
-    .AiIntro .content h3 {
-        font-size: 28px;
+    .AiIntro h3 {
+        font-size: 28px !important;
     }
 }
 
 @media(max-width:400px) {
-    .IndustriesInfo .content h3 {
-        font-size: 18px;
+    .IndustriesInfo h3 {
+        font-size: 18px !important;
     }
-    .IndustriesInfo .content h4 {
-        font-size: 18px;
+    .IndustriesInfo h4 {
+        font-size: 18px !important;
     }
-    .AiIntro .content h3 {
-        font-size: 24px;
+    .AiIntro h3 {
+        font-size: 24px !important;
+    }
+}
+
+@media(max-width:992px) {
+    .IndustriesInfo .titleOutside {
+        display: block;
+    }
+
+    .IndustriesInfo .sub-titleOutside {
+        display: block;
+    }
+
+    .IndustriesInfo .titleInside {
+        display: none;
+    }
+
+    .IndustriesInfo .sub-titleInside {
+        display: none;
+    }
+}
+
+@media(min-width:993px) {
+    .IndustriesInfo .titleOutside {
+        display: none;
+    }
+
+    .IndustriesInfo .sub-titleOutside {
+        display: none;
+    }
+
+    .IndustriesInfo .titleInside {
+        display: flex;
+    }
+
+    .IndustriesInfo .sub-titleInside {
+        display: flex;
     }
 }
 
 .IndustriesInfo .content {
-    margin-top: 40px;
+    margin-top: 10px;
 }
 
     .IndustriesInfo .content p {
-        padding: 30px 0;
+        padding: 10px 0;
         font-size: 15px;
     }
 
@@ -379,13 +415,13 @@ h6 {
 
 @media only screen and (min-device-width: 375px) and (max-device-width: 375px) {
     .industries-mobile-img {
-        height: 25vh;
+        height: 25vh !important;
     }
 }
 
 @media only screen and (min-device-width: 280px) and (max-device-width: 414px) {
     .industries-mobile-img {
-        height: 30vh;
+        height: 30vh !important;
     }
 }
 
@@ -398,13 +434,13 @@ h6 {
 
 @media only screen and (min-device-width:912px) and (max-device-width: 768px) {
     .industries-mobile-img {
-        height: 40vh;
+        height: 40vh !important;
     }
 }
 
 @media only screen and (min-device-width:540px) and (max-device-width: 540px) {
     .industries-mobile-img {
-        height: 40vh;
+        height: 40vh !important;
     }
 }
 

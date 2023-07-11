@@ -311,18 +311,50 @@ h6 {
     height: 500px;
 }
 
-.ServicesInfo .content h4 {
+.ServicesInfo h4 {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 25px !important;
     font-family: var(--font-secondary);
     color: #444444;
 }
 
-.ServicesInfo .content h3 {
+.ServicesInfo h3 {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 25px !important;
     font-family: var(--font-secondary);
     color: rgba(68,68,68,0.5);
+}
+
+@media(max-width:992px){
+    .ServicesInfo .titleOutside{
+        display:block;
+    }
+    .ServicesInfo .sub-titleOutside {
+        display: block;
+    }
+    .ServicesInfo .titleInside {
+        display:none;
+    }
+    .ServicesInfo .sub-titleInside {
+        display: none;
+    }
+}
+@media(min-width:993px){
+    .ServicesInfo .titleOutside {
+        display: none;
+    }
+
+    .ServicesInfo .sub-titleOutside {
+        display: none;
+    }
+
+    .ServicesInfo .titleInside {
+        display: flex;
+    }
+
+    .ServicesInfo .sub-titleInside {
+        display: flex;
+    }
 }
 
 @media(max-width:768px) {
@@ -352,7 +384,7 @@ h6 {
     }
 }
 .ServicesInfo .content {
-    margin-top: 40px;
+    margin-top: 10px;
 }
 
 .ServicesInfo .content p {

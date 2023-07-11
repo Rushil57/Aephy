@@ -701,6 +701,9 @@ h6 {
         margin-top: 80px;
         text-align: center;
     }
+    .carousel-control-prev, .carousel-control-next {
+        height: 450px;
+    }
 }
 
 .cls-gigopening-m-carousel {

@@ -551,33 +551,100 @@ table tbody tr {
     transform: translateX(0);
 }
 
+@media only screen and (max-width: 360px){
+    .JoinUs .listImage img {
+        width: 55%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 45%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
+    }
+    .carousel-control-prev-icon {
+        margin-left: -6px;
+    }
+    .carousel-control-next-icon {
+        margin-right: -6px;
+    }
+    .cls-gigopening-m-carousel {
+        margin: 0px 9px 0px 32px;
+    }
+}
+
 @media only screen and (max-width: 420px) and (min-width: 360px) {
     .carousel-control-prev-icon {
-        left: -17px;
+        margin-left: -25px;
     }
 
     .carousel-control-next-icon {
-        right: -17px;
+        margin-right: -25px;
+    }
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 26px;
+    }
+    .JoinUs .listImage img {
+        width: 60%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 40%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
 @media only screen and (max-width: 530px) and (min-width: 420px) {
     .carousel-control-prev-icon {
-        left: -27px;
+        margin-left: -28px;
     }
 
     .carousel-control-next-icon {
-        right: -27px;
+        margin-right: -28px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
     .carousel-control-prev-icon {
-        left: -37px;
+        margin-left: -50px;
     }
 
     .carousel-control-next-icon {
-        right: -37px;
+        margin-right: -50px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: right;
+        margin-top: 80px;
+        text-align: center;
     }
 }
 
@@ -593,9 +660,9 @@ table tbody tr {
         display: block;
     }
 
-    .cls-gigopening-m-carousel {
+    /*.cls-gigopening-m-carousel {
         margin: 0px 17px 0px 19px;
-    }
+    }*/
 
     .carousel-control-next-icon {
         display: block !important;
@@ -607,16 +674,19 @@ table tbody tr {
 
     .carousel-control-prev-icon {
         background-color: #d38b4e;
-        margin-left:-25px;
+        /*margin-left:-25px;*/
     }
 
     .carousel-control-next-icon {
-        margin-right:-30px;
+        /*margin-right:-30px;*/
         background-color: #d38b4e;
     }
-    .cls-gigopening-m-carousel{
+    /*.cls-gigopening-m-carousel{
         margin-left:36px;
-    }
+    }*/
+    /*.cls-gigopening-m-carousel {
+        margin-left: 27px;
+    }*/
     .carousel-item > .carousel-control-prev-icon {
         display: none !important;
     }
@@ -629,18 +699,6 @@ table tbody tr {
 
     .cls-gigopening-working-desktop {
         display: none !important;
-    }
-
-    .JoinUs .listImage img {
-        width: 66%;
-        height: 200px;
-    }
-
-    .cls-gigopening-working-mobile {
-        width: 34%;
-        float: right;
-        margin-top: 80px;
-        text-align: center;
     }
 }
 

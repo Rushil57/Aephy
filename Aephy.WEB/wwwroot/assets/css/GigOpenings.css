@@ -631,7 +631,7 @@ table tbody tr {
         display: none !important;
     }
 
-    .JoinUs img {
+    .JoinUs .listImage img {
         width: 66%;
         height: 200px;
     }
@@ -672,6 +672,9 @@ table tbody tr {
 
     .cls-intropart {
         margin-top: 3%;
+    }
+    .btn-dropdown {
+        width: 100%;
     }
 }
 .cls-gigopening-working-mobile {

@@ -925,3 +925,15 @@ h6 {
 /*----------------------------------------
     POPULAR AI SLIDER
 ----------------------------------------*/
+
+@media (max-width: 1000px) {
+    .btn-learnmore {
+        display: flex;
+        justify-content: center;
+    }
+
+    .explore-part{
+        padding: 5%;    
+    }
+}
+    

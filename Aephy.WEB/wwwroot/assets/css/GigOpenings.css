@@ -356,7 +356,7 @@ h6 {
 
 .GigLevels .box .icon-msg i {
     flex-shrink: 0;
-    font-size: 48px;
+    font-size: 48px !important;
     font-weight: 800;
     color: #fff;
     line-height: 0;
@@ -421,7 +421,7 @@ h6 {
 
 .GigCompensation .box .icon-msg i {
     flex-shrink: 0;
-    font-size: 48px;
+    font-size: 48px !important;
     font-weight: 800;
     color: #fff;
     line-height: 0;

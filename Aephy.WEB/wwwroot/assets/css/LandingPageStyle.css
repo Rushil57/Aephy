@@ -1818,3 +1818,11 @@ padding-top: 5%;
 .service-title-size {
     font-size: 25px !important;
 }
+
+.faq-title{
+    font-size: 20px;
+}
+
+.accordion-flush .accordion-button:not(.collapsed) {
+    color: var(--aephy) !important;
+}

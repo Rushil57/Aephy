@@ -270,30 +270,45 @@ h6 {
 .hero .pop-title h5{
     font-size: 16px; /* Increase the font-size */
 }
+@media only screen and (min-device-width:375px) and (max-device-width: 770px) {
+    .cls-popular {
+        padding-right: 0px !important;
+    }
 
-@media (max-width: 770px) {
     .hero .pop-box {
-        font-size: 12px; /* Increase the font-size */
+        font-size: 13px !important; /* Increase the font-size */
     }
+
     .hero .pop-title h5{
-        font-size: 16px; /* Increase the font-size */
+        font-size: 14px !important; /* Increase the font-size */
     }
 }
-@media (max-width: 545px) {
-    .hero .pop-box {
-        font-size: 10px; /* Increase the font-size */
+
+@media(max-width:360px) {
+    .cls-popular {
+        padding-right: 0px !important;
     }
-    .hero .pop-title h5{
-        font-size: 11px; /* Increase the font-size */
+    .hero .pop-title h5 {
+        font-size: 14px !important; /* Increase the font-size */
+    }
+    .hero .pop-box {
+        font-size: 12px !important; /* Increase the font-size */
     }
 }
-@media(max-width:380px){
-    .hero .pop-box {
-        font-size: 8px; /* Increase the font-size */
+
+@media(max-width:280px) {
+    .cls-popular {
+        margin: auto;
+        width: 50%;
+        padding: 4px;
     }
 
     .hero .pop-title h5 {
-        font-size: 10px; /* Increase the font-size */
+        font-size: 15px !important; /* Increase the font-size */
+    }
+
+    .hero .pop-box {
+        font-size: 11px !important; /* Increase the font-size */
     }
 }
 
@@ -633,12 +648,12 @@ h6 {
 
     .shortreviews .box .name {
         font-weight: 600;
-        font-size: 20px;
+        font-size: 18px !important;
         color: #fff;
     }
 
     .shortreviews .box .title {
-        font-size: 22px;
+        font-size: 18px !important;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
@@ -654,6 +669,7 @@ h6 {
 }
 
 .shortreviews .content .sub div {
+    font-size: 16px !important;
     flex-shrink: 0;
     color: #fff;
     margin-right: 2px;

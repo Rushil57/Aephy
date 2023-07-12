@@ -93,7 +93,7 @@
 
                         <!-- Second Row for description -->
                         <div class="row justify-content-center second-row">
-                            <div class="col-12 content px-4">
+                            <div class="col-12 content px-4 d-flex flex-column">
                                 <h3 class="pt-2 Project-title-size title-path">Solution</h3>
                                 <p class="section-detail-size">
                                     Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
@@ -114,6 +114,9 @@
                                 <h5>
                                     A general description created by project leader<br />Guidelines:<br />Paragraph 1: This description could focus on the benefits and outcomes that the project is expected to deliver. It could also highlight any unique features or advantages that make the project stand out from others in the same field.<br />Paragraph 2: Include a brief overview of the process that will be followed to complete the project, including any milestones or deliverables that are included.<br />Overall, the goal of summary should be to give potential clients a clear understanding of what they can expect to achieve by working with you and your team.<br />
                                 </h5>
+                                <div class="d-flex align-self-end">
+                                    <a class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines <i class="bi bi-caret-down-fill"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,7 +126,7 @@
                 <section id="Project" class="Project pt-4">
                     <div class="container-flued">
                         <div class="row justify-content-center">
-                            <div class="col-12 content px-4">
+                            <div class="col-12 content px-4 d-flex flex-column">
                                 <h3 class="pt-2 Project-title-size title-path">What is included</h3>
                                 <p class="section-detail-size">
                                     Our goal is to offer the most suitable project to your needs that will transform your business. <br />Paragraph 0: Project is undertaken by our project leader and associate. Duration of the project is x (determined bysenior project leader).
@@ -131,52 +134,9 @@
                                 <p class="section-detail-size">
                                     Defining the scope and requirements for an AI project involves several steps: <br />Paragraph 1: Identify the problem: First, identify the business problem or opportunity that the AI project will address. This can involve analyzing data, identifying inefficiencies, or uncovering opportunities for automation. <br />Paragraph 2: Determine the goals: Next, determine the goals of the project. These should be specific, measurable, and aligned with the business problem or opportunity identified in step one. For example, a goal might be to reduce customer service response time by 50%. <br />Paragraph 3: Define the scope: Once the goals are established, define the scope of the project. This should include the data sources that will be used, the technology stack that will be employed, and any other key parameters. <br />Paragraph 5: Define the requirements: Based on the goals and scope, define the technical requirements for the project. This may include selecting specific AI algorithms, defining data preprocessing steps, and selecting performance metrics. <br />Paragraph 6: Prioritize requirements: Once the requirements are defined, prioritize them based on their importance to achieving the project goals. This will help ensure that the most critical features are implemented first. <br />Paragraph 7: Develop a plan: Finally, develop a project plan that outlines the timeline, milestones, and resources required to deliver the project. This plan should be reviewed and updated regularly to ensure that the project stays on track.
                                 </p>
-
-                                <h4 class="section-title-size">
-                                    Notes : </h4>
-                                <ul>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Small: project leader + Associate.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>Medium: Project leader + expert + Associate.</p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Large: Project leader + 2 experts + 2 Associates.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Customize team and project scope.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Duration should be about the same for small, medium and large.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Project leader determines duration and requirements and the platform estimates average project price.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>How much time project leader works? This is set up by project leader, he can work maximum in 3 projects at the same time. And needs to work for each project at least 2 hours a day.</p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            Milestones are included and when a client buys a project, he should arrange how often to have calls with the team.
-                                        </p>
-                                    </li>
-                                    <li data-aos="fade-up" data-aos-delay="100">
-                                        <p>
-                                            For project leaders when created what is included make sure that skillset must be similar for everyone.
-                                        </p>
-                                    </li>
-                                </ul>
+                                <div class="d-flex align-self-end">
+                                    <a class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines <i class="bi bi-caret-down-fill"></i></a>
+                                </div>
                             </div>
                         </div>
 
@@ -649,6 +609,8 @@
             $('#milestonesModal').modal('hide');
             
             $('#clsReviewsPopup').modal('hide');
+
+            $('#guidelineModal').modal('hide');
         });
     });
     </script>

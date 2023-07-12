@@ -1059,11 +1059,11 @@ h6 {
 }
 
 .JoinUs .column-client-guide{
-    background-color:rgb(166,166,166);
+    background-color:rgb(166,166,166,0.2);
     padding:25px 25px;
 }
-.JoinUs .expand-client-guide{
-    background-color:rgb(166,166,166);
+.JoinUs .expand-client-guide {
+    background-color: rgb(166,166,166,0);
 }
 /*--------------------------------------------------------------
 # reviews score card Section

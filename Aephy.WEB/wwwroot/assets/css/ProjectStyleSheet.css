@@ -186,6 +186,13 @@ h6 {
     font-family: "Nunito", sans-serif;
 }
 
+.title-path {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: #444444;
+}
+
 /*--------------------------------------------------------------
 # Page Title
 --------------------------------------------------------------*/
@@ -396,12 +403,12 @@ h6 {
     display:contents;
 }
 
-.Project .radio-inline h4 {
-    font-size: 20px;
+.radio-inline h4 {
+    font-size: 16px !important;
 }
 
-.Project .radio-inline h5 {
-    font-size:18px;
+.radio-inline h5 {
+    font-size:18px !important;
     opacity:0.5;
 }
 
@@ -434,6 +441,10 @@ h6 {
     }
 }
 
+.form-check-input[type=radio] {
+    border-color: #7a7a7a !important;
+}
+
 .form-check-input:checked {
     background-color: var(--brand);
     border-color: var(--brand);
@@ -453,11 +464,11 @@ h6 {
     .RButtons input {
         appearance: none;
         cursor: pointer;
-        border-radius: 30px;
+        border-radius: 20px;
         padding: 5px 10px;
         background: #fff;
         color: var(--font-title);
-        font-size: 15px;
+        font-size: 16px;
         font-family: sans-serif;
         transition: all 0.1s;
         width: 100%;
@@ -466,7 +477,7 @@ h6 {
         justify-content: center;
         align-items: center;
         margin: 10px;
-        border: 3px solid rgba(58,58,58,0.3);
+        border: 2px solid rgba(58,58,58,0.2);
         background-color: white;
     }
 
@@ -489,7 +500,7 @@ h6 {
         padding: 10px 10px;
         background: #fff;
         color: var(--font-title);
-        font-size: 15px;
+        font-size: 16px;
         font-family: sans-serif;
         transition: all 0.1s;
         width: 100%;
@@ -516,16 +527,26 @@ h6 {
 
 @media(max-width:500px) {
     .RButtons input {
-        height: 100px;
+        height: 70px !important;
+        border-radius: 15px !important;
+        padding: 0 50px !important;
     }
     .RButtons #projSize {
         height: 60px;
     }
 }
 
+@media(max-width:1400px) and (min-width:1300px) {
+    .RButtons input {
+        height: 80px !important;
+    }
+}
+
 @media(max-width:400px) {
     .RButtons input {
-        height: 80px;
+        height: 70px !important;
+        border-radius: 15px !important;
+        padding: 0 50px !important;
     }
     .RButtons #projSize {
         height: 40px;
@@ -711,15 +732,15 @@ h6 {
 .progress__title {
     padding: 0.4rem 0 0.5rem;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 18px !important;
 }
 
 .progress__info {
-    font-size: 13px;
+    font-size: 16px;
     display: block;
 }
 .progress__info__date {
-    font-size: 13px;
+    font-size: 16px;
     display: block;
     opacity:0.6;
 }
@@ -750,18 +771,18 @@ h6 {
 
     #successfullProjects .box .name {
         font-weight: 600;
-        font-size: 20px;
+        font-size: 18px !important;
         color: #fff;
     }
 
     #successfullProjects .box .title {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 800;
         color: #fff;
         padding-bottom: 10px;
     }
     #successfullProjects .box .sub-title {
-        font-size: 16px;
+        font-size: 16px !important;
         font-weight: 500;
         color: #fff;
     }
@@ -883,7 +904,7 @@ h6 {
 
 #successfullProjects .box .icon-msg h3 {
     flex-shrink: 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     color: #fff;
     padding: 10px 10px 20px 10px;
@@ -892,7 +913,7 @@ h6 {
 }
 
 #successfullProjects .box .description {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     color: #fff;
     padding: 10px 10px 150px 10px;
@@ -925,7 +946,7 @@ h6 {
 
 .reviews .info .name {
     font-weight: 600;
-    font-size: 17px;
+    font-size: 18px;
 }
 
 .reviews .title {
@@ -977,7 +998,7 @@ h6 {
 }
 
 .detailReview {
-    font-size: 20px;
+    font-size: 16px !important;
 }
 
 /*--------------------------------------------------------------
@@ -1024,14 +1045,14 @@ h6 {
     }
 
     .JoinUs ul h5 {
-        font-size: 18px;
+        font-size: 18px !important;
         font-weight: 700;
         font-family: var(--font-secondary);
         color: var(--font-title);
     }
 
     .JoinUs ul p {
-        font-size: 15px;
+        font-size: 16px !important;
     }
 
 .JoinUs p:last-child {
@@ -1075,9 +1096,15 @@ h6 {
 .ratingProgress .ProgressTable progress {
     position: relative;
     height: 10px;
-    width: 150px;
+    width: 130px;
     border: 1px solid #fff;
     border-radius:5px;
+}
+
+@media(max-width:992px){
+    .ratingProgress .ProgressTable progress {
+        width: 150px;
+    }
 }
 
 @media(max-width:768px){
@@ -1100,7 +1127,7 @@ h6 {
 }
 .ratingProgress .approxRating label {
     flex-shrink: 0;
-    font-size: 20px;
+    font-size: 18px;
     margin: 3px;
     color: var(--font-title);
     line-height: 0;
@@ -1130,7 +1157,7 @@ progress::-webkit-progress-value {
 
 .ratingBreakdown #tableRatingBreakdown {
     color: var(--font-title);
-    width:80%;
+    width:100%;
     font-size:14px !important;
 }
 
@@ -1142,7 +1169,7 @@ progress::-webkit-progress-value {
 .ratingBreakdown h4{
     color: var(--font-title);
     font-weight:700;
-    font-size:20px;
+    font-size:18px;
     padding:5px;
     margin:5px 0;
 }
@@ -1166,7 +1193,7 @@ progress::-webkit-progress-value {
 
 .clientReviews .info .name {
     font-weight: 600;
-    font-size: 17px;
+    font-size: 18px !important;
 }
 
 .clientReviews .info .date {
@@ -1209,4 +1236,39 @@ progress::-webkit-progress-value {
 
 .clientReviews .detailReview{
     font-size:18px;
+}
+
+.progressContainer .cls-professional-viewmore{
+    display:none;
+}
+
+.cls-milestone-popup {
+    display: block;
+    font-size: 16px;
+    position: relative;
+    color: #d38b4e;
+    text-align: center;
+}
+.cls-milestone-popup i{
+    font-size: 16px;
+    color: #d38b4e;
+}
+
+@media(max-width:992px){
+    .left-content {
+        width: auto;
+    }
+
+    .right-content {
+        width: auto;
+    }
+}
+@media(min-width:992px) {
+    .left-content {
+        width: 35%;
+    }
+
+    .right-content {
+        width: 65%;
+    }
 }

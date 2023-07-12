@@ -1058,13 +1058,18 @@ h6 {
     transition: all 0.4s ease;
 }
 
-
+.JoinUs .column-client-guide{
+    background-color:rgb(166,166,166);
+    padding:25px 25px;
+}
+.JoinUs .expand-client-guide{
+    background-color:rgb(166,166,166);
+}
 /*--------------------------------------------------------------
 # reviews score card Section
 --------------------------------------------------------------*/
-
-.ratingProgress .content{
-    width:fit-content;
+.ratingProgress .content {
+    width: fit-content;
 }
 
 .ratingProgress .ProgressTable progress {

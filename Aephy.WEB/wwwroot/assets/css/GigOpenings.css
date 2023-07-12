@@ -550,6 +550,11 @@ table tbody tr {
         .carousel-inner .carousel-item > div:first-child {
             display: block;
         }
+
+    .join-us-img{
+        height: 30vh !important;
+        width: 100% !important;
+    }
 }
 
 .carousel-inner .carousel-item.active {

@@ -532,7 +532,7 @@ h6 {
         padding: 0 50px !important;
     }
     .RButtons #projSize {
-        height: 60px;
+        height: 60px !important;
     }
 }
 
@@ -549,7 +549,7 @@ h6 {
         padding: 0 50px !important;
     }
     .RButtons #projSize {
-        height: 40px;
+        height: 40px !important;
     }
 }
 
@@ -641,7 +641,7 @@ h6 {
     height: fit-content;
     margin: 0 auto;
     overflow: hidden;
-    padding: 2rem;
+    padding: 2rem 0;
     color: var(--font-title);
     background: #fff;
     @include box-shadow(0 0 15px rgba(0, 0, 0, 0.3));
@@ -831,6 +831,7 @@ h6 {
 .Project .second-row h5 {
     font-size: 16px;
     font-weight: 500;
+    margin-bottom:1rem;
 }
 .Project .second-row h4 {
     font-weight: 700;
@@ -923,6 +924,10 @@ h6 {
         # Clients Review
      ----------------------------------------------------------
 */
+
+.reviews{
+    padding:1rem;
+}
 
 .reviews .box {
     background: #fff;
@@ -1090,7 +1095,7 @@ h6 {
 # reviews score card Section
 --------------------------------------------------------------*/
 .ratingProgress .content {
-    width: fit-content;
+    width: 100%;
 }
 
 .ratingProgress .ProgressTable progress {
@@ -1178,7 +1183,7 @@ progress::-webkit-progress-value {
     background: #fff;
     /*  margin: 10px !important;*/
     margin-top: 0;
-    padding: 13px !important;
+    padding: 1rem !important;
     width: 100%;
 }
 
@@ -1188,7 +1193,6 @@ progress::-webkit-progress-value {
     align-items: center;
     justify-content: left;
     padding-top: 10px;
-    margin-top: 5%;
 }
 
 .clientReviews .info .name {
@@ -1249,10 +1253,6 @@ progress::-webkit-progress-value {
     color: #d38b4e;
     text-align: center;
 }
-.cls-milestone-popup i{
-    font-size: 16px;
-    color: #d38b4e;
-}
 
 @media(max-width:992px){
     .left-content {
@@ -1271,4 +1271,23 @@ progress::-webkit-progress-value {
     .right-content {
         width: 65%;
     }
+}
+.cls-milestone-hide{
+    display:none;
+}
+
+.cls-milestone-showless{
+    display:none;
+}
+
+.btn-show-more {
+    font-size: 16px;
+    position: relative;
+    color: var(--brand);
+    text-align: center; 
+    cursor:pointer;
+}
+.btn-show-more i{
+    font-size:16px;
+    color:var(--brand);
 }

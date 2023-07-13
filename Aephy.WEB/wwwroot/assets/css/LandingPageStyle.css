@@ -1826,6 +1826,6 @@ padding-top: 5%;
 .accordion-flush .accordion-button:not(.collapsed) {
     color: var(--aephy) !important;
 }
-.project-title-size {
+.Project-title-size {
     font-size: 25px !important;
 }

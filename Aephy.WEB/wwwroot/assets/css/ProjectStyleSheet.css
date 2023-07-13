@@ -1301,11 +1301,6 @@ progress::-webkit-progress-value {
         .carousel-inner .carousel-item > div:first-child {
             display: block;
         }
-
-    .join-us-img {
-        height: 30vh !important;
-        width: 100% !important;
-    }
 }
 
 .carousel-inner .carousel-item.active {
@@ -1332,10 +1327,6 @@ progress::-webkit-progress-value {
 }
 
 @media only screen and (max-width: 360px) {
-    .JoinUs .listImage img {
-        width: 55%;
-        height: 200px;
-    }
 
     .cls-gigopening-working-mobile {
         width: 45%;
@@ -1410,11 +1401,6 @@ progress::-webkit-progress-value {
 
     .cls-gigopening-m-carousel {
         margin: 0px 10px 0px 29px;
-    }
-
-    .JoinUs .listImage img {
-        width: 66%;
-        height: 200px;
     }
 
     .cls-gigopening-working-mobile {
@@ -1501,4 +1487,31 @@ progress::-webkit-progress-value {
 
 .carousel-control-prev, .carousel-control-next {
     height: 270px !important;
+}
+
+.cls-gigopening-m-carousel {
+    /*  padding-left: 0px;
+    padding-right: 30px;*/
+}
+
+.carousel-control-prev-icon {
+    background-color: #d38b4e;
+    margin-left: -50%;
+}
+
+.carousel-control-next-icon {
+    margin-right: -50%;
+    background-color: #d38b4e;
+}
+
+.carousel-item > .carousel-control-prev-icon {
+    display: none;
+}
+
+.carousel-item > .carousel-control-next-icon {
+    display: none;
+}
+
+.carousel-item.active {
+    padding-left: 7%;
 }

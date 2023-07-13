@@ -15,20 +15,20 @@
                     <div class="container-flued projectBanner">
                         <div class="section-header">
                             @*<span>For Ai Gigs</span>*@
-                            <h4 class="Project-title-size title-path">@ViewBag.pagePath</h4>
-                            @*<h4>@TempData["pagePath"]</h4>*@
+                            @*<h4 class="Project-title-size title-path">@ViewBag.pagePath</h4>*@
+                            <h4 class="label-title-size title-path">@TempData["pagePath"]</h4>
                         </div>
                         <!-- First Row -->
                         <div class="row justify-content-center">
                             <div class="box px-0">
                             <!-- first column -->
-                            <div class="col-0 col-sm-12 order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
+                            <div class="col-0 col-sm-auto order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
                                 <div class="row m-lg-2 d-flex justify-content-center align-center RButtons">
                                     <div class="col-6 d-flex justify-content-center">
-                                        <input type="radio" name="preferOption" label="Select Project" value="select" checked />
+                                        <input type="radio" name="preferOptionmobile" label="Select Project" value="select" checked />
                                     </div>
                                     <div class="col-6 d-flex justify-content-center">
-                                        <input type="radio" name="preferOption" label="Customize Project" value="customize" />
+                                            <input type="radio" name="preferOptionmobile" label="Customize Project" value="customize" />
                                     </div>
                                 </div>
                                 <div class="row m-lg-2 pt-4">
@@ -67,12 +67,27 @@
                                     <div class="col key section-detail-size">Team Size</div>
                                     <div class="col val section-detail-size">2</div>
                                 </div>
-                                <div class="row me-lg-2 me-4 detailRow">
-                                    <div class="col key section-detail-size">
-                                        Add more (senior project leader can add up to 3 points here)
+                                    <div class="row me-lg-2 me-4 py-2 detailRow">
+                                        <a href="" style="color:#d38b4e">Add more</a>
                                     </div>
-                                    <div class="col val"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
-                                </div>
+                                    <div class="row me-lg-2 me-4 detailRow">
+                                        <div class="col key section-detail-size">
+                                            Point 1
+                                        </div>
+                                        <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+                                    </div>
+                                    <div class="row me-lg-2 me-4 detailRow">
+                                        <div class="col key section-detail-size">
+                                            Point 2
+                                        </div>
+                                        <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+                                    </div>
+                                    <div class="row me-lg-2 me-4 detailRow">
+                                        <div class="col key section-detail-size">
+                                            Point 3
+                                        </div>
+                                        <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+                                    </div>
 
                                 <div class="row m-lg-2 m-4 d-flex justify-content-center align-center">
                                     <div class="col-lg-4 col-md-8 col-sm-12">
@@ -85,7 +100,7 @@
                             <!-- Second column -->
                             <div class="col-12 content order-first order-lg-first left-box">
                                 <img src="../assets/img/whyaephy/ai_roadmap_development.jpg" class="img-flued" style="width:100%" />
-                                <h3 class="pt-2 Project-title-size title-path">Solution</h3>
+                                <h3 class="pt-2 label-title-size title-path">Solution</h3>
                                 <p class="section-detail-size">
                                     Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
                                 </p>
@@ -95,13 +110,13 @@
                         <!-- Second Row for description -->
                         <div class="row justify-content-center second-row">
                             <div class="col-12 content d-flex flex-column">
-                                <h3 class="pt-2 Project-title-size title-path">Solution</h3>
+                                <h3 class="pt-2 label-title-size title-path">Solution</h3>
                                 <p class="section-detail-size">
                                     Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
                                 </p>
 
                                 <!--Description column-->
-                                <h4 class="pt-2 Project-title-size title-path">Project Architect Guidelines</h4>
+                                <h4 class="pt-2 label-title-size title-path">Project Architect Guidelines</h4>
                                 <h5 class="creaetdBy"></h5>
                                 <h5>
                                     As we aim to consistently deliver projects of exemplary quality, it is crucial for our Project Architects to align their approaches with specific guidelines. These guidelines are designed to provide a framework that ensures comprehensive project planning, regardless of the project's scale or complexity.<br />
@@ -125,14 +140,14 @@
 
                                 <!--Description column-->
 
-                                <h4 class="pt-2 Project-title-size title-path">Description</h4>
+                                <h4 class="pt-2 label-title-size title-path">Project Outline</h4>
                                 <h5 class="creaetdBy">Created by project architect</h5>
                                 <h5>
                                     A general description created by project leader<br />Guidelines:<br />Paragraph 1: This description could focus on the benefits and outcomes that the project is expected to deliver. It could also highlight any unique features or advantages that make the project stand out from others in the same field.<br />Paragraph 2: Include a brief overview of the process that will be followed to complete the project, including any milestones or deliverables that are included.<br />Overall, the goal of summary should be to give potential clients a clear understanding of what they can expect to achieve by working with you and your team.<br />
                                 </h5>
-                                <div class="d-flex align-self-start">
+                                @*<div class="d-flex align-self-start">
                                     <a href=""  class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
                     </div>
@@ -143,16 +158,16 @@
                     <div class="container-flued">
                         <div class="row justify-content-center">
                             <div class="col-12 content d-flex flex-column">
-                                <h3 class="pt-2 Project-title-size title-path">What is included</h3>
+                                <h3 class="pt-2 label-title-size title-path">Project Details</h3>
                                 <p class="section-detail-size">
                                     Our goal is to offer the most suitable project to your needs that will transform your business. <br />Paragraph 0: Project is undertaken by our project leader and associate. Duration of the project is x (determined bysenior project leader).
                                 </p>
                                 <p class="section-detail-size">
                                     Defining the scope and requirements for an AI project involves several steps: <br />Paragraph 1: Identify the problem: First, identify the business problem or opportunity that the AI project will address. This can involve analyzing data, identifying inefficiencies, or uncovering opportunities for automation. <br />Paragraph 2: Determine the goals: Next, determine the goals of the project. These should be specific, measurable, and aligned with the business problem or opportunity identified in step one. For example, a goal might be to reduce customer service response time by 50%. <br />Paragraph 3: Define the scope: Once the goals are established, define the scope of the project. This should include the data sources that will be used, the technology stack that will be employed, and any other key parameters. <br />Paragraph 5: Define the requirements: Based on the goals and scope, define the technical requirements for the project. This may include selecting specific AI algorithms, defining data preprocessing steps, and selecting performance metrics. <br />Paragraph 6: Prioritize requirements: Once the requirements are defined, prioritize them based on their importance to achieving the project goals. This will help ensure that the most critical features are implemented first. <br />Paragraph 7: Develop a plan: Finally, develop a project plan that outlines the timeline, milestones, and resources required to deliver the project. This plan should be reviewed and updated regularly to ensure that the project stays on track.
                                 </p>
-                                <div class="d-flex align-self-start">
+                                @*<div class="d-flex align-self-start">
                                     <a href="" class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
 
@@ -162,31 +177,31 @@
   background:#2E1F47;
   letter-spacing: 0.6px;">
                             <!-- first row -->
-                            <div class="progressContainer d-flex flex-column">
-                                <h3 class="pt-2 Project-title-size title-path" style="padding:0 0 0 0.5em;">Milestone</h3>
+                            <div class="progressContainer d-flex flex-column px-0">
+                                <h3 class="pt-2 label-title-size title-path" style="padding:0 0 0 0.5em;">Milestone</h3>
                                 <ul class="progress">
                                     <li class="progress__item progress__item--completed">
-                                        <p class="progress__title">Milestone 1 - Design</p>
+                                        <p class="progress__title Project-title-size">Milestone 1 - Design</p>
                                         <p class="progress__info">Milestone Homepage / About/Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage / About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
                                         <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                                     </li>
                                     <li class="progress__item progress__item--active">
-                                        <p class="progress__title">Milestone 2</p>
+                                        <p class="progress__title Project-title-size">Milestone 2</p>
                                         <p class="progress__info">Milestone 2 Homepage / About / Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage/ About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
                                         <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                                     </li>
                                     <li class="progress__item cls-professional-viewmore">
-                                        <p class="progress__title">Milestone 3</p>
+                                        <p class="progress__title Project-title-size">Milestone 3</p>
                                         <p class="progress__info">Next Step</p>
                                         <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                                     </li>
                                     <li class="progress__item cls-professional-viewmore">
-                                        <p class="progress__title">Milestone 4</p>
+                                        <p class="progress__title Project-title-size">Milestone 4</p>
                                         <p class="progress__info">Describe</p>
                                         <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                                     </li>
                                     <li class="progress__item cls-professional-viewmore">
-                                        <p class="progress__title">Milestone 5</p>
+                                        <p class="progress__title Project-title-size">Milestone 5</p>
                                         <p class="progress__info">Describe</p>
                                         <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                                     </li>
@@ -201,13 +216,13 @@
                         <div class="row justify-content-center" id="successfullProjects">
                             <div class="col-12 content px-0">
                                 <div class="row d-flex justify-content-center align-center RButtons">
-                                    <h3 class="pt-2 justify-content-center Project-title-size title-path" style="padding:0 0 0 1em;">
+                                    <h3 class="pt-2 justify-content-center label-title-size title-path" style="padding:0 0 0 1em;">
                                         Successful Projects
                                     </h3>
                                     <div class="col-lg-6 col-md-6 d-flex justify-content-center">
                                         <div class="box">
                                             <div class="icon-msg">
-                                                <h3>
+                                                <h3 class="Project-title-size">
                                                     Customer experience
                                                 </h3>
                                             </div>
@@ -238,7 +253,7 @@
                                     <div class="col-lg-6 col-md-6 d-flex justify-content-center">
                                         <div class="box" style="background-color:#a6a6a6">
                                             <div class="icon-msg">
-                                                <h3>
+                                                <h3 class="Project-title-size">
                                                     Portfolio Management
                                                 </h3>
                                             </div>
@@ -272,7 +287,7 @@
 
                         <!-- Reviews row -->
                         <div class="row justify-content-center reviews" id="reviews">
-                            <h3 class="pt-2 justify-content-center Project-title-size title-path">
+                            <h3 class="pt-2 justify-content-center label-title-size title-path">
                                 Top Professionals
                             </h3>
                             <div class="col-12 content d-flex flex-column" id="leftReview">                                
@@ -334,7 +349,7 @@
                         <!--Ratings Scorecard row-->
                         <div class="row ratingProgress">
                             <div class="section-header">
-                                <h3 class="justify-content-start align-items-center Project-title-size title-path"><label style="background-color:#fff; padding:0 0 0 0.5em;">Solution Reviews</label></h3>
+                                <h3 class="justify-content-start align-items-center label-title-size title-path"><label style="background-color:#fff; padding:0 0 0 0.5em;">Solution Reviews</label></h3>
                             </div>
                             <div class="col-12 d-flex px-0">
                                 <div class="row" style="width:100%;">
@@ -380,7 +395,7 @@
                                     </div>
                                     <!--col 2-->
                                     <div class="col-6 right-content ratingBreakdown px-lg-0 px-4">
-                                        <div class="row mx-lg-0 mx-2 Project-title-size title-path"><h4>Rating breakdown</h4></div>
+                                        <div class="row mx-lg-0 mx-2 label-title-size title-path"><h4>Rating breakdown</h4></div>
                                         <div class="row">
                                             <div class="col-lg-6 col-12">
                                                 <table id="tableRatingBreakdown">
@@ -451,6 +466,28 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 cls-clientReview-hide">
+                                            <div class="content">
+                                                <div class="image">
+                                                    <div>EC</div>
+                                                </div>
+                                                <div class="info">
+                                                    <div class="name">Eleonora C.</div>
+                                                    <div class="stars">
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <label>5.00</label>
+                                                        <lable class="date">Mar 23,2023</lable>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="box">
+                                                <div class="title">
+                                                    extra PPT as agreed
+                                                </div>
+                                                <div class="detailReview">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="d-flex align-self-start">
                                         <a class="cls-ClientReviews-popup btn-show-more" id="btnClientReviewsPopup" data-bs-toggle="modal" data-bs-target="#clsClientReviewsPopup">View More</i></a>
@@ -462,14 +499,14 @@
                         <div class="row JoinUs" style="padding:50px 0;">
                             <div class="col-12 column-client-guide">
                                 @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
-                                <h3 class="Project-title-size title-path">
+                                <h3 class="label-title-size title-path">
                                     Client Guide
                                 </h3>
                                 <ul>
                                     <li data-aos="fade-up" data-aos-delay="100">
                                         <i class="bi bi-send"></i>
                                         <div>
-                                            <h5 class="section-title-size">
+                                            <h5 class="Project-title-size">
                                                 Project Initiation After Purchase
                                             </h5>
                                             <p>
@@ -486,7 +523,7 @@
                                     <li data-aos="fade-up" data-aos-delay="200">
                                         <i class="bi bi-send"></i>
                                         <div>
-                                            <h5 class="section-title-size">
+                                            <h5 class="Project-title-size">
                                                 Provision of Project Information
                                             </h5>
                                             <p>
@@ -503,7 +540,7 @@
                                     <li data-aos="fade-up" data-aos-delay="300">
                                         <i class="bi bi-send"></i>
                                         <div>
-                                            <h5 class="section-title-size">
+                                            <h5 class="Project-title-size">
                                                 Project Completion, Payment Processing, and Feedback
                                             </h5>
                                             <p>
@@ -574,9 +611,24 @@
                             <div class="col key section-detail-size">Team Size</div>
                             <div class="col val text-end section-detail-size">2</div>
                         </div>
+                        <div class="row me-lg-2 me-4 py-2 detailRow">
+                            <a href="" style="color:#d38b4e">Add more</a>
+                        </div>
                         <div class="row me-lg-2 me-4 detailRow">
                             <div class="col key section-detail-size">
-                                Add more (senior project leader can add up to 3 points here)
+                                Point 1
+                            </div>
+                            <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+                        </div>
+                        <div class="row me-lg-2 me-4 detailRow">
+                            <div class="col key section-detail-size">
+                                Point 2
+                            </div>
+                            <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
+                        </div>
+                        <div class="row me-lg-2 me-4 detailRow">
+                            <div class="col key section-detail-size">
+                                Point 3
                             </div>
                             <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
                         </div>

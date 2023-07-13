@@ -441,7 +441,7 @@ h6 {
     }
 }
 
-.form-check-input[type=radio] {
+.form-check-input {
     border-color: #7a7a7a !important;
 }
 
@@ -641,7 +641,7 @@ h6 {
     height: fit-content;
     margin: 0 auto;
     overflow: hidden;
-    padding: 2rem 0;
+    padding: 2rem;
     color: var(--font-title);
     background: #fff;
     @include box-shadow(0 0 15px rgba(0, 0, 0, 0.3));
@@ -1256,7 +1256,7 @@ progress::-webkit-progress-value {
 
 @media(max-width:992px){
     .left-content {
-        width: auto;
+        width: 100%;
     }
 
     .right-content {

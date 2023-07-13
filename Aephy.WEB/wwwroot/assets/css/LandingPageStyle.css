@@ -1829,3 +1829,16 @@ padding-top: 5%;
 .Project-title-size {
     font-size: 25px !important;
 }
+.list-title-size{
+    font-size:23px;
+}
+@media(max-width:992px) {
+    .cls-clientReview-hide{
+        display:none;
+    }
+}
+@media(min-width:993px) {
+    .cls-clientReview-hide {
+        display: block;
+    }
+}

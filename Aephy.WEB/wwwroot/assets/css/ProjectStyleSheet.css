@@ -1291,3 +1291,214 @@ progress::-webkit-progress-value {
     font-size:16px;
     color:var(--brand);
 }
+
+
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+
+    .join-us-img {
+        height: 30vh !important;
+        width: 100% !important;
+    }
+}
+
+.carousel-inner .carousel-item.active {
+    display: flex;
+}
+
+/* medium and up screens */
+@media (min-width: 768px) {
+
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+        transform: translateX(25%);
+    }
+
+    .carousel-inner .carousel-item-start.active,
+    .carousel-inner .carousel-item-prev {
+        transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
+}
+
+@media only screen and (max-width: 360px) {
+    .JoinUs .listImage img {
+        width: 55%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 45%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    .carousel-control-prev-icon {
+        margin-left: -6px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -6px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 9px 0px 32px;
+    }
+}
+
+@media only screen and (max-width: 420px) and (min-width: 360px) {
+    .carousel-control-prev-icon {
+        margin-left: -25px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -25px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 26px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 40%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 530px) and (min-width: 420px) {
+    .carousel-control-prev-icon {
+        margin-left: -28px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -28px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 530px) {
+    .carousel-control-prev-icon {
+        margin-left: -50px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -50px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .JoinUs .listImage img {
+        width: 66%;
+        height: 200px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        font-size: 12px !important;
+        width: 25px;
+    }
+
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: block;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 17px 0px 19px;
+    }
+
+    .carousel-control-next-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        background-color: #d38b4e;
+        margin-left: -25px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -30px;
+        background-color: #d38b4e;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin-left: 36px;
+    }
+
+    .carousel-item > .carousel-control-prev-icon {
+        display: none !important;
+    }
+
+    .carousel-item > .carousel-control-next-icon {
+        display: none !important;
+    }
+
+    .cls-gigopening-working-mobile {
+        display: block !important;
+    }
+
+    .cls-gigopening-working-desktop {
+        display: none !important;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+}
+
+.cls-gigopening-m-carousel {
+    padding-right: 18px;
+}
+
+.carousel-control-next-icon {
+    display: none;
+}
+
+.carousel-control-prev-icon {
+    display: none;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    height: 270px !important;
+}

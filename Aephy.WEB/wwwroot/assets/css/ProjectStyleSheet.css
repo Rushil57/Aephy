@@ -681,7 +681,7 @@ h6 {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: transparent;
+    background: #fff;
     color: var(--font-title);
     font-weight: 400;
     font-size: 13px;

@@ -930,7 +930,7 @@ h6 {
     font-size: 16px;
     font-weight: 600;
     color: #fff;
-    padding: 10px 10px 150px 10px;
+    padding: 10px 10px 10px 10px;
 }
 
 /*---------------------------------------------------------
@@ -1363,6 +1363,15 @@ progress::-webkit-progress-value {
     .cls-gigopening-m-carousel {
         margin: 0px 9px 0px 32px;
     }
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
 }
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {
@@ -1383,6 +1392,15 @@ progress::-webkit-progress-value {
         float: left;
         margin-top: 80px;
         text-align: center;
+    }
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
     }
 }
 
@@ -1405,6 +1423,16 @@ progress::-webkit-progress-value {
         margin-top: 80px;
         text-align: center;
     }
+
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
@@ -1425,6 +1453,16 @@ progress::-webkit-progress-value {
         float: left;
         margin-top: 80px;
         text-align: center;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
     }
 }
 
@@ -1489,13 +1527,24 @@ progress::-webkit-progress-value {
         text-align: center;
     }
 
-    .carousel-item {
+    #projectReviewCarousel .carousel-item {
         max-height: 430px !important;
     }
 
     .carousel-control-next-icon {
         margin-right: 0% !important;
     }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev,
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        display: block !important;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-item {
+        max-height: 575px !important;
+    }
+
+    
 
    /* .carousel-control-prev, .carousel-control-next {
         margin-left: 8px !important;
@@ -1552,13 +1601,22 @@ progress::-webkit-progress-value {
     padding-left: 7%;
 }*/
 
-.carousel-item {
+#projectReviewCarousel .carousel-item {
     padding-right: 7%;
     max-height: 362px;
 }
 
+    #projectReviewCarousel .carousel-item .cls-Successful-Projects {
+        display:none;
+    }
+
 .carousel-inner {
     padding-top: 10px;
+}
+
+#SuccessfulProjectsCarousel .carousel-control-prev,
+#SuccessfulProjectsCarousel .carousel-control-next{
+    display:none;
 }
 
 /*.cls-carouselproject-mobile{

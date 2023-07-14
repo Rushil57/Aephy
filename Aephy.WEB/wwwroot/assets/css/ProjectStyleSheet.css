@@ -949,7 +949,7 @@ h6 {
     padding: 13px !important;
     border-radius: 3px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
-    width: 95%;
+    width: 97%;
     min-height: 250px;
 }
 
@@ -1325,7 +1325,7 @@ progress::-webkit-progress-value {
 }
 
 /* medium and up screens */
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
 
     .carousel-inner .carousel-item-end.active,
     .carousel-inner .carousel-item-next {
@@ -1341,7 +1341,7 @@ progress::-webkit-progress-value {
 .carousel-inner .carousel-item-end,
 .carousel-inner .carousel-item-start {
     transform: translateX(0);
-}
+}*/
 
 @media only screen and (max-width: 360px) {
 
@@ -1489,36 +1489,45 @@ progress::-webkit-progress-value {
         text-align: center;
     }
 
-    .carousel-control-prev, .carousel-control-next {
+    .carousel-item {
+        max-height: 430px !important;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: 0% !important;
+    }
+
+   /* .carousel-control-prev, .carousel-control-next {
         margin-left: 8px !important;
         margin-right: 8px !important;
     }
     .cls-carouselproject-mobile {
         display: block;
-    }
+    }*/
 }
 
-.cls-gigopening-m-carousel {
+/*.cls-gigopening-m-carousel {
     padding-right: 18px;
-}
+}*/
 
-.carousel-control-next-icon {
+/*.carousel-control-next-icon {
     display: none;
-}
+}*/
 
-.carousel-control-prev-icon {
+/*.carousel-control-prev-icon {
     display: none;
-}
+}*/
 
 .carousel-control-prev, .carousel-control-next {
     height: 270px !important;
-    margin-left: -284px;
+/*    margin-left: -284px;
     margin-right: -284px;
+*/
 }
 
 .cls-gigopening-m-carousel {
-    /*  padding-left: 0px;
-    padding-right: 30px;*/
+    margin-left:3%;
+    margin-right:1%;
 }
 
 .carousel-control-prev-icon {
@@ -1527,7 +1536,7 @@ progress::-webkit-progress-value {
 }
 
 .carousel-control-next-icon {
-    margin-right: -50%;
+    margin-right: -75%;
     background-color: #d38b4e;
 }
 
@@ -1539,9 +1548,19 @@ progress::-webkit-progress-value {
     display: none;
 }
 
-.carousel-item.active {
+/*.carousel-item.active {
     padding-left: 7%;
+}*/
+
+.carousel-item {
+    padding-right: 7%;
+    max-height: 362px;
 }
-.cls-carouselproject-mobile{
+
+.carousel-inner {
+    padding-top: 10px;
+}
+
+/*.cls-carouselproject-mobile{
     display:none;
-}
+}*/

@@ -1832,12 +1832,12 @@ padding-top: 5%;
 .list-title-size{
     font-size:23px;
 }
-@media(max-width:992px) {
-    .cls-clientReview-hide{
-        display:none;
+@media only screen and (max-width:992px) {
+    .cls-clientReview-hide {
+        display: none;
     }
 }
-@media(min-width:993px) {
+@media only screen and (min-width:993px) {
     .cls-clientReview-hide {
         display: block;
     }
@@ -1856,25 +1856,29 @@ padding-top: 5%;
         color: #d38b4e;
     }
 
-@media(max-width:992px){
-    .btn-more-less{
-        display:flex;
+@media only screen and (max-width:992px) {
+    .btn-more-less {
+        display: flex;
     }
+
     .cls-milestone-showmore {
         display: block;
     }
-    .cls-milestone-showless{
-        display:none;
+
+    .cls-milestone-showless {
+        display: none;
     }
+
     .cls-milestone-hide {
         display: none;
     }
 }
-@media(min-width:993px){
-    .btn-more-less{
-        display:none !important;
+@media only screen and (min-width:993px) {
+    .btn-more-less {
+        display: none !important;
     }
-    .cls-milestone-hide{
-        display:block !important;
+
+    .cls-milestone-hide {
+        display: block !important;
     }
 }

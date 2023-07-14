@@ -1272,13 +1272,13 @@ progress::-webkit-progress-value {
         width: 65%;
     }
 }
-.cls-milestone-hide{
+/*.cls-milestone-hide{
     display:none;
 }
 
 .cls-milestone-showless{
     display:none;
-}
+}*/
 
 .btn-show-more {
     font-size: 16px;

@@ -477,23 +477,29 @@
                                 <p class="progress__info">Milestone 2 Homepage / About / Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage/ About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
                                 <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                             </li>
-                            <li class="progress__item">
+                            <li class="progress__item cls-milestone-hide">
                                 <p class="progress__title">Milestone 3</p>
                                 <p class="progress__info">Next Step</p>
                                 <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                             </li>
-                            <li class="progress__item">
+                            <li class="progress__item cls-milestone-hide">
                                 ""
                                 <p class="progress__title">Milestone 4</p>
                                 <p class="progress__info">Describe</p>
                                 <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                             </li>
-                            <li class="progress__item">
+                            <li class="progress__item cls-milestone-hide">
                                 <p class="progress__title">Milestone 5</p>
                                 <p class="progress__info">Describe</p>
                                 <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
                             </li>
                         </ul>
+                        <div class="d-flex align-self-start btn-more-less" style="padding:1rem 0 0 1em;">
+                            <a class="cls-milestone-showmore cls-milestone" onclick="MilestoneViewMore();" id="clsMilestoneShowmore">View Details<i class="bi bi-caret-down-fill"></i></a>
+                        </div>
+                        <div class="d-flex align-self-start btn-more-less" style="padding:1rem 0 0 1em;">
+                            <a class="cls-milestone-showless cls-milestone" onclick="MilestoneViewLess();" id="clsMilestoneShowless">Hide Details<i class="bi bi-caret-up-fill"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -801,6 +807,18 @@
 
             });
         })
+
+        function MilestoneViewMore(){
+        $(".cls-milestone-showmore").css("display", "none");
+        $(".cls-milestone-hide").css("display", "block");
+        $(".cls-milestone-showless").css("display", "block");
+    }
+
+    function MilestoneViewLess(){
+        $(".cls-milestone-showmore").css("display", "block");
+        $(".cls-milestone-hide").css("display", "none");
+        $(".cls-milestone-showless").css("display", "none");
+    }
 
     </script>
 </body>

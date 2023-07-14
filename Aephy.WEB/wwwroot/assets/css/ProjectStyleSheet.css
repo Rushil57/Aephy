@@ -1487,6 +1487,8 @@ progress::-webkit-progress-value {
 
 .carousel-control-prev, .carousel-control-next {
     height: 270px !important;
+    margin-left: -284px;
+    margin-right: -284px;
 }
 
 .cls-gigopening-m-carousel {

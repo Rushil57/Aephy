@@ -1476,6 +1476,9 @@ progress::-webkit-progress-value {
         margin-left: 8px !important;
         margin-right: 8px !important;
     }
+    .cls-carouselproject-mobile {
+        display: block;
+    }
 }
 
 .cls-gigopening-m-carousel {
@@ -1521,4 +1524,7 @@ progress::-webkit-progress-value {
 
 .carousel-item.active {
     padding-left: 7%;
+}
+.cls-carouselproject-mobile{
+    display:none;
 }

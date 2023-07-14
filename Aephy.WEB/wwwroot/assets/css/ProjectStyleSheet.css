@@ -1424,7 +1424,7 @@ progress::-webkit-progress-value {
     }
 
     .cls-gigopening-m-carousel {
-        margin: 0px 17px 0px 19px;
+        margin: 0px 5px 0px 15px;
     }
 
     .carousel-control-next-icon {
@@ -1445,9 +1445,9 @@ progress::-webkit-progress-value {
         background-color: #d38b4e;
     }
 
-    .cls-gigopening-m-carousel {
+    /*.cls-gigopening-m-carousel {
         margin-left: 36px;
-    }
+    }*/
 
     .carousel-item > .carousel-control-prev-icon {
         display: none !important;
@@ -1470,6 +1470,11 @@ progress::-webkit-progress-value {
         float: left;
         margin-top: 80px;
         text-align: center;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        margin-left: 8px !important;
+        margin-right: 8px !important;
     }
 }
 

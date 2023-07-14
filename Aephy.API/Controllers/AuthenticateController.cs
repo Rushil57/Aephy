@@ -3,6 +3,7 @@ using Aephy.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace Aephy.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/api/Authenticate/")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
@@ -49,7 +50,7 @@ namespace Aephy.API.Controllers
         /// </remarks>
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
             UserDetail userDetail = new UserDetail();
             string strError = "";
@@ -60,69 +61,12 @@ namespace Aephy.API.Controllers
                 {
                     if (await _userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        if (!string.IsNullOrEmpty(model.FCMToken))
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
-                            if (!string.IsNullOrEmpty(model.Device))
-                            {
-                                var userRoles = await _userManager.GetRolesAsync(user);
-
-                                var authClaims = new List<Claim>
-                            {
-                                new Claim(ClaimTypes.Name, user.UserName),
-                                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            };
-
-                                foreach (var userRole in userRoles)
-                                {
-                                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                                }
-
-                                var token = GetToken(authClaims);
-                                var refreshToken = GenerateRefreshToken();
-
-                                int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
-
-                                user.RefreshToken = refreshToken;
-                                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
-                                user.FCMToken = model.FCMToken.Trim();
-                                user.Device = model.Device.Trim().ToUpper();
-                                await _userManager.UpdateAsync(user);
-                                userDetail.UserId = user.Id;
-                                userDetail.UserName = user.FirstName + " " + user.LastName;
-                                userDetail.Email = user.UserName;
-                                if (!string.IsNullOrEmpty(user.ProfileUrl))
-                                {
-                                    userDetail.ProfileImage = _configuration["BlobStorageSettings:UserImagesPath"].ToString() + user.ProfileUrl + _configuration["BlobStorageSettings:UserImagesPathToken"].ToString();
-                                    //Byte[] bytes = common.GetFileFromAzure(user.ProfileUrl);
-                                    //userDetail.ProfileImage = common.ImageCompressed(bytes);
-
-                                }
-
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Message = "Success",
-                                    Result = new
-                                    {
-                                        Token = new JwtSecurityTokenHandler().WriteToken(token),
-                                        RefreshToken = refreshToken,
-                                        Expiration = token.ValidTo,
-                                        RefreshTokenExpiration = user.RefreshTokenExpiryTime.ToUniversalTime(),
-                                        Id = user.Id,
-                                        UserDetail = userDetail
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                strError = "Device is required";
-                            }
-                        }
-                        else
-                        {
-                            strError = "FCMToken is required";
-                        }
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Login Success",
+                            Result = user.Email
+                        });
                     }
                     else
                     {
@@ -155,14 +99,14 @@ namespace Aephy.API.Controllers
         /// </remarks>
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromForm] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             try
             {
                 var userExists = await _userManager.FindByNameAsync(model.Email);
                 if (userExists != null)
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "User already exists with this email address" });
-
+                var refreshToken = GenerateRefreshToken();
                 ApplicationUser user = new()
                 {
                     Email = model.Email,
@@ -170,32 +114,10 @@ namespace Aephy.API.Controllers
                     UserName = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    RefreshToken = refreshToken,
+                    UserType = model.UserType,
                     CreatedDateTime = DateTime.UtcNow,
                 };
-
-                if (model.ProfileImage != null)
-                {
-                    if (model.ProfileImage.Length > 0)
-                    {
-                        user.ProfileUrl = await common.UploadBlobFile(model.ProfileImage, "userimages");
-                        //IFormFile formFile = model.ProfileImage;
-
-                        //var folderPath = Path.Combine(_hostingEnv.ContentRootPath, "UserImages");
-                        //var folderName = "UserImages";
-                        //var fileName = Path.GetRandomFileName() + Path.GetExtension(formFile.FileName).ToLowerInvariant();
-                        //var filePath = Path.Combine(folderPath, fileName);
-
-                        //if (!Directory.Exists(folderPath))
-                        //    Directory.CreateDirectory(folderPath);
-
-                        //using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        //{
-                        //    await formFile.CopyToAsync(fileStream);
-                        //    fileStream.Flush();
-                        //    user.ProfileUrl = fileName;
-                        //}
-                    }
-                }
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
                 {

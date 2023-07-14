@@ -1,151 +1,194 @@
 ﻿@{
     ViewData["Title"] = "Register Page";
-    Layout = null;
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Pages / Register - NiceAdmin Bootstrap Template</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-    <link href="~/assets/img/brand-icon.png" rel="icon">
-    @*<link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">*@
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-    <!-- Vendor CSS Files -->
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-    <!-- Template Main CSS File -->
-    <link href="~/assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Updated: May 30 2023 with Bootstrap v5.3.0
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-</head>
-
-<body>
-
-  <main>
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
     <div class="container">
-
-      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-        <div class="container">
-          <div class="row justify-content-center">
+        <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div class="d-flex justify-content-center py-4">
+                    <a href="/Home/Index" class="logo d-flex align-items-center w-auto">
+                        <img src="~/assets/img/ephylink_no_background_blue.png" />
+                        @*<span class="d-none d-lg-block">NiceAdmin</span>*@
+                    </a>
+                </div><!-- End Logo -->
 
-              <div class="d-flex justify-content-center py-4">
-                                <a href="/Home/Index" class="logo d-flex align-items-center w-auto">
-                  <img src="~/assets/img/Logo1.png" alt="">
-                  @*<span class="d-none d-lg-block">NiceAdmin</span>*@
-                </a>
-              </div><!-- End Logo -->
+                <div class="card mb-3">
 
-              <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="pt-4 pb-2">
+                            <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                            <p class="text-center small">Enter your details to create account</p>
+                        </div>
 
-                <div class="card-body">
+                        <form name="registration">
+                            <div class="form-group cls-form">
+                                <label for="Name">First Name</label>
+                                <input type="text" class="form-control" name="firstname" id="FirstName" placeholder="First Name">
+                            </div>
+                            <div class="form-group cls-form">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" name="lastname" id="LastName" placeholder="Last Name">
+                            </div>
+                            <div class="form-group cls-form">
+                                <label for="email">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="EmalId" placeholder="Email Address">
+                            </div>
+                            @*<div class="form-group cls-form">
+                            <label for="username">UserName</label>
+                            <div class="input-group">
+                            <span class="input-group-text" id="inputGroupPrepend">@@</span>
+                            <input type="text" name="username" class="form-control" id="UserName">
+                            </div>
+                            </div>*@
+                            <div class="form-group cls-form">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" name="password" id="Password" placeholder="Password">
+                            </div>
+                            <div class="form-group cls-form">
+                                <label for="userType">Select Role</label>
+                                <select class="form-select" aria-label="Default select example" name="role" id="userType">
+                                    <option value="client">Client</option>
+                                    <option value="freelancer">Freelancer</option>
+                                </select>
+                            </div>
+                            <div class="form-group cls-form">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms">
+                                    <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
+                                </div>
+                            </div>
+                            <button class="btn btn-brand w-100" type="submit">Create Account</button>
+                        </form>
+                        <p class="small mt-2">Already have an account? <a href="/Home/Login">Log in</a></p>
 
-                  <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
-                    <p class="text-center small">Enter your personal details to create account</p>
-                  </div>
-
-                  <form class="row g-3 needs-validation" novalidate>
-                    <div class="col-12">
-                      <label for="yourName" class="form-label">Your Name</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
                     </div>
-
-                    <div class="col-12">
-                      <label for="yourEmail" class="form-label">Your Email</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
-                      <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please choose a username.</div>
-                      </div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
-                    </div>
-
-                    <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
-                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
-                        <div class="invalid-feedback">You must agree before submitting.</div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <button class="btn btn-brand w-100" type="submit">Create Account</button>
-                    </div>
-                    <div class="col-12">
-                                            <p class="small mb-0">Already have an account? <a href="/Home/Login">Log in</a></p>
-                    </div>
-                  </form>
                 </div>
-              </div>
-
-              @*<div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-              </div>*@
-
             </div>
-          </div>
         </div>
-
-      </section>
-
     </div>
-  </main><!-- End #main -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+</section>
 
-    <!-- Vendor JS Files -->
-    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
-    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
-    <script src="~/assets/vendor/echarts/echarts.min.js"></script>
-    <script src="~/assets/vendor/quill/quill.min.js"></script>
-    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
-    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
-    <script src="~/assets/vendor/php-email-form/validate.js"></script>
 
-    <!-- Template Main JS File -->
-    <script src="~/assets/js/main.js"></script>
 
-</body>
 
-</html>
+<script type="text/javascript">
+    $(function () {
+        $("form[name='registration']").validate({
+            rules: {
+                firstname: { required: true },
+                lastname: { required: true },
+                email: {
+                    required: true,
+                    email: true
+                },
+                username: { required: true },
+                password: {
+                    required: true,
+                },
+                role: { required: true },
+                terms: {
+                    required: true,
+                }
+            },
+            messages: {
+                firstname: { required: "Please enter a firstname", },
+                lastname: { required: "Please enter a lastname", },
+                email: {
+                    required: "Please enter email address",
+                    email: "Please enter a valid email address"
+                },
+                username: { required: "Please enter user name" },
+                password: {
+                    required: "Please enter a password",
+                },
+                role: { required: "Select valid role" },
+                terms: {
+                    required: "Please check checkbox",
+                }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else if (element.parent('.form-check').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SaveUserData()
+            }
+        });
+    });
+
+    function SaveUserData() {
+        var Userdata = {
+            FirstName: $("#FirstName").val(),
+            LastName: $("#LastName").val(),
+            Email: $("#EmalId").val(),
+            Password: $("#Password").val(),
+            TermsCondition: $('#acceptTerms').is(':checked'),
+            UserType: $("#userType").val(),
+        }
+        //$.ajax({
+        //    type: "POST",
+        //    url: "https://localhost:7118/api/Authenticate/Register",
+        //    contentType: 'application/json',
+        //    data: JSON.stringify(Userdata),
+        //    success: function (result) {
+        //        if (result.Message == "User created successfully") {
+        //            //alert(result.Message)
+        //            $("#SuccessAlert").show()
+        //            window.location.href = '/Home/Login'
+        //            ResetForm()
+        //        }
+        //        else {
+        //            alert(result.Message)
+        //        }
+
+
+        //    },
+        //    error: function (result) {
+        //        alert("Something Went Wrong!");
+        //    }
+        //});
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RegisterNewUser", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(Userdata),
+            success: function (result) {
+                if (result.Message == "User created successfully") {
+                    alert(result.Message)
+
+                    window.location.href = '/Home/Login'
+                    ResetForm()
+                }
+                else {
+                    alert(result.Message)
+                }
+
+            },
+            error: function (result) {
+                alert("Enter Correct EmailId or Password");
+            }
+        });
+    }
+
+    function ResetForm() {
+        $("#FirstName").val("")
+        $("#LastName").val("")
+        $("#EmalId").val("")
+        $("#UserName").val("")
+        $("#Password").val("")
+        $("#userType").val("client")
+        $("#acceptTerms").prop('checked', false);
+    }
+</script>

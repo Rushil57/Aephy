@@ -753,7 +753,7 @@ h6 {
     */
 #successfullProjects .box {
     background: var(--brand);
-    min-height: 500px;
+    min-height: 550px;
     margin: 10px !important;
     padding: 20px !important;
     position: relative;
@@ -799,6 +799,10 @@ h6 {
         margin-right: 2px;
         line-height: 1;
     }
+
+#successfullProjects .successfull-projects-next-prev {
+    height: 540px !important;
+}
 
 .child {
     padding-top: 10px;
@@ -1098,10 +1102,14 @@ h6 {
     width: 100%;
 }
 
+.ratingProgress .ProgressTable {
+    padding-left: 2rem;
+}
+
 .ratingProgress .ProgressTable progress {
     position: relative;
     height: 10px;
-    width: 130px;
+    width: 115px;
     border: 1px solid #fff;
     border-radius:5px;
 }

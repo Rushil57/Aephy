@@ -67,7 +67,7 @@
                                     <div class="col key section-detail-size">Team Size</div>
                                     <div class="col val section-detail-size">2</div>
                                 </div>
-                                    <div class="row me-lg-2 me-4 py-2 detailRow">
+                                    @*<div class="row me-lg-2 me-4 py-2 detailRow">
                                         <a href="" style="color:#d38b4e">Add more</a>
                                     </div>
                                     <div class="row me-lg-2 me-4 detailRow">
@@ -87,14 +87,20 @@
                                             Point 3
                                         </div>
                                         <div class="col val text-end"><input class="form-check-input" type="checkbox" name="Addmore" value="Addmore" /></div>
-                                    </div>
+                                    </div>*@
 
-                                <div class="row m-lg-2 m-4 d-flex justify-content-center align-center">
+                                @*<div class="row m-lg-2 m-4 d-flex justify-content-center align-center">
                                     <div class="col-lg-4 col-md-8 col-sm-12">
                                         <input  type="submit" name="btnBuy" value="Buy($100)" class="btn btn-brand" style="width: 100%; font-size: 16px;">
                                         <a href="#" class="btn btn-brand" style="width:100%;">Message</a>
                                     </div>
-                                </div>
+                                </div>*@
+                                    <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
+                                        <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
+                                            <input type="submit" name="btnBuy" value="Buy ($100)" class="btn btn-brand" style="font-size: 16px;width: 50%;">
+                                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                                        </div>
+                                    </div>
                             </div>
                             </div>
                             <!-- Second column -->
@@ -214,67 +220,71 @@
 
                         <!-- Successfull Projects row-->
                         <div class="row justify-content-center" id="successfullProjects">
-                            <div class="col-12 content px-0">
-                                <div class="row d-flex justify-content-center align-center RButtons">
-                                    <h3 class="pt-2 justify-content-center label-title-size title-path" style="padding:0 0 0 1em;">
-                                        Successful Projects
-                                    </h3>
-                                    <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                        <div class="box">
-                                            <div class="icon-msg">
-                                                <h3 class="Project-title-size">
-                                                    Customer experience
-                                                </h3>
-                                            </div>
-                                            <div class="description">
-                                                Our team developed an AI strategy and roadmap for a retail bank that included implementing chatbots and voice assistants to automate customer service processes, improve response times, and reduce costs. Additionally, we identified opportunities to use machine learning algorithms to personalize marketing campaigns and product recommendations.
-                                            </div>
-                                            <div class="child col-10 mx-lg-2">
-                                                <div class="title border-bottom">
-                                                    Results
+                            <h3 class="pt-2 justify-content-center label-title-size title-path" style="padding:0 0 0 1em;">
+                                Successful Projects
+                            </h3>
+                            <div id="successfullProjectscarousel" class="carousel slide" data-interval="false">
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="carousel-item active px-0">
+                                        <div class="col-md-6 ">
+                                            <div class="box">
+                                                <div class="icon-msg">
+                                                    <h3 class="Project-title-size">
+                                                        Customer experience
+                                                    </h3>
                                                 </div>
-                                                <div class="content">
-                                                    <div class="info">
-                                                        <div class="name">Improved</div>
-                                                        <div class="sub">
-                                                            <div class="sub-title">Customer Satisfaction</div>
-                                                        </div>
+                                                <div class="description">
+                                                    Our team developed an AI strategy and roadmap for a retail bank that included implementing chatbots and voice assistants to automate customer service processes, improve response times, and reduce costs. Additionally, we identified opportunities to use machine learning algorithms to personalize marketing campaigns and product recommendations.
+                                                </div>
+                                                <div class="child col-10 mx-lg-2">
+                                                    <div class="title border-bottom">
+                                                        Results
                                                     </div>
-                                                    <div class="right-info">
-                                                        <div class="name">10% <i class="bi-arrow-up"></i></div>
-                                                        <div class="sub">
-                                                            <div class="sub-title">Revenue</div>
+                                                    <div class="content">
+                                                        <div class="info">
+                                                            <div class="name">Improved</div>
+                                                            <div class="sub">
+                                                                <div class="sub-title">Customer Satisfaction</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="right-info">
+                                                            <div class="name">10% <i class="bi-arrow-up"></i></div>
+                                                            <div class="sub">
+                                                                <div class="sub-title">Revenue</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                        <div class="box" style="background-color:#a6a6a6">
-                                            <div class="icon-msg">
-                                                <h3 class="Project-title-size">
-                                                    Portfolio Management
-                                                </h3>
-                                            </div>
-                                            <div class="description">
-                                                An AI roadmap that included implementing natural language processing (NLP) and deep learning algorithms to analyze market data, identify trends and patterns, and provide investment recommendations. We also implemented a risk management system that used machine learning to monitor portfolio risk in real-time and provide alerts when necessary.
-                                            </div>
-                                            <div class="child col-10 mx-lg-2" style="background-color:#a6a6a6">
-                                                <div class="title border-bottom">
-                                                    Results
+                                    <div class="carousel-item px-0">
+                                        <div class="col-md-6">
+                                            <div class="box" style="background-color:#a6a6a6">
+                                                <div class="icon-msg">
+                                                    <h3 class="Project-title-size">
+                                                        Portfolio Management
+                                                    </h3>
                                                 </div>
-                                                <div class="content">
-                                                    <div class="info">
-                                                        <div class="name">15%</div>
-                                                        <div class="sub">
-                                                            <div class="sub-title">Investment Return</div>
-                                                        </div>
+                                                <div class="description">
+                                                    An AI roadmap that included implementing natural language processing (NLP) and deep learning algorithms to analyze market data, identify trends and patterns, and provide investment recommendations. We also implemented a risk management system that used machine learning to monitor portfolio risk in real-time and provide alerts when necessary.
+                                                </div>
+                                                <div class="child col-10 mx-lg-2" style="background-color:#a6a6a6">
+                                                    <div class="title border-bottom">
+                                                        Results
                                                     </div>
-                                                    <div class="right-info">
-                                                        <div class="name">20% <i class="bi-arrow-down"></i></div>
-                                                        <div class="sub">
-                                                            <div class="sub-title">Risk Exposure</div>
+                                                    <div class="content">
+                                                        <div class="info">
+                                                            <div class="name">15%</div>
+                                                            <div class="sub">
+                                                                <div class="sub-title">Investment Return</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="right-info">
+                                                            <div class="name">20% <i class="bi-arrow-down"></i></div>
+                                                            <div class="sub">
+                                                                <div class="sub-title">Risk Exposure</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -282,6 +292,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                <a class="carousel-control-prev bg-transparent w-aut successfull-projects-next-prev" href="#successfullProjectscarousel" role="button" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </a>
+                                <a class="carousel-control-next bg-transparent w-aut successfull-projects-next-prev" href="#successfullProjectscarousel" role="button" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </a>
                             </div>
                         </div>
 
@@ -671,7 +687,7 @@
                             <div class="col key section-detail-size">Team Size</div>
                             <div class="col val text-end section-detail-size">2</div>
                         </div>
-                        <div class="row me-lg-2 me-4 py-2 detailRow">
+                        @*<div class="row me-lg-2 me-4 py-2 detailRow">
                             <a href="" style="color:#d38b4e">Add more</a>
                         </div>
                         <div class="row me-lg-2 me-4 detailRow">
@@ -698,16 +714,18 @@
                                 <a href="#" class="btn btn-brand" style="width:100%;">Buy($100)</a>
                                 <a href="#" class="btn btn-brand" style="width:100%;">Message</a>
                             </div>
+                        </div>*@
+                        <div class="row d-flex justify-content-center align-center">
+                            <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
+                                <input type="submit" name="btnBuy" value="Buy ($100)" class="btn btn-brand" style="width: 50%;">
+                                <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-   
-
-    
+    </div>   
 
 </main>
 

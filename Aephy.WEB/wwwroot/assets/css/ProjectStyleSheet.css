@@ -662,8 +662,8 @@ h6 {
     min-height: 75px;
     counter-increment: list;
     padding-left: 0.5rem;
-    &:before
-{
+}
+.progress__item:before {
     content: "";
     position: absolute;
     left: -1.7rem;
@@ -673,42 +673,39 @@ h6 {
     border-left: 1px solid var(--gray);
 }
 
-&:after {
-    content: counter(list);
-    position: absolute;
-    top: 12px;
-    left: -2.5rem;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #fff;
-    color: var(--font-title);
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 26px;
-    text-align: center;
-    border: 1px solid var(--brand);
-}
-
-    &:last-child {
-        &:before
-        {
-            border: none;
-        }
-
+    .progress__item:after {
+        content: counter(list);
+        position: absolute;
+        top: 12px;
+        left: -2.5rem;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--font-title);
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 26px;
+        text-align: center;
+        border: 1px solid var(--brand);
     }
 
-    &.progress__item--completed {
+    .progress__item:last-child::before {        
+            border: none;      
+    }
+
+    .progress__item .progress__item--completed {
         opacity: 0.6;
         color: var(--font-title);
-        &:after
+    }
+        .progress__item--completed:after
         {
             content: "\2713";
             font-weight: 400;
             background: var(--brand);
             color: #fff;
         }
-        &:before {
+        .progress__item--completed:before {
             content: "";
             position: absolute;
             left: -1.7rem;
@@ -717,17 +714,10 @@ h6 {
             width: 1px;
             border-left: 1px solid var(--brand);
         }
-
-    }
-
-    &.progress__item--active {
-        &:after
-        {
+    .progress__item--active:after{
             background: var(--aephy);
             color: #fff;
-        }
     }
-}
 
 .progress__title {
     padding: 0.4rem 0 0.5rem;

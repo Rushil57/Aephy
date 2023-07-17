@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Aephy.API.Models
+﻿namespace Aephy.WEB.Models
 {
-    public class GetUserProfileRequestModel
+    public class LoginModel
     {
-        public string UserId { get; set; } = "";
+        public string? Id { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public bool RememberMe { get; set; }
     }
+
     public class UserModel
     {
         public string? Id { get; set; }
@@ -18,8 +20,6 @@ namespace Aephy.API.Models
         public string? Email { get; set; }
 
         public string? UserType { get; set; }
-
-        public string? UserName { get; set; }
     }
 
     public class ChangePasswordModel

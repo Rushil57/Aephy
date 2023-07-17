@@ -20,6 +20,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AephyAppDbContext>()
     .AddDefaultTokenProviders();
 
+
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -54,6 +55,16 @@ builder.Services.AddControllers()
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
         });
 
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(1800);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,8 +72,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+    app.UseCors(x => x
+           .AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 
 

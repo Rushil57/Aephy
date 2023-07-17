@@ -13,5 +13,7 @@ namespace Aephy.API.DBHelper
         public string? FCMToken { get; set; }
         public string? Device { get; set; }
 
+        public string? UserType { get; set; }
+
     }
 }

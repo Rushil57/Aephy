@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                <div class="d-flex justify-content-center py-4">
+                    <a href="/Home/Dashboard" class="logo d-flex align-items-center w-auto">
+                        @*<img src="~/assets/img/Logo1.png" alt="">*@
+                        <img src="~/assets/img/ephylink_no_background_blue.png" />
+                        @*<span class="d-none d-lg-block">NiceAdmin</span>*@
+                    </a>
+                </div><!-- End Logo -->
+
+                <div class="card mb-3">
+
+                    <div class="card-body">
+
+                        <div class="pt-4 pb-2">
+                            <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                            <p class="text-center small">Enter your username & password to login</p>
+                        </div>
+                        <form name="loginForm">
+                            <div class="form-group cls-form">
+                                <label for="Name">UserName</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="inputGroupPrepend">@@</span>
+                                    <input type="text" name="username" class="form-control" id="username" placeholder="Email Address">
+                                </div>
+                            </div>
+                            <div class="form-group cls-form">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" name="password" id="Password" placeholder="Password">
+                            </div>
+                            <div class="form-group cls-form">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-brand w-100" type="submit">Login</button>
+                        </form>
+                        @*<p class="small mt-2">Don't have account? <a href="/Home/Register">Create an account</a></p>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<script type="text/javascript">
+
+
+
+    $(function () {
+        $("form[name='loginForm']").validate({
+            rules: {
+                username: { required: true },
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+
+                username: { required: "Please enter user name" },
+                password: {
+                    required: "Please enter a password",
+                }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                UserLogin()
+            }
+        });
+    });
+
+    function UserLogin() {
+        var Userdata = {
+            Username: $("#username").val(),
+            Password: $("#Password").val(),
+            RememberMe: $("#rememberMe").is(':checked')
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CheckExistingUser", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(Userdata),
+            success: function (result) {
+                if (result.Message == "Login Success") {
+                    window.location.href = '/Home/Index'
+                }
+                else {
+                    alert(result.Message)
+                }
+
+            },
+            error: function (result) {             
+                alert("Enter Correct EmailId or Password");
+            }
+        });
+    }
+
+    function ResetForm() {
+        $("#username").val("")
+        $("#Password").val("")
+        $("#rememberMe").prop('checked', false);
+    }
+
+    function SetSessionValue(email) {
+        $.ajax({
+            type: "POST",
+            url: "/Home/SetSessionValue",
+            data: { Email: email },
+            success: function (result) {
+                if (result) {
+                    window.location.href = '/Home/Index'
+                }
+                ResetForm()
+            },
+            error: function (result) {
+                alert("Something Went Wrong!");
+            }
+        });
+    }
+</script>

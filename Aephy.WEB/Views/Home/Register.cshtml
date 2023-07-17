@@ -3,12 +3,12 @@
     Layout = "~/Views/Shared/_RegisterLayout.cshtml";
 }
 
-<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center">
     <div id="preloader" style="display:none;"></div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                <div class="d-flex justify-content-center py-4">
+                <div class="d-flex justify-content-center">
                     <a href="/Home/Dashboard" class="logo d-flex align-items-center w-auto">
                         <img src="~/assets/img/ephylink_no_background_blue.png" />
                         @*<span class="d-none d-lg-block">NiceAdmin</span>*@
@@ -19,22 +19,22 @@
 
                     <div class="card-body">
                         <div class="pt-4 pb-2">
-                            <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                            <h5 class="card-title text-center pb-0 fs-4" style="padding:0;">Create an Account</h5>
                             <p class="text-center small">Enter your details to create account</p>
                         </div>
 
                         <form name="registration">
                             <div class="form-group cls-form">
                                 <label for="Name">First Name</label>
-                                <input type="text" class="form-control" name="firstname" id="FirstName" placeholder="First Name">
+                                <input type="text" class="form-control" name="firstname" id="FirstName">
                             </div>
                             <div class="form-group cls-form">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control" name="lastname" id="LastName" placeholder="Last Name">
+                                <input type="text" class="form-control" name="lastname" id="LastName">
                             </div>
                             <div class="form-group cls-form">
                                 <label for="email">Email Address</label>
-                                <input type="email" class="form-control" name="email" id="EmalId" placeholder="Email Address">
+                                <input type="email" class="form-control" name="email" id="EmalId">
                             </div>
                             @*<div class="form-group cls-form">
                             <label for="username">UserName</label>
@@ -45,7 +45,7 @@
                             </div>*@
                             <div class="form-group cls-form">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control" name="password" id="Password" placeholder="Password">
+                                <input type="password" class="form-control" name="password" id="Password">
                             </div>
                             <div class="form-group cls-form">
                                 <label for="userType">Select Role</label>

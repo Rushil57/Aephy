@@ -790,3 +790,14 @@ table tbody tr {
 .cls-gigopening-working-desktop {
     display: block;
 }
+
+@media(max-width:992px) {
+    .btn-next-prev {
+        display: flex !important;
+    }
+}
+@media(min-width:993px){
+    .btn-next-prev {
+        display: none !important;
+    }
+}

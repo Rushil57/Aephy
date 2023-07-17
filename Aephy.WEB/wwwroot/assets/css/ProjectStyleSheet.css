@@ -649,7 +649,7 @@ h6 {
 
 .progress {
     display:block;
-    height:-webkit-fill-available;
+    height:fit-content;
     background-color:#fff;
     position: relative;
     padding: 0 1rem 0 3.5rem;

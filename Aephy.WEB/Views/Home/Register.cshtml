@@ -4,6 +4,7 @@
 }
 
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+    <div id="preloader" style="display:none;"></div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
@@ -135,6 +136,7 @@
             TermsCondition: $('#acceptTerms').is(':checked'),
             UserType: $("#userType").val(),
         }
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("AddorEditUserData", "Home")",
@@ -142,6 +144,7 @@
             dataType: "json",
             data: JSON.stringify(Userdata),
             success: function (result) {
+                $("#preloader").hide();
                 if (result.Message == "User created successfully") {
                     alert(result.Message)
 
@@ -154,7 +157,8 @@
 
             },
             error: function (result) {
-                alert("Enter Correct EmailId or Password");
+                $("#preloader").hide();
+                alert("Error !");
             }
         });
     }

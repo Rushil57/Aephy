@@ -69,7 +69,7 @@ namespace Aephy.WEB.Controllers
         public ActionResult BrowseSolution(string service,string solution,string industry)
         {
             string pagePath;
-            if (string.IsNullOrEmpty(service) && string.IsNullOrEmpty(solution) && string.IsNullOrEmpty(solution))
+            if (string.IsNullOrEmpty(service) || string.IsNullOrEmpty(solution) || string.IsNullOrEmpty(industry))
             {
                 return View();
             }
@@ -83,7 +83,7 @@ namespace Aephy.WEB.Controllers
 
                     TempData["pagePath"] = pagePath;
 
-                    return View("Project");
+                    return RedirectToAction("Project");
                 }
             }
             return View();

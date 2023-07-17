@@ -1826,6 +1826,59 @@ padding-top: 5%;
 .accordion-flush .accordion-button:not(.collapsed) {
     color: var(--aephy) !important;
 }
-.project-title-size {
+.Project-title-size {
     font-size: 25px !important;
+}
+.list-title-size{
+    font-size:23px;
+}
+@media only screen and (max-width:992px) {
+    .cls-clientReview-hide {
+        display: none;
+    }
+}
+@media only screen and (min-width:993px) {
+    .cls-clientReview-hide {
+        display: block;
+    }
+}
+
+.cls-milestone {
+    display: block;
+    font-size: 16px;
+    position: relative;
+    color: #d38b4e;
+    text-align: center;
+}
+    .cls-milestone i {
+        font-size: 16px;
+        position: relative;
+        color: #d38b4e;
+    }
+
+@media only screen and (max-width:992px) {
+    .btn-more-less {
+        display: flex;
+    }
+
+    .cls-milestone-showmore {
+        display: block;
+    }
+
+    .cls-milestone-showless {
+        display: none;
+    }
+
+    .cls-milestone-hide {
+        display: none;
+    }
+}
+@media only screen and (min-width:993px) {
+    .btn-more-less {
+        display: none !important;
+    }
+
+    .cls-milestone-hide {
+        display: block !important;
+    }
 }

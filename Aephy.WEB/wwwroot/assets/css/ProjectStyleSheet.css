@@ -441,7 +441,7 @@ h6 {
     }
 }
 
-.form-check-input[type=radio] {
+.form-check-input {
     border-color: #7a7a7a !important;
 }
 
@@ -532,7 +532,7 @@ h6 {
         padding: 0 50px !important;
     }
     .RButtons #projSize {
-        height: 60px;
+        height: 60px !important;
     }
 }
 
@@ -549,7 +549,7 @@ h6 {
         padding: 0 50px !important;
     }
     .RButtons #projSize {
-        height: 40px;
+        height: 40px !important;
     }
 }
 
@@ -649,7 +649,7 @@ h6 {
 
 .progress {
     display:block;
-    height:-webkit-fill-available;
+    height:fit-content;
     background-color:#fff;
     position: relative;
     padding: 0 1rem 0 3.5rem;
@@ -662,8 +662,8 @@ h6 {
     min-height: 75px;
     counter-increment: list;
     padding-left: 0.5rem;
-    &:before
-{
+}
+.progress__item:before {
     content: "";
     position: absolute;
     left: -1.7rem;
@@ -673,42 +673,39 @@ h6 {
     border-left: 1px solid var(--gray);
 }
 
-&:after {
-    content: counter(list);
-    position: absolute;
-    top: 12px;
-    left: -2.5rem;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--font-title);
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 26px;
-    text-align: center;
-    border: 1px solid var(--brand);
-}
-
-    &:last-child {
-        &:before
-        {
-            border: none;
-        }
-
+    .progress__item:after {
+        content: counter(list);
+        position: absolute;
+        top: 12px;
+        left: -2.5rem;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--font-title);
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 26px;
+        text-align: center;
+        border: 1px solid var(--brand);
     }
 
-    &.progress__item--completed {
+    .progress__item:last-child::before {        
+            border: none;      
+    }
+
+    .progress__item .progress__item--completed {
         opacity: 0.6;
         color: var(--font-title);
-        &:after
+    }
+        .progress__item--completed:after
         {
             content: "\2713";
             font-weight: 400;
             background: var(--brand);
             color: #fff;
         }
-        &:before {
+        .progress__item--completed:before {
             content: "";
             position: absolute;
             left: -1.7rem;
@@ -717,17 +714,10 @@ h6 {
             width: 1px;
             border-left: 1px solid var(--brand);
         }
-
-    }
-
-    &.progress__item--active {
-        &:after
-        {
+    .progress__item--active:after{
             background: var(--aephy);
             color: #fff;
-        }
     }
-}
 
 .progress__title {
     padding: 0.4rem 0 0.5rem;
@@ -753,12 +743,25 @@ h6 {
     */
 #successfullProjects .box {
     background: var(--brand);
-    min-height: 500px;
+    min-height: 550px;
     margin: 10px !important;
     padding: 20px !important;
     position: relative;
     border-radius: 30px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#successfullProjects .successfull-projects-next-prev {
+    height: 540px !important;
+}
+
+@media(max-width:992px){
+    #successfullProjects .box {
+        margin: 10px 30px !important;
+    }
+    #successfullProjects .successfull-projects-next-prev {
+        height: 650px !important;
+    }
 }
 
     #successfullProjects .box .content {
@@ -831,6 +834,7 @@ h6 {
 .Project .second-row h5 {
     font-size: 16px;
     font-weight: 500;
+    margin-bottom:1rem;
 }
 .Project .second-row h4 {
     font-weight: 700;
@@ -916,13 +920,17 @@ h6 {
     font-size: 16px;
     font-weight: 600;
     color: #fff;
-    padding: 10px 10px 150px 10px;
+    padding: 10px 10px 10px 10px;
 }
 
 /*---------------------------------------------------------
         # Clients Review
      ----------------------------------------------------------
 */
+
+.reviews{
+    padding:1rem;
+}
 
 .reviews .box {
     background: #fff;
@@ -931,7 +939,7 @@ h6 {
     padding: 13px !important;
     border-radius: 3px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
-    width: 95%;
+    width: 97%;
     min-height: 250px;
 }
 
@@ -1090,13 +1098,17 @@ h6 {
 # reviews score card Section
 --------------------------------------------------------------*/
 .ratingProgress .content {
-    width: fit-content;
+    width: 100%;
+}
+
+.ratingProgress .ProgressTable {
+    padding-left: 2rem;
 }
 
 .ratingProgress .ProgressTable progress {
     position: relative;
     height: 10px;
-    width: 130px;
+    width: 115px;
     border: 1px solid #fff;
     border-radius:5px;
 }
@@ -1178,7 +1190,7 @@ progress::-webkit-progress-value {
     background: #fff;
     /*  margin: 10px !important;*/
     margin-top: 0;
-    padding: 13px !important;
+    padding: 1rem !important;
     width: 100%;
 }
 
@@ -1188,7 +1200,6 @@ progress::-webkit-progress-value {
     align-items: center;
     justify-content: left;
     padding-top: 10px;
-    margin-top: 5%;
 }
 
 .clientReviews .info .name {
@@ -1249,14 +1260,10 @@ progress::-webkit-progress-value {
     color: #d38b4e;
     text-align: center;
 }
-.cls-milestone-popup i{
-    font-size: 16px;
-    color: #d38b4e;
-}
 
 @media(max-width:992px){
     .left-content {
-        width: auto;
+        width: 100%;
     }
 
     .right-content {
@@ -1272,3 +1279,336 @@ progress::-webkit-progress-value {
         width: 65%;
     }
 }
+/*.cls-milestone-hide{
+    display:none;
+}
+
+.cls-milestone-showless{
+    display:none;
+}*/
+
+.btn-show-more {
+    font-size: 16px;
+    position: relative;
+    color: var(--brand);
+    text-align: center; 
+    cursor:pointer;
+}
+.btn-show-more i{
+    font-size:16px;
+    color:var(--brand);
+}
+
+
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+}
+
+.carousel-inner .carousel-item.active {
+    display: flex;
+}
+
+/* medium and up screens */
+/*@media (min-width: 768px) {
+
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+        transform: translateX(25%);
+    }
+
+    .carousel-inner .carousel-item-start.active,
+    .carousel-inner .carousel-item-prev {
+        transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
+}*/
+
+@media only screen and (max-width: 360px) {
+
+    .cls-gigopening-working-mobile {
+        width: 45%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    .carousel-control-prev-icon {
+        margin-left: -6px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -6px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 9px 0px 32px;
+    }
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
+}
+
+@media only screen and (max-width: 420px) and (min-width: 360px) {
+    .carousel-control-prev-icon {
+        margin-left: -25px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -25px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 26px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 40%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
+}
+
+@media only screen and (max-width: 530px) and (min-width: 420px) {
+    .carousel-control-prev-icon {
+        margin-left: -28px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -28px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 530px) {
+    .carousel-control-prev-icon {
+        margin-left: -50px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -50px;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 10px 0px 29px;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        top: 220px;
+        right: -21px;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev {
+        top: 220px;
+        left: 25px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        font-size: 12px !important;
+        width: 25px;
+    }
+
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: block;
+    }
+
+    .cls-gigopening-m-carousel {
+        margin: 0px 5px 0px 15px;
+    }
+
+    .carousel-control-next-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        display: block !important;
+    }
+
+    .carousel-control-prev-icon {
+        background-color: #d38b4e;
+        margin-left: -25px;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: -30px;
+        background-color: #d38b4e;
+    }
+
+    /*.cls-gigopening-m-carousel {
+        margin-left: 36px;
+    }*/
+
+    .carousel-item > .carousel-control-prev-icon {
+        display: none !important;
+    }
+
+    .carousel-item > .carousel-control-next-icon {
+        display: none !important;
+    }
+
+    .cls-gigopening-working-mobile {
+        display: block !important;
+    }
+
+    .cls-gigopening-working-desktop {
+        display: none !important;
+    }
+
+    .cls-gigopening-working-mobile {
+        width: 34%;
+        float: left;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    #projectReviewCarousel .carousel-item {
+        max-height: 430px !important;
+    }
+
+    .carousel-control-next-icon {
+        margin-right: 0% !important;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-control-prev,
+    #SuccessfulProjectsCarousel .carousel-control-next {
+        display: block !important;
+    }
+
+    #SuccessfulProjectsCarousel .carousel-item {
+        max-height: 575px !important;
+    }
+
+    
+
+   /* .carousel-control-prev, .carousel-control-next {
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+    }
+    .cls-carouselproject-mobile {
+        display: block;
+    }*/
+}
+
+/*.cls-gigopening-m-carousel {
+    padding-right: 18px;
+}*/
+
+/*.carousel-control-next-icon {
+    display: none;
+}*/
+
+/*.carousel-control-prev-icon {
+    display: none;
+}*/
+
+.carousel-control-prev, .carousel-control-next {
+    height: 270px !important;
+/*    margin-left: -284px;
+    margin-right: -284px;
+*/
+}
+
+.cls-gigopening-m-carousel {
+    margin-left:3%;
+    margin-right:1%;
+}
+
+.carousel-control-prev-icon {
+    background-color: #d38b4e;
+    margin-left: -50%;
+}
+
+.carousel-control-next-icon {
+    margin-right: -75%;
+    background-color: #d38b4e;
+}
+
+.carousel-item > .carousel-control-prev-icon {
+    display: none;
+}
+
+.carousel-item > .carousel-control-next-icon {
+    display: none;
+}
+
+/*.carousel-item.active {
+    padding-left: 7%;
+}*/
+
+#projectReviewCarousel .carousel-item {
+    padding-right: 7%;
+    max-height: 362px;
+}
+
+    #projectReviewCarousel .carousel-item .cls-Successful-Projects {
+        display:none;
+    }
+
+.carousel-inner {
+    padding-top: 10px;
+}
+
+#SuccessfulProjectsCarousel .carousel-control-prev,
+#SuccessfulProjectsCarousel .carousel-control-next{
+    display:none;
+}
+
+/*.cls-carouselproject-mobile{
+    display:none;
+}*/

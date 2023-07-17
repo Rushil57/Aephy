@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230717114211_Added_user_fields")]
+    partial class Added_user_fields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

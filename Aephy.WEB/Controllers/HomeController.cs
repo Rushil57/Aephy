@@ -2,8 +2,10 @@
 using Aephy.WEB.Provider;
 using Aephy.WEB.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
@@ -14,10 +16,6 @@ namespace Aephy.WEB.Controllers
 {
     public class HomeController : Controller
     {
-
-        //ApiProvider _apiProvider = new ApiProvider();
-
-
         private readonly IApiRepository _apiRepository;
         public HomeController(IApiRepository apiRepository)
         {
@@ -27,6 +25,11 @@ namespace Aephy.WEB.Controllers
         public IActionResult Dashboard()
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
+            var role = HttpContext.Session.GetString("LoggedUserRole");
+            var fullname = HttpContext.Session.GetString("FullName");
+            
+            TempData["Role"] = role.ToString();
+            TempData["Fullname"] = fullname.ToString();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Home");
@@ -70,12 +73,22 @@ namespace Aephy.WEB.Controllers
             {
                 var test = await _apiRepository.MakeApiCallAsync("api/Authenticate/Login", HttpMethod.Post, loginModel);
                 var UserId = string.Empty;
+                var FirstName = string.Empty;
+                var LastName = string.Empty;
+                var Role = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
-                if (jsonObj != null)
+                if (jsonObj["Result"] != null)
                 {
-                    UserId = jsonObj.Result;
+                    UserId = jsonObj.Result.UserId;
+                    FirstName = jsonObj.Result.FirstName;
+                    LastName = jsonObj.Result.LastName;
+                    Role = jsonObj.Result.Role;
+
+                    HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
+                    HttpContext.Session.SetString("LoggedUserRole", Role);
+                    HttpContext.Session.SetString("LoggedUser", UserId);
                 }
-                HttpContext.Session.SetString("LoggedUser", UserId);
+               
                 return test;
             }
             catch (Exception ex)

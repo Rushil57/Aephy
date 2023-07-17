@@ -65,7 +65,7 @@ namespace Aephy.API.Controllers
                         {
                             StatusCode = StatusCodes.Status200OK,
                             Message = "Login Success",
-                            Result = user.Email
+                            Result = user.Id
                         });
                     }
                     else

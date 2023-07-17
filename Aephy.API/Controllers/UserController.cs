@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Aephy.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/User/")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -57,11 +57,13 @@ namespace Aephy.API.Controllers
                             Message = "Success",
                             Result = new
                             {
+                                UserId = user.Id,
                                 FirstName = string.IsNullOrEmpty(user.FirstName) ? "" : user.FirstName,
                                 LastName = string.IsNullOrEmpty(user.LastName) ? "" : user.LastName,
                                 Email = user.Email,
                                 ProfileUrl = filePath,
                                 ProfileImageData = profileData,
+                                Role = user.UserType
                             }
                         });
                     }
@@ -146,7 +148,7 @@ namespace Aephy.API.Controllers
         /// </remarks>
         [HttpPost]
         [Route("UpdateProfile")]
-        public async Task<IActionResult> UpdateProfile([FromForm] UserModel model)
+        public async Task<IActionResult> UpdateProfile([FromBody] UserModel model)
         {
             try
             {
@@ -157,19 +159,10 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
-                    oldFilename = string.IsNullOrEmpty(user.ProfileUrl) ? "" : user.ProfileUrl;
-                    if (model.ProfileImage != null)
-                    {
-                        if (model.ProfileImage.Length > 0)
-                        {
-                            user.ProfileUrl = await common.UploadBlobFile(model.ProfileImage, "userimages");
-                            isfileChange = true;
-                        }
-                    }
-                    else
-                    {
-                        user.ProfileUrl = oldFilename;
-                    }
+                    user.UserType = model.UserType.Trim();
+                    user.Email = model.Email.Trim();
+                    user.UserName = model.Email.Trim();
+
                     var result = await _userManager.UpdateAsync(user);
                     if (!result.Succeeded)
                     {

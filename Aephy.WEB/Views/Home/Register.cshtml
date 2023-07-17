@@ -135,32 +135,9 @@
             TermsCondition: $('#acceptTerms').is(':checked'),
             UserType: $("#userType").val(),
         }
-        //$.ajax({
-        //    type: "POST",
-        //    url: "https://localhost:7118/api/Authenticate/Register",
-        //    contentType: 'application/json',
-        //    data: JSON.stringify(Userdata),
-        //    success: function (result) {
-        //        if (result.Message == "User created successfully") {
-        //            //alert(result.Message)
-        //            $("#SuccessAlert").show()
-        //            window.location.href = '/Home/Login'
-        //            ResetForm()
-        //        }
-        //        else {
-        //            alert(result.Message)
-        //        }
-
-
-        //    },
-        //    error: function (result) {
-        //        alert("Something Went Wrong!");
-        //    }
-        //});
-
         $.ajax({
             type: "POST",
-            url: "@Url.Action("RegisterNewUser", "Home")",
+            url: "@Url.Action("AddorEditUserData", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(Userdata),

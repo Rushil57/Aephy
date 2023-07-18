@@ -13,12 +13,15 @@ namespace Aephy.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         public string UserImgPath;
         private readonly IConfiguration _configuration;
+        private readonly AephyAppDbContext _db;
+
         CommonMethod common;
         public UserController(UserManager<ApplicationUser> userManager, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, AephyAppDbContext dbContext)
         {
             _userManager = userManager;
             _configuration = configuration;
             UserImgPath = Path.Combine(env.ContentRootPath, "UserImages");
+            _db = dbContext;
             common = new CommonMethod(dbContext);
 
         }
@@ -46,10 +49,9 @@ namespace Aephy.API.Controllers
                     var user = await _userManager.FindByIdAsync(model.UserId.Trim());
                     if (user != null)
                     {
-                        var profileData = "";
-                        if (!string.IsNullOrEmpty(user.ProfileUrl))
+                        if (user.UserType == "Client")
                         {
-                            filePath = _configuration["BlobStorageSettings:UserImagesPath"].ToString() + user.ProfileUrl + _configuration["BlobStorageSettings:UserImagesPathToken"].ToString();
+                            var clientDetails = _db.ClientDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
                         }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -62,8 +64,7 @@ namespace Aephy.API.Controllers
                                 LastName = string.IsNullOrEmpty(user.LastName) ? "" : user.LastName,
                                 Email = user.Email,
                                 ProfileUrl = filePath,
-                                ProfileImageData = profileData,
-                                Role = user.UserType
+                                Role = user.UserType,
                             }
                         });
                     }
@@ -159,24 +160,38 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
-                    user.UserType = model.UserType.Trim();
-                    user.Email = model.Email.Trim();
-                    user.UserName = model.Email.Trim();
-
                     var result = await _userManager.UpdateAsync(user);
+
+                    if (model.freelancerDetail != null)
+                    {
+                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
+                        if (freelancerDetails != null)
+                        {
+                            freelancerDetails.HourlyRate = model.freelancerDetail.HourlyRate;
+                            freelancerDetails.Address = model.freelancerDetail.FreelancerAddress;
+                            freelancerDetails.Education = model.freelancerDetail.Education;
+                            freelancerDetails.ProffessionalExperience = model.freelancerDetail.ProffessionalExperience;
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    if (model.clientDetail != null)
+                    {
+                        var clientDetails = _db.ClientDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
+                        if (clientDetails != null)
+                        {
+                            clientDetails.Description = model.clientDetail.Description;
+                            clientDetails.Address = model.clientDetail.ClientAddress;
+                            _db.SaveChanges();
+                        }
+                    }
                     if (!result.Succeeded)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "User Updated failed! Please check user details and try again" });
                     }
                     else
                     {
-                        if (isfileChange)
-                        {
-                            if (!string.IsNullOrEmpty(oldFilename))
-                            {
-                                await common.DeleteBlobFile(oldFilename, "userimages");
-                            }
-                        }
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User Updated successfully!" });
                     }
                 }

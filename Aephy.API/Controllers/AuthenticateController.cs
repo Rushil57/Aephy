@@ -2,6 +2,7 @@
 using Aephy.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,6 +21,7 @@ namespace Aephy.API.Controllers
         private readonly IConfiguration _configuration;
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnv;
         CommonMethod common;
+        private readonly AephyAppDbContext _db;
 
         public AuthenticateController(
             UserManager<ApplicationUser> userManager,
@@ -31,6 +33,7 @@ namespace Aephy.API.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
             _hostingEnv = env;
+            _db = dbContext;
             common = new CommonMethod(dbContext);
         }
 
@@ -133,6 +136,30 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
+                    var getUserDetail = await _userManager.FindByEmailAsync(model.Email);
+                    if (getUserDetail != null)
+                    {
+                        if(getUserDetail.UserType == "Client")
+                        {
+                            ClientDetails client = new()
+                            {
+                                UserId = getUserDetail.Id.ToString()
+                            };
+                           _db.ClientDetails.Add(client);
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            FreelancerDetails freelancer = new()
+                            {
+                                UserId = getUserDetail.Id.ToString(),
+                            };
+                            _db.FreelancerDetails.Add(freelancer);
+                            _db.SaveChanges();
+                        }
+                        
+                    }
+                    
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User created successfully" });
                 }
             }

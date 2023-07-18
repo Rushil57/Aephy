@@ -74,7 +74,7 @@ namespace Aephy.WEB.Controllers
                 var LastName = string.Empty;
                 var Role = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
-                if (jsonObj["Result"] != null)
+                if (jsonObj["StatusCode"] == 200)
                 {
                     UserId = jsonObj.Result.UserId;
                     FirstName = jsonObj.Result.FirstName;
@@ -96,7 +96,7 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<string> AddorEditUserData([FromBody] ResgisterNewUser registerModel)
+        public async Task<string> AddorEditUserData([FromBody] RegisterNewUser registerModel)
         {
             if(registerModel.Id == null)
             {

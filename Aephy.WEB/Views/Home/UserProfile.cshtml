@@ -85,6 +85,52 @@
                                     </div>
                                 </div>
 
+                                <div class="ClientFields" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Description</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea name="Description" type="text" class="form-control description" readonly></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Address</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea name="Address" type="text" class="form-control address" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="FreelancerFields" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Hourly Rate</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="HourlyRate" type="text" class="form-control hourlyRate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Education</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Education" type="text" class="form-control education" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Proffessional Experience</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Address</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Address" type="text" class="form-control address" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
@@ -130,6 +176,51 @@
                                         </div>
                                     </div>
 
+                                    <div class="ClientFields" style="display:none;">
+                                        <div class="row mb-3">
+                                            <label for="Description" class="col-md-4 col-lg-3 col-form-label">Description</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <textarea name="Description" type="text" class="form-control description" id="Description"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <textarea name="Address" type="text" class="form-control address" id="Client-Address"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="FreelancerFields" style="display:none;">
+                                        <div class="row mb-3">
+                                            <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="HourlyRate" type="text" class="form-control hourlyRate" id="HourlyRate" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Education" class="col-md-4 col-lg-3 col-form-label">Education</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="Education" type="text" class="form-control education" id="Education" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="ProffessionalExperience" class="col-md-4 col-lg-3 col-form-label">Proffessional Experience</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" id="ProffessionalExperience" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="Address" type="text" class="form-control address" id="Freelancer-Address" />
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
@@ -237,6 +328,7 @@
             url: "@Url.Action("GetUserData", "Home")",
             success: function (result) {
                 if (result != null) {
+                    CheckUserBasedonUserTye(result.Result.Role)
                     $(".UserId").val(result.Result.UserId)
                     $(".firstName").val(result.Result.FirstName)
                     $(".lastName").val(result.Result.LastName)
@@ -255,13 +347,26 @@
     }
 
     function UpdateUserData() {
+        var FreelancerDetail = {
+            HourlyRate: $("#HourlyRate").val(),
+            Education : $("#Education").val(),
+            ProffessionalExperience: $("#ProffessionalExperience").val(),
+            FreelancerAddress: $("#Freelancer-Address").val()
+        }
+
+        var ClientDetail = {
+            Description: $("#Description").val(),
+            ClientAddress: $("#Client-Address").val(),
+        }
+
         var Userdata = {
             Id: $(".UserId").val(),
             FirstName: $("#firstname").val(),
             LastName: $("#lastName").val(),
             UserType: $("#userType").val(),
-            Email: $("#emailId").val()
-
+            Email: $("#emailId").val(),
+            freelancerDetail: FreelancerDetail,
+            clientDetail: ClientDetail
         }
 
         $.ajax({
@@ -306,5 +411,17 @@
         $("#currentPassword").val("");
         $("#newPassword").val("");
         $("#renewPassword").val("")
+    }
+
+    function CheckUserBasedonUserTye(role){
+        if(role == "Freelancer")
+        {
+            $(".FreelancerFields").show();
+            $(".ClientFields").hide()
+        }
+        else{
+            $(".FreelancerFields").hide();
+            $(".ClientFields").show();
+        }
     }
 </script>

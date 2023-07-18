@@ -3,6 +3,8 @@
 *@
 @{
     ViewData["Title"] = "Home page";
+    ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
+    ViewData["Fullname"] = Context.Session.GetString("FullName");
 }
 
 <main id="main" class="main">

@@ -25,11 +25,6 @@ namespace Aephy.WEB.Controllers
         public IActionResult Dashboard()
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
-            var role = HttpContext.Session.GetString("LoggedUserRole");
-            var fullname = HttpContext.Session.GetString("FullName");
-            
-            TempData["Role"] = role.ToString();
-            TempData["Fullname"] = fullname.ToString();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Home");
@@ -64,6 +59,8 @@ namespace Aephy.WEB.Controllers
         public void LogOut()
         {
             HttpContext.Session.Remove("LoggedUser");
+            HttpContext.Session.Remove("FullName");
+            HttpContext.Session.Remove("LoggedUserRole");
         }
 
         [HttpPost]

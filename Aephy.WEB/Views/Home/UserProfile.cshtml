@@ -1,4 +1,10 @@
-﻿<main id="main" class="main">
+﻿@{
+    ViewData["Title"] = "User Profile";
+    ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
+    ViewData["Fullname"] = Context.Session.GetString("FullName");
+}
+
+<main id="main" class="main">
 
     <div class="pagetitle">
         <h1>Profile</h1>
@@ -111,7 +117,7 @@
                                     <div class="row mb-3">
                                         <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <select class="form-select role" aria-label="Default select example" name="role" id="userType">
+                                            <select class="form-select role" aria-label="Default select example" name="role" id="userType" disabled="true">
                                                 <option value="Client">Client</option>
                                                 <option value="Freelancer">Freelancer</option>
                                             </select>
@@ -120,7 +126,7 @@
                                     <div class="row mb-3">
                                         <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="email" type="email" class="form-control emailId" id="emailId">
+                                            <input name="email" type="email" class="form-control emailId" id="emailId" readonly>
                                         </div>
                                     </div>
 
@@ -186,7 +192,7 @@
                 role: { required: true }
             },
             messages: {
-                firstname: { required: "Please enter a firstname", },
+                firstName: { required: "Please enter a firstname", },
                 lastName: { required: "Please enter a lastname", },
                 email: {
                     required: "Please enter email address",

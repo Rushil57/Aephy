@@ -22,6 +22,10 @@
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+    <!--Multi Select CSS-->
+    <link href="~/assets/css/example-styles.css" rel="stylesheet" />
+    <link href="~/assets/css/demo-styles.css" rel="stylesheet" />
+
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet">
 
@@ -273,6 +277,24 @@
                 </ul>
             </li><!-- End Components Nav -->
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#Solutions-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Solutions</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="Solutions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="~/Solutions/Solution">
+                            <i class="bi bi-circle"></i><span>Solutions</span>
+                        </a>
+                    </li>
+                    @*<li>
+                        <a href="~/Lookup/Industries">
+                            <i class="bi bi-circle"></i><span>Industries</span>
+                        </a>
+                    </li>*@
+                </ul>
+            </li><!-- End Components Nav -->
+
             @*<li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -435,11 +457,11 @@
     <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
-
     <!-- Template Main JS File -->
-    <script src="~/assets/js/main.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/assets/js/jquery.multi-select.js"></script>
+    <script src="~/assets/js/main.js"></script>
 </body>
 </html>
 

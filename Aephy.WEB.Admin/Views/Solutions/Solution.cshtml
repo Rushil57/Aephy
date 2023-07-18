@@ -1,0 +1,244 @@
+﻿@{
+    ViewData["Title"] = "Solutions Page";
+}
+
+<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                    <h5 class="card-title">Solutions <span>| Total</span></h5>
+
+                    <a class="btn btn-brand m-2" onclick="OpenAddIndustriesModalPopup();">Create Solution</a>
+
+                    <table class="table table-borderless datatable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Solution Title</th>
+                                <th scope="col">Solution sub-title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Services</th>
+                                <th scope="col">Industries</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Bridie Kessler</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Ashleigh Langosh</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>Angus Grady</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Raheem Lehner</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>Raheem Lehner</td>
+                                <td>Brandon Jacob</td>
+                                <td>Brandon Jacob asdf sdf sf sfd htrh vr dfv  rv vr e dfv dv  vdrv dv</td>
+                                <td>~/assets/img/product-1.jpg</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                                <td>Brandon Jacob,Brandon Jacob,Brandon Jacob</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+
+    <div class="modal fade" id="addSolutionModal" tabindex="-1" aria-labelledby="addSolutionModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create Solution</h4>
+                    <a class="close" data-dismiss="#addSolutionModal" onclick="CloseAddIndustriesModalPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    @*<h5 class="card-title">Vertical Form</h5>*@
+
+                                    <!-- Vertical Form -->
+                                    <!-- Vertical Form -->
+                                    <form class="row g-3 mt-3" name="addSolutionForm">
+                                        <div class="col-12">
+                                            <label for="SolutionTitle" class="form-label">Solution Title</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="SolutionTitle" name="SolutionTitle">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="Solution_SubTitle" class="form-label">Solution SubTitle</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="Solution_SubTitle" name="Solution_SubTitle">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="SolutionDescription" class="form-label">Solution Description</label>
+                                            <div class="input-group">
+                                                <textarea class="form-control" id="SolutionDescription" name="SolutionDescription" style="height:100px;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="SolutionImage" class="form-label">Image</label>
+                                            <div class="input-group">
+                                                <input type="file" class="form-control" id="SolutionImage" name="SolutionImage">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="Services" class="form-label">Services</label>
+                                            <div class="input-group">
+                                                <select id="Services" multiple="multiple" class="form-control px-lg-4" name="Services" title="--Select Services--">
+                                                    <option value="All">All Services</option>
+                                                    <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
+                                                    <option value="AI Engineering">AI Engineering</option>
+                                                    <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
+                                                    <option value="AI Operations">AI Operations</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="Industries" class="form-label">Industries</label>
+                                            <div class="input-group">
+                                                <select id="Industries" multiple="multiple" class="form-control px-lg-4" name="Industries" title="--Select Industry--">
+                                                    <option value="All">All Industies</option>
+                                                    <option value="Retail">Retail</option>
+                                                    <option value="Finance">Finance</option>
+                                                    <option value="Healthcare">Healthcare</option>
+                                                    <option value="Manufacturing">Manufacturing </option>
+                                                    <option value="Marketing">Marketing</option>
+                                                    <option value="Real Estate">Real Estate</option>
+                                                    <option value="Energy">Energy</option>
+                                                    <option value="Education">Education</option>
+                                                    <option value="Other Industries">Other Industries</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Submit</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                        </div>
+                                    </form><!-- Vertical Form -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $(document).ready(function(){
+        $('#Services').multiSelect();
+        $('#Industries').multiSelect();
+    });
+    $(function () {
+        $("form[name='addSolutionForm']").validate({
+            rules: {
+                SolutionTitle: { required: true },
+                Solution_SubTitle: { required: true },
+                SolutionDescription: { required: true },
+                SolutionImage: { required: true }
+            },
+            messages: {
+                SolutionTitle: { required: "Please enter solution title" },
+                Solution_SubTitle: { required: "Please enter sub title" },
+                SolutionDescription: { required: "Please enter description" },
+                SolutionImage: { required: "Please chhose an image" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                addSolution()
+            }
+        });
+    });
+
+    function addSolution() {
+        var SolutionData = {
+            SolutionTitle: $("#SolutionTitle").val(),
+            Solution_SubTitle: $("#Solution_SubTitle").val(),
+            SolutionDescription: $("#SolutionDescription").val(),
+            SolutionImage: $("#SolutionImage").val(),
+            Services: $("#Services").val(),
+            Industries: $("#Industries").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("addSolutionForm", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(SolutionData),
+            success: function (result) {
+                alert(result["message"])
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    }
+
+    function ResetForm() {
+        $("#SolutionTitle").val("");
+        $("#Solution_SubTitle").val("");
+        $("#SolutionDescription").val("");
+        $("#SolutionImage").val("");
+    }
+    function CloseAddIndustriesModalPopup() {
+        $("#addSolutionModal").modal('hide')
+    }
+    function OpenAddIndustriesModalPopup() {
+        $("#addSolutionModal").modal('show')
+    }
+</script>

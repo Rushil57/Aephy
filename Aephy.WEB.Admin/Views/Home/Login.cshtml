@@ -103,7 +103,12 @@
             data: JSON.stringify(Userdata),
             success: function (result) {
                 if (result.Message == "Login Success") {
-                    window.location.href = '/Home/Index'
+                    debugger
+                    if(result.Result.Role == "Admin"){
+                        window.location.href = '/Home/Index'
+                    }else{
+                        alert("Enter Correct EmailId or Password")
+                    }
                 }
                 else {
                     alert(result.Message)

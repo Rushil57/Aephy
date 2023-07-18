@@ -20,7 +20,7 @@ namespace Aephy.WEB.Admin.Controllers
         }
         public IActionResult Index()
         {
-            var userId = HttpContext.Session.GetString("LoggedUser");
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
             if (userId == null)
             {
                 return RedirectToAction("Login", "Home");
@@ -41,11 +41,16 @@ namespace Aephy.WEB.Admin.Controllers
 
         public ActionResult UserProfile()
         {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             return View();
         }
         public void LogOut()
         {
-            HttpContext.Session.Remove("LoggedUser");
+            HttpContext.Session.Remove("LoggedAdmin");
         }
 
         [HttpPost]
@@ -55,12 +60,13 @@ namespace Aephy.WEB.Admin.Controllers
             {
                 var test = await _apiRepository.MakeApiCallAsync("api/Authenticate/Login", HttpMethod.Post, loginModel);
                 var UserId = string.Empty;
+                var UserType = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj != null)
                 {
                     UserId = jsonObj.Result.UserId;
                 }
-                HttpContext.Session.SetString("LoggedUser", UserId);
+                HttpContext.Session.SetString("LoggedAdmin", UserId);
                 return test;
             }
             catch (Exception ex)

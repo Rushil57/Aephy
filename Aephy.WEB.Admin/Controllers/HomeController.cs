@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Data;
-
+using System.Text.Json.Nodes;
 
 namespace Aephy.WEB.Admin.Controllers
 {
@@ -54,26 +54,42 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> CheckExistingUser([FromBody] LoginModel loginModel)
+        public async Task<JsonResult> CheckExistingUser([FromBody] LoginModel loginModel)
         {
+            var messageSatus = string.Empty; 
             try
             {
                 var test = await _apiRepository.MakeApiCallAsync("api/Authenticate/Login", HttpMethod.Post, loginModel);
                 var UserId = string.Empty;
                 var UserType = string.Empty;
+                var FirstName = string.Empty;
+                var LastName = string.Empty;
+                var Role = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj != null)
                 {
+                    messageSatus = jsonObj.Message;
                     UserId = jsonObj.Result.UserId;
+                    FirstName = jsonObj.Result.FirstName;
+                    LastName = jsonObj.Result.LastName;
+                    Role = jsonObj.Result.Role;
+
+                    if (Role != "Admin")
+                    {
+                        return Json(new { message = "Invalid Credentials" });
+                    }
+                    HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
+                    HttpContext.Session.SetString("LoggedUserRole", Role);
+                    HttpContext.Session.SetString("LoggedAdmin", UserId);
+                    return Json(new { message = "Login Success" });
                 }
-                HttpContext.Session.SetString("LoggedAdmin", UserId);
-                return test;
+                /*return test;*/
             }
             catch (Exception ex)
             {
 
             }
-            return "";
+            return Json(new { message = messageSatus }); ;
         }
     }
 }

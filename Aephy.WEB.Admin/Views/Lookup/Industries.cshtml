@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Industries Page";
+}
+
+<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+
+                @*<div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+                </ul>
+                </div>*@
+
+                <div class="card-body">
+                    <h5 class="card-title">Industries <span>| Total</span></h5>
+
+                    <a class="btn btn-brand m-2" onclick="OpenAddIndustriesModalPopup();">Add Industry</a>
+
+                    <table class="table table-borderless datatable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Industry Name</th>
+                                <th scope="col">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">#2457</th>
+                                <td>Brandon Jacob</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">#2147</th>
+                                <td>Bridie Kessler</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">#2049</th>
+                                <td>Ashleigh Langosh</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">#2644</th>
+                                <td>Angus Grady</td>
+                                <td><span class="badge bg-danger">Rejected</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">#2644</th>
+                                <td>Raheem Lehner</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">#2644</th>
+                                <td>Raheem Lehner</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+
+    <div class="modal fade" id="addIndusriesModal" tabindex="-1" aria-labelledby="addIndusriesModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Services</h4>
+                    <a class="close" data-dismiss="#addIndusriesModal" onclick="CloseAddIndustriesModalPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    @*<h5 class="card-title">Vertical Form</h5>*@
+
+                                    <!-- Vertical Form -->
+                                    <!-- Vertical Form -->
+                                    <form class="row g-3 mt-3" name="addIndustriesForm">
+                                        <div class="col-12">
+                                            <label for="IndustryName" class="form-label">Industry Name</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="IndustryName" name="IndustryName">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="isActive" class="form-label">Status</label>
+                                            <div class="col-12 d-flex">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Submit</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                        </div>
+                                    </form><!-- Vertical Form -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $(function () {
+        $("form[name='addIndustriesForm']").validate({
+            rules: {
+                IndustryName: { required: true },
+            },
+            messages: {
+                IndustryName: { required: "Please enter service name" },
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                AddIndustry()
+            }
+        });
+    });
+
+    function AddIndustry() {
+        var IndustryData = {
+            IndustryName: $("#IndustryName").val(),
+            isActive: $("#isActive").is(':checked')
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddIndustriesForm", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(IndustryData),
+            success: function (result) {
+                alert(result["message"])
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    }
+
+    function ResetForm() {
+        $("#IndustryName").val("")
+        $("#isActive").prop('checked', false);
+    }
+    function CloseAddIndustriesModalPopup() {
+        $("#addIndusriesModal").modal('hide')
+    }
+    function OpenAddIndustriesModalPopup() {
+        $("#addIndusriesModal").modal('show')
+    }
+</script>

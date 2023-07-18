@@ -102,16 +102,11 @@
             dataType: "json",
             data: JSON.stringify(Userdata),
             success: function (result) {
-                if (result.Message == "Login Success") {
-                    debugger
-                    if(result.Result.Role == "Admin"){
-                        window.location.href = '/Home/Index'
-                    }else{
-                        alert("Enter Correct EmailId or Password")
-                    }
+                if (result["message"] == "Login Success") {
+                    window.location.href = '/Home/Index'
                 }
                 else {
-                    alert(result.Message)
+                    alert(result["message"])
                 }
 
             },

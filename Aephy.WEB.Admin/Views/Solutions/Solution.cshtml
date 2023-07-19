@@ -19,10 +19,10 @@
                                 <th scope="col">Id</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Sub Title</th>
-                                <th scope="col" style="min-width:350px !important; ">Description</th>
-                                <th scope="col">Services</th>
-                                <th scope="col">Industries</th>
-                               @* <th></th>*@
+                                <th scope="col">Description</th>
+                                @*<th scope="col">Services</th>
+                                <th scope="col">Industries</th>*@
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -170,6 +170,7 @@
             success: function (result) {
                 alert(result.Message)
                 ResetForm()
+                GetSolutionList()
             },
             error: function (result) {
                 alert("Error occured..");
@@ -190,19 +191,19 @@
                     "columns": [
                         {
                             "data": "Id",
-                            "className": "SolutionId"
+                            "className": "cls-Solution"
                         },
                         { "data": "Title" },
                         { "data": "SubTitle" },
                         { "data": "Description" },
-                        { "data": "Services" },
-                        { "data": "Industry" }
-                        //{
-                        //    "data": "Id",
-                        //    "render": function (data, type, row) {
-                        //        return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution(' + data + ') disabled>Delete</a>';
-                        //    }
-                        //}
+                        //{ "data": "Services" },
+                        //{ "data": "Industry" }
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution(' + data + ') disabled>Delete</a>';
+                            }
+                        }
 
                     ]
                 });
@@ -222,13 +223,20 @@
         $("#SolutionImage").val("");
         $("#Services").val("");
         $("#Industries").val("");
-        $("#addSolutionModal").modal('hide')
+        $("#addSolutionModal").modal('hide'),
+        $("#SolutionId").val(0)
     }
 
-    function DeleteSolution(Id){
+    function DeleteSolution(Id) {
         if (confirm('Are you sure want to delete solution?')) {
             var ServiceData = {
-                Id: Id
+                Id: Id,
+                Title: $("#SolutionTitle").val(),
+                SubTitle: $("#Solution_SubTitle").val(),
+                Description: $("#SolutionDescription").val(),
+                //Image: $("#SolutionImage").val(),
+                solutionServices: $("#Services").val(),
+                solutionIndustries: $("#Industries").val()
             };
             $.ajax({
                 type: "POST",
@@ -237,8 +245,8 @@
                 dataType: "json",
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
-                    alert(result.Message)
-                    GetServiceList()
+                    alert(result.Message);
+                    GetSolutionList();
 
                 },
                 error: function (result) {
@@ -253,7 +261,7 @@
     }
     function OpenAddIndustriesModalPopup() {
         $("#addSolutionModal").modal('show')
-       // BindServices()
+        // BindServices()
     }
 
     function BindServices() {
@@ -272,4 +280,34 @@
             }
         });
     }
+
+    $('#solutionList').on('click', '.cls-Solution', function () {
+        var serviceId = $(this).closest('tr').find('td:eq(0)').text();
+        serviceId = parseInt(serviceId)
+
+        var ServiceData = {
+            Id: serviceId,
+            Title: $("#SolutionTitle").val(),
+            SubTitle: $("#Solution_SubTitle").val(),
+            Description: $("#SolutionDescription").val(),
+            //Image: $("#SolutionImage").val(),
+            solutionServices: $("#Services").val(),
+            solutionIndustries: $("#Industries").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutiondataById", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(ServiceData),
+            success: function (result) {
+                alert(result.Message);
+                GetSolutionList();
+
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    });
 </script>

@@ -39,15 +39,32 @@ namespace Aephy.WEB.Admin.Controllers
             [HttpPost]
         public async Task<string> DeleteSolutions([FromBody] SolutionsModel solutionsModel)
         {
-            if (solutionsModel != null)
+            try
             {
-                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteSolutionById", HttpMethod.Post, solutionsModel);
-                return serviceData;
+                if (solutionsModel != null)
+                {
+                    var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteSolutionById", HttpMethod.Post, solutionsModel);
+                    return serviceData;
+                }
+                else
+                {
+                    return "failed to receive data..";
+                }
             }
-            else
+            catch(Exception ex)
             {
-                return "failed to receive data..";
+
             }
+            return "";
+           
+        }
+
+        //GetSolutiondataById
+        [HttpPost]
+        public async Task<string> GetSolutiondataById([FromBody] SolutionsModel solutionsModel)
+        {
+            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDataById", HttpMethod.Post, solutionsModel);
+            return serviceList;
         }
     }
 }

@@ -5,9 +5,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Security.Cryptography;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using static Aephy.API.Models.AdminViewModel;
 using static Azure.Core.HttpHeader;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Aephy.API.Controllers
 {
@@ -146,9 +151,9 @@ namespace Aephy.API.Controllers
                     _db.Solutions.Add(solution);
                     _db.SaveChanges();
 
-                    if(model.solutionIndustries.Count > 0)
+                    if (model.solutionIndustries.Count > 0)
                     {
-                        foreach(var industry in model.solutionIndustries)
+                        foreach (var industry in model.solutionIndustries)
                         {
                             var solutionindustry = new SolutionIndustry()
                             {
@@ -203,34 +208,63 @@ namespace Aephy.API.Controllers
         }
 
 
-        
+
         [HttpGet]
         [Route("SolutionList")]
         public async Task<IActionResult> SolutionList()
         {
             try
             {
-                var entryPoint = (from ep in _db.Solutions
-                                  join e in _db.SolutionServices on ep.Id equals e.SolutionId
-                                  join t in _db.SolutionIndustry on e.Id equals t.SolutionId
-                                  select new
-                                  {
-                                      Id = ep.Id,
-                                      Title = ep.Title,
-                                      SubTitle = ep.SubTitle,
-                                      Description = ep.Description,
-                                      Services = string.Join(", ", e.ServicesId),
-                                      Industry = string.Join(", ", t.IndustryId)
-                                  }).ToList();
+                //var entryPoint = (from ep in _db.Solutions
+                //                  join e in _db.SolutionServices on ep.Id equals e.SolutionId
+                //                  join t in _db.SolutionIndustry on e.Id equals t.SolutionId
+                //                  select new
+                //                  {
+                //                      Id = ep.Id,
+                //                      Title = ep.Title,
+                //                      SubTitle = ep.SubTitle,
+                //                      Description = ep.Description,
+                //                      Services = string.Join(", ", e.ServicesId),
+                //                      Industry = string.Join(", ", t.IndustryId)
+                //                  }).ToList();
 
+                //var ok = from d in _db.Solutions
+                //join c in _db.SolutionServices on d.Id equals c.SolutionId
+                //join s in _db.SolutionIndustry on d.Id equals s.SolutionId
+                //select new
+                //{
+                //    Id = d.Id,
+                //    Title = d.Title,
+                //    Description = d.Description,
+                //    Industries = s.IndustryId,
+                //    solutionServices = c.ServicesId
+                //};
+
+                List<Solutions> solution = _db.Solutions.ToList();
+                List<SolutionServices> solutionservice = _db.SolutionServices.ToList();
+                List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.ToList();
+                List<Industries> industries = _db.Industries.ToList();
+
+                
+                var emps = from e in solution
+                           select new SolutionsModel
+                           {
+                               Id = e.Id,
+                               Title = e.Title,
+                               SubTitle = e.SubTitle,
+                               Description = e.Description,
+                               //solutionIndustries = string.Join(", ", emp_Depts.Where(x => x.SolutionId == e.Id).
+                               //Select(c => c.In.DepartmentName))
+                               //ServiceName = string.Join(", ", solutionservice.Where(x => x.SolutionId == e.Id)),
+                           };
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
+                    StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = entryPoint
+                    Result = emps
                 });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -239,13 +273,13 @@ namespace Aephy.API.Controllers
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "Success"
-                
+
             });
         }
 
 
-        
-              [HttpPost]
+
+        [HttpPost]
         [Route("DeleteSolutionById")]
         public async Task<IActionResult> DeleteSolutionById([FromBody] SolutionsModel solutionsModel)
         {
@@ -253,17 +287,24 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    SolutionIndustry services = _db.SolutionIndustry.Find(solutionsModel.Id);
-                    if (services != null)
+                    var solutionindustryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                    if(solutionindustryList.Count > 0)
                     {
-                        _db.SolutionIndustry.Remove(services);
-                        _db.SaveChanges();
+                        foreach(var solution in solutionindustryList)
+                        {
+                            _db.SolutionIndustry.Remove(solution);
+                            _db.SaveChanges();
+                        }
                     }
-                    SolutionServices solutionServices = _db.SolutionServices.Find(solutionsModel.Id);   
-                    if(solutionServices != null)
+
+                    var solutionserviceslist = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                    if (solutionserviceslist.Count > 0)
                     {
-                        _db.SolutionServices.Remove(solutionServices);
-                        _db.SaveChanges();
+                        foreach (var solution in solutionserviceslist)
+                        {
+                            _db.SolutionServices.Remove(solution);
+                            _db.SaveChanges();
+                        }
                     }
                     Solutions solutions = _db.Solutions.Find(solutionsModel.Id);
                     if (solutions != null)
@@ -435,6 +476,54 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
             }
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+        //SolutionDataById
+        [HttpPost]
+        [Route("SolutionDataById")]
+        public async Task<IActionResult> SolutionDataById([FromBody] SolutionsModel solutionsModel)
+        {
+            try
+            {
+                var solutionRecord = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
+                var solutionIndustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                var solutionServices = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+
+                //var list = solutionIndustry.Concat(solutionServices);
+
+                var categories = _db.SolutionIndustry.Select(c => new
+                {
+                    SolutionId = c.SolutionId,
+                    IndustryId = c.IndustryId
+                }).ToList();
+
+                var services = _db.SolutionServices.Select(c => new
+                {
+                    SolutionId = c.SolutionId,
+                    ServicesId = c.ServicesId
+                }).ToList();
+
+                var req = from r in _db.Solutions
+                          from p in _db.SolutionIndustry
+                          from q in _db.SolutionServices
+                          where r.Id == solutionsModel.Id
+                          select new
+                          {
+                              IndustryId = p.IndustryId,
+                              ServicesId = q.ServicesId 
+                          };
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = solutionRecord
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
         }
 
     }

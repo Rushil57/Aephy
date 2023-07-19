@@ -35,7 +35,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Service</h4>
-                    <a class="close" data-dismiss="#addServicesModal" onclick="CloseAddServicesModalPopup();"><i class="bi bi-x-circle"></i></a>
+                    <a class="close" onclick="ResetForm();"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
                     <div class="row">
@@ -128,6 +128,7 @@
     }
 
     function ResetForm() {
+        $("#ServiceId").val(0)
         $("#addServicesModal").modal('hide')
         $("#ServiceName").val("")
         $("#isActive").prop('checked', false);

@@ -112,6 +112,7 @@
                                     <!-- Vertical Form -->
                                     <!-- Vertical Form -->
                                     <form class="row g-3 mt-3" name="addIndustriesForm">
+                                        <input type="hidden" id="IndustryId" value="0">
                                         <div class="col-12">
                                             <label for="IndustryName" class="form-label">Industry Name</label>
                                             <div class="input-group">
@@ -119,10 +120,10 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <label for="isActive" class="form-label">Status</label>
+                                            <label for="Active" class="form-label">Status</label>
                                             <div class="col-12 d-flex">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
+                                                    <input class="form-check-input" type="checkbox" id="Active" name="Active">
                                                 </div>
                                             </div>
                                         </div>
@@ -147,7 +148,6 @@
         GetServiceList();
     });
     $(function () {
-        GetServiceList();
         $("form[name='addIndustriesForm']").validate({
             rules: {
                 IndustryName: { required: true },
@@ -171,8 +171,9 @@
 
     function AddIndustry() {
         var IndustryData = {
+            Id: $('#IndustryId').val(),
             IndustryName: $("#IndustryName").val(),
-            isActive: $("#isActive").is(':checked')
+            Active: $("#Active").is(':checked')
         };
         $.ajax({
             type: "POST",
@@ -182,7 +183,8 @@
             data: JSON.stringify(IndustryData),
             success: function (result) {
                 if(result.Message=="Success"){
-                    location.reload();
+                    CloseAddIndustriesModalPopup()
+                    GetServiceList();
                 }
                 alert(result.Message)
             },
@@ -193,13 +195,16 @@
     }
 
     function ResetForm() {
-        $("#IndustryName").val("")
-        $("#isActive").prop('checked', false);
+        $("#IndustryName").val("");
+        $("#Active").prop('checked', false);
     }
     function CloseAddIndustriesModalPopup() {
         $("#addIndusriesModal").modal('hide')
     }
-    function OpenAddIndustriesModalPopup() {
+    function OpenAddIndustriesModalPopup(){
+        $("#IndustryId").val(0);
+        $("#IndustryName").val("");
+        $("#Active").prop('checked', false);
         $("#addIndusriesModal").modal('show')
     }
     function GetServiceList() {
@@ -250,28 +255,29 @@
         var industryData = {
             Id: Id,
             IndustryName: "",
-            isActive: true
+            Active: true
         };
         $.ajax({
             type: "POST",
-            url: "@Url.Action("AddIndustriesForm", "Lookup")",
+            url: "@Url.Action("GetIndustriesRecord", "Lookup")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(industryData),
             success: function (result) {
                 if (result.Message == "Success"){
-                    $("#addIndusriesModal").modal('show')
+                    OpenAddIndustriesModalPopup();
                         $('#modal-title').html('Edit Industry');
                         var IndustryId = result.Result.Id;
                         var industryname = result.Result.IndustryName;
                         var staus = result.Result.Active;
 
+                        $('#IndustryId').val(IndustryId);
                         $("#IndustryName").val(result.Result.IndustryName);
-                        if (status == "true") {
-                            $("#isActive").prop('checked', true);
+                    if (result.Result.Active) {
+                            $("#Active").prop('checked', true);
                         }
                         else{
-                            $("#isActive").prop('checked', false);
+                            $("#Active").prop('checked', false);
                         }
                 }
             },
@@ -284,7 +290,7 @@
         var IndustryData = {
             Id: IndustryId,
             IndustryName: "",
-            isActive: true
+            Active: true
         };
         $.ajax({
             type: "POST",
@@ -295,7 +301,7 @@
             success: function (result) {
                 alert(result.Message)
                 if (result.Message == "Deleted Successfully") {
-                    location.reload();
+                    GetServiceList();
                 }
             },
             error: function (result) {

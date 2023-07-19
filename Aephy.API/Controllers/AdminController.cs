@@ -327,10 +327,16 @@ namespace Aephy.API.Controllers
         [Route("SaveIndustries")]
         public async Task<IActionResult> SaveIndustries([FromBody] Industries model)
         {
-            try
+            if (model.Id == 0)
             {
-                if (model != null)
+                try
                 {
+                    var checkService = _db.Services.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (checkService != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Industry Already Added!" });
+
+                    }
                     await _db.Industries.AddAsync(model);
                     var result = _db.SaveChanges();
                     if (result != 0)
@@ -341,17 +347,39 @@ namespace Aephy.API.Controllers
                             Message = "Success"
                         });
                     }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
                 }
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                try
+                {
+                    var IndusrtyRecord = _db.Industries.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (IndusrtyRecord != null)
+                    {
+                        IndusrtyRecord.IndustryName = model.IndustryName;
+                        IndusrtyRecord.Active = model.Active;
+                        _db.Entry(IndusrtyRecord).State = EntityState.Modified;
+                        var result = _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success"
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
             }
-
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
         }
 

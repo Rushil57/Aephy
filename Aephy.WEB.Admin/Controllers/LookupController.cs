@@ -73,21 +73,9 @@ namespace Aephy.WEB.Admin.Controllers
         {
             var messageSatus = string.Empty;
             if (IndustryData != null)
-            {
-                var user = GetIndustriesRecord(IndustryData);
-
-                if (user.Result != null)
-                {
-                    var UpdateResponse = await _apiRepository.MakeApiCallAsync("api/Admin/UpdateIndustries", HttpMethod.Post, IndustryData);
-                    return UpdateResponse;
-                }
+            { 
                 var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/SaveIndustries", HttpMethod.Post, IndustryData);
                 dynamic jsonObj = JsonConvert.DeserializeObject(industryData);
-
-                if (jsonObj != null)
-                {
-                    messageSatus = jsonObj.Message;
-                }
                 return industryData;
             }
             else

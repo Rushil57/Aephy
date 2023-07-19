@@ -59,21 +59,25 @@
     margin-left: -20px;
 }
 
-.multi-select-button {
-    display: inline-block;
-    font-size: 0.875em;
-    padding: 0.2em 0.6em;
-    max-width: 16em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: -0.5em;
-    background-color: #fff;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    cursor: default;
-}
+    .multi-select-menuitem input:checked[type=checkbox] {
+        background-color: var(--brand);
+    }
+
+    .multi-select-button {
+        display: inline-block;
+        font-size: 0.875em;
+        padding: 0.2em 0.6em;
+        max-width: 16em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: -0.5em;
+        background-color: #fff;
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        cursor: default;
+    }
 
 .multi-select-button:after {
     content: "";

@@ -12,6 +12,10 @@ namespace Aephy.API.DBHelper
 
         public DbSet<FreelancerDetails> FreelancerDetails { get; set; }
 
+        public DbSet<Industries> Industries { get; set; }
+
+        public DbSet<Services> Services { get; set; }
+
         public DbSet<ClientDetails> ClientDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {

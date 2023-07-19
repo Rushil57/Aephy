@@ -1,4 +1,6 @@
-﻿@{
+﻿@*@model IEnumerable<Aephy.WEB.Admin.Models.IndustriesModel>
+@using Aephy.WEB.Admin.Models*@
+@{
     ViewData["Title"] = "Industries Page";
 }
 
@@ -26,15 +28,19 @@
 
                     <a class="btn btn-brand m-2" onclick="OpenAddIndustriesModalPopup();">Add Industry</a>
 
-                    <table class="table table-borderless datatable">
+                    <table class="table table-borderless datatable" id="IndustriesList">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Industry Name</th>
                                 <th scope="col">Active</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="#list">
+
+                        </tbody>
+                        @*<tbody>
                             <tr>
                                 <th scope="row">2457</th>
                                 <td>Retail</td>
@@ -80,7 +86,7 @@
                                 <td>Other Industries</td>
                                 <td><span class="badge bg-danger">False</span></td>
                             </tr>
-                        </tbody>
+                        </tbody>*@
                     </table>
 
                 </div>
@@ -134,9 +140,14 @@
             </div>
         </div>
     </div>
+
 </main>
 <script>
+    $(document).ready(function (){
+        GetServiceList();
+    });
     $(function () {
+        GetServiceList();
         $("form[name='addIndustriesForm']").validate({
             rules: {
                 IndustryName: { required: true },
@@ -170,7 +181,10 @@
             dataType: "json",
             data: JSON.stringify(IndustryData),
             success: function (result) {
-                alert(result["message"])
+                if(result.Message=="Success"){
+                    location.reload();
+                }
+                alert(result.Message)
             },
             error: function (result) {
                 alert("Error occured..");
@@ -188,4 +202,109 @@
     function OpenAddIndustriesModalPopup() {
         $("#addIndusriesModal").modal('show')
     }
+    function GetServiceList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetIndustries", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#IndustriesList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" onclick=EditData("' + data + '");>'+ data +'</a>';
+                            }
+                        },
+                        { "data": "IndustryName" },
+                        {
+                            "data": "Active",
+                            "render": function (data, type, row) {
+                                if (data == true) {
+                                    return '<span class="badge bg-success">' + data + '  </span>'
+                                }
+                                else {
+                                    return '<span class="badge bg-danger">' + data + '</span>'
+                                }
+                            }
+                        },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" class="btn btn-danger" onclick=DeleteData("' + data + '");>Delete</a>';
+                            }
+                        },
+
+                    ]
+                });
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+    function EditData(Id){
+        var industryData = {
+            Id: Id,
+            IndustryName: "",
+            isActive: true
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddIndustriesForm", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(industryData),
+            success: function (result) {
+                if (result.Message == "Success"){
+                    $("#addIndusriesModal").modal('show')
+                        $('#modal-title').html('Edit Industry');
+                        var IndustryId = result.Result.Id;
+                        var industryname = result.Result.IndustryName;
+                        var staus = result.Result.Active;
+
+                        $("#IndustryName").val(result.Result.IndustryName);
+                        if (status == "true") {
+                            $("#isActive").prop('checked', true);
+                        }
+                        else{
+                            $("#isActive").prop('checked', false);
+                        }
+                }
+            },
+            error: function (result) {
+                alert("Error occured..")
+            }
+        });
+    }
+    function DeleteData(IndustryId){
+        var IndustryData = {
+            Id: IndustryId,
+            IndustryName: "",
+            isActive: true
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteIndustry", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(IndustryData),
+            success: function (result) {
+                alert(result.Message)
+                if (result.Message == "Deleted Successfully") {
+                    location.reload();
+                }
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    }
 </script>
+@*{
+    "data": "Id",
+    "className": "IndustryId"
+}*@

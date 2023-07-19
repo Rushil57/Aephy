@@ -12,6 +12,12 @@ namespace Aephy.API.Models
             public bool Active { get; set; }
         }
 
+        public class IndustriesModel
+        {
+            public int Id { get; set; }
+            public string IndustryName { get; set; }
+            public bool isActive { get; set; }
+        }
         public class SolutionsModel
         {
             public int Id { get; set; }

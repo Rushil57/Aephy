@@ -282,5 +282,160 @@ namespace Aephy.API.Controllers
 
         }
 
+        [HttpPost]
+        [Route("SaveIndustries")]
+        public async Task<IActionResult> SaveIndustries([FromBody] Industries model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    await _db.Industries.AddAsync(model);
+                    var result = _db.SaveChanges();
+                    if (result != 0)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success"
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+        [HttpPost]
+        [Route("UpdateIndustries")]
+        public async Task<IActionResult> UpdateIndustries([FromBody] Industries model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var IndusrtyRecord = _db.Industries.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (IndusrtyRecord != null)
+                    {
+                        IndusrtyRecord.IndustryName = model.IndustryName;
+                        IndusrtyRecord.Active = model.Active;
+                        var result = _db.SaveChanges();
+                        if (result != 0)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Data Updated Succesfully!.."
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+        [HttpPost]
+        [Route("GetAllIndustries")]
+        public async Task<IActionResult> GetAllIndustries()
+        {
+            try
+            {
+                List<Industries> industryList = _db.Industries.ToList();
+                if (industryList != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = industryList
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetIndustry")]
+        public async Task<IActionResult> GetIndustry([FromBody] Industries model)
+        {
+            try
+            {
+                Industries industryRecord = _db.Industries.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (industryRecord != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = industryRecord
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteIndustry")]
+        public async Task<IActionResult> DeleteIndustry([FromBody] Industries IndustryData)
+        {
+            try
+            {
+                Industries industryRecord = _db.Industries.Where(x => x.Id == IndustryData.Id).FirstOrDefault();
+                if (industryRecord != null)
+                {
+                    _db.Industries.Remove(industryRecord);
+                    var result = _db.SaveChanges();
+                    if (result != 0)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Deleted Successfully"
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
     }
 }

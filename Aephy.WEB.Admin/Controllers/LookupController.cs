@@ -1,6 +1,7 @@
 ﻿using Aephy.WEB.Admin.Models;
 using Aephy.WEB.Provider;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Aephy.WEB.Admin.Controllers
 {
@@ -67,16 +68,51 @@ namespace Aephy.WEB.Admin.Controllers
                 return "failed to receive data..";
             }
         }
-        public async Task<JsonResult> AddIndustriesForm([FromBody] IndustriesModel IndustryData)
+        [HttpPost]
+        public async Task<string> AddIndustriesForm([FromBody] IndustriesModel IndustryData)
         {
+            var messageSatus = string.Empty;
             if (IndustryData != null)
             {
-                return Json(new { message = "you have selected IndustriesName= " + IndustryData.IndustryName + " And Isactive= " + IndustryData.isActive });
+                var user = GetIndustriesRecord(IndustryData);
+
+                if (user.Result != null)
+                {
+                    var UpdateResponse = await _apiRepository.MakeApiCallAsync("api/Admin/UpdateIndustries", HttpMethod.Post, IndustryData);
+                    return UpdateResponse;
+                }
+                var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/SaveIndustries", HttpMethod.Post, IndustryData);
+                dynamic jsonObj = JsonConvert.DeserializeObject(industryData);
+
+                if (jsonObj != null)
+                {
+                    messageSatus = jsonObj.Message;
+                }
+                return industryData;
             }
             else
             {
-                return Json(new { message = "failed to receive data.." });
+                return "failed to receive data..";
             }
+        }
+        public async Task<string> GetIndustries()
+        {
+            var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/GetAllIndustries", HttpMethod.Post);
+            return industryData;
+        }
+
+        [HttpPost]
+        public async Task<string> GetIndustriesRecord([FromBody] IndustriesModel IndustryData)
+        {
+            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/GetIndustry", HttpMethod.Post, IndustryData);
+            return industryrecord;
+        }
+
+        [HttpPost]
+        public async Task<string> DeleteIndustry([FromBody] IndustriesModel IndustryData)
+        {
+            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteIndustry", HttpMethod.Post, IndustryData);
+            return industryrecord;
         }
     }
 }

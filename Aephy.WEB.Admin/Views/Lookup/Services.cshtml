@@ -10,62 +10,27 @@
         <!-- Recent Sales -->
         <div class="col-12">
             <div class="card recent-sales overflow-auto">
-
-                @*<div class="filter">
-                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
-                </div>*@
-
                 <div class="card-body">
                     <h5 class="card-title">Services <span>| Total</span></h5>
 
                     <a class="btn btn-brand m-2" onclick="OpenAddServicesModalPopup();">Add Service</a>
 
-                    <table class="table table-borderless datatable">
+                    <table class="table table-borderless datatable" id="serviceList">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Service Name</th>
                                 <th scope="col">Active</th>
+                                <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">#2457</th>
-                                <td>AI Strategy and Consulting</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">#2147</th>
-                                <td>AI Engineering</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">#2049</th>
-                                <td>AI Data Science and Analytics</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">#2644</th>
-                                <td>AI Operations</td>
-                                <td><span class="badge bg-danger">false</span></td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>
         </div><!-- End Recent Sales -->
     </div>
 
-    <div class="modal fade" id="addServicesModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
+    <div class="modal" id="addServicesModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,6 +46,7 @@
 
                                     <!-- Vertical Form -->
                                     <form class="row g-3 mt-3" name="addServicesForm">
+                                        <input type="hidden" id="ServiceId" value="0">
                                         <div class="col-12">
                                             <label for="ServiceName" class="form-label">Service Name</label>
                                             <div class="input-group">
@@ -88,7 +54,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <label for="isActive" class="form-label">Status</label>
+                                            <label for="isActive" class="form-label">Active</label>
                                             <div class="col-12 d-flex">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
@@ -133,11 +99,13 @@
                 AddService()
             }
         });
+
+        GetServiceList()
     });
 
     function AddService() {
-        debugger
         var ServiceData = {
+            Id: $("#ServiceId").val(),
             ServiceName: $("#ServiceName").val(),
             Active: $("#isActive").is(':checked')
         };
@@ -148,7 +116,10 @@
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
-                alert(result["message"])
+                alert(result.Message)
+                GetServiceList();
+                ResetForm();
+
             },
             error: function (result) {
                 alert("Error occured..");
@@ -157,6 +128,7 @@
     }
 
     function ResetForm() {
+        $("#addServicesModal").modal('hide')
         $("#ServiceName").val("")
         $("#isActive").prop('checked', false);
     }
@@ -165,5 +137,88 @@
     }
     function OpenAddServicesModalPopup() {
         $("#addServicesModal").modal('show')
+    }
+
+    function GetServiceList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServices", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#serviceList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                             "className": "ServiceId"
+                        },
+                        { "data": "ServicesName" },
+                        {
+                            "data": "Active",
+                            "render": function (data, type, row) {
+                                if (data == true) {
+                                    return '<span class="badge bg-success">'+ data +'</span>'
+                                }
+                                else {
+                                    return '<span class="badge bg-danger">'+ data +'</span>'
+                                }
+                            }
+                        },
+                        {
+                            "data" : "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteServices(' + data + ')>Delete</a>';
+                            }
+                        }
+
+                    ]
+                });
+
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    $('#serviceList').on('click', '.ServiceId', function () {
+        var serviceId = $(this).closest('tr').find('td:eq(0)').text();
+        var serviceName = $(this).closest('tr').find('td:eq(1)').text();
+        var Active = $(this).closest('tr').find('td:eq(2)').text();
+        $("#addServicesModal").modal('show')
+        $("#ServiceId").val(serviceId);
+        $("#ServiceName").val(serviceName);
+        if(Active == "true".trim()){
+            $("#isActive").prop('checked', true);
+        }
+    });
+
+    function DeleteServices(id){
+        if (confirm('Are you sure want to delete services?')) {
+            var ServiceData = {
+                Id: id,
+                ServiceName: $("#ServiceName").val(),
+                Active: $("#isActive").is(':checked')
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteServices", "Lookup")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ServiceData),
+                success: function (result) {
+                    alert(result.Message)
+                    GetServiceList()
+
+                },
+                error: function (result) {
+                    alert("Error occured..");
+                }
+            });
+        }
+      
     }
 </script>

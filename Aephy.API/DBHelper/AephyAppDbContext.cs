@@ -16,6 +16,12 @@ namespace Aephy.API.DBHelper
 
         public DbSet<Services> Services { get; set; }
 
+        public DbSet<Solutions> Solutions { get; set; }
+
+        public DbSet<SolutionServices> SolutionServices { get; set; }
+
+        public DbSet<SolutionIndustry> SolutionIndustry { get; set; }
+
         public DbSet<ClientDetails> ClientDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {

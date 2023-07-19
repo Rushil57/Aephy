@@ -13,59 +13,18 @@
 
                     <a class="btn btn-brand m-2" onclick="OpenAddIndustriesModalPopup();">Create Solution</a>
 
-                    <table class="table table-borderless datatable">
+                    <table class="table table-borderless datatable" id="solutionList">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Sub Title</th>
-                                <th scope="col" style="min-width:350px !important; " >Description</th>
-                                <th scope="col">Image</th>
+                                <th scope="col" style="min-width:350px !important; ">Description</th>
                                 <th scope="col">Services</th>
                                 <th scope="col">Industries</th>
+                               @* <th></th>*@
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>AI Roadmap Development</td>
-                                <td>Develop a comprehensive AI strategy and roadmap</td>
-                                <td style="width:25% !important;">
-                                    Develop a comprehensive AI strategy and roadmap tailored to your educational organization's specific needs and goals.
-                                </td>
-                                <td><img src="~/assets/img/industries/energy.jpg" style="height:125px;border-radius:15px;width:125px;" /></td>
-                                <td>AI Strategy and Consulting</td>
-                                <td>Retail,Finance,Healthcare,Manufacturing,Marketing,Real Estate,Energy,Education</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>AI Readiness Assessment</td>
-                                <td>Assess your organization's readiness for AI implementation</td>
-                                <td>Assess your organization's readiness for AI implementation and identify any gaps or areas of improvement.</td>
-                                <td><img src="~/assets/img/industries/Industries-healthcare.png" style="height:125px;border-radius:15px;width:125px;" /></td>
-                                <td>AI Strategy and Consulting</td>
-                                <td>Marketing,Real Estate,Energy,Education</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>AI Vendor Selection and Management</td>
-                                <td>Help select and manage AI vendors</td>
-                                <td>When selecting and managing AI vendors in the education industry, it is important to ensure that they understand your organization's needs and goals. This includes having expertise in educational technology and understanding the unique challenges and opportunities within the industry.</td>
-                                <td><img src="~/assets/img/industries/Industries-main-marketing.png" style="height:125px;border-radius:15px;width:125px;" /></td>
-                                <td>AI Strategy and Consulting</td>
-                                <td>Retail,Finance,Healthcare,Manufacturing,Marketing,Real Estate</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>Natural Language Processing (NLP)</td>
-                                <td>Develop NLP solutions to enable machines to understand, interpret and generate human language.</td>
-                                <td>NLP solutions can be utilized in the education industry to improve student outcomes by enabling machines to understand and interpret educational data</td>
-                                <td><img src="~/assets/img/industries/Industries-main-manufacturing.png" style="height:125px;width:125px;border-radius:15px;" /></td>
-                                <td>AI Engineering</td>
-                                <td>Retail,Finance,Healthcare,Manufacturing</td>
-                            </tr>
-                            
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -89,6 +48,7 @@
                                     <!-- Vertical Form -->
                                     <!-- Vertical Form -->
                                     <form class="row g-3 mt-3" name="addSolutionForm">
+                                        <input type="hidden" id="SolutionId" value="0">
                                         <div class="col-12">
                                             <label for="SolutionTitle" class="form-label">Solution Title</label>
                                             <div class="input-group">
@@ -116,12 +76,12 @@
                                         <div class="col-12">
                                             <label for="Services" class="form-label">Services</label>
                                             <div class="input-group">
-                                                <select id="Services" multiple="multiple" class="form-control px-lg-4" name="Services" title="--Select Services--">
-                                                    <option value="All">All Services</option>
-                                                    <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
-                                                    <option value="AI Engineering">AI Engineering</option>
-                                                    <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
-                                                    <option value="AI Operations">AI Operations</option>
+                                                <select id="Services" multiple="multiple" class="form-control px-lg-4 cls-drp-services" name="Services" title="--Select Services--">
+                                                    <option value="0">All Services</option>
+                                                    <option value="1">AI Strategy and Consulting</option>
+                                                    <option value="2">AI Engineering</option>
+                                                    <option value="3">AI Data Science and Analytics</option>
+                                                    <option value="4">AI Operations</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -129,16 +89,16 @@
                                             <label for="Industries" class="form-label">Industries</label>
                                             <div class="input-group">
                                                 <select id="Industries" multiple="multiple" class="form-control px-lg-4" name="Industries" title="--Select Industry--">
-                                                    <option value="All">All Industies</option>
-                                                    <option value="Retail">Retail</option>
-                                                    <option value="Finance">Finance</option>
-                                                    <option value="Healthcare">Healthcare</option>
-                                                    <option value="Manufacturing">Manufacturing </option>
-                                                    <option value="Marketing">Marketing</option>
-                                                    <option value="Real Estate">Real Estate</option>
-                                                    <option value="Energy">Energy</option>
-                                                    <option value="Education">Education</option>
-                                                    <option value="Other Industries">Other Industries</option>
+                                                    <option value="0">All Industies</option>
+                                                    <option value="1">Retail</option>
+                                                    <option value="2">Finance</option>
+                                                    <option value="3">Healthcare</option>
+                                                    <option value="4">Manufacturing </option>
+                                                    <option value="5">Marketing</option>
+                                                    <option value="6">Real Estate</option>
+                                                    <option value="5">Energy</option>
+                                                    <option value="8">Education</option>
+                                                    <option value="9">Other Industries</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -158,7 +118,7 @@
     </div>
 </main>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('#Services').multiSelect();
         $('#Industries').multiSelect();
     });
@@ -188,28 +148,69 @@
                 addSolution()
             }
         });
+        GetSolutionList()
     });
 
     function addSolution() {
         var SolutionData = {
-            SolutionTitle: $("#SolutionTitle").val(),
-            Solution_SubTitle: $("#Solution_SubTitle").val(),
-            SolutionDescription: $("#SolutionDescription").val(),
-            SolutionImage: $("#SolutionImage").val(),
-            Services: $("#Services").val(),
-            Industries: $("#Industries").val()
+            Id: $("#SolutionId").val(),
+            Title: $("#SolutionTitle").val(),
+            SubTitle: $("#Solution_SubTitle").val(),
+            Description: $("#SolutionDescription").val(),
+            //Image: $("#SolutionImage").val(),
+            solutionServices: $("#Services").val(),
+            solutionIndustries: $("#Industries").val()
         };
         $.ajax({
             type: "POST",
-            url: "@Url.Action("addSolutionForm", "Solutions")",
+            url: "@Url.Action("AddorEditSolution", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(SolutionData),
             success: function (result) {
-                alert(result["message"])
+                alert(result.Message)
+                ResetForm()
             },
             error: function (result) {
                 alert("Error occured..");
+            }
+        });
+    }
+
+    function GetSolutionList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutionsList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#solutionList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "className": "SolutionId"
+                        },
+                        { "data": "Title" },
+                        { "data": "SubTitle" },
+                        { "data": "Description" },
+                        { "data": "Services" },
+                        { "data": "Industry" }
+                        //{
+                        //    "data": "Id",
+                        //    "render": function (data, type, row) {
+                        //        return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution(' + data + ') disabled>Delete</a>';
+                        //    }
+                        //}
+
+                    ]
+                });
+
+
+            },
+            error: function (result) {
+                alert("failure");
             }
         });
     }
@@ -221,11 +222,54 @@
         $("#SolutionImage").val("");
         $("#Services").val("");
         $("#Industries").val("");
+        $("#addSolutionModal").modal('hide')
     }
+
+    function DeleteSolution(Id){
+        if (confirm('Are you sure want to delete solution?')) {
+            var ServiceData = {
+                Id: Id
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteSolutions", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ServiceData),
+                success: function (result) {
+                    alert(result.Message)
+                    GetServiceList()
+
+                },
+                error: function (result) {
+                    alert("Error occured..");
+                }
+            });
+        }
+    }
+
     function CloseAddIndustriesModalPopup() {
         $("#addSolutionModal").modal('hide')
     }
     function OpenAddIndustriesModalPopup() {
         $("#addSolutionModal").modal('show')
+       // BindServices()
+    }
+
+    function BindServices() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServices", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $(".multi-select-menuitems").append($("<option></option>").val(value.Id).html(value.ServicesName));
+                })
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
     }
 </script>

@@ -19,16 +19,47 @@ namespace Aephy.WEB.Admin.Controllers
         {
             return View();
         }
-        public IActionResult Industries() {
+        public IActionResult Industries()
+        {
             return View();
         }
 
         [HttpPost]
         public async Task<string> AddServiceForm([FromBody] ServicesModel ServiceData)
         {
-            if (ServiceData != null) 
+            if (ServiceData != null)
             {
-                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/SaveServices", HttpMethod.Post, ServiceData);
+                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/AddServices", HttpMethod.Post, ServiceData);
+                return serviceData;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<string> GetServices()
+        {
+            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
+            return serviceList;
+        }
+
+        [HttpGet]
+        public async Task<string> GetServicesById(int Id)
+        {
+            var serviceListById = await _apiRepository.MakeApiCallAsync("api/Admin/GetServicesById", HttpMethod.Get, Id);
+            return serviceListById;
+        }
+
+
+        [HttpPost]
+        public async Task<string> DeleteServices([FromBody] ServicesModel ServiceData)
+        {
+            if (ServiceData != null)
+            {
+                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteServicesById", HttpMethod.Post, ServiceData);
                 return serviceData;
             }
             else

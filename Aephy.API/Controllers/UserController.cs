@@ -43,6 +43,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
+                FreelancerDetails freelancerDetails = new FreelancerDetails();
+                ClientDetails clientDetails = new ClientDetails();
+
                 var filePath = "";
                 if (!string.IsNullOrEmpty(model.UserId))
                 {
@@ -51,7 +54,11 @@ namespace Aephy.API.Controllers
                     {
                         if (user.UserType == "Client")
                         {
-                            var clientDetails = _db.ClientDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
+                            clientDetails = _db.ClientDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
+                        }
+                        else
+                        {
+                            freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
                         }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -65,6 +72,12 @@ namespace Aephy.API.Controllers
                                 Email = user.Email,
                                 ProfileUrl = filePath,
                                 Role = user.UserType,
+                                Description = clientDetails.Description,
+                                ClientAddress = clientDetails.Address,
+                                HourlyRate = freelancerDetails.HourlyRate,
+                                Education = freelancerDetails.Education,
+                                ProffessionalExperience = freelancerDetails.ProffessionalExperience,
+                                FreelancerAddress = freelancerDetails.Address
                             }
                         });
                     }

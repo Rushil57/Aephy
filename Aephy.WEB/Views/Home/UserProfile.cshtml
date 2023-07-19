@@ -89,14 +89,14 @@
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Description</div>
                                         <div class="col-md-8 col-lg-9">
-                                            <textarea name="Description" type="text" class="form-control description" readonly></textarea>
+                                            <textarea name="Description" type="text" class="form-control description" rows="4" cols="50" readonly></textarea>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Address</div>
                                         <div class="col-md-8 col-lg-9">
-                                            <textarea name="Address" type="text" class="form-control address" readonly></textarea>
+                                            <textarea name="Address" type="text" class="form-control cls-client-address" rows="4" cols="50" readonly></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Address</div>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="Address" type="text" class="form-control address" readonly />
+                                            <input name="Address" type="text" class="form-control cls-freelancer-address" readonly />
                                         </div>
                                     </div>
                                 </div>
@@ -180,14 +180,14 @@
                                         <div class="row mb-3">
                                             <label for="Description" class="col-md-4 col-lg-3 col-form-label">Description</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <textarea name="Description" type="text" class="form-control description" id="Description"></textarea>
+                                                <textarea name="Description" type="text" class="form-control description" id="Description" rows="4" cols="50"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <textarea name="Address" type="text" class="form-control address" id="Client-Address"></textarea>
+                                                <textarea name="Address" type="text" class="form-control cls-client-address" id="Client-Address" rows="4" cols="50"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +217,7 @@
                                         <div class="row mb-3">
                                             <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="Address" type="text" class="form-control address" id="Freelancer-Address" />
+                                                <textarea name="Address" type="text" class="form-control cls-freelancer-address" id="Freelancer-Address" rows="4" cols="50"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -337,6 +337,12 @@
                     var Fullname = result.Result.FirstName + " " + result.Result.LastName
                     $("#fullName").text(Fullname)
                     $("#userRole").text(result.Result.Role)
+                    $(".hourlyRate").val(result.Result.HourlyRate)
+                    $(".education").val(result.Result.Education)
+                    $(".proffessionalExperience").val(result.Result.ProffessionalExperience)
+                    $(".cls-freelancer-address").val(result.Result.FreelancerAddress)
+                    $(".cls-client-address").val(result.Result.ClientAddress)
+                    $(".description").val(result.Result.Description)
                 }
 
             },

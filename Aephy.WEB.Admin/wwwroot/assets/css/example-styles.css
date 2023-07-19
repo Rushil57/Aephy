@@ -60,7 +60,7 @@
 }
 
     .multi-select-menuitem input:checked[type=checkbox] {
-        background-color: var(--brand);
+        background-color: var(--brand) !important;
     }
 
     .multi-select-button {

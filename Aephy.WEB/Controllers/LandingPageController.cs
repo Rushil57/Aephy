@@ -1,11 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Aephy.WEB.Models;
+using Aephy.WEB.Provider;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Aephy.WEB.Controllers
 {
     public class LandingPageController : Controller
     {
-        public IActionResult Index()
+		private readonly IApiRepository _apiRepository;
+		public LandingPageController(IApiRepository apiRepository)
+		{
+
+			_apiRepository = apiRepository;
+		}
+		public IActionResult Index()
         {
             return View();
         }
@@ -98,5 +107,22 @@ namespace Aephy.WEB.Controllers
         {
             return View();
         }
-    }
+
+        [HttpPost]
+        public async Task<string> ApplyForOpenGigRoles([FromBody] OpenGigRolesModel OpenGigRolesData)
+        {
+			if (OpenGigRolesData != null)
+			{
+                var currentDateTime = DateTime.Now;
+                OpenGigRolesData.CreatedDateTime = currentDateTime;
+				var industryData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, OpenGigRolesData);
+				dynamic jsonObj = JsonConvert.DeserializeObject(industryData);
+				return industryData;
+			}
+			else
+			{
+				return "failed to receive data..";
+			}
+		}
+	}
 }

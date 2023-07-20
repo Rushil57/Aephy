@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230720132105_OpenGigRolesApplications1")]
+    partial class OpenGigRolesApplications1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,20 +197,17 @@ namespace Aephy.API.Migrations
                     b.Property<string>("BlobStorageBaseUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CVPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CVUrlWithSas")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("FreelancerID")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrlWithSas")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IndustriesID")
                         .HasColumnType("int");

@@ -14,7 +14,7 @@
 
     <!-- Vendor CSS Files -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
@@ -678,6 +678,58 @@
         </div>
     </div>
 
+    	<div class="modal fade" id="GigOpeningApplyModal" tabindex="-1" aria-labelledby="GigOpeningApplyModal" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title main-title">Apply For Gig Role</h4>
+					<a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
+				</div>
+				<div class="modal-body p-0">
+					<div class="row">
+						<div class="col">
+							<div class="card">
+								<div class="card-body">
+									@*<h5 class="card-title">Vertical Form</h5>*@
+
+									<!-- Vertical Form -->
+									<!-- Vertical Form -->
+									<form class="row g-3 mt-3" name="GigOpeningApplyForm">
+										<input type="hidden" id="ID" value="0">
+										<input type="hidden" id="FreelancerID" value="0">
+										<input type="hidden" id="ServiceID" value="0">
+										<input type="hidden" id="IndustriesID" value="0">
+										<input type="hidden" id="SolutionID" value="0">
+										<input type="hidden" id="Title" value="NA">
+										<input type="hidden" id="Level" value="NA">
+										<div class="col-12">
+											<label for="Description" class="form-label">Description</label>
+											<div class="input-group">
+												<textarea type="text" class="form-control" id="Description" name="Description" style="height:50px;"></textarea>
+											</div>
+										</div>
+										<div class="col-12">
+											<label for="CVPath" class="form-label">Upload CV</label>
+											<div class="col-12 d-flex">
+												<div class="input-group">
+													<input class="form-control" type="file" id="CVPath" name="CVPath">
+												</div>
+											</div>
+										</div>
+										<div class="text-center">
+											<button type="submit" class="btn btn-brand">Submit</button>
+											<button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+										</div>
+									</form><!-- Vertical Form -->
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <!-- Vendor JS Files -->
     @*<script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>*@
@@ -784,6 +836,27 @@
         }
 
         $(function () {
+            $("form[name='GigOpeningApplyForm']").validate({
+			rules: {
+				Description: { required: true },
+                CVPath:{required:true}
+			},
+			messages: {
+				Description: { required: "Please enter Description" },
+                CVPath:{required:"Please Upload your CV"}
+			},
+			errorPlacement: function (error, element) {
+				if (element.parent('.input-group').length) {
+					error.insertAfter(element.parent());
+				}
+				else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function (form) {
+				GigOpenRolesApply()
+			}
+		});
             //$('body').openAccessibility({
             //    localization: ['en']
             //});

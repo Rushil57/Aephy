@@ -1,0 +1,61 @@
+﻿using Aephy.API.DBHelper;
+using Aephy.API.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using static Aephy.API.Models.AdminViewModel;
+using static Azure.Core.HttpHeader;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace Aephy.API.Controllers
+{
+	[Route("api/Freelancer/")]
+	[ApiController]
+	public class FreelancerController : ControllerBase
+	{
+		private readonly AephyAppDbContext _db;
+		public FreelancerController(AephyAppDbContext dbContext)
+		{
+			_db = dbContext;
+		}
+
+		[HttpPost]
+		[Route("OpenGigRolesApply")]
+		public async Task<IActionResult> OpenGigRolesApply([FromBody] OpenGigRolesApplications OpenGigRolesData)
+		{
+			try
+			{
+				var checkGigApplication = _db.OpenGigRolesApplications.Where(x => x.ID == OpenGigRolesData.ID).FirstOrDefault();
+				if (checkGigApplication != null)
+				{
+					return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You already have applied for this role!" });
+				}
+				await _db.OpenGigRolesApplications.AddAsync(OpenGigRolesData);
+				var result = _db.SaveChanges();
+				if (result != 0)
+				{
+					return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+					{
+						StatusCode = StatusCodes.Status200OK,
+						Message = "Applied Successfully"
+					});
+				}
+				else
+				{
+					return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+			}
+		}
+	}
+}

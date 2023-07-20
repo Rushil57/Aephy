@@ -1,6 +1,22 @@
 ﻿@{
-    ViewData["Title"] = "OpenGigRoles";
-    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+	ViewData["Title"] = "OpenGigRoles";
+	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+	if (Context.Session.GetString("LoggedUser") != null)
+	{
+		<style>
+			.applyFor-btn{
+				display:block;
+			}
+		</style>
+	}
+	else
+	{
+		<style>
+			.applyFor-btn {
+				display: none;
+			}
+		</style>
+	}
 }
 
 <link href="../assets/css/gigopenings.css" rel="stylesheet" />
@@ -100,7 +116,7 @@
 						<th>Title</th>
 						<th>Level</th>
 						<th>Industry</th>
-						<th>Location</th>
+						<th></th>
 					</tr>
 
 				</thead>
@@ -111,21 +127,22 @@
 							Strategy and Consulting
 						</td>
 						<td>NA</td>
+						<td>Data Analyst</td>
+						<td>Associate</td>
 						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
+						<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 					<tr>
 						<td>
 							Ai Engineering
 						</td>
 						<td>NA</td>
+						<td>Team Leader</td>
+						<td>Project Manager</td>
 						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
+							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
+
 					<tr>
 						<td>
 							Data Science and Engineering
@@ -134,8 +151,9 @@
 						<td>NA</td>
 						<td>NA</td>
 						<td>NA</td>
-						<td>NA</td>
+							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
+
 					<tr>
 						<td>
 							Strategy and Consulting
@@ -144,8 +162,9 @@
 						<td>NA</td>
 						<td>NA</td>
 						<td>NA</td>
-						<td>NA</td>
+							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
+
 					<tr>
 						<td>
 							Ai Engineering
@@ -154,7 +173,7 @@
 						<td>Data Engineering</td>
 						<td>Expert</td>
 						<td>Finance</td>
-						<td>France</td>
+							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 					<tr>
 						<td>
@@ -168,11 +187,11 @@
 						</td>
 						<td>Associate</td>
 						<td>Retail</td>
-						<td>Germany</td>
+							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 				</tbody>
 
-			</table>
+				</table>
 			
 			
 			<!--		Start Pagination -->
@@ -222,6 +241,68 @@
 		</div> <!-- 		End of Container -->
 		<!--  Developed By Yasser Mas -->
     </section>
+
 </main>
 
 <script src="~/assets/js/opengigroles.js"></script>
+<script>
+	function CloseGigOpeningApplyModal() {
+		$("#GigOpeningApplyModal").modal('hide')
+	}
+	function OpenGigOpeningApplyModal() {
+		$("#GigOpeningApplyModal").modal('show')
+	}
+	function GigOpenRolesApply(){
+		var formData = {
+			ID: $("#ID").val(),
+			FreelancerID: $("#FreelancerID").val(),
+			ServiceID: $("#ServiceID").val(),
+			IndustriesID: $("#IndustriesID").val(),
+			SolutionID: $("#SolutionID").val(),
+			Title: $("#Title").val(),
+			Level: $("#Level").val(),
+			IsApproved: false,
+			Description: $("#Description").val(),
+			CVPath: $("#CVPath").val()
+		}
+		$.ajax({
+			type: "POST",
+			url: "@Url.Action("ApplyForOpenGigRoles", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			data: JSON.stringify(formData),
+			success: function (result) {
+				alert(result.Message)
+				CloseGigOpeningApplyModal();
+			},
+			error: function (result) {
+				alert("failure");
+			}
+		});
+	}
+			// code to read selected table row cell data (values).
+	$("#table-OpenRoles").on('click', '.applyFor-btn', function () {
+				// get the current row
+				var currentRow = $(this).closest("tr");
+				var ServiceID = currentRow.find("td:eq(0)").text();
+				var SolutionID = currentRow.find("td:eq(1)").text(); // get current row 1st TD value
+				var Title = currentRow.find("td:eq(2)").text(); // get current row 2nd TD
+				var Level = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+				var IndustriesID = currentRow.find("td:eq(4)").text();
+				var data = SolutionID + "\n" + Title + "\n" + Level + "\n" + IndustriesID;
+
+		OpenGigOpeningApplyModal();
+
+		var TRMTitle = $.trim(Title);
+		var TRMLevel = $.trim(Level);
+
+		//$("#ID").val();
+		//$("#ServiceID").val();
+		//$("#SolutionID").val();
+		$("#Title").val(TRMTitle);
+		$("#Level").val(TRMLevel);
+		//$("#IndustriesID ").val();
+
+				//alert(data);
+	});
+</script>

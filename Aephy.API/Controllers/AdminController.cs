@@ -324,8 +324,8 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
-        [Route("SaveIndustries")]
-        public async Task<IActionResult> SaveIndustries([FromBody] Industries model)
+        [Route("AddIndustries")]
+        public async Task<IActionResult> AddIndustries([FromBody] Industries model)
         {
             if (model.Id == 0)
             {
@@ -385,8 +385,8 @@ namespace Aephy.API.Controllers
 
 
         [HttpPost]
-        [Route("GetAllIndustries")]
-        public async Task<IActionResult> GetAllIndustries()
+        [Route("IndustriesList")]
+        public async Task<IActionResult> IndustriesList()
         {
             try
             {
@@ -412,8 +412,8 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
-        [Route("GetIndustry")]
-        public async Task<IActionResult> GetIndustry([FromBody] Industries model)
+        [Route("GetIndustryById")]
+        public async Task<IActionResult> GetIndustryById([FromBody] Industries model)
         {
             try
             {
@@ -439,8 +439,8 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteIndustry")]
-        public async Task<IActionResult> DeleteIndustry([FromBody] Industries IndustryData)
+        [Route("DeleteIndustryById")]
+        public async Task<IActionResult> DeleteIndustryById([FromBody] Industries IndustryData)
         {
             try
             {

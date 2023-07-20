@@ -349,8 +349,17 @@
                         </h3>
                     </div>
                     <div style="text-align:center;">
-                        <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
-                        <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
+                        @{
+                            if (Context.Session.GetString("LoggedUser") != null)
+                            {
+                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Dashboard">Dashboard</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
+                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
+                            }
+                        }
                     </div>
                 </div>
             </div>

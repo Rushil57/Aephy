@@ -107,12 +107,24 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                        </li>
+                                        @{
+                                            if (Context.Session.GetString("LoggedUser") == null)
+                                            {
+                                                 <li class="nav-item">
+                                                 <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                 </li>
+                                                 <li class="nav-item">
+                                                 <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                 </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="nav-item">
+                                                <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
+                                                </li>
+                                            }
+                                        }
+                                        
                                     </ul>
 
                                     <hr class="header-bar" />

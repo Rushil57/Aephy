@@ -30,14 +30,30 @@
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="/Home/Dashboard" class="logo d-flex align-items-center">
-                <img src="~/assets/img/ephylink_no_background_blue.png" />
+        @{
+            if (Context.Session.GetString("LoggedUser") != null)
+            {
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="../LandingPage/Index" class="logo d-flex align-items-center">
+                        <img src="~/assets/img/ephylink_no_background_blue.png" />
 
-            </a>
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div><!-- End Logo -->
+                    </a>
+                    <i class="bi bi-list toggle-sidebar-btn"></i>
+                </div><!-- End Logo -->
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="Home/Dashboard" class="logo d-flex align-items-center">
+                        <img src="~/assets/img/ephylink_no_background_blue.png" />
 
+                    </a>
+                    <i class="bi bi-list toggle-sidebar-btn"></i>
+                </div>
+
+                <!-- End Logo -->
+            }
+        }
         <div class="search-bar">
             <form class="search-form d-flex align-items-center" method="POST" action="#">
                 <input type="text" name="query" placeholder="Search" title="Enter search keyword">

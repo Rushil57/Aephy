@@ -74,7 +74,7 @@ namespace Aephy.WEB.Admin.Controllers
             var messageSatus = string.Empty;
             if (IndustryData != null)
             { 
-                var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/SaveIndustries", HttpMethod.Post, IndustryData);
+                var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/AddIndustries", HttpMethod.Post, IndustryData);
                 dynamic jsonObj = JsonConvert.DeserializeObject(industryData);
                 return industryData;
             }
@@ -85,21 +85,21 @@ namespace Aephy.WEB.Admin.Controllers
         }
         public async Task<string> GetIndustries()
         {
-            var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/GetAllIndustries", HttpMethod.Post);
+            var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
             return industryData;
         }
 
         [HttpPost]
         public async Task<string> GetIndustriesRecord([FromBody] IndustriesModel IndustryData)
         {
-            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/GetIndustry", HttpMethod.Post, IndustryData);
+            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/GetIndustryById", HttpMethod.Post, IndustryData);
             return industryrecord;
         }
 
         [HttpPost]
         public async Task<string> DeleteIndustry([FromBody] IndustriesModel IndustryData)
         {
-            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteIndustry", HttpMethod.Post, IndustryData);
+            var industryrecord = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteIndustryById", HttpMethod.Post, IndustryData);
             return industryrecord;
         }
     }

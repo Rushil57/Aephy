@@ -99,7 +99,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Industry</h4>
+                    <h4 class="modal-title main-title">Add Industry</h4>
                     <a class="close" data-dismiss="#addIndusriesModal" onclick="CloseAddIndustriesModalPopup();"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
@@ -182,11 +182,9 @@
             dataType: "json",
             data: JSON.stringify(IndustryData),
             success: function (result) {
-                if(result.Message=="Success"){
-                    CloseAddIndustriesModalPopup()
-                    GetServiceList();
-                }
                 alert(result.Message)
+                GetServiceList();
+                CloseAddIndustriesModalPopup();
             },
             error: function (result) {
                 alert("Error occured..");
@@ -199,6 +197,7 @@
         $("#Active").prop('checked', false);
     }
     function CloseAddIndustriesModalPopup() {
+        $('.main-title').html('Add Industry');
         $("#addIndusriesModal").modal('hide')
     }
     function OpenAddIndustriesModalPopup(){
@@ -266,10 +265,8 @@
             success: function (result) {
                 if (result.Message == "Success"){
                     OpenAddIndustriesModalPopup();
-                        $('#modal-title').html('Edit Industry');
+                    $('.main-title').html('Edit Industry');
                         var IndustryId = result.Result.Id;
-                        var industryname = result.Result.IndustryName;
-                        var staus = result.Result.Active;
 
                         $('#IndustryId').val(IndustryId);
                         $("#IndustryName").val(result.Result.IndustryName);
@@ -287,27 +284,29 @@
         });
     }
     function DeleteData(IndustryId){
-        var IndustryData = {
-            Id: IndustryId,
-            IndustryName: "",
-            Active: true
-        };
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("DeleteIndustry", "Lookup")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(IndustryData),
-            success: function (result) {
-                alert(result.Message)
-                if (result.Message == "Deleted Successfully") {
-                    GetServiceList();
+        if(confirm('Are you sure wants to delete this record?')){
+            var IndustryData = {
+                Id: IndustryId,
+                IndustryName: "",
+                Active: true
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteIndustry", "Lookup")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(IndustryData),
+                success: function (result) {
+                    alert(result.Message)
+                    if (result.Message == "Deleted Successfully") {
+                        GetServiceList();
+                    }
+                },
+                error: function (result) {
+                    alert("Error occured..");
                 }
-            },
-            error: function (result) {
-                alert("Error occured..");
-            }
-        });
+            });
+        }
     }
 </script>
 @*{

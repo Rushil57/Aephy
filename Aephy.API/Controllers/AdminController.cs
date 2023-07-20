@@ -245,7 +245,7 @@ namespace Aephy.API.Controllers
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.ToList();
                 List<Industries> industries = _db.Industries.ToList();
 
-                
+
                 var emps = from e in solution
                            select new SolutionsModel
                            {
@@ -288,9 +288,9 @@ namespace Aephy.API.Controllers
                 try
                 {
                     var solutionindustryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                    if(solutionindustryList.Count > 0)
+                    if (solutionindustryList.Count > 0)
                     {
-                        foreach(var solution in solutionindustryList)
+                        foreach (var solution in solutionindustryList)
                         {
                             _db.SolutionIndustry.Remove(solution);
                             _db.SaveChanges();
@@ -331,11 +331,10 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var checkService = _db.Services.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if (checkService != null)
+                    var checkIndustries = _db.Industries.Where(x => x.IndustryName == model.IndustryName).FirstOrDefault();
+                    if (checkIndustries != null)
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Industry Already Added!" });
-
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Industry Already Exists!" });
                     }
                     await _db.Industries.AddAsync(model);
                     var result = _db.SaveChanges();
@@ -344,7 +343,7 @@ namespace Aephy.API.Controllers
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Success"
+                            Message = "Industry Created Successfully"
                         });
                     }
                     else
@@ -371,7 +370,7 @@ namespace Aephy.API.Controllers
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Success"
+                            Message = "Industry Updated Successfully"
                         });
                     }
                 }
@@ -383,42 +382,7 @@ namespace Aephy.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
         }
 
-        [HttpPost]
-        [Route("UpdateIndustries")]
-        public async Task<IActionResult> UpdateIndustries([FromBody] Industries model)
-        {
-            try
-            {
-                if (model != null)
-                {
-                    var IndusrtyRecord = _db.Industries.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if (IndusrtyRecord != null)
-                    {
-                        IndusrtyRecord.IndustryName = model.IndustryName;
-                        IndusrtyRecord.Active = model.Active;
-                        var result = _db.SaveChanges();
-                        if (result != 0)
-                        {
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Data Updated Succesfully!.."
-                            });
-                        }
-                    }
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
-            }
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
-        }
 
         [HttpPost]
         [Route("GetAllIndustries")]
@@ -538,7 +502,7 @@ namespace Aephy.API.Controllers
                           select new
                           {
                               IndustryId = p.IndustryId,
-                              ServicesId = q.ServicesId 
+                              ServicesId = q.ServicesId
                           };
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel

@@ -253,6 +253,7 @@
 		$("#GigOpeningApplyModal").modal('show')
 	}
 	function GigOpenRolesApply(){
+		$('#preloader').show();
 		var fileUpload = $("#CVPath").get(0);
 		var files = fileUpload.files;
 
@@ -282,10 +283,12 @@
 			processData: false,
 			data: formData,
 			success: function (result) {
+				$('#preloader').hide();
 				alert(result)
 				CloseGigOpeningApplyModal();
 			},
 			error: function (result) {
+				$('#preloader').hide();
 				alert("failure");
 			}
 		});

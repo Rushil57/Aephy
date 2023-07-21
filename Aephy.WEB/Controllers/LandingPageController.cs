@@ -125,7 +125,7 @@ namespace Aephy.WEB.Controllers
 			IFormFile imageFile = httpPostedFileBase;
 
 			var currentDateTime = DateTime.Now;
-			result.CreatedDateTime = currentDateTime;
+            result.CreatedDateTime = currentDateTime;
 			var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
 				dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
 				if (data != null)

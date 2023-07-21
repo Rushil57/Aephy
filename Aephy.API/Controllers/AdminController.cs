@@ -164,18 +164,17 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    if (model.solutionServices.Count > 0)
+                    if (model.solutionServices != null)
                     {
-                        foreach (var services in model.solutionServices)
+
+                        var solutionservices = new SolutionServices()
                         {
-                            var solutionservices = new SolutionServices()
-                            {
-                                SolutionId = solution.Id,
-                                ServicesId = services
-                            };
-                            _db.SolutionServices.Add(solutionservices);
-                            _db.SaveChanges();
-                        }
+                            SolutionId = solution.Id,
+                            ServicesId = model.solutionServices
+                        };
+                        _db.SolutionServices.Add(solutionservices);
+                        _db.SaveChanges();
+
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -229,18 +228,17 @@ namespace Aephy.API.Controllers
                         _db.SolutionServices.RemoveRange(solutionservices);
                         _db.SaveChanges();
 
-                        if (model.solutionServices.Count > 0)
+                        if (model.solutionServices != null)
                         {
-                            foreach (var services in model.solutionServices)
+
+                            var solutionindustry = new SolutionServices()
                             {
-                                var solutionindustry = new SolutionServices()
-                                {
-                                    SolutionId = model.Id,
-                                    ServicesId = services
-                                };
-                                _db.SolutionServices.Add(solutionindustry);
-                                _db.SaveChanges();
-                            }
+                                SolutionId = model.Id,
+                                ServicesId = model.solutionServices
+                            };
+                            _db.SolutionServices.Add(solutionindustry);
+                            _db.SaveChanges();
+
                         }
                     }
 
@@ -291,17 +289,17 @@ namespace Aephy.API.Controllers
 
                 foreach (var list in data)
                 {
-                    if(list.Industries != null)
+                    if (list.Industries != null)
                     {
                         var industries = list.Industries.Split(",");
-                        foreach(var indus in industries)
+                        foreach (var indus in industries)
                         {
                             var industryname = _db.Industries.Where(x => x.Id.ToString() == indus).Select(x => x.IndustryName).FirstOrDefault();
-                            
+
                             industrylist.Add(industryname);
                         }
                     }
-                    if(list.Services != null)
+                    if (list.Services != null)
                     {
                         var servicesdata = list.Services.Split(",");
                         foreach (var datas in servicesdata)
@@ -336,7 +334,7 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
-                    Message =   ex.Message + ex.InnerException
+                    Message = ex.Message + ex.InnerException
 
                 });
             }
@@ -586,7 +584,7 @@ namespace Aephy.API.Controllers
                         });
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {

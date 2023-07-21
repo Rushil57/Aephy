@@ -30,7 +30,7 @@ namespace Aephy.API.Models
 
             public List<int> solutionIndustries { get; set; }
 
-            public List<int> solutionServices { get; set; }
+            public int solutionServices { get; set; }
 
             public string? Industries { get; set; }
 

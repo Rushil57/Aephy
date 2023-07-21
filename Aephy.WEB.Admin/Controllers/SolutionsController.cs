@@ -41,35 +41,42 @@ namespace Aephy.WEB.Admin.Controllers
         [HttpPost]
         public async Task<string> AddorEditSolution(IFormFile httpPostedFileBase, string SolutionData)
         {
-            var result = JsonConvert.DeserializeObject<SolutionsModel>(SolutionData);
-            IFormFile imageFile = httpPostedFileBase;
-
-            var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditSolutionData", HttpMethod.Post, result);
-            dynamic data = JsonConvert.DeserializeObject(solutionData);
-            if (data["StatusCode"] == 200)
+            try
             {
-                if (result.Id == 0)
-                {
+                var result = JsonConvert.DeserializeObject<SolutionsModel>(SolutionData);
+                IFormFile imageFile = httpPostedFileBase;
 
-                    int Id = data.Result;
-                    var fileData = await SaveImageFile(imageFile, Id);
-                    await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
-
-                }
-                else
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditSolutionData", HttpMethod.Post, result);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                if (data["StatusCode"] == 200)
                 {
-                    if(imageFile != null)
+                    if (result.Id == 0)
                     {
-                        int Id = result.Id;
-                        string Imagepath = data.Result;
-                        var editFileData = await EditImageFile(imageFile, Id, Imagepath);
-                        await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImageById", HttpMethod.Post, editFileData);
+
+                        int Id = data.Result;
+                        var fileData = await SaveImageFile(imageFile, Id);
+                        await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
+
                     }
+                    else
+                    {
+                        if (imageFile != null)
+                        {
+                            int Id = result.Id;
+                            string Imagepath = data.Result;
+                            var editFileData = await EditImageFile(imageFile, Id, Imagepath);
+                            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImageById", HttpMethod.Post, editFileData);
+                        }
 
+                    }
                 }
-            }
 
-            return solutionData;
+                return solutionData;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
 

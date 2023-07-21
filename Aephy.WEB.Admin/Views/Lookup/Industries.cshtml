@@ -9,20 +9,6 @@
         <!-- Recent Sales -->
         <div class="col-12">
             <div class="card recent-sales overflow-auto">
-
-                @*<div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-                </div>*@
-
                 <div class="card-body">
                     <h5 class="card-title">Industries <span>| Total</span></h5>
 
@@ -35,58 +21,13 @@
                                 <th scope="col">Industry Name</th>
                                 <th scope="col">Active</th>
                                 <th scope="col"></th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody id="#list">
 
                         </tbody>
-                        @*<tbody>
-                            <tr>
-                                <th scope="row">2457</th>
-                                <td>Retail</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2147</th>
-                                <td>Finance</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2049</th>
-                                <td>Healthcare</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2644</th>
-                                <td>Manufacturing</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2645</th>
-                                <td>Marketing</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2648</th>
-                                <td>Real Estate</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2647</th>
-                                <td>Energy</td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2649</th>
-                                <td>Education </td>
-                                <td><span class="badge bg-success">True</span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2646</th>
-                                <td>Other Industries</td>
-                                <td><span class="badge bg-danger">False</span></td>
-                            </tr>
-                        </tbody>*@
+                       
                     </table>
 
                 </div>
@@ -106,10 +47,7 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                    @*<h5 class="card-title">Vertical Form</h5>*@
-
-                                    <!-- Vertical Form -->
-                                    <!-- Vertical Form -->
+                                  
                                     <form class="row g-3 mt-3" name="addIndustriesForm">
                                         <input type="hidden" id="IndustryId" value="0">
                                         <div class="col-12">
@@ -141,11 +79,11 @@
         </div>
     </div>
 
+
+    
+
 </main>
 <script>
-    $(document).ready(function (){
-        GetServiceList();
-    });
     $(function () {
         $("form[name='addIndustriesForm']").validate({
             rules: {
@@ -166,6 +104,11 @@
                 AddIndustry()
             }
         });
+
+        $(".chosen-select").chosen();
+        BindServices();
+        GetServiceList();
+        BindIndustries();
     });
 
     function AddIndustry() {
@@ -240,6 +183,12 @@
                                 return '<a href="#" class="btn btn-danger" onclick=DeleteData("' + data + '");>Delete</a>';
                             }
                         },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" class="btn btn-primary" onclick=OpenSolutionModal("' + data + '");>Create Solution</a>';
+                            }
+                        },
 
                     ]
                 });
@@ -307,8 +256,50 @@
             });
         }
     }
+
+    function OpenSolutionModal(id){
+        $("#addSolutionModal").modal('show')
+        $('#drp-industries').val(id).trigger('chosen:updated');
+        $("#drp-industries option:not(:selected)").not(id).each(function (index) {
+            $(this).prop('disabled', true);
+        });
+        $('#drp-industries').trigger('chosen:updated');
+
+    }
+
+    function BindServices() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServices", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#drp-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                })
+                $('#drp-services').trigger('chosen:updated');
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function BindIndustries() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetIndustries", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#drp-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                })
+                $('#drp-industries').trigger('chosen:updated');
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
 </script>
-@*{
-    "data": "Id",
-    "className": "IndustryId"
-}*@

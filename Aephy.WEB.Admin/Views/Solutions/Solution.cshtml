@@ -77,7 +77,7 @@
                                         <div class="col-12" id="img-id">
                                             <label for="SolutionImage" class="form-label">Image</label>
                                             <div class="input-group">
-                                                <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" />
+                                                <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" onchange="ShowImagePreview()"/>
                                                
                                             </div>
                                         </div>
@@ -361,4 +361,9 @@
             }
         });
     });
+
+    function ShowImagePreview(){
+        $("#solution-img").remove()
+
+    }
 </script>

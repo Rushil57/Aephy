@@ -58,14 +58,14 @@ namespace Aephy.WEB.Admin.Controllers
             else
             {
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
-                if(data != null)
+                if (data != null)
                 {
                     int Id = result.Id;
                     string Imagepath = data.Result;
                     var d = await EditImageFile(imageFile, Id, Imagepath);
                     var ok = await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImageById", HttpMethod.Post, d);
                 }
-                
+
             }
 
 
@@ -80,8 +80,8 @@ namespace Aephy.WEB.Admin.Controllers
             var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionList", HttpMethod.Get);
             // Set the BlobStorageBaseUrl property for each service and generate the SAS token
 
-              dynamic data = JsonConvert.DeserializeObject(serviceList);
-           // var result = JsonConvert.DeserializeObject<SolutionsModel>(serviceList);
+            dynamic data = JsonConvert.DeserializeObject(serviceList);
+            // var result = JsonConvert.DeserializeObject<SolutionsModel>(serviceList);
 
             try
             {
@@ -93,7 +93,7 @@ namespace Aephy.WEB.Admin.Controllers
                         string sasToken = GenerateSasToken(imagepath);
                         string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
                         service.ImageUrlWithSas = imageUrlWithSas;
-                      
+
                     }
 
                 }
@@ -103,8 +103,8 @@ namespace Aephy.WEB.Admin.Controllers
             {
 
             }
-
-            return serviceList;
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
         }
 
 
@@ -148,33 +148,31 @@ namespace Aephy.WEB.Admin.Controllers
 
         }
 
-        //GetSolutiondataById
         [HttpPost]
         public async Task<string> GetSolutiondataById([FromBody] SolutionIdModel solutionsModel)
         {
             var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDataById", HttpMethod.Post, solutionsModel);
 
-            string imageUrlWithSas = string.Empty; 
+            string imageUrlWithSas = string.Empty;
             dynamic data = JsonConvert.DeserializeObject(serviceList);
             try
             {
                 if (data.Result != null)
                 {
-                    foreach (var service in data.Result)
-                    {
-                        string imagepath = service.ImagePath;
-                        string sasToken = GenerateSasToken(imagepath);
-                        imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
-                        service.ImageUrlWithSas = imageUrlWithSas;
-                    }
+                    string imagepath = data.Result.ImagePath;
+                    string sasToken = GenerateSasToken(imagepath);
+                    imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
+                    data.Result.ImageUrlWithSas = imageUrlWithSas;
+
                 }
             }
             catch (Exception ex)
             {
 
             }
-            
-            return serviceList;
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+            return jsonString;
         }
 
         private static string GetEndpointSuffixFromConnectionString(string connectionString)
@@ -294,7 +292,7 @@ namespace Aephy.WEB.Admin.Controllers
 
 
                     string imageUrlWithSas = ImagePath + sasToken;
-                    
+
 
 
                     BlobStorageBaseUrl = containerClient.Uri.ToString();
@@ -327,34 +325,34 @@ namespace Aephy.WEB.Admin.Controllers
         {
 
             EditSolutionImage solutions = new EditSolutionImage();
-                if (!string.IsNullOrEmpty(Imagepath))
-                {
-                    BlobServiceClient updateBlobServiceClient = new BlobServiceClient(_connectionString);
-                    BlobContainerClient updateContainerClient = updateBlobServiceClient.GetBlobContainerClient("profileimages");
+            if (!string.IsNullOrEmpty(Imagepath))
+            {
+                BlobServiceClient updateBlobServiceClient = new BlobServiceClient(_connectionString);
+                BlobContainerClient updateContainerClient = updateBlobServiceClient.GetBlobContainerClient("profileimages");
 
-                    BlobClient updateBlobClient = updateContainerClient.GetBlobClient(Path.GetFileName(Imagepath));
+                BlobClient updateBlobClient = updateContainerClient.GetBlobClient(Path.GetFileName(Imagepath));
 
-                    await updateBlobClient.DeleteIfExistsAsync();
-                }
+                await updateBlobClient.DeleteIfExistsAsync();
+            }
 
-                string fileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+            string fileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
 
-                BlobServiceClient createBlobServiceClient = new BlobServiceClient(_connectionString);
-                BlobContainerClient createContainerClient = createBlobServiceClient.GetBlobContainerClient("profileimages");
+            BlobServiceClient createBlobServiceClient = new BlobServiceClient(_connectionString);
+            BlobContainerClient createContainerClient = createBlobServiceClient.GetBlobContainerClient("profileimages");
 
-                BlobClient createBlobClient = createContainerClient.GetBlobClient(fileName);
+            BlobClient createBlobClient = createContainerClient.GetBlobClient(fileName);
 
-                using (var stream = imageFile.OpenReadStream())
-                {
-                    await createBlobClient.UploadAsync(stream, overwrite: true);
-                }
+            using (var stream = imageFile.OpenReadStream())
+            {
+                await createBlobClient.UploadAsync(stream, overwrite: true);
+            }
 
-                Imagepath = createBlobClient.Uri.ToString();
-                solutions.Id = (int)Id;
-                solutions.ImagePath = Imagepath;
-                return solutions;
-           
-            
+            Imagepath = createBlobClient.Uri.ToString();
+            solutions.Id = (int)Id;
+            solutions.ImagePath = Imagepath;
+            return solutions;
+
+
         }
 
     }

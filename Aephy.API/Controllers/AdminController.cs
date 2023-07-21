@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Security.Cryptography;
@@ -132,6 +133,7 @@ namespace Aephy.API.Controllers
         }
 
 
+        [HttpPost]
 
         [Route("AddorEditSolutionData")]
         public async Task<IActionResult> AddorEditSolutionData(SolutionsModel model)
@@ -270,9 +272,9 @@ namespace Aephy.API.Controllers
                 List<SolutionServices> solutionservice = _db.SolutionServices.ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.ToList();
                 List<Services> services = _db.Services.ToList();
+                //List<ServicesModel> servicesModels = services.ToList();
 
                 var data = from e in solution
-                         
                            select new SolutionsModel
                            {
                                Id = e.Id,
@@ -283,14 +285,52 @@ namespace Aephy.API.Controllers
                                ImagePath = e.ImagePath,
                                Industries = string.Join(",", solutionindustry.FindAll(x => x.SolutionId == e.Id).Select(p => p.IndustryId)),
                                Services = string.Join(",", solutionservice.Where(x => x.SolutionId == e.Id).Select(c => c.ServicesId)),
-                               
-
                            };
+
+                List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                List<string> industrylist = new List<string>();
+                List<string> Serviceslist = new List<string>();
+
+                foreach (var list in data)
+                {
+                    if(list.Industries != null)
+                    {
+                        var industries = list.Industries.Split(",");
+                        foreach(var indus in industries)
+                        {
+                            var industryname = _db.Industries.Where(x => x.Id.ToString() == indus).Select(x => x.IndustryName).FirstOrDefault();
+                            
+                            industrylist.Add(industryname);
+                        }
+                    }
+                    if(list.Services != null)
+                    {
+                        var servicesdata = list.Services.Split(",");
+                        foreach (var datas in servicesdata)
+                        {
+                            var servicename = _db.Services.Where(x => x.Id.ToString() == datas).Select(x => x.ServicesName).FirstOrDefault();
+                            Serviceslist.Add(servicename);
+                        }
+                    }
+                    SolutionsModel dataStore = new SolutionsModel();
+                    dataStore.Services = string.Join(",", Serviceslist);
+                    dataStore.Industries = string.Join(",", industrylist);
+                    dataStore.Id = list.Id;
+                    dataStore.Description = list.Description;
+                    dataStore.ImagePath = list.ImagePath;
+                    dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                    dataStore.Title = list.Title;
+                    dataStore.SubTitle = list.SubTitle;
+                    solutionsModel.Add(dataStore);
+                    Serviceslist.Clear();
+                    industrylist.Clear();
+                }
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = data
+                    Result = solutionsModel
                 });
             }
             catch (Exception ex)

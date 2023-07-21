@@ -134,7 +134,6 @@ namespace Aephy.API.Controllers
 
 
         [HttpPost]
-
         [Route("AddorEditSolutionData")]
         public async Task<IActionResult> AddorEditSolutionData(SolutionsModel model)
         {
@@ -272,7 +271,6 @@ namespace Aephy.API.Controllers
                 List<SolutionServices> solutionservice = _db.SolutionServices.ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.ToList();
                 List<Services> services = _db.Services.ToList();
-                //List<ServicesModel> servicesModels = services.ToList();
 
                 var data = from e in solution
                            select new SolutionsModel
@@ -335,13 +333,18 @@ namespace Aephy.API.Controllers
             }
             catch (Exception ex)
             {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message =   ex.Message + ex.InnerException
 
+                });
             }
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
-                Message = "Success"
+                Message = "Something Went Wrong!"
 
             });
         }
@@ -562,28 +565,35 @@ namespace Aephy.API.Controllers
         [Route("UpdateImage")]
         public async Task<IActionResult> UpdateImage([FromBody] SolutionImage solutionImage)
         {
-            //return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
             if (solutionImage.Id != 0)
             {
-                var UpdateImage = _db.Solutions.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
-                if (UpdateImage != null)
+                try
                 {
+                    var UpdateImage = _db.Solutions.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
+                    if (UpdateImage != null)
+                    {
 
-                    UpdateImage.BlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
-                    UpdateImage.ImagePath = solutionImage.ImagePath;
-                    UpdateImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
+                        UpdateImage.BlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
+                        UpdateImage.ImagePath = solutionImage.ImagePath;
+                        UpdateImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
 
-                    _db.SaveChanges();
+                        _db.SaveChanges();
 
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Save Suucessfully !"
+                        });
+                    }
+                }
+                catch(Exception ex)
+                {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Data Save Suucessfully !"
+                        Message = ex.Message + ex.InnerException
                     });
                 }
-
-
-
             }
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -596,7 +606,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("UpdateImageById")]
-        public async Task<IActionResult> UpdateImageById([FromBody] EditSolutionImage solutionImage)
+        public async Task<IActionResult> UpdateImageById([FromBody] SolutionImage solutionImage)
         {
 
             if (solutionImage.Id != 0)

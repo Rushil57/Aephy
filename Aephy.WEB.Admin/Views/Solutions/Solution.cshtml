@@ -1,9 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Solutions Page";
 }
-  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css">
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css">
 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
 
 
 <main id="main" class="main">
@@ -24,10 +24,10 @@
                                 <th scope="col">Title</th>
                                 <th scope="col">Sub Title</th>
                                 <th scope="col">Description</th>
-                                <th>Image</th>
+                                <th scope="col">Image</th>
                                 <th scope="col">Services</th>
                                 <th scope="col">Industries</th>
-                                <th></th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                     </table>
@@ -77,24 +77,22 @@
                                         <div class="col-12" id="img-id">
                                             <label for="SolutionImage" class="form-label">Image</label>
                                             <div class="input-group">
-                                                <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" onchange="ShowImagePreview()"/>
-                                               
+                                                <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" />
                                             </div>
+                                            <div id="solutionImagepreview"></div>
                                         </div>
                                         <div class="col-12">
                                             <label for="Services" class="form-label">Services</label>
                                             <div class="input-group" id="services">
                                                 <select data-placeholder="Choose tags ..." name="tags[]" multiple class="chosen-select" id="drp-services">
-                                                   
-                                                  </select>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <label for="Industries" class="form-label">Industries</label>
                                             <div class="input-group" id="industries">
-                                                  <select data-placeholder="Choose tags ..." name="tags[]" multiple class="chosen-select" id="drp-industries">
-                                                   
-                                                  </select>
+                                                <select data-placeholder="Choose tags ..." name="tags[]" multiple class="chosen-select" id="drp-industries">
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="text-center">
@@ -119,13 +117,13 @@
                 SolutionTitle: { required: true },
                 Solution_SubTitle: { required: true },
                 SolutionDescription: { required: true },
-                SolutionImage: { required: true }
+                //SolutionImage: { required: true }
             },
             messages: {
                 SolutionTitle: { required: "Please enter solution title" },
                 Solution_SubTitle: { required: "Please enter sub title" },
                 SolutionDescription: { required: "Please enter description" },
-                SolutionImage: { required: "Please chhose an image" }
+                //SolutionImage: { required: "Please chhose an image" }
             },
             errorPlacement: function (error, element) {
                 if (element.parent('.input-group').length) {
@@ -140,49 +138,48 @@
             }
         });
         GetSolutionList()
-      $(".chosen-select").chosen();
-       BindServices()
-       BindIndustries()
+        $(".chosen-select").chosen();
+        BindServices()
+        BindIndustries()
     });
 
     function addSolution() {
-          var fileUpload = $("#SolutionImage").get(0);  
-            var files = fileUpload.files;
+        var fileUpload = $("#SolutionImage").get(0);
+        var files = fileUpload.files;
 
-           var SolutionData = {
+        var SolutionData = {
             Id: $("#SolutionId").val(),
             Title: $("#SolutionTitle").val(),
             SubTitle: $("#Solution_SubTitle").val(),
             Description: $("#SolutionDescription").val(),
             solutionServices: $("#drp-services").val(),
-            solutionIndustries: $("#drp-industries").val()
+            solutionIndustries: $("#drp-industries").val(),
+            ImagePath: $("#ImagePath").val()
         };
 
         var formData = new FormData();
-        for (var i = 0; i < files.length; i++) {  
-               // fileData.append(files[i].name, files[i]);  
-                 formData.append("httpPostedFileBase", files[i]);
-            }  
+        for (var i = 0; i < files.length; i++) {
+            // fileData.append(files[i].name, files[i]);
+            formData.append("httpPostedFileBase", files[i]);
+        }
         formData.append("SolutionData", JSON.stringify(SolutionData));
 
-            $.ajax({  
-                url: '/Solutions/AddorEditSolution',  
-                type: "POST",  
-                contentType: false, 
-                processData: false,
-                 data: formData,
+        $.ajax({
+            url: '/Solutions/AddorEditSolution',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
             dataType: 'json',
-                success: function (result) {  
-                    alert(result);  
-                    ResetForm();
-                    GetSolutionList();
-                },  
-                error: function (err) {  
-                    alert("Success");  
-                    ResetForm();
+            success: function (result) {
+                alert(result.Message);
+                ResetForm();
                 GetSolutionList();
-                }  
-            });     
+            },
+            error: function (err) {
+                alert("Something Went Wrong!");
+            }
+        });
 
     }
 
@@ -207,7 +204,7 @@
                         {
                             "data": "ImageUrlWithSas",
                             "render": function (data, type, row) {
-                                return '<img src="' + data +'" alt="Image" height="70" width="150" />';
+                                return '<img src="' + data + '" alt="Image" height="70" width="150" />';
                             }
                         },
                         { "data": "Services" },
@@ -216,6 +213,7 @@
                             "data": "Id",
                             "render": function (data, type, row) {
                                 return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution("' + row.ImageUrlWithSas + '","' + row.ImagePath + '",' + row.Id + ')>Delete</a>';
+                                
                             }
                         }
 
@@ -239,11 +237,14 @@
         $('#drp-services').val("").trigger('chosen:updated');
         $("#drp-industries").val("").trigger('chosen:updated');
         $("#addSolutionModal").modal('hide'),
-        $("#SolutionId").val(0)
+            $("#SolutionId").val(0)
+        $(".SolutionImage").attr('src', ""),
+            $("#solutionImagepreview").hide()
+
     }
 
-    function DeleteSolution(ImageUrlWithSas,ImagePath,Id) {
-        
+    function DeleteSolution(row) {
+
         if (confirm('Are you sure want to delete solution?')) {
             var ServiceData = {
                 Id: Id,
@@ -301,7 +302,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                $.each(result.Result, function (data, value) { 
+                $.each(result.Result, function (data, value) {
                     $("#drp-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
                 })
                 $('#drp-industries').trigger('chosen:updated');
@@ -326,33 +327,35 @@
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
-                if(result != null){
+                if (result != null) {
                     $("#addSolutionModal").modal('show')
                     $("#solution-img").remove()
                     $("#SolutionId").val(result.Result.Id)
                     $("#SolutionTitle").val(result.Result.Title)
                     $("#Solution_SubTitle").val(result.Result.SubTitle)
                     $("#SolutionDescription").val(result.Result.Description)
-                    //$("#SolutionImage").val(result.Result.ImageUrlWithSas)
-                    //$("#solution-img").show();
-                    $(" <img src=" + result.Result.ImageUrlWithSas + " alt='Image' id='solution-img' style='height:200px;width:200px;'/>").insertAfter("#img-id");
-
+                    $("#ImagePath").val(result.Result.ImagePath)
+                    $("#solutionImagepreview").find("span").first().remove();
+                    $('#solutionImagepreview').show();
+                    var span = document.createElement('span');
+                    span.innerHTML =
+                        ['<img class="SolutionImage" src="', result.Result.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                            .join('');
+                    document.getElementById('solutionImagepreview').insertBefore(span, null);
                     var industryvalues = new Array();
                     var servicesvalues = new Array();
 
                     $.each(result.IndustryResult, function (index, value) {
                         industryvalues.push(value.IndustryId)
                     });
-                   
-                     $.each(result.ServiceResult, function (index, value) {
+
+                    $.each(result.ServiceResult, function (index, value) {
                         servicesvalues.push(value.ServicesId)
                     });
                     console.log(industryvalues)
                     console.log(servicesvalues)
                     $('#drp-services').val(servicesvalues).trigger('chosen:updated');
                     $('#drp-industries').val(industryvalues).trigger('chosen:updated');
-                     //$("#Services").val(servicesvalues);
-                     // $("#Industries").val(industryvalues);
                 }
 
             },
@@ -362,8 +365,23 @@
         });
     });
 
-    function ShowImagePreview(){
-        $("#solution-img").remove()
+    $("#SolutionImage").change(AddsolutionImage);
+    function AddsolutionImage(event) {
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            console.log(reader)
+            reader.onload = (function (e) {
+                $("#solutionImagepreview").find("span").first().remove();
+                $('#solutionImagepreview').show();
+                var span = document.createElement('span');
+                span.innerHTML =
+                    ['<img class="SolutionImage" src="', e.target.result, '" title="', escape(e.name), '" style="height:200px;width:200px;"/>']
+                        .join('');
+                document.getElementById('solutionImagepreview').insertBefore(span, null);
+            });
 
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 </script>

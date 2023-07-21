@@ -4,8 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Aephy.WEB-Admin</title>
-    <link href="~/assets/img/Logo1.png" rel="icon">
-    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="~/assets/img/brand-icon.png" rel="icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -496,11 +495,17 @@
             type: "Get",
             url: "/Home/LogOut",
             success: function (result) {
-                window.location.href = '/Home/Login'
+                ClearHistory();
+                window.location.href = '/Home/Login';
             },
             error: function (result) {
                 alert("Something Went Wrong!");
             }
         });
+    }
+    function ClearHistory() {
+        var backlen = history.length;
+        history.go(-backlen);
+        window.location.href = '/Home/Dashboard';
     }
 </script>

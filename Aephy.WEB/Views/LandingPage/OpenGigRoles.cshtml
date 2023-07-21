@@ -253,7 +253,10 @@
 		$("#GigOpeningApplyModal").modal('show')
 	}
 	function GigOpenRolesApply(){
-		var formData = {
+		var fileUpload = $("#CVPath").get(0);
+		var files = fileUpload.files;
+
+		var GigOpenRolesData = {
 			ID: $("#ID").val(),
 			FreelancerID: $("#FreelancerID").val(),
 			ServiceID: $("#ServiceID").val(),
@@ -263,16 +266,23 @@
 			Level: $("#Level").val(),
 			IsApproved: false,
 			Description: $("#Description").val(),
-			CVPath: $("#CVPath").val()
 		}
+
+		var formData = new FormData();
+		for (var i = 0; i < files.length; i++) {
+			// fileData.append(files[i].name, files[i]);
+			formData.append("httpPostedFileBase", files[i]);
+		}
+		formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
+
 		$.ajax({
 			type: "POST",
 			url: "@Url.Action("ApplyForOpenGigRoles", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			data: JSON.stringify(formData),
+			contentType: false,
+			processData: false,
+			data: formData,
 			success: function (result) {
-				alert(result.Message)
+				alert(result)
 				CloseGigOpeningApplyModal();
 			},
 			error: function (result) {

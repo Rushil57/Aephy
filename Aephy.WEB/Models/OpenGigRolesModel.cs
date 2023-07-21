@@ -13,7 +13,17 @@
         public DateTime CreatedDateTime { get; set; }
         public string? Description { get; set; }
 		public string? CVPath { get; set; }
-		public string? BlobStorageBaseUrl { get; set; }
 		public string? CVUrlWithSas { get; set; }
 	}
+
+    public class OpenGigRolesCV
+    {
+        public int ID { get; set; }
+
+        public string? CVPath { get; set; }
+
+        public string? BlobStorageBaseUrl { get; set; }
+
+        public string? CVUrlWithSas { get; set; }
+    }
 }

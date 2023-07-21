@@ -1329,4 +1329,17 @@ h6 {
         border-color: var(--brand);
     }
 
+/*-------------------------*/
+
+.chosen-container .chosen-drop{
+    width: 500px;
+}
+
+.chosen-container-multi .chosen-choices{
+    width: 460px !important;
+}
+
+.chosen-container .chosen-drop {
+    width: 460px !important;
+}
 

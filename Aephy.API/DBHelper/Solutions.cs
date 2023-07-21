@@ -16,6 +16,12 @@ namespace Aephy.API.DBHelper
         public string? Description { get; set; }
 
         public string? Image { get; set; }
+       
+        public string? ImagePath { get; set; }
+
+        public string? BlobStorageBaseUrl { get; set; }
+
+        public string? ImageUrlWithSas { get; set; }
     }
 
     public class SolutionServices

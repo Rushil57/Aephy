@@ -1,5 +1,8 @@
 using Aephy.WEB.Provider;
 using Aephy.WEB.Repository;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,20 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddScoped<IApiRepository, ApiRepository>();
+
+// Use DefaultAzureCredential to authenticate with Azure Blob Storage
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json")
+    .Build();
+var connectionString = configuration.GetConnectionString("AzureBlobStorage");
+
+var credential = new DefaultAzureCredential();
+
+var blobServiceClient = new BlobServiceClient(connectionString);
+
+builder.Services.AddSingleton<BlobServiceClient>(blobServiceClient);
+
 
 var app = builder.Build();
 

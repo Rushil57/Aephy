@@ -1,4 +1,7 @@
-﻿namespace Aephy.WEB.Admin.Models
+﻿using Microsoft.OpenApi.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Aephy.WEB.Admin.Models
 {
     public class SolutionsModel
     {
@@ -13,7 +16,16 @@
         public List<int> solutionIndustries { get; set; }
 
         public List<int> solutionServices { get; set; }
+
+        public string? Industries { get; set; }
+
+        public string? Services { get; set; }
         public string? Image { get; set; }
+
+        public string? ImageUrlWithSas { get; set; }
+
+        public string? ImagePath { get; set; }
+        // public IFormFile[] ImageFile { get; set; }
     }
 
     public class SolutionServicesViewModel
@@ -32,5 +44,32 @@
         public int SolutionId { get; set; }
 
         public int IndustryId { get; set; }
+    }
+
+    public class SolutionIdModel
+    {
+        public int Id { get; set; }
+
+        public string? ImagePath { get; set; }
+
+        public string? ImageUrlWithSas { get; set; }
+    }
+
+    public class SolutionImage
+    {
+        public int Id { get; set; }
+
+        public string? ImagePath { get; set; }
+
+        public string? BlobStorageBaseUrl { get; set; }
+
+        public string? ImageUrlWithSas { get; set; }
+    }
+
+    public class EditSolutionImage
+    {
+        public int Id { get; set; }
+
+        public string? ImagePath { get; set; }
     }
 }

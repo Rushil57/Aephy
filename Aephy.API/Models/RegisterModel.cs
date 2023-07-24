@@ -16,6 +16,6 @@ namespace Aephy.API.Models
 
         public string? UserType { get; set; }
 
-        public IFormFile? ProfileImage { get; set; }
+        public string? FreelancerLevel { get; set; }
     }
 }

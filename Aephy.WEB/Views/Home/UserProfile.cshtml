@@ -129,6 +129,13 @@
                                             <input name="Address" type="text" class="form-control cls-freelancer-address" readonly />
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Freelancer Level</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="freelancerLevel" type="text" class="form-control drp-freelancer-level" readonly />
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -218,6 +225,19 @@
                                             <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <textarea name="Address" type="text" class="form-control cls-freelancer-address" id="Freelancer-Address" rows="4" cols="50"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Level" class="col-md-4 col-lg-3 col-form-label">Freelancer Level</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select drp-freelancer-level" aria-label="Default select example" name="level" disabled="true">
+                                                    <option value="">All Levels</option>
+                                                    <option value="Experts">Experts</option>
+                                                    <option value="Associate">Associate</option>
+                                                    <option value="ProjectManager">Project Manager</option>
+                                                    <option value="ProjectLeader">Project Leader</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -343,6 +363,7 @@
                     $(".cls-freelancer-address").val(result.Result.FreelancerAddress)
                     $(".cls-client-address").val(result.Result.ClientAddress)
                     $(".description").val(result.Result.Description)
+                    $(".drp-freelancer-level").val(result.Result.FreelancerLevel)
                 }
 
             },
@@ -357,7 +378,7 @@
             HourlyRate: $("#HourlyRate").val(),
             Education : $("#Education").val(),
             ProffessionalExperience: $("#ProffessionalExperience").val(),
-            FreelancerAddress: $("#Freelancer-Address").val()
+            FreelancerAddress: $("#Freelancer-Address").val(),
         }
 
         var ClientDetail = {

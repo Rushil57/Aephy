@@ -18,6 +18,7 @@
         public FreelancerDetail freelancerDetail { get; set; }
 
         public ClientDetail clientDetail { get; set; }
+        public string? FreelancerLevel { get; set; }
         public IFormFile? ProfileImage { get; set; }
     }
 
@@ -30,7 +31,7 @@
         public string? Education { get; set; }
 
         public string? FreelancerAddress { get; set; }
-
+        public string? FreelancerLevel { get; set; }
     }
 
     public class ClientDetail

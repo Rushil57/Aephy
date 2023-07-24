@@ -18,5 +18,7 @@ namespace Aephy.API.DBHelper
         public string? ProffessionalExperience { get; set; }
 
         public string? Address { get; set; }
+
+        public string? FreelancerLevel { get; set; }
     }
 }

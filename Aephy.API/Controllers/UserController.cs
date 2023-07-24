@@ -77,7 +77,8 @@ namespace Aephy.API.Controllers
                                 HourlyRate = freelancerDetails.HourlyRate,
                                 Education = freelancerDetails.Education,
                                 ProffessionalExperience = freelancerDetails.ProffessionalExperience,
-                                FreelancerAddress = freelancerDetails.Address
+                                FreelancerAddress = freelancerDetails.Address,
+                                FreelancerLevel = freelancerDetails.FreelancerLevel,
                             }
                         });
                     }

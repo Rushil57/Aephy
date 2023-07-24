@@ -25,6 +25,7 @@ namespace Aephy.API.DBHelper
         public DbSet<ClientDetails> ClientDetails { get; set; }
 
         public DbSet<OpenGigRolesApplications> OpenGigRolesApplications { get; set; }
+        public DbSet<GigOpenRoles> GigOpenRoles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

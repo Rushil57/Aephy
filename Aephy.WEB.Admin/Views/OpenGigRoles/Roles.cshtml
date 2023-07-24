@@ -1,0 +1,286 @@
+﻿@{
+    ViewData["Title"] = "Roles Page";
+}
+<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                    <h5 class="card-title">Gig Roles</h5>
+
+                    <a class="btn btn-brand m-2" onclick="OpenAddRolesModalPopup();">Create Roles</a>
+
+                    <table class="table table-borderless datatable" id="gigRolesList">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">SolutionId</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Level</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+
+
+    <div class="modal" id="addRolesModal" tabindex="-1" aria-labelledby="addRolesModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create Roles</h4>
+                    <a class="close" onclick="CloseAddRolesModalPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <form class="row g-3 mt-3" name="addRolesForm">
+                                        <input type="hidden" id="ID" value="0">
+
+                                        <div class="col-12">
+                                            <label for="Solutions" class="form-label">Solution</label>
+                                            <div class="input-group" id="Solutions">
+                                                <select data-placeholder="Choose tags ..." id="drp-Solutions" name="drpSolutions" class="form-control dropdown">
+                                                    <option value="">Choose Solutions</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="Title" class="form-label">Title</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="Title" name="Title">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="Level" class="form-label">Level</label>
+                                            <div class="input-group" id="level">
+                                                <select data-placeholder="Choose tags ..." id="drp-Level" name="drpLevel" class="form-control dropdown">
+                                                    <option value="">Choose Solutions</option>
+                                                    <option value="Associate">Associate</option>
+                                                    <option value="Expert">Expert</option>
+                                                    <option value="Project Manager">Project Manager</option>
+                                                    <option value="Project Architect">Project Architect</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Submit</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetRolesForm();">Reset</button>
+                                        </div>
+                                    </form><!-- Vertical Form -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $(function () {
+        GetRolesList()
+        $(".chosen-select").chosen();
+        BindSolutions();
+
+        //OpenGigRoles
+        $("form[name='addRolesForm']").validate({
+            rules: {
+                drpSolutions: { required: true },
+                Title: { required: true },
+                drpLevel: { required: true },
+            },
+            messages: {
+                drpSolutions: { required: "please select solution" },
+                Title: { required: "please enter title" },
+                drpLevel: { required: "please select level" },
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                addRoles()
+            }
+        });
+    });
+
+    function addRoles() {
+        var id = $("#ID").val();
+        if (id == null){
+            id=0;
+        }
+        var GigRolesData = {
+            ID: id,
+            SolutionId: $("#drp-Solutions").val(),
+            Title: $("#Title").val(),
+            Level: $("#drp-Level").val(),
+        };
+        $("#preloader").show();
+        $.ajax({
+            url: '/OpenGigRoles/AddorEditRoles',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(GigRolesData),
+            success: function (result) {
+                $("#preloader").hide();
+                CloseAddRolesModalPopup();
+                alert(result.Message);
+                ResetRolesForm();
+                GetRolesList();
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                CloseAddRolesModalPopup();
+                alert("Something Went Wrong!");
+            }
+        });
+
+    }
+
+    function ResetRolesForm() {
+        $("#ID").val(0);
+        $("#Title").val("");
+        $('#drp-Solutions').val("").trigger('chosen:updated');
+        $("#drp-Level").val("").trigger('chosen:updated');
+        $(".modal-title").html("Add Roles");
+    }
+
+    function GetRolesList() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetRolesList", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#gigRolesList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "className": "cls-RolesId"
+                        },
+                        { "data": "SolutionId" },
+                        { "data": "Title" },
+                        { "data": "Level" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution(' + row.ID + ')>Delete</a>';
+
+                            }
+                        }
+
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+
+
+    function DeleteSolution(Id) {
+
+        if (confirm('Are you sure want to delete solution?')) {
+            $("#preloader").show();
+            var RolesData = {
+                Id: Id
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteRoles", "OpenGigRoles")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(RolesData),
+                success: function (result) {
+                    $("#preloader").hide();
+                    alert(result.Message);
+                    GetRolesList();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    alert("Error occured..");
+                }
+            });
+        }
+    }
+
+    function CloseAddRolesModalPopup() {
+        ResetRolesForm();
+        $("#addRolesModal").modal('hide')
+    }
+    function OpenAddRolesModalPopup() {
+        $("#addRolesModal").modal('show')
+    }
+
+    function BindSolutions() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutionsList", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#drp-Solutions").append($("<option     />").val(value.Id).text(value.Title));
+                })
+                $('#drp-Solutions').trigger('chosen:updated');
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    $('#gigRolesList').on('click', '.cls-RolesId', function () {
+        var RolesId = $(this).closest('tr').find('td:eq(0)').text();
+        rolesId = parseInt(RolesId)
+
+        var RolesData = {
+            ID: rolesId,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetRolesdataById", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(RolesData),
+            success: function (result) {
+                if (result != null) {
+                    $("#addRolesModal").modal('show');
+                    $(".modal-title").html("Edit Roles");
+                    $("#ID").val(result.Result.ID);
+                    $('#drp-Solutions').val(result.Result.SolutionId).trigger('chosen:updated');
+                    $("#Title").val(result.Result.Title)
+                    $('#drp-Level').val(result.Result.Level).trigger('chosen:updated');
+                }
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    });
+
+
+</script>

@@ -322,7 +322,18 @@
                     </li>
                 </ul>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#Roles-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Roles</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="Roles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="~/OpenGigRoles/Roles">
+                            <i class="bi bi-circle"></i><span>Create Roles</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Components Nav -->
         </ul>
 
     </aside><!-- End Sidebar-->
@@ -409,7 +420,7 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <div id="preloader" style="display:block;"></div>
+    <div id="preloader" style="display:none;"></div>
 
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/vendor/quill/quill.min.js"></script>

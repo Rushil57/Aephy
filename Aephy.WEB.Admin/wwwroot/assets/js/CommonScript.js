@@ -45,8 +45,32 @@ $(function () {
     $(".chosen-select").chosen();
     BindServices()
     BindIndustries()
-});
 
+    //OpenGigRoles
+    $("form[name='addRolesForm']").validate({
+        rules: {
+            drpSolutions : { required: true },
+            Title: { required: true },
+            drpLevel: { required: true },
+        },
+        messages: {
+            drpSolutions: { required: "please select solution" },
+            Title: { required: "please enter title" },
+            drpLevel: { required: "please select level" },
+        },
+        errorPlacement: function (error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            }
+            else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function (form) {
+            addRoles()
+        }
+    });
+});
 
 function addSolution() {
     var fileUpload = $("#SolutionImage").get(0);
@@ -102,7 +126,7 @@ function SignOut() {
             alert("Something Went Wrong!");
         }
     });
-}
+
 
 function ResetForm() {
     $("#solution-img").remove()

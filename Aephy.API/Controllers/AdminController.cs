@@ -370,6 +370,29 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetSolutionList")]
+        public async Task<IActionResult> GetSolutionList()
+        {
+            try
+            {
+                var list = _db.Solutions.ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
 
 
         [HttpPost]
@@ -672,5 +695,147 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("RolesList")]
+        public async Task<IActionResult> RolesList()
+        {
+            try
+            {
+                var list = _db.GigOpenRoles.ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("AddorEditRoles")]
+        public async Task<IActionResult> AddorEditRoles([FromBody]GigOpenRoles model)
+        {
+            try
+            {
+                if (model.ID == 0)
+                {
+                    try
+                    {
+                        var roles = new GigOpenRoles()
+                        {
+                            SolutionId = model.SolutionId,
+                            Title = model.Title,
+                            Level = model.Level
+                        };
+                        _db.GigOpenRoles.Add(roles);
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Saved Succesfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var openRolesdata = _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                        if (openRolesdata != null)
+                        {
+                            openRolesdata.SolutionId = model.SolutionId;
+                            openRolesdata.Title = model.Title;
+                            openRolesdata.Level = model.Level;
+                            _db.SaveChanges();
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Saved Succesfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("RolesDataById")]
+        public async Task<IActionResult> RolesDataById([FromBody] GigOpenRoles model)
+        {
+            try
+            {
+                GigOpenRoles openRoles= _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                if (openRoles != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = openRoles
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteRolesById")]
+        public async Task<IActionResult> DeleteRolesById([FromBody] GigOpenRoles rolesData)
+        {
+            try
+            {
+                GigOpenRoles openRolesRecord = _db.GigOpenRoles.Where(x => x.ID == rolesData.ID).FirstOrDefault();
+                if (openRolesRecord != null)
+                {
+                    _db.GigOpenRoles.Remove(openRolesRecord);
+                    var result = _db.SaveChanges();
+                    if (result != 0)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Deleted Successfully"
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
     }
 }

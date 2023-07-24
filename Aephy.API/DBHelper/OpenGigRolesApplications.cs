@@ -31,4 +31,18 @@ namespace Aephy.API.DBHelper
 		public string? CVUrlWithSas { get; set; }
 
 	}
+    public class GigOpenRoles
+    {
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Level { get; set; }
+        
+        public DateTime CreatedDateTime { get; set; }
+	}
 }

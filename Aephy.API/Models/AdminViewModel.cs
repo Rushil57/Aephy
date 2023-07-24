@@ -8,7 +8,7 @@ namespace Aephy.API.Models
         public class ServicesModel
         {
             public int Id { get; set; }
-            public string ServiceName { get; set; }
+            public string? ServiceName { get; set; }
             public bool Active { get; set; }
         }
 
@@ -81,6 +81,7 @@ namespace Aephy.API.Models
             public string? BlobStorageBaseUrl { get; set; }
 
             public string? ImageUrlWithSas { get; set; }
+            public bool HasImageFile { get; set; }
         }
 
         public class EditSolutionImage

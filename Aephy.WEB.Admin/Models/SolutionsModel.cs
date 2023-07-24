@@ -64,6 +64,8 @@ namespace Aephy.WEB.Admin.Models
         public string? BlobStorageBaseUrl { get; set; }
 
         public string? ImageUrlWithSas { get; set; }
+
+        public bool? HasImageFile { get; set; }
     }
 
     public class EditSolutionImage

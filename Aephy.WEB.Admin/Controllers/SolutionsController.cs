@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics.Metrics;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using static Azure.Core.HttpHeader;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -47,29 +48,32 @@ namespace Aephy.WEB.Admin.Controllers
                 IFormFile imageFile = httpPostedFileBase;
 
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditSolutionData", HttpMethod.Post, result);
-                dynamic data = JsonConvert.DeserializeObject(solutionData);
-                if (data["StatusCode"] == 200)
+                if(solutionData != "")
                 {
-                    if (result.Id == 0)
+                    dynamic data = JsonConvert.DeserializeObject(solutionData);
+                    if (data["StatusCode"] == 200)
                     {
-
-                        int Id = data.Result;
-                        var fileData = await SaveImageFile(imageFile, Id);
-                        await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
-
-                    }
-                    else
-                    {
-                        if (imageFile != null)
+                        if (result.Id == 0)
                         {
-                            int Id = result.Id;
-                            string Imagepath = data.Result;
-                            var editFileData = await EditImageFile(imageFile, Id, Imagepath);
-                            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImageById", HttpMethod.Post, editFileData);
-                        }
 
+                            int Id = data.Result;
+                            var fileData = await SaveImageFile(imageFile, Id);
+                            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
+
+                        }
+                        else
+                        {
+                            if (imageFile != null)
+                            {
+                                int Id = result.Id;
+                                string Imagepath = data.Result;
+                                var editFileData = await EditImageFile(imageFile, Id, Imagepath);
+                                await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, editFileData);
+                            }
+
+                        }
                     }
-                }
+                }           
 
                 return solutionData;
             }
@@ -274,7 +278,8 @@ namespace Aephy.WEB.Admin.Controllers
                     string ImagePath = string.Empty;
                     string ImageUrlWithSas = string.Empty;
 
-                    string fileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                    var newfileName = Regex.Replace(imageFile.FileName, @"[^a-zA-Z]", "");
+                    string fileName = Guid.NewGuid().ToString() + "_" + newfileName;
 
                     // Get the Azure Blob Storage connection string from configuration
                     var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
@@ -307,6 +312,7 @@ namespace Aephy.WEB.Admin.Controllers
                     solutions.BlobStorageBaseUrl = BlobStorageBaseUrl;
                     solutions.ImagePath = ImagePath;
                     solutions.ImageUrlWithSas = ImageUrlWithSas;
+                    solutions.HasImageFile = true;
                     solutions.Id = (int)(Id);
 
                     return solutions;
@@ -339,8 +345,8 @@ namespace Aephy.WEB.Admin.Controllers
 
                     await updateBlobClient.DeleteIfExistsAsync();
                 }
-
-                string fileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                var newfileName = Regex.Replace(imageFile.FileName, @"[^a-zA-Z]", "");
+                string fileName = Guid.NewGuid().ToString() + "_" + newfileName;
 
                 BlobServiceClient createBlobServiceClient = new BlobServiceClient(_connectionString);
                 BlobContainerClient createContainerClient = createBlobServiceClient.GetBlobContainerClient("profileimages");
@@ -353,6 +359,7 @@ namespace Aephy.WEB.Admin.Controllers
                 }
 
                 Imagepath = createBlobClient.Uri.ToString();
+                solutions.HasImageFile = false;
                 solutions.Id = (int)Id;
                 solutions.ImagePath = Imagepath;
             }

@@ -30,8 +30,15 @@ namespace Aephy.WEB.Admin.Controllers
         {
             if (ServiceData != null)
             {
-                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/AddServices", HttpMethod.Post, ServiceData);
-                return serviceData;
+                var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditServices", HttpMethod.Post, ServiceData);
+                if(serviceData != "")
+                {
+                    return serviceData;
+                }
+                else
+                {
+                    return "failed to save data..";
+                }
             }
             else
             {
@@ -47,10 +54,10 @@ namespace Aephy.WEB.Admin.Controllers
             return serviceList;
         }
 
-        [HttpGet]
-        public async Task<string> GetServicesById(int Id)
+        [HttpPost]
+        public async Task<string> GetServicesById([FromBody] ServicesModel ServiceData)
         {
-            var serviceListById = await _apiRepository.MakeApiCallAsync("api/Admin/GetServicesById", HttpMethod.Get, Id);
+            var serviceListById = await _apiRepository.MakeApiCallAsync("api/Admin/GetServicesById", HttpMethod.Post, ServiceData);
             return serviceListById;
         }
 
@@ -61,7 +68,15 @@ namespace Aephy.WEB.Admin.Controllers
             if (ServiceData != null)
             {
                 var serviceData = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteServicesById", HttpMethod.Post, ServiceData);
-                return serviceData;
+                if(serviceData != "")
+                {
+                    return serviceData;
+                }
+                else
+                {
+                    return "Failed to delete data";
+                }
+                
             }
             else
             {

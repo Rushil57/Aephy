@@ -1359,8 +1359,8 @@ h6 {
     width: 460px !important;
 }
 
-td.cls-Solution {
-    color: #e85f09;
+td.cls-Solution, .cls-service, .cls-industries {
+    color: #e85f09 !important;
     text-decoration: underline;
     font-size: 18px;
     cursor: pointer;

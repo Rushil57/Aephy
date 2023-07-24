@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<Aephy.WEB.Admin.Models.IndustriesModel>
-@using Aephy.WEB.Admin.Models*@
+﻿
 @{
     ViewData["Title"] = "Industries Page";
 }
@@ -104,11 +103,7 @@
                 AddIndustry()
             }
         });
-
-        $(".chosen-select").chosen();
-        BindServices();
         GetServiceList();
-        BindIndustries();
     });
 
     function AddIndustry() {
@@ -162,7 +157,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
-                                return '<a href="#" onclick=EditData("' + data + '");>'+ data +'</a>';
+                                return '<a class="cls-industries" onclick=EditData("' + data + '");>'+ data +'</a>';
                             }
                         },
                         { "data": "IndustryName" },
@@ -256,7 +251,6 @@
             });
         }
     }
-
     function OpenSolutionModal(id){
         $("#addSolutionModal").modal('show')
         $('#drp-industries').val(id).trigger('chosen:updated');
@@ -265,41 +259,5 @@
         });
         $('#drp-industries').trigger('chosen:updated');
 
-    }
-
-    function BindServices() {
-        $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetServices", "Lookup")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                $.each(result.Result, function (data, value) {
-                    $("#drp-services").append($("<option     />").val(value.Id).text(value.ServicesName));
-                })
-                $('#drp-services').trigger('chosen:updated');
-            },
-            error: function (result) {
-                alert("failure");
-            }
-        });
-    }
-
-    function BindIndustries() {
-        $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetIndustries", "Lookup")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                $.each(result.Result, function (data, value) {
-                    $("#drp-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
-                })
-                $('#drp-industries').trigger('chosen:updated');
-            },
-            error: function (result) {
-                alert("failure");
-            }
-        });
     }
 </script>

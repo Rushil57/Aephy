@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<Aephy.WEB.Admin.Models.ServicesModel>
-@using Aephy.WEB.Admin.Models*@
+﻿
 @{
     ViewData["Title"] = "Services Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -35,7 +34,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Service</h4>
-                    <a class="close" onclick="ResetForm();"><i class="bi bi-x-circle"></i></a>
+                    <a class="close" onclick="ResetServiceForm();"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
                     <div class="row">
@@ -63,7 +62,7 @@
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-brand">Submit</button>
-                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetServiceForm();">Reset</button>
                                         </div>
                                     </form><!-- Vertical Form -->
 
@@ -116,9 +115,9 @@
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
-                alert(result.Message)
+                alert(result.Message);
+                ResetServiceForm();
                 GetServiceList();
-                ResetForm();
 
             },
             error: function (result) {
@@ -127,15 +126,13 @@
         });
     }
 
-    function ResetForm() {
+    function ResetServiceForm() {
         $("#ServiceId").val(0)
         $("#addServicesModal").modal('hide')
         $("#ServiceName").val("")
         $("#isActive").prop('checked', false);
     }
-    function CloseAddServicesModalPopup() {
-        $("#addServicesModal").modal('hide')
-    }
+   
     function OpenAddServicesModalPopup() {
         $("#addServicesModal").modal('show')
     }
@@ -153,7 +150,9 @@
                     "columns": [
                         {
                             "data": "Id",
-                             "className": "ServiceId"
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick=GetDataById(' + data + ')>' + data + '</a>';
+                            }
                         },
                         { "data": "ServicesName" },
                         {
@@ -185,24 +184,10 @@
         });
     }
 
-    $('#serviceList').on('click', '.ServiceId', function () {
-        var serviceId = $(this).closest('tr').find('td:eq(0)').text();
-        var serviceName = $(this).closest('tr').find('td:eq(1)').text();
-        var Active = $(this).closest('tr').find('td:eq(2)').text();
-        $("#addServicesModal").modal('show')
-        $("#ServiceId").val(serviceId);
-        $("#ServiceName").val(serviceName);
-        if(Active == "true".trim()){
-            $("#isActive").prop('checked', true);
-        }
-    });
-
     function DeleteServices(id){
         if (confirm('Are you sure want to delete services?')) {
             var ServiceData = {
                 Id: id,
-                ServiceName: $("#ServiceName").val(),
-                Active: $("#isActive").is(':checked')
             };
             $.ajax({
                 type: "POST",
@@ -221,5 +206,35 @@
             });
         }
       
+    }
+
+    function GetDataById(Id){
+        if (Id != 0) {
+            var ServiceData = {
+                Id: Id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetServicesById", "Lookup")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ServiceData),
+                success: function (result) {
+                    if (result != null) {
+                        $("#addServicesModal").modal('show')
+                        $("#ServiceId").val(result.Result.Id);
+                        $("#ServiceName").val(result.Result.ServicesName);
+                        var active = result.Result.Active;
+                        if (active) {
+                            $("#isActive").prop('checked', true);
+                        }
+                    }
+                },
+                error: function (result) {
+                    alert("Error occured..");
+                }
+            });
+        }
     }
 </script>

@@ -1,7 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Solutions Page";
-}
-<main id="main" class="main">
+﻿<main id="main" class="main">
     <div class="row">
         <!-- Recent Sales -->
         <div class="col-12">
@@ -15,14 +12,14 @@
                     <table class="table table-borderless datatable" id="solutionList">
                         <thead>
                             <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Sub Title</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Image</th>
-                                <th scope="col">Services</th>
-                                <th scope="col">Industries</th>
-                                <th scope="col"></th>
+                                <th style="width:10%">Id</th>
+                                <th style="width:10%">Title</th>
+                                <th style="width:10%">Sub Title</th>
+                                <th style="width:30%">Description</th>
+                                <th style="width:20%">Image</th>
+                                <th style="width:10%">Services</th>
+                                <th style="width:10%">Industries</th>
+                                <th style="width:10%"></th>
                             </tr>
                         </thead>
                     </table>
@@ -31,14 +28,11 @@
         </div><!-- End Recent Sales -->
     </div>
 
-    
+
 </main>
 <script>
     $(function () {
         GetSolutionList()
-        $(".chosen-select").chosen();
-        BindServices()
-        BindIndustries()
     });
     function GetSolutionList() {
         $.ajax({
@@ -53,11 +47,19 @@
                     "columns": [
                         {
                             "data": "Id",
-                            "className": "cls-Solution"
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick=GetSolutionDataById(' + data + ')>' + data + '</a>';
+                            }
                         },
                         { "data": "Title" },
                         { "data": "SubTitle" },
-                        { "data": "Description" },
+                        {
+                            "data": "Description",
+                            "render": function (data, type, row) {
+                                var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                return "<span title='" + data + "'>" + description + "</span>";
+                            }
+                        },
                         {
                             "data": "ImageUrlWithSas",
                             "render": function (data, type, row) {
@@ -70,7 +72,7 @@
                             "data": "Id",
                             "render": function (data, type, row) {
                                 return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteSolution("' + row.ImageUrlWithSas + '","' + row.ImagePath + '",' + row.Id + ')>Delete</a>';
-                                
+
                             }
                         }
 
@@ -84,10 +86,7 @@
             }
         });
     }
-
-    
-
-    function DeleteSolution(ImageUrlWithSas,ImagePath,Id) {
+    function DeleteSolution(ImageUrlWithSas, ImagePath, Id) {
 
         if (confirm('Are you sure want to delete solution?')) {
             var ServiceData = {
@@ -114,55 +113,13 @@
         }
     }
 
-    function CloseAddIndustriesModalPopup() {
-        $("#addSolutionModal").modal('hide')
-    }
     function OpenAddIndustriesModalPopup() {
         $("#addSolutionModal").modal('show')
     }
 
-    function BindServices() {
-        $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetServices", "Lookup")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                $.each(result.Result, function (data, value) {
-                    $("#drp-services").append($("<option     />").val(value.Id).text(value.ServicesName));
-                })
-                $('#drp-services').trigger('chosen:updated');
-            },
-            error: function (result) {
-                alert("failure");
-            }
-        });
-    }
-
-    function BindIndustries() {
-        $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetIndustries", "Lookup")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                $.each(result.Result, function (data, value) {
-                    $("#drp-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
-                })
-                $('#drp-industries').trigger('chosen:updated');
-            },
-            error: function (result) {
-                alert("failure");
-            }
-        });
-    }
-
-    $('#solutionList').on('click', '.cls-Solution', function () {
-        var serviceId = $(this).closest('tr').find('td:eq(0)').text();
-        serviceId = parseInt(serviceId)
-
+    function GetSolutionDataById(Id) {
         var ServiceData = {
-            Id: serviceId,
+            Id: Id,
         };
         $.ajax({
             type: "POST",
@@ -196,8 +153,6 @@
                     $.each(result.ServiceResult, function (index, value) {
                         servicesvalues.push(value.ServicesId)
                     });
-                    console.log(industryvalues)
-                    console.log(servicesvalues)
                     $('#drp-services').val(servicesvalues).trigger('chosen:updated');
                     $('#drp-industries').val(industryvalues).trigger('chosen:updated');
                 }
@@ -207,7 +162,6 @@
                 alert("Error occured..");
             }
         });
-    });
+    }
 
-   
 </script>

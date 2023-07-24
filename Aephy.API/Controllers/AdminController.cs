@@ -23,9 +23,11 @@ namespace Aephy.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        public AdminController(AephyAppDbContext dbContext)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             _db = dbContext;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -641,6 +643,33 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Something Went Wrong"
             });
+        }
+
+
+
+        [HttpGet]
+        [Route("UserList")]
+        public async Task<IActionResult> UserList()
+        {
+            try
+            {
+                var list = await _userManager.Users.ToListAsync();
+                
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
         }
 
     }

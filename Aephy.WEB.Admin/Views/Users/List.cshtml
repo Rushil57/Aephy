@@ -1,0 +1,75 @@
+﻿
+<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">User List</h5>
+
+                    <table class="table table-borderless datatable" id="userList">
+                        <thead>
+                            <tr>
+                                <th scope="col">FirstName</th>
+                                <th scope="col">LastName</th>
+                                <th scope="col">EmailAddress</th>
+                                <th scope="col">UserRole</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+
+
+</main>
+
+<script>
+    $(function () {
+        GetUserList()
+    });
+
+    function GetUserList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetUsers", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var list = new Array()
+                $.each(result.Result, function (index, value) {
+                    if(value.UserType != "Admin"){
+                        list.push(value)
+                    }
+                    
+                });
+                
+                $('#userList').DataTable({
+                    destroy: true,
+                    data: list,
+                    "columns": [
+
+                        { "data": "FirstName" },
+                        { "data": "LastName" },
+                        { "data": "Email" },
+                        { "data": "UserType" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-primary">Edit</a>';
+                            }
+                        },
+
+
+                    ]
+                });
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+</script>

@@ -1,7 +1,7 @@
 ﻿@{
 	ViewData["Title"] = "OpenGigRoles";
 	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
-	if (Context.Session.GetString("LoggedUser") != null)
+	if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
 	{
 		<style>
 			.applyFor-btn{
@@ -123,70 +123,70 @@
 
 				<tbody>
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Strategy and Consulting
 						</td>
-						<td>NA</td>
-						<td>Data Analyst</td>
-						<td>Associate</td>
-						<td>NA</td>
+						<td class="solutionId" data-solution-id="0">NA</td>
+							<td class="title" data-title="Data Analyst">Data Analyst</td>
+							<td class="level" data-level="Associate">Associate</td>
+							<td class="industryId" data-industry-id="0">NA</td>
 						<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Ai Engineering
-						</td>
-						<td>NA</td>
-						<td>Team Leader</td>
-						<td>Project Manager</td>
-						<td>NA</td>
+							</td>
+							<td class="solutionId" data-solution-id="0">NA</td>
+							<td class="title" data-title="Team Leader">Team Leader</td>
+							<td class="level" data-level="Project Manager">Project Manager</td>
+							<td class="industryId" data-industry-id="0">NA</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Data Science and Engineering
 						</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
+							<td class="solutionId" data-solution-id="0">NA</td>
+							<td class="title" data-title="NA">NA</td>
+							<td class="level" data-level="NA">NA</td>
+							<td class="industryId" data-industry-id="0">NA</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Strategy and Consulting
 						</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
-						<td>NA</td>
+							<td class="solutionId" data-solution-id="0">NA</td>
+							<td class="title" data-title="NA">NA</td>
+							<td class="level" data-level="NA">NA</td>
+							<td class="industryId" data-industry-id="0">NA</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Ai Engineering
 						</td>
-						<td>Ai Data Engineering</td>
-						<td>Data Engineering</td>
-						<td>Expert</td>
-						<td>Finance</td>
+							<td class="solutionId" data-solution-id="0">Ai Data Engineering</td>
+							<td class="title" data-title="Data Engineering">Data Engineering</td>
+							<td class="level" data-level="Expert">Expert</td>
+							<td class="industryId" data-industry-id="0">Finance</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 					<tr>
-						<td>
+							<td class="serviceId" data-service-id="0">
 							Data Science and Engineering
 						</td>
-						<td>
+							<td class="solutionId" data-solution-id="0">
 							AI Data Analysis
 						</td>
-						<td>
+							<td class="title" data-title="Data analyst">
 							Data analyst
 						</td>
-						<td>Associate</td>
-						<td>Retail</td>
+							<td class="level" data-level="Associate">Associate</td>
+							<td class="industryId" data-industry-id="0">Retail</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
 				</tbody>
@@ -253,68 +253,78 @@
 		$("#GigOpeningApplyModal").modal('show')
 	}
 	function GigOpenRolesApply(){
-		$('#preloader').show();
-		var fileUpload = $("#CVPath").get(0);
-		var files = fileUpload.files;
+		var filename = $("#CVPath").val();
+		var validFileExtentions = /(\.pdf|\.docx)$/i;
+		if (validFileExtentions.exec(filename)) {
+			$('#preloader').show();
+			var fileUpload = $("#CVPath").get(0);
+			var files = fileUpload.files;
 
-		var GigOpenRolesData = {
-			ID: $("#ID").val(),
-			FreelancerID: $("#FreelancerID").val(),
-			ServiceID: $("#ServiceID").val(),
-			IndustriesID: $("#IndustriesID").val(),
-			SolutionID: $("#SolutionID").val(),
-			Title: $("#Title").val(),
-			Level: $("#Level").val(),
-			IsApproved: false,
-			Description: $("#Description").val(),
-		}
-
-		var formData = new FormData();
-		for (var i = 0; i < files.length; i++) {
-			// fileData.append(files[i].name, files[i]);
-			formData.append("httpPostedFileBase", files[i]);
-		}
-		formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
-
-		$.ajax({
-			type: "POST",
-			url: "@Url.Action("ApplyForOpenGigRoles", "LandingPage")",
-			contentType: false,
-			processData: false,
-			data: formData,
-			success: function (result) {
-				$('#preloader').hide();
-				alert(result)
-				CloseGigOpeningApplyModal();
-			},
-			error: function (result) {
-				$('#preloader').hide();
-				alert("failure");
+			var GigOpenRolesData = {
+				ID: $("#ID").val(),
+				FreelancerID: $("#FreelancerID").val(),
+				ServiceID: $("#ServiceID").val(),
+				IndustriesID: $("#IndustriesID").val(),
+				SolutionID: $("#SolutionID").val(),
+				Title: $("#Title").val(),
+				Level: $("#Level").val(),
+				IsApproved: false,
+				Description: $("#Description").val(),
 			}
-		});
+
+			var formData = new FormData();
+			for (var i = 0; i < files.length; i++) {
+				// fileData.append(files[i].name, files[i]);
+				formData.append("httpPostedFileBase", files[i]);
+			}
+			formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
+
+			$.ajax({
+				type: "POST",
+				url: "@Url.Action("ApplyForOpenGigRoles", "LandingPage")",
+				contentType: false,
+				processData: false,
+				data: formData,
+				success: function (result) {
+					clearForm();
+					$('#preloader').hide();
+					alert(result)
+					CloseGigOpeningApplyModal();
+				},
+				error: function (result) {
+					clearForm();
+					$('#preloader').hide();
+					alert("failure");
+				}
+			});
+		}else{
+			alert('You can upload only PDF or Document file..')
+			clearForm();
+		}
 	}
 			// code to read selected table row cell data (values).
 	$("#table-OpenRoles").on('click', '.applyFor-btn', function () {
 				// get the current row
 				var currentRow = $(this).closest("tr");
-				var ServiceID = currentRow.find("td:eq(0)").text();
-				var SolutionID = currentRow.find("td:eq(1)").text(); // get current row 1st TD value
-				var Title = currentRow.find("td:eq(2)").text(); // get current row 2nd TD
-				var Level = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
-				var IndustriesID = currentRow.find("td:eq(4)").text();
-				var data = SolutionID + "\n" + Title + "\n" + Level + "\n" + IndustriesID;
+				var ServiceID = currentRow.find(".serviceId").data("serviceId");
+		var SolutionID = currentRow.find(".solutionId").data("solutionId"); // get current row 1st TD value
+		var Title = currentRow.find(".title").data("title"); // get current row 2nd TD
+		var Level = currentRow.find(".level").data("level"); // get current row 3rd TD
+		var IndustriesID = currentRow.find(".industryId").data("industryId");
+		var data = ServiceID + "\n" + SolutionID + "\n" + Title + "\n" + Level + "\n" + IndustriesID;
 
+		//alert(data)
 		OpenGigOpeningApplyModal();
 
 		var TRMTitle = $.trim(Title);
 		var TRMLevel = $.trim(Level);
 
-		//$("#ID").val();
-		//$("#ServiceID").val();
-		//$("#SolutionID").val();
+		$("#ID").val(0);
+		$("#ServiceID").val(0);
+		$("#SolutionID").val(0);
 		$("#Title").val(TRMTitle);
 		$("#Level").val(TRMLevel);
-		//$("#IndustriesID ").val();
+		$("#IndustriesID ").val(0);
 
 				//alert(data);
 	});

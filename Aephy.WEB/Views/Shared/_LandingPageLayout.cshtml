@@ -713,13 +713,13 @@
 											<label for="CVPath" class="form-label">Upload CV</label>
 											<div class="col-12 d-flex">
 												<div class="input-group">
-													<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.doc">
+													<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx">
 												</div>
 											</div>
 										</div>
 										<div class="text-center">
 											<button type="submit" class="btn btn-brand">Submit</button>
-											<button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+											<button type="reset" class="btn btn-secondary" onclick="clearForm();">Reset</button>
 										</div>
 									</form><!-- Vertical Form -->
 
@@ -821,6 +821,18 @@
         function ClosePostRequestModalPopup() {
             $("#confirmation").modal('hide')
         }
+
+        	function clearForm(){
+		$("#ID").val("");
+		$("#FreelancerID").val("");
+		$("#ServiceID").val("");
+		$("#IndustriesID").val("");
+		$("#SolutionID").val("");
+		$("#Title").val("");
+		$("#Level").val("");
+		$("#Description").val("");
+		$("#CVPath").val("");
+	}
 
         function OpenPostModalPopup() {
             $("#confirmation").modal('show')

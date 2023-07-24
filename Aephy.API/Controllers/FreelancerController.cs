@@ -32,10 +32,10 @@ namespace Aephy.API.Controllers
 		{
 			try
 			{
-				var checkGigApplication = _db.OpenGigRolesApplications.Where(x => x.ID == OpenGigRolesData.ID).FirstOrDefault();
+				var checkGigApplication = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == OpenGigRolesData.FreelancerID && x.ServiceID == OpenGigRolesData.ServiceID && x.SolutionID == OpenGigRolesData.SolutionID && x.IndustriesID == OpenGigRolesData.IndustriesID && x.Title == OpenGigRolesData.Title && x.Level == OpenGigRolesData.Level).FirstOrDefault();
 				if (checkGigApplication != null)
 				{
-					return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You already have applied for this role!" });
+					return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You already have applied for this role!" });	
 				}
 				var opengigroles_data = new OpenGigRolesApplications()
 				{

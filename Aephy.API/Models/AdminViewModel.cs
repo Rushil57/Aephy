@@ -93,7 +93,7 @@ namespace Aephy.API.Models
         public class OpenGigRolesModel
         {
             public int ID { get; set; }
-            public int FreelancerID { get; set; }
+            public string? FreelancerID { get; set; }
             public int ServiceID { get; set; }
             public int IndustriesID { get; set; }
             public int SolutionID { get; set; }

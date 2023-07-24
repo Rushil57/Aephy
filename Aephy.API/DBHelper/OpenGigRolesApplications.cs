@@ -9,7 +9,7 @@ namespace Aephy.API.DBHelper
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public int FreelancerID { get;set; }
+        public string? FreelancerID { get;set; }
 
         public int ServiceID { get; set; }
 

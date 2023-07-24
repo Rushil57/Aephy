@@ -121,32 +121,43 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> ApplyForOpenGigRoles(IFormFile httpPostedFileBase, string GigOpenRolesData)
         {
-			var result = JsonConvert.DeserializeObject<OpenGigRolesModel>(GigOpenRolesData);
-			IFormFile imageFile = httpPostedFileBase;
-
-			var currentDateTime = DateTime.Now;
-            result.CreatedDateTime = currentDateTime;
-			var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
+			try
+			{
+				IFormFile CVFile = httpPostedFileBase;
+				var result = JsonConvert.DeserializeObject<OpenGigRolesModel>(GigOpenRolesData);
+				var freelancer = HttpContext.Session.GetString("LoggedUser");
+				result.FreelancerID = freelancer;
+				var currentDateTime = DateTime.Now;
+				result.CreatedDateTime = currentDateTime;
+				var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
 				dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
 				if (data != null)
 				{
-					int Id = data.Result;
-					var d = await SaveImageFile(imageFile, Id);
-					var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
-					dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
-					if (ImageResponse != null) {
-						return ImageResponse.Message;
+					if (data.Message == "Applied Successfully")
+					{
+						int Id = data.Result;
+						var d = await SaveCVFile(CVFile, Id);
+						var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
+						dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
+						if (ImageResponse != null)
+						{
+							return ImageResponse.Message;
+						}
+						else
+						{
+							return "Failed to Apply !";
+						}
+					}
+					else
+					{
+						return data.Message;
+					}
 				}
-				else
-				{
-					return "Failed to Apply !";
-				}
-				}
-				else
-				{
-					return "Failed to Apply !";
-				}
-			return "";
+			}catch (Exception ex)
+			{
+				return ex.Message;
+			}
+			return "Failed to Apply !";
 		}
 
 		private static string GetEndpointSuffixFromConnectionString(string connectionString)
@@ -233,18 +244,18 @@ namespace Aephy.WEB.Controllers
 			return "";
 		}
 
-		public async Task<OpenGigRolesCV> SaveImageFile(IFormFile imageFile, object Id)
+		public async Task<OpenGigRolesCV> SaveCVFile(IFormFile CVFile, object Id)
 		{
 			OpenGigRolesCV opengigroles = new OpenGigRolesCV();
 			try
 			{
-				if (imageFile != null && imageFile.Length > 0)
+				if (CVFile != null && CVFile.Length > 0)
 				{
 					string BlobStorageBaseUrl = string.Empty;
 					string CVPath = string.Empty;
 					string CVUrlWithSas = string.Empty;
 
-					string fileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+					string fileName = Guid.NewGuid().ToString() + "_" + CVFile.FileName;
 
 					// Get the Azure Blob Storage connection string from configuration
 					var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
@@ -254,7 +265,7 @@ namespace Aephy.WEB.Controllers
 
 					BlobClient blobClient = containerClient.GetBlobClient(fileName);
 
-					using (var stream = imageFile.OpenReadStream())
+					using (var stream = CVFile.OpenReadStream())
 					{
 						await blobClient.UploadAsync(stream, overwrite: true);
 					}
@@ -265,14 +276,14 @@ namespace Aephy.WEB.Controllers
 					string sasToken = GenerateSasToken(CVPath);
 
 
-					string imageUrlWithSas = CVPath + sasToken;
+					string cvUrlWithSas = CVPath + sasToken;
 
 
 
 					BlobStorageBaseUrl = containerClient.Uri.ToString();
 
 
-					CVUrlWithSas = imageUrlWithSas;
+					CVUrlWithSas = cvUrlWithSas;
 
 					opengigroles.BlobStorageBaseUrl = BlobStorageBaseUrl;
 					opengigroles.CVPath = CVPath;

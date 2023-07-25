@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    [Migration("20230719072445_Created_Industries_Services_Table")]
-    partial class Created_Industries_Services_Table
+    [Migration("20230725082938_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,6 +153,9 @@ namespace Aephy.API.Migrations
                     b.Property<string>("Education")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FreelancerLevel")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("HourlyRate")
                         .HasColumnType("nvarchar(max)");
 
@@ -165,6 +168,31 @@ namespace Aephy.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FreelancerDetails");
+                });
+
+            modelBuilder.Entity("Aephy.API.DBHelper.GigOpenRoles", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Level")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("GigOpenRoles");
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.Industries", b =>
@@ -186,6 +214,43 @@ namespace Aephy.API.Migrations
                     b.ToTable("Industries");
                 });
 
+            modelBuilder.Entity("Aephy.API.DBHelper.OpenGigRolesApplications", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("BlobStorageBaseUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CVPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CVUrlWithSas")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FreelancerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GigOpenRoleId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("OpenGigRolesApplications");
+                });
+
             modelBuilder.Entity("Aephy.API.DBHelper.Services", b =>
                 {
                     b.Property<int>("Id")
@@ -203,6 +268,78 @@ namespace Aephy.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Aephy.API.DBHelper.SolutionIndustry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IndustryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SolutionIndustry");
+                });
+
+            modelBuilder.Entity("Aephy.API.DBHelper.SolutionServices", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ServicesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SolutionServices");
+                });
+
+            modelBuilder.Entity("Aephy.API.DBHelper.Solutions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BlobStorageBaseUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrlWithSas")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Solutions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

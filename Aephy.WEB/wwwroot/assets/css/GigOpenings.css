@@ -504,10 +504,6 @@ table tr:nth-child(even) {
     cursor: pointer;
 }
 
-table tbody tr {
-    display: none;
-}
-
 @media(max-width:652px) {
 
     .table-OpenRoles th {

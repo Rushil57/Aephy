@@ -168,29 +168,32 @@ namespace Aephy.API.Migrations
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.GigOpenRoles", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("ID")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDateTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Level")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SolutionId")
-                        .HasColumnType("int");
+                b.Property<string>("Level")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<int>("SolutionId")
+                    .HasColumnType("int");
 
-                    b.HasKey("ID");
+                b.Property<string>("Title")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("GigOpenRoles");
-                });
+                b.HasKey("ID");
+
+                b.ToTable("GigOpenRoles");
+            });
 
             modelBuilder.Entity("Aephy.API.DBHelper.Industries", b =>
                 {
@@ -237,23 +240,13 @@ namespace Aephy.API.Migrations
                     b.Property<string>("FreelancerID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IndustriesID")
+                    b.Property<int>("GigOpenRoleId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Level")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ServiceID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolutionID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                    
 
                     b.HasKey("ID");
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace Aephy.WEB.Controllers
 {
@@ -118,13 +119,23 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<string> GetRolesList()
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesList", HttpMethod.Get);
+            return RolesList;
+        }
+
         [HttpPost]
         public async Task<string> ApplyForOpenGigRoles(IFormFile httpPostedFileBase, string GigOpenRolesData)
         {
 			try
 			{
+
 				IFormFile CVFile = httpPostedFileBase;
 				var result = JsonConvert.DeserializeObject<OpenGigRolesModel>(GigOpenRolesData);
+
+				
 				var freelancer = HttpContext.Session.GetString("LoggedUser");
 				result.FreelancerID = freelancer;
 				var currentDateTime = DateTime.Now;
@@ -158,6 +169,41 @@ namespace Aephy.WEB.Controllers
 				return ex.Message;
 			}
 			return "Failed to Apply !";
+		}
+
+		[HttpGet]
+		public async Task<string> GetServices()
+		{
+			var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
+			return serviceList;
+		}
+
+		[HttpGet]
+		public async Task<string> GetIndustries()
+		{
+			var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
+			return industryData;
+		}
+
+		[HttpGet]
+		public async Task<string> GetSolutions()
+		{
+			var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
+			return industryData;
+		}
+
+		[HttpGet]
+		public async Task<string> GetFilteredRolesList(int service, int solution, string level, int industry)
+		{
+			dynamic obj = new 
+			{
+				service = service,
+				level = level,
+				solution = solution,
+				industry = industry
+			};
+			var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilteredRolesList?serviceId="+service+"&solutionId="+solution+"&level="+level+"&industryId="+industry, HttpMethod.Get);
+			return RolesList;
 		}
 
 		private static string GetEndpointSuffixFromConnectionString(string connectionString)

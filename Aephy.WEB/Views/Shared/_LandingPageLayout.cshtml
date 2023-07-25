@@ -21,8 +21,9 @@
     <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet">
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
+    @*<link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">*@
+    <link href="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/css/jquery.dataTables.min.css" rel="stylesheet" />
+    
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
     <link href="~/assets/css/open-accessibility.min.css" rel="stylesheet" />
@@ -678,69 +679,17 @@
         </div>
     </div>
 
-    	<div class="modal fade" id="GigOpeningApplyModal" tabindex="-1" aria-labelledby="GigOpeningApplyModal" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered modal-xl">
-            <div id="preloader" style="display:none;"></div>
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title main-title">Apply For Gig Role</h4>
-					<a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
-				</div>
-				<div class="modal-body p-0">
-					<div class="row">
-						<div class="col">
-							<div class="card">
-								<div class="card-body">
-									@*<h5 class="card-title">Vertical Form</h5>*@
-
-									<!-- Vertical Form -->
-									<!-- Vertical Form -->
-									<form class="row g-3 mt-3" name="GigOpeningApplyForm">
-										<input type="hidden" id="ID" value="0">
-										<input type="hidden" id="FreelancerID" value="0">
-										<input type="hidden" id="ServiceID" value="0">
-										<input type="hidden" id="IndustriesID" value="0">
-										<input type="hidden" id="SolutionID" value="0">
-										<input type="hidden" id="Title" value="NA">
-										<input type="hidden" id="Level" value="NA">
-										<div class="col-12">
-											<label for="Description" class="form-label">Description</label>
-											<div class="input-group">
-												<textarea type="text" class="form-control" id="Description" name="Description" style="height:50px;"></textarea>
-											</div>
-										</div>
-										<div class="col-12">
-											<label for="CVPath" class="form-label">Upload CV</label>
-											<div class="col-12 d-flex">
-												<div class="input-group">
-													<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx">
-												</div>
-											</div>
-										</div>
-										<div class="text-center">
-											<button type="submit" class="btn btn-brand">Submit</button>
-											<button type="reset" class="btn btn-secondary" onclick="clearForm();">Reset</button>
-										</div>
-									</form><!-- Vertical Form -->
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
     <!-- Vendor JS Files -->
     @*<script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>*@
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     @*<script src="~/assets/vendor/chart.js/chart.umd.js"></script>*@
     @*<script src="~/assets/vendor/echarts/echarts.min.js"></script>*@
     <script src="~/assets/vendor/quill/quill.min.js"></script>
-    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    @*<script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>*@
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/js/jquery.dataTables.min.js"></script>
+
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>

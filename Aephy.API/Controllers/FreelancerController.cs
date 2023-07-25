@@ -32,7 +32,7 @@ namespace Aephy.API.Controllers
 		{
 			try
 			{
-				var checkGigApplication = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == OpenGigRolesData.FreelancerID && x.ServiceID == OpenGigRolesData.ServiceID && x.SolutionID == OpenGigRolesData.SolutionID && x.IndustriesID == OpenGigRolesData.IndustriesID && x.Title == OpenGigRolesData.Title && x.Level == OpenGigRolesData.Level).FirstOrDefault();
+				var checkGigApplication = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == OpenGigRolesData.FreelancerID &&  x.GigOpenRoleId == OpenGigRolesData.GigOpenRoleId).FirstOrDefault();
 				if (checkGigApplication != null)
 				{
 					return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You already have applied for this role!" });	
@@ -41,11 +41,7 @@ namespace Aephy.API.Controllers
 				{
 
 					FreelancerID = OpenGigRolesData.FreelancerID,
-					ServiceID = OpenGigRolesData.ServiceID,
-                    IndustriesID = OpenGigRolesData.IndustriesID,
-                    SolutionID = OpenGigRolesData.SolutionID,
-                    Title = OpenGigRolesData.Title,
-                    Level = OpenGigRolesData.Level,
+					GigOpenRoleId = OpenGigRolesData.GigOpenRoleId,
                     IsApproved = OpenGigRolesData.IsApproved,
                     CreatedDateTime = OpenGigRolesData.CreatedDateTime,
                     Description = OpenGigRolesData.Description

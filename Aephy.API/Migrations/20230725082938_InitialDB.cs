@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Aephy.API.Migrations
 {
     /// <inheritdoc />
-    public partial class DBInitial : Migration
+    public partial class InitialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,7 @@ namespace Aephy.API.Migrations
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FCMToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Device = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -56,6 +57,150 @@ namespace Aephy.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientDetails", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FreelancerDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyRate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Education = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProffessionalExperience = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FreelancerLevel = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FreelancerDetails", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GigOpenRoles",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolutionId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GigOpenRoles", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Industries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IndustryName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Industries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OpenGigRolesApplications",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FreelancerID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GigOpenRoleId = table.Column<int>(type: "int", nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CVPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BlobStorageBaseUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CVUrlWithSas = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OpenGigRolesApplications", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServicesName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SolutionIndustry",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolutionId = table.Column<int>(type: "int", nullable: false),
+                    IndustryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SolutionIndustry", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Solutions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BlobStorageBaseUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrlWithSas = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Solutions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SolutionServices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolutionId = table.Column<int>(type: "int", nullable: false),
+                    ServicesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SolutionServices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +366,33 @@ namespace Aephy.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ClientDetails");
+
+            migrationBuilder.DropTable(
+                name: "FreelancerDetails");
+
+            migrationBuilder.DropTable(
+                name: "GigOpenRoles");
+
+            migrationBuilder.DropTable(
+                name: "Industries");
+
+            migrationBuilder.DropTable(
+                name: "OpenGigRolesApplications");
+
+            migrationBuilder.DropTable(
+                name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "SolutionIndustry");
+
+            migrationBuilder.DropTable(
+                name: "Solutions");
+
+            migrationBuilder.DropTable(
+                name: "SolutionServices");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

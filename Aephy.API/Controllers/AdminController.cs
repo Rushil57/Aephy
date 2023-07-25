@@ -1,12 +1,15 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
@@ -590,28 +593,20 @@ namespace Aephy.API.Controllers
                 Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
                 List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                List<Industries> IndutrynameList = new List<Industries>();
-                if (solutionindustry.Count > 0)
+                dynamic test = new
                 {
-                    foreach (var industryId in solutionindustry)
-                    {
-                        //var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).Select(p => p.IndustryName).FirstOrDefault();
-                        var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).FirstOrDefault();
-                        IndutrynameList.Add(industryName);
-                    }
-                }
-
+                    solution = solution,
+                    IndustryResult = solutionindustry,
+                    ServiceResult = solutionservice
+                };
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "success",
-                    Result = new
-                    {
-                        Solution = solution,
-                        IndustryResult = solutionindustry,
-                        ServiceResult = solutionservice,
-                        IndustryNameList = IndutrynameList
-                    }
+                    //Result = solution,
+                    //IndustryResult = solutionindustry,
+                    //ServiceResult = solutionservice
+                    Result = test
                 });
             }
             catch (Exception ex)
@@ -619,6 +614,7 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
+
 
         [HttpPost]
         [Route("UpdateImage")]
@@ -716,12 +712,50 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var list = _db.GigOpenRoles.ToList();
+                var listDB = _db.GigOpenRoles.ToList();
+                var listSolution = _db.Solutions.ToList();
+                var listServiceSol = _db.SolutionServices.ToList();
+                var listService = _db.Services.ToList();
+                var listIndustry = _db.Industries.ToList();
+                var listIndustrySol = _db.SolutionIndustry.ToList();
+                List<dynamic> finalList = new List<dynamic>();
+                listDB.ForEach(x =>
+                {
+                    var solSer = listServiceSol.Where(t => t.SolutionId == x.SolutionId).FirstOrDefault();
+                    var serviceName = "";
+                    if (solSer != null)
+                    {
+                        serviceName = listService.Where(s => s.Id == solSer.ServicesId).FirstOrDefault()?.ServicesName;
+                    }
+
+                    var solInd = listIndustrySol.Where(t1 => t1.SolutionId == x.SolutionId).FirstOrDefault();
+                    var IndName = "";
+                    if (solInd != null)
+                    {
+                        IndName = listIndustry.Where(s1 => s1.Id == solInd.IndustryId).FirstOrDefault()?.IndustryName;
+                    }
+                    var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
+                    dynamic obj = new
+                    {
+                        x.Level,
+                        x.Title,
+                        x.CreatedDateTime,
+                        x.ID,
+                        x.SolutionId,
+                        x.Description,
+                        SolutionName = solutionName,
+                        ServiceName = serviceName,
+                        IndustryName = IndName,
+
+                    };
+                    finalList.Add(obj);
+
+                });
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "Success",
-                    Result = list
+                    Result = finalList
                 });
             }
             catch (Exception ex)
@@ -748,7 +782,8 @@ namespace Aephy.API.Controllers
                         {
                             SolutionId = model.SolutionId,
                             Title = model.Title,
-                            Level = model.Level
+                            Level = model.Level,
+                            Description = model.Description
                         };
                         _db.GigOpenRoles.Add(roles);
                         _db.SaveChanges();
@@ -773,6 +808,7 @@ namespace Aephy.API.Controllers
                             openRolesdata.SolutionId = model.SolutionId;
                             openRolesdata.Title = model.Title;
                             openRolesdata.Level = model.Level;
+                            openRolesdata.Description = model.Description;
                             _db.SaveChanges();
                         }
 
@@ -853,6 +889,79 @@ namespace Aephy.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
         }
 
+        [HttpGet]
+        [Route("FilteredRolesList")]
+        public async Task<IActionResult> FilteredRolesList(int serviceId, int solutionId, string level, int industryId)
+        {
+            try
+            {
+                var listDB = _db.GigOpenRoles.ToList();
+                var listSolution = _db.Solutions.ToList();
+                var listServiceSol = _db.SolutionServices.ToList();
+                var listService = _db.Services.ToList();
+                var listIndustry = _db.Industries.ToList();
+                var listIndustrySol = _db.SolutionIndustry.ToList();
+                List<dynamic> finalList = new List<dynamic>();
+
+                listDB.ForEach(x =>
+                {
+                    var solSer = listServiceSol.Where(t => t.SolutionId == x.SolutionId).FirstOrDefault();
+                    var service = new Services();
+                    if (solSer != null)
+                    {
+                        service = listService.Where(s => s.Id == solSer.ServicesId).FirstOrDefault();
+                    }
+
+                    var solInd = listIndustrySol.Where(t1 => t1.SolutionId == x.SolutionId).FirstOrDefault();
+                    var industry = new Industries();
+                    if (solInd != null)
+                    {
+                        industry = listIndustry.Where(s1 => s1.Id == solInd.IndustryId).FirstOrDefault();
+                    }
+                    var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
+                    dynamic obj = new
+                    {
+                        x.Level,
+                        x.Title,
+                        x.CreatedDateTime,
+                        x.ID,
+                        x.SolutionId,
+                        x.Description,
+                        SolutionName = solutionName,
+                        ServiceName = service?.ServicesName,
+                        IndustryName = industry?.IndustryName,
+                        ServiceId = service?.Id,
+                        IndustryId = industry?.Id,
+
+                    };
+                    finalList.Add(obj);
+                });
+
+                if (serviceId != 0)
+                    finalList = finalList.Where(x => x.ServiceId == serviceId).ToList();
+                if (solutionId != 0)
+                    finalList = finalList.Where(x => x.SolutionId == solutionId).ToList();
+                if (level != "0")
+                    finalList = finalList.Where(x => x.Level == level).ToList();
+                if (industryId != 0)
+                    finalList = finalList.Where(x => x.IndustryId == industryId).ToList();
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = finalList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
 
         //AddSolutionDescribedData
         [HttpPost]

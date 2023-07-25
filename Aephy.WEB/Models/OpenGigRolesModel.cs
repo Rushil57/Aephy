@@ -4,11 +4,7 @@
     {
         public int ID { get; set; }
         public string? FreelancerID { get; set; }
-        public int ServiceID { get; set; }
-        public int IndustriesID { get; set; }
-        public int SolutionID { get; set; }
-        public string? Title { get; set; }
-        public string? Level { get; set; }
+        public int GigOpenRoleId { get; set; }
         public bool IsApproved { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public string? Description { get; set; }

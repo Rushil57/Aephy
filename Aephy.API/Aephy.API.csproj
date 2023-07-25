@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="DBModels\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

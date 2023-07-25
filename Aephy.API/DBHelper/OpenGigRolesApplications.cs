@@ -11,15 +11,7 @@ namespace Aephy.API.DBHelper
 
         public string? FreelancerID { get;set; }
 
-        public int ServiceID { get; set; }
-
-        public int IndustriesID { get; set; }
-
-        public int SolutionID { get; set; }
-
-        public string? Title { get;set; }
-         
-        public string? Level { get; set; }
+        public int GigOpenRoleId { get; set; }
 
         public bool IsApproved { get; set; }
 
@@ -42,7 +34,27 @@ namespace Aephy.API.DBHelper
         public string? Title { get; set; }
 
         public string? Level { get; set; }
-        
+
+        public string? Description { get; set; }
+
         public DateTime CreatedDateTime { get; set; }
+	}
+	public class GigOpenRolesModel
+	{
+		public int ID { get; set; }
+
+		[NotMapped]
+		public string? ServiceName { get; set; }
+
+		public int SolutionId { get; set; }
+
+		public string? Title { get; set; }
+
+		public string? Level { get; set; }
+
+		[NotMapped]
+		public string? IndustryName { get; set; }
+
+		public DateTime CreatedDateTime { get; set; }
 	}
 }

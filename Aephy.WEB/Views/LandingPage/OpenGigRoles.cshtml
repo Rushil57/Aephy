@@ -52,35 +52,45 @@
 			<div class="row d-flex">
 				<div class="col-12 d-block my-2">
 					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="service" id="select-services">
-						<option value="5000">All Services</option>
+					<select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
+						<option value="0">All Services</option>
+					</select>
+					@*<select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
+						<option value="0">All Services</option>
 						<option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
 						<option value="AI Engineering">AI Engineering</option>
 						<option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
 						<option value="AI Operations">AI Operations</option>
-					</select>
+					</select>*@
 
 					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="solution" id="select-solutions">
-						<option value="5000">All Solutions</option>
+					<select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
+						<option value="">All Solutions</option>
+					</select>
+					@*<select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
+						<option value="0">All Solutions</option>
 						<option value="AI Roadmap Development">AI Roadmap Development</option>
 						<option value="AI Readiness Assessment">AI Readiness Assessment</option>
 						<option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
 						<option value="AI Governance and Ethics">AI Governance and Ethics</option>
 						<option value="AI Business Case Development">AI Business Case Development</option>	
-					</select>
+					</select>*@
 
 					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="level" id="select-levels">
-						<option value="5000">All Levels</option>
-						<option value="experts">Experts</option>
-						<option value="associate">Associate</option>
-						<option value="projectmanager">Project Manager</option>
-						<option value="projectleader">Project Leader</option>
+					<select class="dropdown btn-dropdown" name="level" id="select-levels" onchange="getFilteredRoles();">
+						<option value="0">All Levels</option>
+						<option value="Associate">Associate</option>
+						<option value="Expert">Expert</option>
+						<option value="Project Manager">Project Manager</option>
+						<option value="Project Architect">Project Architect</option>
 					</select>
 
-					<select class="dropdown btn-dropdown" name="service" id="select-industries">
-                        <option value="All">All Industies</option>
+					<select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
+						<option value="0">All Industies</option>
+					</select>
+
+					@*<select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
+                        <option value="0">All Industies</option>
                         <option value="Retail">Retail</option>
                         <option value="Finance">Finance</option>
                         <option value="Healthcare">Healthcare</option>
@@ -90,19 +100,7 @@
                         <option value="Energy">Energy</option>
                         <option value="Education">Education</option>
                         <option value="Other Industries">Other Industries</option>
-                    </select>
-
-					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="state" id="maxRows">
-						<option value="5000">Show ALL Rows</option>
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="15">15</option>
-						<option value="20">20</option>
-						<option value="50">50</option>
-						<option value="70">70</option>
-						<option value="100">100</option>
-					</select>
+                    </select>*@
 				</div>
 			</div>
 
@@ -111,17 +109,17 @@
 
 				<thead>
 					<tr>
-						<th>Service</th>
-						<th>Solution</th>
-						<th>Title</th>
-						<th>Level</th>
-						<th>Industry</th>
-						<th></th>
+							<th scope="col">Service</th>
+							<th scope="col">Solution</th>
+							<th scope="col">Title</th>
+							<th scope="col">Level</th>
+							<th scope="col">Industry</th>
+							<th scope="col" class="cls-RolesId"></th>
 					</tr>
 
 				</thead>
 
-				<tbody>
+				@*<tbody>
 					<tr>
 							<td class="serviceId" data-service-id="0">
 							Strategy and Consulting
@@ -189,12 +187,11 @@
 							<td class="industryId" data-industry-id="0">Retail</td>
 							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
 					</tr>
-				</tbody>
-
+				</tbody>*@
+			
 				</table>
 			
-			
-			<!--		Start Pagination -->
+			@*<!--		Start Pagination -->
 			<div class='pagination-container'>
 				<nav>
 					<ul class="pagination">
@@ -208,7 +205,7 @@
 						</li>
 					</ul>
 				</nav>
-			</div>
+			</div>*@
 			</div>
 			<!--Row 2 Join Us-->
 			<div class="row justify-content-center" style="padding:50px 0;">
@@ -243,9 +240,209 @@
     </section>
 
 </main>
+<div class="modal fade" id="GigOpeningApplyModal" tabindex="-1" aria-labelledby="GigOpeningApplyModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div id="preloader" style="display:none;"></div>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title main-title">Apply For Gig Role</h4>
+				<a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
+			</div>
+			<div class="modal-body p-0">
+				<div class="row">
+					<div class="col">
+						<div class="card">
+							<div class="card-body">
+								@*<h5 class="card-title">Vertical Form</h5>*@
+
+								<!-- Vertical Form -->
+								<!-- Vertical Form -->
+								<form class="row g-3 mt-3" name="GigOpeningApplyForm">
+									<input type="hidden" id="gigRole_id" value="0">
+									<div class="col-12">
+										<label for="Description" class="form-label">Roles Description</label>
+										<div class="input-group">
+											<textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="max-height:80px;min-height:34px;" disabled></textarea>
+										</div>
+									</div>
+									<div class="col-12">
+										<label for="Description" class="form-label">Description</label>
+										<div class="input-group">
+											<textarea type="text" class="form-control" id="Description" name="Description" style="max-height:80px;min-height:34px;"></textarea>
+										</div>
+									</div>
+									<div class="col-12">
+										<label for="CVPath" class="form-label">Upload CV</label>
+										<div class="col-12 d-flex">
+											<div class="input-group">
+												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx">
+											</div>
+										</div>
+									</div>
+									<div class="text-center">
+										<button type="submit" class="btn btn-brand">Submit</button>
+										<button type="reset" class="btn btn-secondary" onclick="clearForm();">Reset</button>
+									</div>
+								</form><!-- Vertical Form -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <script src="~/assets/js/opengigroles.js"></script>
 <script>
+
+	$(document).ready(function(){
+		GetRolesList();
+		BindServices();
+		BindSolutions();
+		BindIndustries();
+	});
+
+	function BindServices(){
+		$.ajax({
+			type: "Get",
+			url: "@Url.Action("GetServices", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (result) {
+				$.each(result.Result, function (data, value) {
+					$("#select-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+				})
+				$('#select-services').trigger('chosen:updated');
+			},
+			error: function (result) {
+				alert("failure");
+			}
+		});
+	}
+	
+	function BindSolutions() {
+		$.ajax({
+			type: "Get",
+			url: "@Url.Action("GetSolutions", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (result) {
+				$.each(result.Result, function (data, value) {
+					$("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+				})
+				$('#select-solutions').trigger('chosen:updated');
+			},
+			error: function (result) {
+				alert("failure");
+			}
+		});
+	}
+	function BindIndustries() {
+		$.ajax({
+			type: "Get",
+			url: "@Url.Action("GetIndustries", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (result) {
+				$.each(result.Result, function (data, value) {
+					$("#select-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+				})
+				$('#select-industries').trigger('chosen:updated');
+			},
+			error: function (result) {
+				alert("failure");
+			}
+		});
+	}
+	function getFilteredRoles() {
+		$("#preloader").show();
+		var filteredData = {
+			service : $('#select-services').val(),
+			solution : $('#select-solutions').val(),
+			level : $('#select-levels').val(),
+			industry : $('#select-industries').val()
+		};
+		
+		$.ajax({
+			type: "Get",
+			url: "@Url.Action("GetFilteredRolesList", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType:"json",
+			data: filteredData,
+			success: function (result) {
+				$('#table-OpenRoles').DataTable({
+					destroy: true,
+					data: result.Result,
+					"columns": [
+						{
+							"data": "ID",
+							"className": "cls-RolesId"
+						},
+						{ "data": "ServiceName" },
+						{ "data": "SolutionName" },
+						{ "data": "Title" },
+						{ "data": "Level" },
+						{ "data": "IndustryName" },
+						{
+							"data": "ID",
+							"render": function (data, type, row) {
+								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" + ')">Apply</a>';
+
+							}
+						}
+					]
+				});
+				$("#preloader").hide();
+			},
+			error: function (result) {
+				alert("failure");
+				$("#preloader").hide();
+			}
+		});
+	}
+
+	function GetRolesList() {
+		$("#preloader").show();
+		$.ajax({
+			type: "Get",
+			url: "@Url.Action("GetRolesList", "LandingPage")",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (result) {
+				$('#table-OpenRoles').DataTable({
+					destroy: true,
+					data: result.Result,
+					"columns": [
+						{
+							"data": "ID",
+							"className": "cls-RolesId"
+						},
+						{ "data": "ServiceName" },
+						{ "data": "SolutionName" },
+						{ "data": "Title" },
+						{ "data": "Level" },
+						{ "data": "IndustryName" },
+						{
+							"data": "ID",
+							"render": function (data, type, row) {
+								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
+
+							}
+						}
+					]
+				});
+				$("#preloader").hide();
+			},
+			error: function (result) {
+				alert("failure");
+				$("#preloader").hide();
+			}
+		});
+	}
+
 	function CloseGigOpeningApplyModal() {
 		$("#GigOpeningApplyModal").modal('hide')
 	}
@@ -253,6 +450,7 @@
 		$("#GigOpeningApplyModal").modal('show')
 	}
 	function GigOpenRolesApply(){
+
 		var filename = $("#CVPath").val();
 		var validFileExtentions = /(\.pdf|\.docx)$/i;
 		if (validFileExtentions.exec(filename)) {
@@ -261,13 +459,8 @@
 			var files = fileUpload.files;
 
 			var GigOpenRolesData = {
-				ID: $("#ID").val(),
-				FreelancerID: $("#FreelancerID").val(),
-				ServiceID: $("#ServiceID").val(),
-				IndustriesID: $("#IndustriesID").val(),
-				SolutionID: $("#SolutionID").val(),
-				Title: $("#Title").val(),
-				Level: $("#Level").val(),
+				FreelancerID: 0,
+				GigOpenRoleId: $("#gigRole_id").val(),
 				IsApproved: false,
 				Description: $("#Description").val(),
 			}
@@ -303,29 +496,9 @@
 		}
 	}
 			// code to read selected table row cell data (values).
-	$("#table-OpenRoles").on('click', '.applyFor-btn', function () {
-				// get the current row
-				var currentRow = $(this).closest("tr");
-				var ServiceID = currentRow.find(".serviceId").data("serviceId");
-		var SolutionID = currentRow.find(".solutionId").data("solutionId"); // get current row 1st TD value
-		var Title = currentRow.find(".title").data("title"); // get current row 2nd TD
-		var Level = currentRow.find(".level").data("level"); // get current row 3rd TD
-		var IndustriesID = currentRow.find(".industryId").data("industryId");
-		var data = ServiceID + "\n" + SolutionID + "\n" + Title + "\n" + Level + "\n" + IndustriesID;
-
-		//alert(data)
+	function GigApply(ID,Description) {
 		OpenGigOpeningApplyModal();
-
-		var TRMTitle = $.trim(Title);
-		var TRMLevel = $.trim(Level);
-
-		$("#ID").val(0);
-		$("#ServiceID").val(0);
-		$("#SolutionID").val(0);
-		$("#Title").val(TRMTitle);
-		$("#Level").val(TRMLevel);
-		$("#IndustriesID ").val(0);
-
-				//alert(data);
-	});
+		$("#gigRole_id").val(ID);
+		$("#RoleDescription").val(Description);
+	}
 </script>

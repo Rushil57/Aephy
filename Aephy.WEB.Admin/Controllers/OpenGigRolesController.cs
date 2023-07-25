@@ -41,6 +41,8 @@ namespace Aephy.WEB.Admin.Controllers
         {
             try
             {
+                var date = DateTime.Now;
+                model.CreatedDateTime = date;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditRoles", HttpMethod.Post, model);
                 return solutionData;
             }

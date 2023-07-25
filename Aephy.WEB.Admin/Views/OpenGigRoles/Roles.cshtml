@@ -19,6 +19,7 @@
                                 <th scope="col">SolutionId</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Level</th>
+                                <th scope="col">Description</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -70,6 +71,12 @@
                                                     <option value="Project Manager">Project Manager</option>
                                                     <option value="Project Architect">Project Architect</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="Title" class="form-label">Description</label>
+                                            <div class="input-group">
+                                                <textarea class="form-control" id="RoleDescription" name="RoleDescription" style="max-height:80px; min-height:34px;"></textarea>
                                             </div>
                                         </div>
 
@@ -129,6 +136,7 @@
             SolutionId: $("#drp-Solutions").val(),
             Title: $("#Title").val(),
             Level: $("#drp-Level").val(),
+            Description: $("#RoleDescription").val()
         };
         $("#preloader").show();
         $.ajax({
@@ -180,6 +188,7 @@
                         { "data": "SolutionId" },
                         { "data": "Title" },
                         { "data": "Level" },
+                        { "data": "Description" },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {

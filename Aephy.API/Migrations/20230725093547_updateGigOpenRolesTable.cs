@@ -5,14 +5,14 @@
 namespace Aephy.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Added_user_fields : Migration
+    public partial class updateGigOpenRolesTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "UserType",
-                table: "AspNetUsers",
+                name: "Description",
+                table: "GigOpenRoles",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -21,8 +21,8 @@ namespace Aephy.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "UserType",
-                table: "AspNetUsers");
+                name: "Description",
+                table: "GigOpenRoles");
         }
     }
 }

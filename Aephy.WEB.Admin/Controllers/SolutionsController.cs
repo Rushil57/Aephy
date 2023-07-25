@@ -35,7 +35,7 @@ namespace Aephy.WEB.Admin.Controllers
             return View();
         }
 
-        public IActionResult Solution()
+        public IActionResult DescribeSolution()
         {
             return View();
         }
@@ -369,6 +369,68 @@ namespace Aephy.WEB.Admin.Controllers
 
         }
 
+      
+        [HttpPost]
+        public async Task<string> EditSolutionIndustry(IFormFile[] httpPostedFileBase, string Industries)
+       {
+            try
+            {
+                var result = JsonConvert.DeserializeObject<List<SolutionDescribeModel>>(Industries);
+                var Data = await _apiRepository.MakeApiCallAsync("api/Admin/AddSolutionDescribedData", HttpMethod.Post, result);
+                if (Data != "")
+                {
+                    dynamic data = JsonConvert.DeserializeObject(Data);
+                    //if (data["StatusCode"] == 200)
+                    //{
+                    //    if (result.Count > 0)
+                    //    {
+                    //        foreach(var id in data.Result)
+                    //        {
+                    //            int Id = id;
+                    //            IFormFile imageFile = httpPostedFileBase[0] ;
+                    //            var fileData = await SaveImageFile(imageFile, Id);
+                    //            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
+                    //        }
+                           
+
+                    //    }
+                    //}
+                }
+                        return Data;
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
+            return "";
+        }
+
+        
+        [HttpPost]
+        public async Task<string> GetSolutionDetailsById([FromBody] SolutionIdModel solutionsModel)
+        {
+            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDetailsDataById", HttpMethod.Post, solutionsModel);
+
+            string imageUrlWithSas = string.Empty;
+            dynamic data = JsonConvert.DeserializeObject(serviceList);
+            try
+            {
+                if (data["StatusCode"] == 200)
+                {
+                    string imagepath = data.Result.Solution.ImagePath;
+                    string sasToken = GenerateSasToken(imagepath);
+                    imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
+                    data.Result.Solution.ImageUrlWithSas = imageUrlWithSas;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string convertjsonTostring = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return convertjsonTostring;
+        }
     }
 
 

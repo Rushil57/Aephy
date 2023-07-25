@@ -74,4 +74,17 @@ namespace Aephy.WEB.Admin.Models
 
         public string? ImagePath { get; set; }
     }
+
+    public class SolutionDescribeModel
+    {
+        public int Id { get; set; }
+        public int IndustryId { get; set; }
+        public int SolutionId { get; set; }
+        public string? Description { get; set; }
+        //public string? Image { get; set; }
+
+        //public string? ImageUrlWithSas { get; set; }
+
+        //public string? ImagePath { get; set; }
+    }
 }

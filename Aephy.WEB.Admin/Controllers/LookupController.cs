@@ -25,6 +25,11 @@ namespace Aephy.WEB.Admin.Controllers
             return View();
         }
 
+        public IActionResult Solutions()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<string> AddServiceForm([FromBody] ServicesModel ServiceData)
         {

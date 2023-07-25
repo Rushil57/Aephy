@@ -1,0 +1,298 @@
+﻿<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                    <h5 class="card-title">Solutions</h5>
+
+                    <table class="table table-borderless datatable" id="solutionList">
+                        <thead>
+                            <tr>
+                                <th style="width:10%">Id</th>
+                                <th style="width:10%">Title</th>
+                                <th style="width:10%">Sub Title</th>
+                                <th style="width:30%">Description</th>
+                                <th style="width:20%">Image</th>
+                                <th style="width:10%">Services</th>
+                                <th style="width:10%">Industries</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+</main>
+
+<div class="modal" id="EditsolutionModal" tabindex="-1" aria-labelledby="editSolutionModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Solution</h4>
+                <a class="close" onclick="ResetSolutionIndustryDetailForm();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form class="row g-3 mt-3 cls-Solution" name="addSolutiondescribeForm">
+                                    <input type="hidden" id="SolutionId" value="0">
+                                    <input type="hidden" id="ImagePath" value="">
+
+                                    <div class="col-12">
+                                        <label for="SolutionTitle" class="form-label">Solution Title</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="SolutionTitle" name="SolutionTitle" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Solution_SubTitle" class="form-label">Solution SubTitle</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="Solution_SubTitle" name="Solution_SubTitle" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Services" class="form-label">Services</label>
+                                        <div class="input-group" id="services">
+                                            <select data-placeholder="Choose tags ..." id="drp-services" name="SolutionServices" class="form-control" disabled>
+                                                <option value="">Choose Services</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="SolutionDescription" class="form-label">Solution Description</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="SolutionDescription" name="SolutionDescription" style="height:100px;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="img-id">
+                                        <label for="SolutionImage" class="form-label">Image</label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" />
+                                        </div>
+                                        <div id="solutionImagepreview"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="Industries" class="form-label">Industries</label>
+                                        <div class="input-group" id="industries">
+                                            <select data-placeholder="Choose tags ..." name="Industries" multiple class="chosen-select" id="drp-industries">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="ResetSolutionIndustryDetailForm();">Reset</button>
+                                    </div>
+                                </form><!-- Vertical Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("form[name='addSolutiondescribeForm']").validate({
+            rules: {
+                SolutionTitle: { required: true },
+
+            },
+            messages: {
+                SolutionTitle: { required: "please select solution" },
+
+            },
+            submitHandler: function (form) {
+                SaveDescribeSolutionData()
+            }
+        });
+        GetSolutionList()
+    });
+
+    function GetSolutionList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutionsList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#solutionList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick=GetSolutionDataById(' + data + ')>' + data + '</a>';
+                            }
+                        },
+                        { "data": "Title" },
+                        { "data": "SubTitle" },
+                        {
+                            "data": "Description",
+                            "render": function (data, type, row) {
+                                var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                return "<span title='" + data + "'>" + description + "</span>";
+                            }
+                        },
+                        {
+                            "data": "ImageUrlWithSas",
+                            "render": function (data, type, row) {
+                                return '<img src="' + data + '" alt="Image" height="70" width="150" />';
+                            }
+                        },
+                        { "data": "Services" },
+                        { "data": "Industries" }
+
+                    ]
+                });
+
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+
+
+    function GetSolutionDataById(Id) {
+        var ServiceData = {
+            Id: Id,
+        };
+        $.ajax({
+            type: "POST",
+            //url: "@Url.Action("GetSolutionDetailsById", "Solutions")",
+            url: "@Url.Action("GetSolutiondataById", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(ServiceData),
+            success: function (result) {
+                if (result != null) {
+                    $("#EditsolutionModal").modal('show')
+                    $("#solution-img").remove()
+                    $("#SolutionId").val(result.Result.Solution.Id)
+                    $("#SolutionTitle").val(result.Result.Solution.Title)
+                    $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
+                    $("#SolutionDescription").val(result.Result.Solution.Description)
+                    $("#ImagePath").val(result.Result.Solution.ImagePath)
+                    $("#solutionImagepreview").find("span").first().remove();
+                    $('#solutionImagepreview').show();
+                    var span = document.createElement('span');
+                    span.innerHTML =
+                        ['<img class="SolutionImage" src="', result.Result.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                            .join('');
+                    document.getElementById('solutionImagepreview').insertBefore(span, null);
+                    var industryvalues = new Array();
+                    var servicesvalues = new Array();
+
+                    $.each(result.Result.IndustryResult, function (index, value) {
+                        industryvalues.push(value.IndustryId)
+                    })
+                    $.each(result.Result.ServiceResult, function (index, value) {
+                        servicesvalues.push(value.ServicesId)
+                    });
+                    $('#drp-services').val(servicesvalues).trigger('chosen:updated');
+                    $('#drp-industries').val(industryvalues).trigger('chosen:updated');
+                    $.each(result.Result.IndustryNameList, function (index, value) {
+
+                        var addcontrols = "<div class='cls-industriesdiv'>" +
+                            "<input type='hidden' class='industryId' value=" + value.Id + ">" +
+                            "<div class='col-12'>" +
+                            "<label class='form-label'>" + value.IndustryName + " Description</label>" +
+                            "<div class='input-group'>" +
+                            "<input type='text' class='form-control industrydescription' id=\"Description_" + value.IndustryName + "\" >" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-12'>" +
+                            "<label class='form-label'>" + value.IndustryName + " Image</label>" +
+                            "<div class='input-group'>" +
+                            "<input type='file' class='form-control industryImage' id=\"Image_" + value.IndustryName + "\" >" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
+                        $(".cls-Solution").append(addcontrols);
+                        //$(".cls-industriesdiv").insertBefore(".text-center");
+                    });
+
+
+                }
+
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+    }
+
+
+    function SaveDescribeSolutionData() {
+        var files;
+        var ImageList = new Array();
+        var Industries = new Array();
+        $('.cls-industriesdiv').each(function (i, obj) {
+            var Industry = {};
+            Industry.IndustryId = $(this).find(".industryId").val()
+            Industry.SolutionId = $("#SolutionId").val()
+            Industry.Description = $(this).find(".industrydescription").val()
+            Industry.Image = $(this).find(".industryImage").get(0);
+            files = Industry.Image.files;
+            ImageList.push(Industry.Image.files);
+            Industries.push(Industry);
+        });
+
+        var formData = new FormData();
+        for (var i = 0; i < ImageList.length; i++) {
+            formData.append("httpPostedFileBase", ImageList[i][0]);
+
+        }
+        formData.append("Industries", JSON.stringify(Industries));
+
+        
+        $.ajax({
+            url: '/Solutions/EditSolutionIndustry',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            dataType: 'json',
+            success: function (result) {
+                alert(result.Message);
+                ResetSolutionIndustryDetailForm();
+                GetSolutionList();
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+    }
+
+    function ResetSolutionIndustryDetailForm()
+    {
+        $("#solution-img").remove()
+        $("#SolutionTitle").val("");
+        $("#Solution_SubTitle").val("");
+        $("#SolutionDescription").val("");
+        $("#SolutionImage").val("");
+        $('#drp-services').val("").trigger('chosen:updated');
+        $("#drp-industries").val("").trigger('chosen:updated');
+        $("#EditsolutionModal").modal('hide'),
+            $("#SolutionId").val(0)
+        $(".SolutionImage").attr('src', ""),
+            $("#solutionImagepreview").hide(),
+            $("#ImagePath").val(""),
+            $('.cls-industriesdiv').remove()
+     
+    }
+</script>

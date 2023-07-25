@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
+using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -157,7 +158,7 @@ namespace Aephy.API.Controllers
 
 
         [HttpPost]
-        [Route("DeleteServicesById")]   
+        [Route("DeleteServicesById")]
         public async Task<IActionResult> DeleteServicesById([FromBody] ServicesModel model)
         {
             if (model.Id != 0)
@@ -325,7 +326,7 @@ namespace Aephy.API.Controllers
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
 
-                if(solutionList.Count > 0)
+                if (solutionList.Count > 0)
                 {
                     foreach (var list in solutionList)
                     {
@@ -586,22 +587,33 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                Solutions solution =  _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
+                Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
                 List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                List<Industries> IndutrynameList = new List<Industries>();
+                if (solutionindustry.Count > 0)
+                {
+                    foreach (var industryId in solutionindustry)
+                    {
+                        //var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).Select(p => p.IndustryName).FirstOrDefault();
+                        var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).FirstOrDefault();
+                        IndutrynameList.Add(industryName);
+                    }
+                }
 
-				return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-				{
-					StatusCode = StatusCodes.Status200OK,
-					Message = "success",
-					Result = new
-					{
-						Solution = solution,
-						IndustryResult = solutionindustry,
-						ServiceResult = solutionservice
-					}
-				});
-			}
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = new
+                    {
+                        Solution = solution,
+                        IndustryResult = solutionindustry,
+                        ServiceResult = solutionservice,
+                        IndustryNameList = IndutrynameList
+                    }
+                });
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
@@ -663,7 +675,7 @@ namespace Aephy.API.Controllers
                     }
                 }
             }
-           
+
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status200OK,
@@ -680,7 +692,7 @@ namespace Aephy.API.Controllers
             try
             {
                 var list = await _userManager.Users.ToListAsync();
-                
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -724,7 +736,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("AddorEditRoles")]
-        public async Task<IActionResult> AddorEditRoles([FromBody]GigOpenRoles model)
+        public async Task<IActionResult> AddorEditRoles([FromBody] GigOpenRoles model)
         {
             try
             {
@@ -788,7 +800,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                GigOpenRoles openRoles= _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                GigOpenRoles openRoles = _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
                 if (openRoles != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -839,6 +851,93 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+
+        //AddSolutionDescribedData
+        [HttpPost]
+        [Route("AddSolutionDescribedData")]
+        public async Task<IActionResult> AddSolutionDescribedData([FromBody] List<SolutionDescribeModel> model)
+        {
+            try
+            {
+                if (model.Count > 0)
+                {
+                    List<int> industryIds = new List<int>();
+                    foreach (var item in model)
+                    {
+                        if (item.Id == 0)
+                        {
+                            var solution = new SolutionIndustryDetails()
+                            {
+                                SolutionId = item.SolutionId,
+                                IndustryId = item.IndustryId,
+                                Description = item.Description
+                            };
+                            _db.SolutionIndustryDetails.Add(solution);
+                            _db.SaveChanges();
+
+                            industryIds.Add(solution.Id);   
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Saved Succesfully!",
+                        Result = industryIds
+                    });
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "No data found"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+
+        [HttpPost]
+        [Route("SolutionDetailsDataById")]
+        public async Task<IActionResult> SolutionDetailsDataById([FromBody] SolutionIdModel solutionsModel)
+        {
+            try
+            {
+                Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
+                List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                List<SolutionIndustryDetails> solutionIndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                List<Industries> IndutrynameList = new List<Industries>();
+                if (solutionindustry.Count > 0)
+                {
+                    foreach (var industryId in solutionindustry)
+                    {
+                        //var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).Select(p => p.IndustryName).FirstOrDefault();
+                        var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).FirstOrDefault();
+                        IndutrynameList.Add(industryName);
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = new
+                    {
+                        Solution = solution,
+                        IndustryResult = solutionindustry,
+                        ServiceResult = solutionservice,
+                        IndustryNameList = IndutrynameList
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
         }
     }
 }

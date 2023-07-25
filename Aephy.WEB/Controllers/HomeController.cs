@@ -1,4 +1,5 @@
-﻿using Aephy.WEB.Models;
+﻿using Aephy.Helper.Helpers;
+using Aephy.WEB.Models;
 using Aephy.WEB.Provider;
 using Aephy.WEB.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,11 @@ namespace Aephy.WEB.Controllers
     {
 
         private readonly IApiRepository _apiRepository;
-        public HomeController(IApiRepository apiRepository)
+        private readonly string _rootPath;
+        public HomeController(IApiRepository apiRepository, IWebHostEnvironment hostEnvironment)
         {
-
             _apiRepository = apiRepository;
+            _rootPath = hostEnvironment.WebRootPath;
         }
         public IActionResult Dashboard()
         {
@@ -86,7 +88,7 @@ namespace Aephy.WEB.Controllers
                     HttpContext.Session.SetString("LoggedUserRole", Role);
                     HttpContext.Session.SetString("LoggedUser", UserId);
                 }
-               
+
                 return test;
             }
             catch (Exception ex)
@@ -99,11 +101,38 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> AddorEditUserData([FromBody] RegisterNewUser registerModel)
         {
-            if(registerModel.Id == null)
+            if (registerModel.Id == null)
             {
                 try
                 {
                     var test = await _apiRepository.MakeApiCallAsync("api/Authenticate/Register", HttpMethod.Post, registerModel);
+
+                    #region SendCongratulation Email
+
+                    dynamic jsonObj = JsonConvert.DeserializeObject(test);
+
+                    if (jsonObj["StatusCode"] == 200)
+                    {
+                        string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/congratulation.html");
+                        body = body.Replace("##UserName##", registerModel.FirstName);
+                        if (registerModel.UserType == "Client")
+                        {
+                            body = body.Replace("##UserInformation##", "<h4><b>UserType : </b> Client </h4>");
+                        }
+                        else
+                        {
+                            body = body.Replace("##UserInformation##", "<h4><b>UserType : </b> Freelancer </h4> <h4><b>Lavel : </b> " + registerModel.FreelancerLevel + " </h4>");
+                        }
+
+                        bool send = SendEmailHelper.SendEmail(registerModel.Email, "Welcome to Ephey", body);
+
+                        if (!send)
+                        {
+                            return "Registration Success but email not send.";
+                        }
+                    }
+                    #endregion
+
                     return test;
                 }
                 catch (Exception ex)
@@ -127,7 +156,7 @@ namespace Aephy.WEB.Controllers
                     throw ex;
                 }
             }
-          
+
             return "";
         }
 

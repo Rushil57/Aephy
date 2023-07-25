@@ -126,6 +126,7 @@ function SignOut() {
             alert("Something Went Wrong!");
         }
     });
+}
 
 
 function ResetForm() {

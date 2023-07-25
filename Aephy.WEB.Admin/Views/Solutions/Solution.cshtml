@@ -131,26 +131,26 @@
                 if (result != null) {
                     $("#addSolutionModal").modal('show')
                     $("#solution-img").remove()
-                    $("#SolutionId").val(result.Result.Id)
-                    $("#SolutionTitle").val(result.Result.Title)
-                    $("#Solution_SubTitle").val(result.Result.SubTitle)
-                    $("#SolutionDescription").val(result.Result.Description)
-                    $("#ImagePath").val(result.Result.ImagePath)
+                    $("#SolutionId").val(result.Result.Solution.Id)
+                    $("#SolutionTitle").val(result.Result.Solution.Title)
+                    $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
+                    $("#SolutionDescription").val(result.Result.Solution.Description)
+                    $("#ImagePath").val(result.Result.Solution.ImagePath)
                     $("#solutionImagepreview").find("span").first().remove();
                     $('#solutionImagepreview').show();
                     var span = document.createElement('span');
                     span.innerHTML =
-                        ['<img class="SolutionImage" src="', result.Result.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                        ['<img class="SolutionImage" src="', result.Result.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
                             .join('');
                     document.getElementById('solutionImagepreview').insertBefore(span, null);
                     var industryvalues = new Array();
                     var servicesvalues = new Array();
 
-                    $.each(result.IndustryResult, function (index, value) {
+                    $.each(result.Result.IndustryResult, function (index, value) {
                         industryvalues.push(value.IndustryId)
                     });
 
-                    $.each(result.ServiceResult, function (index, value) {
+                    $.each(result.Result.ServiceResult, function (index, value) {
                         servicesvalues.push(value.ServicesId)
                     });
                     $('#drp-services').val(servicesvalues).trigger('chosen:updated');

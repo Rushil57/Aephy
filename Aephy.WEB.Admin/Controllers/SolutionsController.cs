@@ -169,10 +169,10 @@ namespace Aephy.WEB.Admin.Controllers
             {
                 if (data["StatusCode"] == 200)
                 {
-                    string imagepath = data.Result.ImagePath;
+                    string imagepath = data.Result.Solution.ImagePath;
                     string sasToken = GenerateSasToken(imagepath);
-                    imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
-                    data.Result.ImageUrlWithSas = imageUrlWithSas;
+                    imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
+                    data.Result.Solution.ImageUrlWithSas = imageUrlWithSas;
                 }
             }
             catch (Exception ex)

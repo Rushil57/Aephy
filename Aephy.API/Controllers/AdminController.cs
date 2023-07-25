@@ -590,15 +590,18 @@ namespace Aephy.API.Controllers
                 List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
 
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "success",
-                    Result = solution,
-                    IndustryResult = solutionindustry,
-                    ServiceResult = solutionservice
-                });
-            }
+				return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+				{
+					StatusCode = StatusCodes.Status200OK,
+					Message = "success",
+					Result = new
+					{
+						Solution = solution,
+						IndustryResult = solutionindustry,
+						ServiceResult = solutionservice
+					}
+				});
+			}
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });

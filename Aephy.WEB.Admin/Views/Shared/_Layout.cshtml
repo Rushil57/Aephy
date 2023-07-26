@@ -1,7 +1,10 @@
 ﻿@{
- 
     ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
     ViewData["Fullname"] = Context.Session.GetString("FullName");
+    if (Context.Session.GetString("LoggedAdmin") == null)
+    {
+        Context.Response.Redirect("../Home/Login");
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +44,7 @@
 
 </head>
 <body>
-    <!-- ======= Header ======= -->
+        <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
@@ -433,4 +436,3 @@
     <script src="~/assets/js/commonscript.js"></script>
 </body>
 </html>
-

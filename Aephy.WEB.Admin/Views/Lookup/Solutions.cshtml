@@ -39,12 +39,14 @@
         GetSolutionList()
     });
     function GetSolutionList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetSolutionsList", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
+                $("#preloader").hide();
                 $('#solutionList').DataTable({
                     destroy: true,
                     data: result.Result,

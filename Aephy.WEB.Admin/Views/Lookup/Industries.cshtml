@@ -20,7 +20,7 @@
                                 <th scope="col">Industry Name</th>
                                 <th scope="col">Active</th>
                                 <th scope="col"></th>
-                                <th scope="col"></th>
+                                @*<th scope="col"></th>*@
                             </tr>
                         </thead>
                         <tbody id="#list">
@@ -177,13 +177,7 @@
                             "render": function (data, type, full, meta) {
                                 return '<a href="#" class="btn btn-danger" onclick=DeleteData("' + data + '");>Delete</a>';
                             }
-                        },
-                        {
-                            "data": "Id",
-                            "render": function (data, type, full, meta) {
-                                return '<a href="#" class="btn btn-primary" onclick=OpenSolutionModal("' + data + '");>Create Solution</a>';
-                            }
-                        },
+                        }
 
                     ]
                 });

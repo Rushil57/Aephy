@@ -45,6 +45,7 @@ $(function () {
     $(".chosen-select").chosen();
     BindServices()
     BindIndustries()
+    $(".cls-subtitle").css("display", "none")
 
     //OpenGigRoles
     $("form[name='addRolesForm']").validate({

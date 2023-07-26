@@ -40,7 +40,7 @@
                             <div class="card-body">
 
                                 <form class="row g-3 mt-3 cls-Solution" name="addSolutiondescribeForm">
-                                    <input type="hidden" id="SolutionId" value="0">
+                                    <input type="hidden" id="SolutionDetailsId" value="0">
                                     <input type="hidden" id="ImagePath" value="">
 
                                     <div class="col-12">
@@ -49,7 +49,7 @@
                                             <input type="text" class="form-control" id="SolutionTitle" name="SolutionTitle" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12 cls-subtitle">
                                         <label for="Solution_SubTitle" class="form-label">Solution SubTitle</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="Solution_SubTitle" name="Solution_SubTitle" readonly>
@@ -66,18 +66,18 @@
                                     <div class="col-12">
                                         <label for="SolutionDescription" class="form-label">Solution Description</label>
                                         <div class="input-group">
-                                            <textarea class="form-control" id="SolutionDescription" name="SolutionDescription" style="height:100px;"></textarea>
+                                            <textarea class="form-control" id="SolutionDescription" name="SolutionDescription" style="height:100px;" readonly></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12" id="img-id">
                                         <label for="SolutionImage" class="form-label">Image</label>
                                         <div class="input-group">
-                                            <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" />
+                                            <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" disabled />
                                         </div>
                                         <div id="solutionImagepreview"></div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-12" id="main-industry-div">
                                         <label for="Industries" class="form-label">Industries</label>
                                         <div class="input-group" id="industries">
                                             <select data-placeholder="Choose tags ..." name="Industries" multiple class="chosen-select" id="drp-industries">
@@ -116,15 +116,19 @@
             }
         });
         GetSolutionList()
+        $(".cls-subtitle").css("display","none")
+
     });
 
     function GetSolutionList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
-            url: "@Url.Action("GetSolutionsList", "Solutions")",
+            url: "@Url.Action("GetSolutionsIndustryDetailList", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
+                $("#preloader").hide();
                 $('#solutionList').DataTable({
                     destroy: true,
                     data: result.Result,
@@ -132,7 +136,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return '<a class="cls-service" onclick=GetSolutionDataById(' + data + ')>' + data + '</a>';
+                                return '<a class="cls-service" onclick=GetSolutionDetailsDataById(' + data + ')>' + data + '</a>';
                             }
                         },
                         { "data": "Title" },
@@ -140,14 +144,27 @@
                         {
                             "data": "Description",
                             "render": function (data, type, row) {
-                                var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
-                                return "<span title='" + data + "'>" + description + "</span>";
+                                if (data != null) {
+                                    var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + description + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+
                             }
                         },
                         {
                             "data": "ImageUrlWithSas",
                             "render": function (data, type, row) {
-                                return '<img src="' + data + '" alt="Image" height="70" width="150" />';
+                                if(data != null)
+                                {
+                                    return '<img src="' + data + '" alt="Image" height="70" width="150" />';
+                                }
+                                else{
+                                    return "<span></span>";
+                                }
+                                
                             }
                         },
                         { "data": "Services" },
@@ -165,57 +182,34 @@
     }
 
 
-
-    function GetSolutionDataById(Id) {
+    function GetSolutionDetailsDataById(Id) {
         var ServiceData = {
             Id: Id,
         };
         $.ajax({
             type: "POST",
             url: "@Url.Action("GetSolutionDetailsById", "Solutions")",
-            //url: "@Url.Action("GetSolutiondataById", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
-                if (result != null) {
-                    $("#EditsolutionModal").modal('show')
-                    $("#solution-img").remove()
-                    $("#SolutionId").val(result.Result.Solution.Id)
-                    $("#SolutionTitle").val(result.Result.Solution.Title)
-                    $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
-                    $("#SolutionDescription").val(result.Result.Solution.Description)
-                    $("#ImagePath").val(result.Result.Solution.ImagePath)
-                    $("#solutionImagepreview").find("span").first().remove();
-                    $('#solutionImagepreview').show();
-                    var span = document.createElement('span');
-                    span.innerHTML =
-                        ['<img class="SolutionImage" src="', result.Result.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
-                            .join('');
-                    document.getElementById('solutionImagepreview').insertBefore(span, null);
-                    var industryvalues = new Array();
-                    var servicesvalues = new Array();
+                $("#EditsolutionModal").modal('show')
+                $("#SolutionDetailsId").val(result.Result.SolutionIndustryDetails.Id)
+                $("#SolutionTitle").val(result.Result.Solution.Title)
+                $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
+                $("#SolutionDescription").val(result.Result.Solution.Description)
+                $("#drp-services").val(result.Result.Services.ServicesId)
+                $('#drp-industries').val(result.Result.Industryname.Id).trigger('chosen:updated');
+                 $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
+                $("#solutionImagepreview").find("span").first().remove();
+                $('#solutionImagepreview').show();
+                var span = document.createElement('span');
+                span.innerHTML =
+                    ['<img class="SolutionImage" src="', result.Result.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                        .join('');
+                document.getElementById('solutionImagepreview').insertBefore(span, null);
 
-                    $.each(result.Result.ServiceResult, function (index, value) {
-                        servicesvalues.push(value.ServicesId)
-                    });
-
-                    $.each(result.Result.IndustryNameList, function (index, value) {
-                        industryvalues.push(value.Id)
-                        BindIndustriesControles(value)
-                    });
-                    if(result.Result.SolutionIndustryDetails != 0)
-                    {
-                        $('.cls-industriesdiv').remove()
-                        $.each(result.Result.SolutionIndustryDetails, function (index, value) {
-                            BindIndustriesValues(value.Id, value.Description, value.ImageUrlWithSas)
-                        });
-                    }
-                    $('#drp-services').val(servicesvalues).trigger('chosen:updated');
-                    $('#drp-industries').val(industryvalues).trigger('chosen:updated');
-
-                }
-
+                BindIndustriesControles(result.Result.Industryname, result.Result.SolutionIndustryDetails)
             },
             error: function (result) {
                 alert("Error occured..");
@@ -223,124 +217,42 @@
         });
     }
 
-
-    function SaveDescribeSolutionData() {
-        var ImageList = new Array();
-        var Industries = new Array();
-        $('.cls-industriesdiv').each(function (i, obj) {
-            var Industry = {};
-            Industry.Id = $(this).find(".industryIdDetails").val()
-            Industry.IndustryId = $(this).find(".industryId").val()
-            Industry.SolutionId = $("#SolutionId").val()
-            Industry.Description = $(this).find(".industrydescription").val()
-            Industry.Image = $(this).find(".industryImage").get(0);
-            ImageList.push(Industry.Image.files);
-            Industry.ImageUpload = $(this).find(".UploadImage").val()//UploadImage
-            Industries.push(Industry);
-        });
-        
-        var formData = new FormData();
-        for (var i = 0; i < ImageList.length; i++) {
-            formData.append("httpPostedFileBase", ImageList[i][0]);
-
+    function BindIndustriesControles(value,IndustryValue)
+    {
+        if (IndustryValue.Description == null)
+        {
+            IndustryValue.Description = "";
         }
-        formData.append("Industries", JSON.stringify(Industries));
-
-
-        $.ajax({
-            url: '/Solutions/EditSolutionIndustry',
-            type: "POST",
-            contentType: false,
-            processData: false,
-            data: formData,
-            dataType: 'json',
-            success: function (result) {
-                alert(result.Message);
-                ResetSolutionIndustryDetailForm();
-                GetSolutionList();
-            },
-            error: function (err) {
-                $("#preloader").hide();
-                alert("Something Went Wrong!");
-            }
-        });
-    }
-
-    function ResetSolutionIndustryDetailForm() {
-        $("#solution-img").remove()
-        $("#SolutionTitle").val("");
-        $("#Solution_SubTitle").val("");
-        $("#SolutionDescription").val("");
-        $("#SolutionImage").val("");
-        $('#drp-services').val("").trigger('chosen:updated');
-        $("#drp-industries").val("").trigger('chosen:updated');
-        $("#EditsolutionModal").modal('hide'),
-            $("#SolutionId").val(0)
-        $(".SolutionImage").attr('src', ""),
-            $("#solutionImagepreview").hide(),
-            $("#ImagePath").val(""),
-            $('.cls-industriesdiv').remove()
-
-    }
-
-    function BindIndustriesControles(value) {
         var addcontrols = "<div class='cls-industriesdiv'>" +
-            "<input type='hidden' class='industryId' value=" + value.Id + ">" +
-            "<input type='hidden' class='UploadImage' id=ImageUpload_"+ value.IndustryName +"  value='false'>" +
             "<div class='col-12'>" +
-            "<label class='form-label'>" + value.IndustryName + " Description</label>" +
+            "<label class='form-label'>Description (" + value.IndustryName + ") </label>" +
             "<div class='input-group'>" +
-            "<input type='text' class='form-control industrydescription' id=\"Description_" + value.IndustryName + "\" >" +
+            //"<textarea type='text' class='form-control industrydescription' id=\"Description_" + value.IndustryName + "\" value=" + IndustryValue.Description + "></textarea>" +
+            '<input type="text" class="form-control industrydescription"  value="' + IndustryValue.Description + '">' +
             "</div>" +
             "</div>" +
             "<div class='col-12'>" +
-            "<label class='form-label'>" + value.IndustryName + " Image</label>" +
+            "<label class='form-label'>Image (" + value.IndustryName + ")</label>" +
             "<div class='input-group'>" +
-            "<input type='file' class='form-control industryImage' id=\"Image_" + value.IndustryName + "\" onchange='ChangeUploadImage(this,true)'>" +
+            "<input type='file' class='form-control industryImage' id=\"Image_" + value.IndustryName + "\" onchange='ChangeUploadImage(this)'>" +
             "</div>" +
-            //"<div id='solutionDetailsImagepreview_'" + value.IndustryName + "></div>" +
             '<div id=solutionDetailsImagepreview_' + value.IndustryName + '>' +
             "</div>" +
             "</div>"
-        $(".cls-Solution").append(addcontrols);
-    }
-    function BindIndustriesValues(Id, IndustryName, ImageUrlWithSas) {
-        var addcontrols = "<div class='cls-industriesdiv'>" +
-            "<input type='hidden' class='industryIdDetails' value=" + Id + ">" +
-            "<div class='col-12'>" +
-            "<label class='form-label'>" + IndustryName + " Description</label>" +
-            "<div class='input-group'>" +
-            '<input type="text" class="form-control industrydescription"  value="' + IndustryName + '">' +
-            "</div>" +
-            "</div>" +
-            "<div class='col-12'>" +
-            "<label class='form-label'>" + IndustryName + " Image</label>" +
-            "<div class='input-group'>" +
-            "<input type='file' class='form-control industryImage' id=\"Image_" + IndustryName + "\" onchange='ChangeUploadImage(this,false)'>" +
-            
-            "</div>" +
-            '<div id=solutionDetailsImagepreview_' + Id + '>' +
-            "</div>" +
-            "</div>"
-        $(".cls-Solution").append(addcontrols);
+        $(addcontrols).insertAfter("#main-industry-div");
 
-        if(ImageUrlWithSas != null)
-        {
-             $("#solutionDetailsImagepreview_" + Id).find("span").first().remove();
-        $('#solutionDetailsImagepreview_' + Id).show();
-        var span = document.createElement('span');
-        span.innerHTML =
-            ['<img class="SolutionImage" src="', ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
-                .join('');
-        document.getElementById('solutionDetailsImagepreview_' + Id).insertBefore(span, null);
+        if (IndustryValue.ImageUrlWithSas != null) {
+            $("#solutionDetailsImagepreview_" + value.IndustryName).find("span").first().remove();
+            $('#solutionDetailsImagepreview_' + value.IndustryName).show();
+            var span = document.createElement('span');
+            span.innerHTML =
+                ['<img class="SolutionImage" src="', IndustryValue.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                    .join('');
+            document.getElementById('solutionDetailsImagepreview_' + value.IndustryName).insertBefore(span, null);
         }
-       
     }
 
-
-    function ChangeUploadImage(value,imageCheck)
-    {
-        debugger
+    function ChangeUploadImage(value) {
         var name = value.id.split("_")[1]
         if (value.files && value.files[0]) {
             var reader = new FileReader();
@@ -356,14 +268,57 @@
 
             reader.readAsDataURL(value.files[0]);
         }
-        if (value.files[0] != null)
-        {
-            $("#ImageUpload_" + name).val(true)
+    }
+
+     function SaveDescribeSolutionData() {
+       
+        var fileUpload = $(".industryImage").get(0);
+        var files = fileUpload.files;
+        var SolutionData = {
+            Id: $("#SolutionDetailsId").val(),
+            Description: $(".industrydescription").val(),
+        };
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append("httpPostedFileBase", files[i]);
         }
-        else{
-            $("#ImageUpload_" + name).val(false)
-        }
-        
+        formData.append("SolutionData", JSON.stringify(SolutionData));
+        $("#preloader").show();
+        $.ajax({
+            url: '/Solutions/AddorEditSolutionDetails',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            dataType: 'json',
+            success: function (result) {
+                $("#preloader").hide();
+                alert(result.Message);
+                ResetSolutionIndustryDetailForm();
+                GetSolutionList();
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+     }
+
+    function ResetSolutionIndustryDetailForm() {
+        $("#EditsolutionModal").modal('hide')
+        $("#solution-img").remove()
+        $("#SolutionTitle").val("");
+        $("#Solution_SubTitle").val("");
+        $("#SolutionDescription").val("");
+        $("#SolutionImage").val("");
+        $('#drp-services').val("").trigger('chosen:updated');
+        $("#drp-industries").val("").trigger('chosen:updated');
+       
+            $("#SolutionDetailsId").val(0)
+        $(".SolutionImage").attr('src', ""),
+            $("#solutionImagepreview").hide(),
+            $("#ImagePath").val(""),
+            $('.cls-industriesdiv').remove()
 
     }
 </script>

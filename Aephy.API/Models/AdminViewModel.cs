@@ -140,7 +140,7 @@ namespace Aephy.API.Models
 
             //public string? ImageUrlWithSas { get; set; }
 
-            //public string? ImagePath { get; set; }
+            public string? ImagePath { get; set; }
         }
     }
 }

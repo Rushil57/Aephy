@@ -73,7 +73,7 @@ namespace Aephy.WEB.Admin.Controllers
 
                         }
                     }
-                }           
+                }
 
                 return solutionData;
             }
@@ -363,52 +363,51 @@ namespace Aephy.WEB.Admin.Controllers
                 solutions.Id = (int)Id;
                 solutions.ImagePath = Imagepath;
             }
-               
+
             return solutions;
 
 
         }
 
-      
-        [HttpPost]
-        public async Task<string> EditSolutionIndustry(IFormFile[] httpPostedFileBase, string Industries)
-       {
+
+        //New
+        [HttpGet]
+        public async Task<string> GetSolutionsIndustryDetailList()
+        {
+            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDetailsList", HttpMethod.Get);
+           
+
+            dynamic data = JsonConvert.DeserializeObject(serviceList);
+            // var result = JsonConvert.DeserializeObject<SolutionsModel>(serviceList);
+
             try
             {
-                var result = JsonConvert.DeserializeObject<List<SolutionDescribeModel>>(Industries);
-                var Data = await _apiRepository.MakeApiCallAsync("api/Admin/AddSolutionDescribedData", HttpMethod.Post, result);
-                if (Data != "")
+                if (data.Result != null)
                 {
-                    dynamic data = JsonConvert.DeserializeObject(Data);
-                    if (data["StatusCode"] == 200)
+                    foreach (var service in data.Result)
                     {
-                        if (result.Count > 0)
+                        if(service.ImagePath != null)
                         {
-                            var count = 0;
-                            foreach (var id in data.Result)
-                            {
-                                int Id = id;
-                                IFormFile imageFile = httpPostedFileBase[count];
-                                var fileData = await SaveImageFile(imageFile, Id);
-                                var ok = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionIndustriesUpdateImage", HttpMethod.Post, fileData);
-                                count++;
-                            }
-
-
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
                         }
+                        
+
                     }
+
                 }
-                        return Data;
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-            
-            return "";
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
         }
 
-        
         [HttpPost]
         public async Task<string> GetSolutionDetailsById([FromBody] SolutionIdModel solutionsModel)
         {
@@ -421,23 +420,21 @@ namespace Aephy.WEB.Admin.Controllers
                 if (data["StatusCode"] == 200)
                 {
                     string imagepath = data.Result.Solution.ImagePath;
-                    string sasToken = GenerateSasToken(imagepath);
-                    imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
-                    data.Result.Solution.ImageUrlWithSas = imageUrlWithSas;
-
-                    if (data.Result.SolutionIndustryDetails.Count > 0)
+                    if(imagepath != null)
                     {
-                        foreach (var service in data.Result.SolutionIndustryDetails)
-                        {
-                            if (service.ImagePath != null)
-                            {
-                                string imagepaths = service.ImagePath;
-                                string sasTokens = GenerateSasToken(imagepaths);
-                                string imageUrlWithSass = $"{service.ImagePath}?{sasTokens}";
-                                service.ImageUrlWithSas = imageUrlWithSass;
-                            }
-                        }
+                        string sasToken = GenerateSasToken(imagepath);
+                        imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
+                        data.Result.Solution.ImageUrlWithSas = imageUrlWithSas;
                     }
+
+                    string industryimage = data.Result.SolutionIndustryDetails.ImagePath;
+                    if(industryimage != null)
+                    {
+                        string tokn = GenerateSasToken(industryimage);
+                        var imageUrlWithSass = $"{data.Result.SolutionIndustryDetails.ImagePath}?{tokn}";
+                        data.Result.SolutionIndustryDetails.ImageUrlWithSas = imageUrlWithSass;
+                    }
+                   
                 }
             }
             catch (Exception ex)
@@ -446,6 +443,37 @@ namespace Aephy.WEB.Admin.Controllers
             }
             string convertjsonTostring = JsonConvert.SerializeObject(data, Formatting.Indented);
             return convertjsonTostring;
+        }
+
+        [HttpPost]
+        public async Task<string> AddorEditSolutionDetails(IFormFile httpPostedFileBase, string SolutionData)
+        {
+            try
+            {
+                var result = JsonConvert.DeserializeObject<SolutionDescribeModel>(SolutionData);
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddSolutionDescribedData", HttpMethod.Post, result);
+                if (solutionData != "")
+                {
+                    dynamic data = JsonConvert.DeserializeObject(solutionData);
+                    if (data["StatusCode"] == 200)
+                    {
+                        if(httpPostedFileBase != null)
+                        {
+                            int Id = result.Id;
+                            var fileData = await SaveImageFile(httpPostedFileBase, Id);
+                            var ok = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionIndustriesUpdateImage", HttpMethod.Post, fileData);
+                        }
+                       
+                    }
+                }
+                return solutionData;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
         }
     }
 

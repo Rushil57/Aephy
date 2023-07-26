@@ -299,10 +299,10 @@
   /**
    * Initiate Datatables
    */
-  const datatables = select('.datatable', true)
+/*  const datatables = select('.datatable', true)
   datatables.forEach(datatable => {
     new simpleDatatables.DataTable(datatable);
-  })
+  })*/
 
   /**
    * Autoresize echart charts

@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "OpenGigRoles";
+	ViewData["Title"] = "Open gig roles";
 	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 	if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
 	{
@@ -275,13 +275,13 @@
 										<label for="CVPath" class="form-label">Upload CV</label>
 										<div class="col-12 d-flex">
 											<div class="input-group">
-												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx">
+												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;">
 											</div>
 										</div>
 									</div>
 									<div class="text-center">
 										<button type="submit" class="btn btn-brand">Submit</button>
-										<button type="reset" class="btn btn-secondary" onclick="clearForm();">Reset</button>
+										<button class="btn btn-secondary" onclick="clearApplyForm();">Reset</button>
 									</div>
 								</form><!-- Vertical Form -->
 
@@ -449,6 +449,11 @@
 	function OpenGigOpeningApplyModal() {
 		$("#GigOpeningApplyModal").modal('show')
 	}
+	function clearApplyForm() {
+		$("#Description").val("");
+		$("#CVPath").val("");
+	}
+
 	function GigOpenRolesApply(){
 
 		var filename = $("#CVPath").val();
@@ -499,6 +504,8 @@
 	function GigApply(ID,Description) {
 		OpenGigOpeningApplyModal();
 		$("#gigRole_id").val(ID);
+		if(Description == 'null')
+			Description = '';
 		$("#RoleDescription").val(Description);
 	}
 </script>

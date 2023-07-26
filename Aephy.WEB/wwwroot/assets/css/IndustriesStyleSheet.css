@@ -399,13 +399,7 @@ h6 {
 }
 
 .industry-joinus-img{
-    max-width: 150%
-}
-
-@media (max-width:980px) {
-    .industry-joinus-img {
-        max-width: 100%
-    }
+    max-width: 70%;
 }
 .industries-img {
     width: 100%;

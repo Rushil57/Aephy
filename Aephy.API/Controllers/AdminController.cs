@@ -593,20 +593,17 @@ namespace Aephy.API.Controllers
                 Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
                 List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
                 List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                dynamic test = new
-                {
-                    solution = solution,
-                    IndustryResult = solutionindustry,
-                    ServiceResult = solutionservice
-                };
+               
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "success",
-                    //Result = solution,
-                    //IndustryResult = solutionindustry,
-                    //ServiceResult = solutionservice
-                    Result = test
+                    Result = new
+                    {
+                        Solution = solution,
+                        IndustryResult = solutionindustry,
+                        ServiceResult = solutionservice,
+                    }
                 });
             }
             catch (Exception ex)
@@ -963,7 +960,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //AddSolutionDescribedData
+       
         [HttpPost]
         [Route("AddSolutionDescribedData")]
         public async Task<IActionResult> AddSolutionDescribedData([FromBody] List<SolutionDescribeModel> model)
@@ -986,7 +983,20 @@ namespace Aephy.API.Controllers
                             _db.SolutionIndustryDetails.Add(solution);
                             _db.SaveChanges();
 
-                            industryIds.Add(solution.Id);   
+                            if(item.ImageUpload == "true")
+                            {
+                                industryIds.Add(solution.Id);
+                            }
+                            
+                        }
+                        else
+                        {
+                            var data = _db.SolutionIndustryDetails.Where(x => x.Id == item.Id).FirstOrDefault();
+                            if (data != null)
+                            {
+                                data.Description = item.Description;
+                                _db.SaveChanges();
+                            }
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1024,7 +1034,6 @@ namespace Aephy.API.Controllers
                 {
                     foreach (var industryId in solutionindustry)
                     {
-                        //var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).Select(p => p.IndustryName).FirstOrDefault();
                         var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).FirstOrDefault();
                         IndutrynameList.Add(industryName);
                     }
@@ -1039,7 +1048,8 @@ namespace Aephy.API.Controllers
                         Solution = solution,
                         IndustryResult = solutionindustry,
                         ServiceResult = solutionservice,
-                        IndustryNameList = IndutrynameList
+                        IndustryNameList = IndutrynameList,
+                        SolutionIndustryDetails = solutionIndustryDetails
                     }
                 });
             }
@@ -1047,6 +1057,70 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
+        }
+
+
+        [HttpPost]
+        [Route("SolutionIndustriesUpdateImage")]
+        public async Task<IActionResult> SolutionIndustriesUpdateImage([FromBody] SolutionImage solutionImage)
+        {
+            if (solutionImage.HasImageFile)
+            {
+                if (solutionImage.Id != 0)
+                {
+                    try
+                    {
+                        var UpdateImage = _db.SolutionIndustryDetails.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
+                        if (UpdateImage != null)
+                        {
+
+                            UpdateImage.BlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
+                            UpdateImage.ImagePath = solutionImage.ImagePath;
+                            UpdateImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
+
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Data Save Sucessfully !"
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+            }
+            else
+            {
+                if (solutionImage.Id != 0)
+                {
+                    var UpdateImage = _db.Solutions.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
+                    if (UpdateImage != null)
+                    {
+                        UpdateImage.ImagePath = solutionImage.ImagePath;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Save Sucessfully !"
+                        });
+                    }
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
         }
     }
 }

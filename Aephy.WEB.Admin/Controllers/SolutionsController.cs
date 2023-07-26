@@ -380,21 +380,23 @@ namespace Aephy.WEB.Admin.Controllers
                 if (Data != "")
                 {
                     dynamic data = JsonConvert.DeserializeObject(Data);
-                    //if (data["StatusCode"] == 200)
-                    //{
-                    //    if (result.Count > 0)
-                    //    {
-                    //        foreach(var id in data.Result)
-                    //        {
-                    //            int Id = id;
-                    //            IFormFile imageFile = httpPostedFileBase[0] ;
-                    //            var fileData = await SaveImageFile(imageFile, Id);
-                    //            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateImage", HttpMethod.Post, fileData);
-                    //        }
-                           
+                    if (data["StatusCode"] == 200)
+                    {
+                        if (result.Count > 0)
+                        {
+                            var count = 0;
+                            foreach (var id in data.Result)
+                            {
+                                int Id = id;
+                                IFormFile imageFile = httpPostedFileBase[count];
+                                var fileData = await SaveImageFile(imageFile, Id);
+                                var ok = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionIndustriesUpdateImage", HttpMethod.Post, fileData);
+                                count++;
+                            }
 
-                    //    }
-                    //}
+
+                        }
+                    }
                 }
                         return Data;
             }
@@ -422,6 +424,20 @@ namespace Aephy.WEB.Admin.Controllers
                     string sasToken = GenerateSasToken(imagepath);
                     imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
                     data.Result.Solution.ImageUrlWithSas = imageUrlWithSas;
+
+                    if (data.Result.SolutionIndustryDetails.Count > 0)
+                    {
+                        foreach (var service in data.Result.SolutionIndustryDetails)
+                        {
+                            if (service.ImagePath != null)
+                            {
+                                string imagepaths = service.ImagePath;
+                                string sasTokens = GenerateSasToken(imagepaths);
+                                string imageUrlWithSass = $"{service.ImagePath}?{sasTokens}";
+                                service.ImageUrlWithSas = imageUrlWithSass;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)

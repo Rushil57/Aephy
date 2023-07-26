@@ -172,8 +172,8 @@
         };
         $.ajax({
             type: "POST",
-            //url: "@Url.Action("GetSolutionDetailsById", "Solutions")",
-            url: "@Url.Action("GetSolutiondataById", "Solutions")",
+            url: "@Url.Action("GetSolutionDetailsById", "Solutions")",
+            //url: "@Url.Action("GetSolutiondataById", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(ServiceData),
@@ -196,35 +196,23 @@
                     var industryvalues = new Array();
                     var servicesvalues = new Array();
 
-                    $.each(result.Result.IndustryResult, function (index, value) {
-                        industryvalues.push(value.IndustryId)
-                    })
                     $.each(result.Result.ServiceResult, function (index, value) {
                         servicesvalues.push(value.ServicesId)
                     });
+
+                    $.each(result.Result.IndustryNameList, function (index, value) {
+                        industryvalues.push(value.Id)
+                        BindIndustriesControles(value)
+                    });
+                    if(result.Result.SolutionIndustryDetails != 0)
+                    {
+                        $('.cls-industriesdiv').remove()
+                        $.each(result.Result.SolutionIndustryDetails, function (index, value) {
+                            BindIndustriesValues(value.Id, value.Description, value.ImageUrlWithSas)
+                        });
+                    }
                     $('#drp-services').val(servicesvalues).trigger('chosen:updated');
                     $('#drp-industries').val(industryvalues).trigger('chosen:updated');
-                    $.each(result.Result.IndustryNameList, function (index, value) {
-
-                        var addcontrols = "<div class='cls-industriesdiv'>" +
-                            "<input type='hidden' class='industryId' value=" + value.Id + ">" +
-                            "<div class='col-12'>" +
-                            "<label class='form-label'>" + value.IndustryName + " Description</label>" +
-                            "<div class='input-group'>" +
-                            "<input type='text' class='form-control industrydescription' id=\"Description_" + value.IndustryName + "\" >" +
-                            "</div>" +
-                            "</div>" +
-                            "<div class='col-12'>" +
-                            "<label class='form-label'>" + value.IndustryName + " Image</label>" +
-                            "<div class='input-group'>" +
-                            "<input type='file' class='form-control industryImage' id=\"Image_" + value.IndustryName + "\" >" +
-                            "</div>" +
-                            "</div>" +
-                            "</div>"
-                        $(".cls-Solution").append(addcontrols);
-                        //$(".cls-industriesdiv").insertBefore(".text-center");
-                    });
-
 
                 }
 
@@ -237,20 +225,20 @@
 
 
     function SaveDescribeSolutionData() {
-        var files;
         var ImageList = new Array();
         var Industries = new Array();
         $('.cls-industriesdiv').each(function (i, obj) {
             var Industry = {};
+            Industry.Id = $(this).find(".industryIdDetails").val()
             Industry.IndustryId = $(this).find(".industryId").val()
             Industry.SolutionId = $("#SolutionId").val()
             Industry.Description = $(this).find(".industrydescription").val()
             Industry.Image = $(this).find(".industryImage").get(0);
-            files = Industry.Image.files;
             ImageList.push(Industry.Image.files);
+            Industry.ImageUpload = $(this).find(".UploadImage").val()//UploadImage
             Industries.push(Industry);
         });
-
+        
         var formData = new FormData();
         for (var i = 0; i < ImageList.length; i++) {
             formData.append("httpPostedFileBase", ImageList[i][0]);
@@ -258,7 +246,7 @@
         }
         formData.append("Industries", JSON.stringify(Industries));
 
-        
+
         $.ajax({
             url: '/Solutions/EditSolutionIndustry',
             type: "POST",
@@ -278,8 +266,7 @@
         });
     }
 
-    function ResetSolutionIndustryDetailForm()
-    {
+    function ResetSolutionIndustryDetailForm() {
         $("#solution-img").remove()
         $("#SolutionTitle").val("");
         $("#Solution_SubTitle").val("");
@@ -293,6 +280,90 @@
             $("#solutionImagepreview").hide(),
             $("#ImagePath").val(""),
             $('.cls-industriesdiv').remove()
-     
+
+    }
+
+    function BindIndustriesControles(value) {
+        var addcontrols = "<div class='cls-industriesdiv'>" +
+            "<input type='hidden' class='industryId' value=" + value.Id + ">" +
+            "<input type='hidden' class='UploadImage' id=ImageUpload_"+ value.IndustryName +"  value='false'>" +
+            "<div class='col-12'>" +
+            "<label class='form-label'>" + value.IndustryName + " Description</label>" +
+            "<div class='input-group'>" +
+            "<input type='text' class='form-control industrydescription' id=\"Description_" + value.IndustryName + "\" >" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-12'>" +
+            "<label class='form-label'>" + value.IndustryName + " Image</label>" +
+            "<div class='input-group'>" +
+            "<input type='file' class='form-control industryImage' id=\"Image_" + value.IndustryName + "\" onchange='ChangeUploadImage(this,true)'>" +
+            "</div>" +
+            //"<div id='solutionDetailsImagepreview_'" + value.IndustryName + "></div>" +
+            '<div id=solutionDetailsImagepreview_' + value.IndustryName + '>' +
+            "</div>" +
+            "</div>"
+        $(".cls-Solution").append(addcontrols);
+    }
+    function BindIndustriesValues(Id, IndustryName, ImageUrlWithSas) {
+        var addcontrols = "<div class='cls-industriesdiv'>" +
+            "<input type='hidden' class='industryIdDetails' value=" + Id + ">" +
+            "<div class='col-12'>" +
+            "<label class='form-label'>" + IndustryName + " Description</label>" +
+            "<div class='input-group'>" +
+            '<input type="text" class="form-control industrydescription"  value="' + IndustryName + '">' +
+            "</div>" +
+            "</div>" +
+            "<div class='col-12'>" +
+            "<label class='form-label'>" + IndustryName + " Image</label>" +
+            "<div class='input-group'>" +
+            "<input type='file' class='form-control industryImage' id=\"Image_" + IndustryName + "\" onchange='ChangeUploadImage(this,false)'>" +
+            
+            "</div>" +
+            '<div id=solutionDetailsImagepreview_' + Id + '>' +
+            "</div>" +
+            "</div>"
+        $(".cls-Solution").append(addcontrols);
+
+        if(ImageUrlWithSas != null)
+        {
+             $("#solutionDetailsImagepreview_" + Id).find("span").first().remove();
+        $('#solutionDetailsImagepreview_' + Id).show();
+        var span = document.createElement('span');
+        span.innerHTML =
+            ['<img class="SolutionImage" src="', ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                .join('');
+        document.getElementById('solutionDetailsImagepreview_' + Id).insertBefore(span, null);
+        }
+       
+    }
+
+
+    function ChangeUploadImage(value,imageCheck)
+    {
+        debugger
+        var name = value.id.split("_")[1]
+        if (value.files && value.files[0]) {
+            var reader = new FileReader();
+            reader.onload = (function (e) {
+                $("#solutionDetailsImagepreview_" + name).find("span").first().remove();
+                $('#solutionDetailsImagepreview_' + name).show();
+                var span = document.createElement('span');
+                span.innerHTML =
+                    ['<img class="SolutionImage" src="', e.target.result, '" title="', escape(e.name), '" style="height:200px;width:200px;"/>']
+                        .join('');
+                document.getElementById('solutionDetailsImagepreview_' + name).insertBefore(span, null);
+            });
+
+            reader.readAsDataURL(value.files[0]);
+        }
+        if (value.files[0] != null)
+        {
+            $("#ImageUpload_" + name).val(true)
+        }
+        else{
+            $("#ImageUpload_" + name).val(false)
+        }
+        
+
     }
 </script>

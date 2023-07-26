@@ -269,7 +269,7 @@ namespace Aephy.API.Controllers
                         {
                             _db.SolutionIndustry.RemoveRange(solutionindustrydata);
                             _db.SaveChanges();
-
+                            
                             if (model.solutionIndustries.Count > 0)
                             {
                                 foreach (var industry in model.solutionIndustries)
@@ -281,6 +281,19 @@ namespace Aephy.API.Controllers
                                     };
                                     _db.SolutionIndustry.Add(solutionindustry);
                                     _db.SaveChanges();
+
+                                    var checkIndustry = _db.SolutionIndustryDetails.Where(x => x.IndustryId == industry && x.SolutionId == model.Id).FirstOrDefault();
+                                    if(checkIndustry == null)
+                                    {
+                                        var solutionindustryDetails = new SolutionIndustryDetails()
+                                        {
+                                            SolutionId = model.Id,
+                                            IndustryId = industry
+                                        };
+                                        _db.SolutionIndustryDetails.Add(solutionindustryDetails);
+                                        _db.SaveChanges();
+                                    }
+
                                 }
                             }
                         }

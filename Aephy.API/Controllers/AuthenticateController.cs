@@ -64,26 +64,33 @@ namespace Aephy.API.Controllers
                 {
                     if (await _userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        //Code for check user are active or not
-                        if (user.IsActive)
+                        if (user.IsDeleted == false)
                         {
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            //Code for check user are active or not
+                            if (user.IsActive)
                             {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Login Success",
-                                Result = new
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                 {
-                                    UserId = user.Id,
-                                    FirstName = user.FirstName,
-                                    LastName = user.LastName,
-                                    Role = user.UserType
-                                }
-                            });
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "Login Success",
+                                    Result = new
+                                    {
+                                        UserId = user.Id,
+                                        FirstName = user.FirstName,
+                                        LastName = user.LastName,
+                                        Role = user.UserType
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                strError = "Your account not active please active once";
+                            }
                         }
                         else
                         {
-                            strError = "Your account not active please active once";
-                        }
+                            strError = "User does not exists with this email address";
+                        }  
                     }
                     else
                     {
@@ -134,6 +141,7 @@ namespace Aephy.API.Controllers
                     RefreshToken = refreshToken,
                     UserType = model.UserType,
                     CreatedDateTime = DateTime.UtcNow,
+                    IsDeleted = false
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)

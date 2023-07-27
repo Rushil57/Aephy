@@ -17,6 +17,7 @@
                                 <th scope="col">EmailAddress</th>
                                 <th scope="col">UserRole</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -40,17 +41,9 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                var list = new Array()
-                $.each(result.Result, function (index, value) {
-                    if(value.UserType != "Admin"){
-                        list.push(value)
-                    }
-                    
-                });
-                
                 $('#userList').DataTable({
                     destroy: true,
-                    data: list,
+                    data: result.Result,
                     "columns": [
 
                         { "data": "FirstName" },
@@ -63,7 +56,12 @@
                                 return '<a class="btn btn-primary">Edit</a>';
                             }
                         },
-
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-danger" onclick=DeleteUser("' + data + '")>Delete</a>';
+                            }
+                        },
 
                     ]
                 });
@@ -73,5 +71,29 @@
                 alert("failure");
             }
         });
+    }
+
+    function DeleteUser(Id)
+    {
+        if (confirm('Are you sure want to delete Record?')) {
+            var ServiceData = {
+                Id: Id,
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateUserIsDelete", "Users")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ServiceData),
+                success: function (result) {
+                    alert(result.Message)
+                    GetUserList()
+
+                },
+                error: function (result) {
+                    alert("Error occured..");
+                }
+            });
+        }
     }
 </script>

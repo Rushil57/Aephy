@@ -16,5 +16,7 @@ namespace Aephy.API.DBHelper
         public string? UserType { get; set; }
 
         public bool IsActive { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

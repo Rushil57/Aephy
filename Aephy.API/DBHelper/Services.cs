@@ -12,6 +12,10 @@ namespace Aephy.API.DBHelper
         public string? ServicesName { get; set; }
 
         public bool Active { get; set; }
+
+        public bool IsActiveFreelancer { get; set; }
+
+        public bool IsActiveClient { get; set; }
     }
 
 }

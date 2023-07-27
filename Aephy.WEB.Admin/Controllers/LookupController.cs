@@ -95,7 +95,6 @@ namespace Aephy.WEB.Admin.Controllers
             if (IndustryData != null)
             { 
                 var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/AddIndustries", HttpMethod.Post, IndustryData);
-                dynamic jsonObj = JsonConvert.DeserializeObject(industryData);
                 return industryData;
             }
             else

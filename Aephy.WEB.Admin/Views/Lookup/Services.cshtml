@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "- Services";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -19,7 +18,8 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Service Name</th>
-                                <th scope="col">Active</th>
+                                <th scope="col">Freelancer Active</th>
+                                <th scope="col">Client Active</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -52,13 +52,21 @@
                                                 <input type="text" class="form-control" id="ServiceName" name="ServiceName">
                                             </div>
                                         </div>
+                                        @*<div class="col-12">
+                                        <label for="isActive" class="form-label">Active</label>
+                                        <div class="col-12 d-flex">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
+                                        </div>
+                                        </div>
+                                        </div>*@
                                         <div class="col-12">
-                                            <label for="isActive" class="form-label">Active</label>
-                                            <div class="col-12 d-flex">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
-                                                </div>
-                                            </div>
+                                            <input class="form-check-input" type="checkbox" id="freelancerActive" name="Freelanceractive">&nbsp;&nbsp;
+                                            <label for="freelancerActive" class="form-label">Is Active For Freelancer</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <input class="form-check-input" type="checkbox" id="clientActive" name="Clientactive">&nbsp;&nbsp;
+                                            <label for="clientActive" class="form-label">Is Active For Client</label>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-brand">Submit</button>
@@ -106,7 +114,9 @@
         var ServiceData = {
             Id: $("#ServiceId").val(),
             ServiceName: $("#ServiceName").val(),
-            Active: $("#isActive").is(':checked')
+            Active: $("#isActive").is(':checked'),
+            IsActiveFreelancer: $("#freelancerActive").is(':checked'),
+            IsActiveClient: $("#clientActive").is(':checked'),
         };
         $.ajax({
             type: "POST",
@@ -131,8 +141,10 @@
         $("#addServicesModal").modal('hide')
         $("#ServiceName").val("")
         $("#isActive").prop('checked', false);
+        $("#freelancerActive").prop('checked', false),
+            $("#clientActive").prop('checked', false)
     }
-   
+
     function OpenAddServicesModalPopup() {
         $("#addServicesModal").modal('show')
     }
@@ -156,18 +168,29 @@
                         },
                         { "data": "ServicesName" },
                         {
-                            "data": "Active",
+                            "data": "IsActiveFreelancer",
                             "render": function (data, type, row) {
                                 if (data == true) {
-                                    return '<span class="badge bg-success">'+ data +'</span>'
+                                    return '<span class="badge bg-success">' + data + '</span>'
                                 }
                                 else {
-                                    return '<span class="badge bg-danger">'+ data +'</span>'
+                                    return '<span class="badge bg-danger">' + data + '</span>'
                                 }
                             }
                         },
                         {
-                            "data" : "Id",
+                            "data": "IsActiveClient",
+                            "render": function (data, type, row) {
+                                if (data == true) {
+                                    return '<span class="badge bg-success">' + data + '</span>'
+                                }
+                                else {
+                                    return '<span class="badge bg-danger">' + data + '</span>'
+                                }
+                            }
+                        },
+                        {
+                            "data": "Id",
                             "render": function (data, type, row) {
                                 return '<a class="btn btn-danger btn-sm" style="color: white;" onclick=DeleteServices(' + data + ')>Delete</a>';
                             }
@@ -205,7 +228,7 @@
                 }
             });
         }
-      
+
     }
 
     function GetDataById(Id){
@@ -222,12 +245,19 @@
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
                     if (result != null) {
+                        var data = result.Result;
                         $("#addServicesModal").modal('show')
-                        $("#ServiceId").val(result.Result.Id);
-                        $("#ServiceName").val(result.Result.ServicesName);
-                        var active = result.Result.Active;
+                        $("#ServiceId").val(data.Id);
+                        $("#ServiceName").val(data.ServicesName);
+                        var active = data.Active;
                         if (active) {
                             $("#isActive").prop('checked', true);
+                        }
+                        if (data.IsActiveFreelancer) {
+                            $("#freelancerActive").prop('checked', true);
+                        }
+                        if (data.IsActiveClient) {
+                            $("#clientActive").prop('checked', true);
                         }
                     }
                 },

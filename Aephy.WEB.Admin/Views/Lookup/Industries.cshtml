@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "- Industries";
 }
 
@@ -18,15 +17,15 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Industry Name</th>
-                                <th scope="col">Active</th>
+                                <th scope="col">Freelancer Active</th>
+                                <th scope="col">Client Active</th>
                                 <th scope="col"></th>
                                 @*<th scope="col"></th>*@
                             </tr>
                         </thead>
                         <tbody id="#list">
-
                         </tbody>
-                       
+
                     </table>
 
                 </div>
@@ -39,14 +38,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title main-title">Add Industry</h4>
-                    <a class="close" data-dismiss="#addIndusriesModal" onclick="CloseAddIndustriesModalPopup();"><i class="bi bi-x-circle"></i></a>
+                    <a class="close" data-dismiss="#addIndusriesModal" onclick="ResetIndustryForm();"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
                     <div class="row">
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                  
+
                                     <form class="row g-3 mt-3" name="addIndustriesForm">
                                         <input type="hidden" id="IndustryId" value="0">
                                         <div class="col-12">
@@ -55,17 +54,25 @@
                                                 <input type="text" class="form-control" id="IndustryName" name="IndustryName">
                                             </div>
                                         </div>
+                                        @*<div class="col-12">
+                                        <label for="Active" class="form-label">Status</label>
+                                        <div class="col-12 d-flex">
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="Active" name="Active">
+                                        </div>
+                                        </div>
+                                        </div>*@
                                         <div class="col-12">
-                                            <label for="Active" class="form-label">Status</label>
-                                            <div class="col-12 d-flex">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="Active" name="Active">
-                                                </div>
-                                            </div>
+                                            <input class="form-check-input" type="checkbox" id="freelancerActive" name="Freelanceractive">&nbsp;&nbsp;
+                                            <label for="freelancerActive" class="form-label">Is Active For Freelancer</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <input class="form-check-input" type="checkbox" id="clientActive" name="Clientactive">&nbsp;&nbsp;
+                                            <label for="clientActive" class="form-label">Is Active For Active</label>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-brand">Submit</button>
-                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetIndustryForm();">Reset</button>
                                         </div>
                                     </form><!-- Vertical Form -->
 
@@ -79,7 +86,7 @@
     </div>
 
 
-    
+
 
 </main>
 <script>
@@ -110,7 +117,9 @@
         var IndustryData = {
             Id: $('#IndustryId').val(),
             IndustryName: $("#IndustryName").val(),
-            Active: $("#Active").is(':checked')
+            Active: $("#Active").is(':checked'),
+            IsActiveFreelancer: $("#freelancerActive").is(':checked'),
+            IsActiveClient: $("#clientActive").is(':checked'),
         };
         $.ajax({
             type: "POST",
@@ -121,7 +130,7 @@
             success: function (result) {
                 alert(result.Message)
                 GetServiceList();
-                CloseAddIndustriesModalPopup();
+                ResetIndustryForm();
             },
             error: function (result) {
                 alert("Error occured..");
@@ -129,18 +138,17 @@
         });
     }
 
-    function ResetForm() {
-        $("#IndustryName").val("");
-        $("#Active").prop('checked', false);
-    }
-    function CloseAddIndustriesModalPopup() {
+    function ResetIndustryForm() {
+        $("#IndustryId").val(0);
         $('.main-title').html('Add Industry');
         $("#addIndusriesModal").modal('hide')
-    }
-    function OpenAddIndustriesModalPopup(){
-        $("#IndustryId").val(0);
         $("#IndustryName").val("");
         $("#Active").prop('checked', false);
+        $("#freelancerActive").prop('checked', false),
+            $("#clientActive").prop('checked', false)
+    }
+
+    function OpenAddIndustriesModalPopup() {
         $("#addIndusriesModal").modal('show')
     }
     function GetServiceList() {
@@ -162,10 +170,21 @@
                         },
                         { "data": "IndustryName" },
                         {
-                            "data": "Active",
+                            "data": "IsActiveFreelancer",
                             "render": function (data, type, row) {
                                 if (data == true) {
-                                    return '<span class="badge bg-success">' + data + '  </span>'
+                                    return '<span class="badge bg-success">' + data + '</span>'
+                                }
+                                else {
+                                    return '<span class="badge bg-danger">' + data + '</span>'
+                                }
+                            }
+                        },
+                        {
+                            "data": "IsActiveClient",
+                            "render": function (data, type, row) {
+                                if (data == true) {
+                                    return '<span class="badge bg-success">' + data + '</span>'
                                 }
                                 else {
                                     return '<span class="badge bg-danger">' + data + '</span>'
@@ -203,16 +222,20 @@
                 if (result.Message == "Success"){
                     OpenAddIndustriesModalPopup();
                     $('.main-title').html('Edit Industry');
-                        var IndustryId = result.Result.Id;
+                    var data = result.Result;
+                    var IndustryId = data.Id;
 
-                        $('#IndustryId').val(IndustryId);
-                        $("#IndustryName").val(result.Result.IndustryName);
-                    if (result.Result.Active) {
-                            $("#Active").prop('checked', true);
-                        }
-                        else{
-                            $("#Active").prop('checked', false);
-                        }
+                    $('#IndustryId').val(IndustryId);
+                    $("#IndustryName").val(data.IndustryName);
+                    if (data.Active) {
+                        $("#Active").prop('checked', true);
+                    }
+                    if (data.IsActiveFreelancer){
+                        $("#freelancerActive").prop('checked', true);
+                    }
+                    if (data.IsActiveClient){
+                        $("#clientActive").prop('checked', true);
+                    }
                 }
             },
             error: function (result) {
@@ -244,14 +267,5 @@
                 }
             });
         }
-    }
-    function OpenSolutionModal(id){
-        $("#addSolutionModal").modal('show')
-        $('#drp-industries').val(id).trigger('chosen:updated');
-        $("#drp-industries option:not(:selected)").not(id).each(function (index) {
-            $(this).prop('disabled', true);
-        });
-        $('#drp-industries').trigger('chosen:updated');
-
     }
 </script>

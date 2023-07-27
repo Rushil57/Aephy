@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
@@ -52,7 +53,9 @@ namespace Aephy.API.Controllers
                         var services = new Services()
                         {
                             ServicesName = model.ServiceName,
-                            Active = model.Active
+                            Active = model.Active,
+                            IsActiveFreelancer = model.IsActiveFreelancer,
+                            IsActiveClient = model.IsActiveClient
                         };
                         _db.Services.Add(services);
                         _db.SaveChanges();
@@ -73,6 +76,8 @@ namespace Aephy.API.Controllers
                         {
                             servicesDetails.ServicesName = model.ServiceName;
                             servicesDetails.Active = model.Active;
+                            servicesDetails.IsActiveClient = model.IsActiveClient;
+                            servicesDetails.IsActiveFreelancer = model.IsActiveFreelancer;
                             _db.SaveChanges();
                         }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Updated Successfully." });
@@ -269,7 +274,7 @@ namespace Aephy.API.Controllers
                         {
                             _db.SolutionIndustry.RemoveRange(solutionindustrydata);
                             _db.SaveChanges();
-                            
+
                             if (model.solutionIndustries.Count > 0)
                             {
                                 foreach (var industry in model.solutionIndustries)
@@ -317,6 +322,20 @@ namespace Aephy.API.Controllers
 
                             }
                         }
+
+                        var solutionIndutryDetaillist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.Id).Select(x => x.IndustryId).ToList();
+                        var solutionIndustryList = _db.SolutionIndustry.Where(x => x.SolutionId == model.Id).Select(x => x.IndustryId).ToList();
+                        var getindustry = solutionIndutryDetaillist.Except(solutionIndustryList).ToList();
+                        if (getindustry.Count > 0)
+                        {
+                            foreach (var data in getindustry)
+                            {
+                                var getdata = _db.SolutionIndustryDetails.Where(x => x.IndustryId == data).FirstOrDefault();
+                                _db.SolutionIndustryDetails.Remove(getdata);
+                                _db.SaveChanges();
+                            }
+                        }
+
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -507,6 +526,8 @@ namespace Aephy.API.Controllers
                     {
                         IndusrtyRecord.IndustryName = model.IndustryName;
                         IndusrtyRecord.Active = model.Active;
+                        IndusrtyRecord.IsActiveFreelancer = model.IsActiveFreelancer;
+                        IndusrtyRecord.IsActiveClient = model.IsActiveClient;
                         _db.Entry(IndusrtyRecord).State = EntityState.Modified;
                         var result = _db.SaveChanges();
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -533,19 +554,15 @@ namespace Aephy.API.Controllers
             try
             {
                 List<Industries> industryList = _db.Industries.ToList();
-                if (industryList.Count > 0)
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Success",
-                        Result = industryList
-                    });
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Empty List" });
-                }
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = industryList
+                });
+
+
             }
             catch (Exception ex)
             {
@@ -712,7 +729,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var list = await _userManager.Users.ToListAsync();
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin").ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1115,20 +1132,6 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                //Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
-                //List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                //List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                //List<SolutionIndustryDetails> solutionIndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                //List<Industries> IndutrynameList = new List<Industries>();
-                //if (solutionindustry.Count > 0)
-                //{
-                //    foreach (var industryId in solutionindustry)
-                //    {
-                //        var industryName = _db.Industries.Where(x => x.Id == industryId.IndustryId).FirstOrDefault();
-                //        IndutrynameList.Add(industryName);
-                //    }
-                //}
-
                 SolutionIndustryDetails solutionIndustry = _db.SolutionIndustryDetails.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
                 var industries = _db.Industries.Where(x => x.Id == solutionIndustry.IndustryId).FirstOrDefault();
                 Solutions solution = _db.Solutions.Where(x => x.Id == solutionIndustry.SolutionId).FirstOrDefault();
@@ -1193,7 +1196,43 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-             
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+
+        [HttpPost]
+        [Route("UserUpdateIsDelete")]
+        public async Task<IActionResult> UserUpdateIsDelete([FromBody] UserIdModel model)
+        {
+            try
+            {
+                if(model.Id != null)
+                {
+                    var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
+                   
+                    if (userDetails != null)
+                    {
+                        userDetails.IsDeleted = true;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "User Deleted Succesfully!"
+                        });
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Something Went Wrong"
+                });
+            }
+
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });

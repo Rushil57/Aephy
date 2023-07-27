@@ -10,6 +10,10 @@ namespace Aephy.API.Models
             public int Id { get; set; }
             public string? ServiceName { get; set; }
             public bool Active { get; set; }
+
+            public bool IsActiveFreelancer { get; set; }
+
+            public bool IsActiveClient { get; set; }
         }
 
         public class IndustriesModel
@@ -17,6 +21,10 @@ namespace Aephy.API.Models
             public int Id { get; set; }
             public string IndustryName { get; set; }
             public bool isActive { get; set; }
+
+            public bool IsActiveFreelancer { get; set; }
+
+            public bool IsActiveClient { get; set; }
         }
         public class SolutionsModel
         {
@@ -136,11 +144,13 @@ namespace Aephy.API.Models
             public string? Description { get; set; }
 
             public string? ImageUpload { get; set; }
-            //public string? Image { get; set; }
-
-            //public string? ImageUrlWithSas { get; set; }
-
+            
             public string? ImagePath { get; set; }
+        }
+
+        public class UserIdModel
+        {
+            public string? Id { get; set; }
         }
     }
 }

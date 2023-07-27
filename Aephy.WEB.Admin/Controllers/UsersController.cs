@@ -1,4 +1,5 @@
-﻿using Aephy.WEB.Provider;
+﻿using Aephy.WEB.Admin.Models;
+using Aephy.WEB.Provider;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aephy.WEB.Admin.Controllers
@@ -25,6 +26,13 @@ namespace Aephy.WEB.Admin.Controllers
         public async Task<string> GetUsers()
         {
             var userList = await _apiRepository.MakeApiCallAsync("api/Admin/UserList", HttpMethod.Get);
+            return userList;
+        }
+
+        [HttpPost]
+        public async Task<string> UpdateUserIsDelete([FromBody] UserIdModel userId)
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/UserUpdateIsDelete", HttpMethod.Post,userId);
             return userList;
         }
 

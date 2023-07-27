@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Verification";
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center">
+    <div id="preloader" style="display:none;"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        @if (ViewBag.Active)
+                        {
+                            <img src="~/assets/img/Verification/success.jpg" width="500" />
+                            <div class="pt-4 pb-2">
+                                <p class="text-center text-success">Your account has been activated successfully.</p>
+                                <a asp-action="Login" asp-controller="Home" class="btn btn-brand w-100">Login</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="~/assets/img/Verification/fail.jpg" width="400" />
+                            <div class="pt-4 pb-2">
+                                <p class="text-center text-danger">Your account has been not activated try again and latter.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

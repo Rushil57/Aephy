@@ -202,25 +202,25 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
-        public async Task<string> VerifyAccount(string userId)
+        public async Task<IActionResult> VerifyAccount(string userId)
         {
+            ViewBag.Active = false;
             try
             {
-                if(userId != null)
+                if (userId != null)
                 {
                     var verifyData = await _apiRepository.MakeApiCallAsync("api/Authenticate/VerifyAccount", HttpMethod.Post, userId);
-                    return verifyData;
-                }
-                else
-                {
-                    return "UserId not valid";
-                }
+                    if(verifyData == "Successfully Activated")
+                    {
+                        ViewBag.Active = true;
+                    }
+                }                
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return "";
+            return View();
         }
 
     }

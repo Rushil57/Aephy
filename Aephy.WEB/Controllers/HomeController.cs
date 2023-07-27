@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using WebApplication7.Models;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 
 namespace Aephy.WEB.Controllers
@@ -118,8 +119,6 @@ namespace Aephy.WEB.Controllers
                     {
                         string userId = Convert.ToString(jsonObj["Result"]["Id"]);
                         string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/VerificationTemplate.html");
-                        //var id = data["Id"];
-                        //var id2 = Convert.ToString(data["Id"]);
                         string verifyUrl = _configuration.GetValue<string>("VerifyURL:Url").Replace("{{UserId}}", userId);
                         
                         body = body.Replace("{{ first_name }}", registerModel.FirstName);
@@ -210,7 +209,8 @@ namespace Aephy.WEB.Controllers
                 if (userId != null)
                 {
                     var verifyData = await _apiRepository.MakeApiCallAsync("api/Authenticate/VerifyAccount", HttpMethod.Post, userId);
-                    if(verifyData == "Successfully Activated")
+                    dynamic jsonObj = JsonConvert.DeserializeObject(verifyData);
+                    if(jsonObj["StatusCode"] == 200)
                     {
                         ViewBag.Active = true;
                     }

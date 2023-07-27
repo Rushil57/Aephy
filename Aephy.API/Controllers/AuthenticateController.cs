@@ -284,15 +284,23 @@ namespace Aephy.API.Controllers
             try
             {
                 var dbData = await _userManager.FindByIdAsync(userId);
-                dbData.IsActive = true;
-                var status = await _userManager.UpdateAsync(dbData);
-                if (status.Succeeded)
+                if (dbData != null)
                 {
-                    return Ok("Successfully Activated");
+
+                    dbData.IsActive = true;
+                    var status = await _userManager.UpdateAsync(dbData);
+                    if (status.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated" });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Verification Faild." });
+                    }
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Verification Faild." });
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Invalid User" });
                 }
             }
             catch (Exception ex)

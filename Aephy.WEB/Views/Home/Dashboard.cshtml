@@ -7,7 +7,7 @@
     ViewData["Fullname"] = Context.Session.GetString("FullName");
 }
 
-<main id="main" class="main">
+<main id="main" class="main cls-fixed-common">
 
     <div class="pagetitle">
         <h1>Dashboard</h1>
@@ -134,7 +134,7 @@
                     <div class="col-12">
                         <div class="card recent-sales overflow-auto">
 
-                            <div class="filter">
+                            <div class="filter" style="display: none;">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <li class="dropdown-header text-start">
@@ -148,16 +148,18 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                                <h5 class="card-title">Recent Opening</h5>
 
-                                <table class="table table-borderless datatable">
+                                <table class="table table-borderless datatable" id="table-OpenRoles">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Customer</th>
-                                            <th scope="col">Product</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Status</th>
+                                            <th scope ="col">Id</th>
+                                            <th scope="col">Service</th>
+                                            <th scope="col">Solution</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Level</th>
+                                            <th scope="col">Industry</th>
+                                            <th scope="col" class="cls-RolesId"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -234,41 +236,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="~/assets/img/product-1.jpg" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
-                                            <td>$64</td>
-                                            <td class="fw-bold">124</td>
-                                            <td>$5,828</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="~/assets/img/product-2.jpg" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
-                                            <td>$46</td>
-                                            <td class="fw-bold">98</td>
-                                            <td>$4,508</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="~/assets/img/product-3.jpg" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
-                                            <td>$59</td>
-                                            <td class="fw-bold">74</td>
-                                            <td>$4,366</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="~/assets/img/product-4.jpg" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
-                                            <td>$32</td>
-                                            <td class="fw-bold">63</td>
-                                            <td>$2,016</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="~/assets/img/product-5.jpg" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
-                                            <td>$79</td>
-                                            <td class="fw-bold">41</td>
-                                            <td>$3,239</td>
-                                        </tr>
                                     </tbody>
                                 </table>
 
@@ -412,5 +379,188 @@
 
         </div>
     </section>
-
+    <div id="preloader" style="display:none;"></div>
 </main><!-- End #main -->
+
+<div class="modal fade" id="GigOpeningApplyModal" tabindex="-1" aria-labelledby="GigOpeningApplyModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div id="preloader" style="display:none;"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Apply For Gig Role</h4>
+                <a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                @*<h5 class="card-title">Vertical Form</h5>*@
+
+                                <!-- Vertical Form -->
+                                <!-- Vertical Form -->
+                                <form class="row g-3 mt-3" name="GigOpeningApplyForm">
+                                    <input type="hidden" id="gigRole_id" value="0">
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Roles Description</label>
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="max-height:80px;min-height:34px;" disabled></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control" id="Description" name="Description" style="max-height:80px;min-height:34px;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="CVPath" class="form-label">Upload CV</label>
+                                        <div class="col-12 d-flex">
+                                            <div class="input-group">
+                                                <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button class="btn btn-secondary" onclick="clearApplyForm();">Reset</button>
+                                    </div>
+                                </form><!-- Vertical Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("form[name='GigOpeningApplyForm']").validate({
+            rules: {
+                Description: { required: true },
+                CVPath: { required: true }
+            },
+            messages: {
+                Description: { required: "Please enter Description" },
+                CVPath: { required: "Please Upload your CV" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                GigOpenRolesApply()
+            }
+        });
+    });
+    $(document).ready(function () {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetRolesList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                for (index = 0; index < result.Result.length; index++) {
+                    subObj = result.Result[index];
+
+                    htm += '<tr>';
+                    htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
+                    htm += '<td>' + subObj.ServiceName + '</td>';
+                    htm += '<td>' + subObj.SolutionName + '</td>';
+                    htm += '<td>' + subObj.Title + '</td>';
+                    htm += '<td>' + subObj.Level + '</td>';
+                    htm += '<td>' + subObj.IndustryName + '</td>';
+                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ',' + "'" + subObj.Description + "'" + ')">Apply</a></td>';
+                    htm += '</tr>';
+                }
+                $("#table-OpenRoles").find("tr:gt(0)").remove();
+                $("#table-OpenRoles tbody").append(htm);
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+                $("#preloader").hide();
+            }
+        });
+    });
+
+    function CloseGigOpeningApplyModal() {
+        $("#GigOpeningApplyModal").modal('hide')
+    }
+    function OpenGigOpeningApplyModal() {
+        $("#GigOpeningApplyModal").modal('show')
+    }
+    function clearApplyForm() {
+        $("#Description").val("");
+        $("#CVPath").val("");
+    }
+
+    function GigOpenRolesApply() {
+
+        var filename = $("#CVPath").val();
+        var validFileExtentions = /(\.pdf|\.docx)$/i;
+        if (validFileExtentions.exec(filename)) {
+            $('#preloader').show();
+            var fileUpload = $("#CVPath").get(0);
+            var files = fileUpload.files;
+
+            var GigOpenRolesData = {
+                FreelancerID: 0,
+                GigOpenRoleId: $("#gigRole_id").val(),
+                IsApproved: false,
+                Description: $("#Description").val(),
+            }
+
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                // fileData.append(files[i].name, files[i]);
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ApplyForOpenGigRoles", "Home")",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    clearApplyForm();
+                    $('#preloader').hide();
+                    alert(result)
+                    CloseGigOpeningApplyModal();
+                },
+                error: function (result) {
+                    clearApplyForm();
+                    $('#preloader').hide();
+                    alert("failure");
+                }
+            });
+        } else {
+            alert('You can upload only PDF or Document file..')
+            clearApplyForm();
+        }
+    }
+    // code to read selected table row cell data (values).
+    function GigApply(ID, Description) {
+        OpenGigOpeningApplyModal();
+        $("#gigRole_id").val(ID);
+        if (Description == 'null')
+            Description = '';
+        $("#RoleDescription").val(Description);
+    }
+
+</script>

@@ -103,7 +103,7 @@
 
                                 <div class="FreelancerFields" style="display:none;">
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4 label">Hourly Rate</div>
+                                        <div class="col-lg-3 col-md-4 label">Hourly Rate Per Day ($)</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="HourlyRate" type="text" class="form-control hourlyRate" readonly>
                                         </div>
@@ -201,9 +201,9 @@
 
                                     <div class="FreelancerFields" style="display:none;">
                                         <div class="row mb-3">
-                                            <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate</label>
+                                            <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate Per Day ($)</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="HourlyRate" type="text" class="form-control hourlyRate" id="HourlyRate" />
+                                                <input name="HourlyRate" type="number" class="form-control hourlyRate" id="HourlyRate" />
                                             </div>
                                         </div>
 
@@ -231,7 +231,7 @@
                                         <div class="row mb-3">
                                             <label for="Level" class="col-md-4 col-lg-3 col-form-label">Freelancer Level</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <select class="form-select drp-freelancer-level" aria-label="Default select example" name="level" disabled="true">
+                                                <select class="form-select drp-freelancer-level" aria-label="Default select example" name="level" id="level" disabled="true">
                                                     <option value="">Select Level</option>
                                                     <option value="Experts">Experts</option>
                                                     <option value="Associate">Associate</option>
@@ -311,7 +311,7 @@
                 role: { required: "Select valid role" },
             },
             submitHandler: function (form) {
-                UpdateUserData()
+                validateManually();
             }
         });
 
@@ -370,6 +370,24 @@
                 alert("Something Went Wrong!");
             }
         });
+    }
+
+    function validateManually() {
+        var hourlyRate = $("#HourlyRate").val();
+        var level = $("#level").val();
+        if (hourlyRate != null && level != null) {
+            if (level == "Experts") {
+                hourlyRate < 40 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 40 + '.');
+            } else if (level == "Associate" && hourlyRate < 20) {
+                hourlyRate < 20 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 20 + '.');
+            } else if (level == "Project Manager" && hourlyRate < 80) {
+                hourlyRate < 80 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 80 + '.');
+            } else if (level == "Project Leader") {
+                UpdateUserData();
+            } else {
+                alert('invalid insertion..')
+            }
+        }
     }
 
     function UpdateUserData() {

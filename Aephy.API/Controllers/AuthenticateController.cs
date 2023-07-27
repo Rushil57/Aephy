@@ -64,18 +64,26 @@ namespace Aephy.API.Controllers
                 {
                     if (await _userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        //Code for check user are active or not
+                        if (user.IsActive)
                         {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Login Success",
-                            Result = new
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
-                                UserId = user.Id,
-                                FirstName = user.FirstName,
-                                LastName = user.LastName,
-                                Role = user.UserType
-                            }
-                        });
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Login Success",
+                                Result = new
+                                {
+                                    UserId = user.Id,
+                                    FirstName = user.FirstName,
+                                    LastName = user.LastName,
+                                    Role = user.UserType
+                                }
+                            });
+                        }
+                        else
+                        {
+                            strError = "Your account not active please active once";
+                        }
                     }
                     else
                     {
@@ -90,7 +98,7 @@ namespace Aephy.API.Controllers
             }
             catch (Exception ex)
             {
-               return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong" });
             }
         }
 
@@ -139,13 +147,13 @@ namespace Aephy.API.Controllers
                     var getUserDetail = await _userManager.FindByEmailAsync(model.Email);
                     if (getUserDetail != null)
                     {
-                        if(getUserDetail.UserType == "Client")
+                        if (getUserDetail.UserType == "Client")
                         {
                             ClientDetails client = new()
                             {
                                 UserId = getUserDetail.Id.ToString()
                             };
-                           _db.ClientDetails.Add(client);
+                            _db.ClientDetails.Add(client);
                             _db.SaveChanges();
                         }
                         else
@@ -158,15 +166,15 @@ namespace Aephy.API.Controllers
                             _db.FreelancerDetails.Add(freelancer);
                             _db.SaveChanges();
                         }
-                        
+
                     }
-                    
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User created successfully" });
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User created successfully", Result = getUserDetail });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message +"  ||  " +ex.StackTrace });
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + "  ||  " + ex.StackTrace });
             }
         }
 
@@ -185,7 +193,7 @@ namespace Aephy.API.Controllers
             return token;
         }
 
-        
+
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
@@ -267,6 +275,30 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
 
+        }
+
+        [HttpPost]
+        [Route("VerifyAccount")]
+        public async Task<IActionResult> VerifyAccount([FromBody] string userId)
+        {
+            try
+            {
+                var dbData = await _userManager.FindByIdAsync(userId);
+                dbData.IsActive = true;
+                var status = await _userManager.UpdateAsync(dbData);
+                if (status.Succeeded)
+                {
+                    return Ok("Successfully Activated");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Verification Faild." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
+            }
         }
     }
 }

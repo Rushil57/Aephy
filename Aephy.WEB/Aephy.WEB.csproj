@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\EmailTemplates\congratulation.html" />
+    <Content Remove="wwwroot\EmailTemplates\VerificationTemplate.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\EmailTemplates\congratulation.html" />
+    <None Include="wwwroot\EmailTemplates\VerificationTemplate.html" />
   </ItemGroup>
 
   <ItemGroup>

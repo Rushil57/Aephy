@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Aephy.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace Aephy.API.Migrations
                     FCMToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Device = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -101,6 +102,7 @@ namespace Aephy.API.Migrations
                     SolutionId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -168,6 +170,24 @@ namespace Aephy.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SolutionIndustry", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SolutionIndustryDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolutionId = table.Column<int>(type: "int", nullable: false),
+                    IndustryId = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BlobStorageBaseUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrlWithSas = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SolutionIndustryDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -387,6 +407,9 @@ namespace Aephy.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "SolutionIndustry");
+
+            migrationBuilder.DropTable(
+                name: "SolutionIndustryDetails");
 
             migrationBuilder.DropTable(
                 name: "Solutions");

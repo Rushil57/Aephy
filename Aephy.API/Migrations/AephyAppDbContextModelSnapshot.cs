@@ -53,6 +53,9 @@ namespace Aephy.API.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -168,32 +171,32 @@ namespace Aephy.API.Migrations
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.GigOpenRoles", b =>
-            {
-                b.Property<int>("ID")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                b.Property<DateTime>("CreatedDateTime")
-                    .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
-                b.Property<string>("Description")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("Level")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Level")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<int>("SolutionId")
-                    .HasColumnType("int");
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
 
-                b.Property<string>("Title")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
-                b.HasKey("ID");
+                    b.HasKey("ID");
 
-                b.ToTable("GigOpenRoles");
-            });
+                    b.ToTable("GigOpenRoles");
+                });
 
             modelBuilder.Entity("Aephy.API.DBHelper.Industries", b =>
                 {
@@ -245,8 +248,6 @@ namespace Aephy.API.Migrations
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
-
-                    
 
                     b.HasKey("ID");
 

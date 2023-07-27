@@ -20,10 +20,13 @@ namespace Aephy.WEB.Controllers
 
         private readonly IApiRepository _apiRepository;
         private readonly string _rootPath;
-        public HomeController(IApiRepository apiRepository, IWebHostEnvironment hostEnvironment)
+        private readonly IConfiguration _configuration;
+
+        public HomeController(IApiRepository apiRepository, IWebHostEnvironment hostEnvironment, IConfiguration configuration)
         {
             _apiRepository = apiRepository;
             _rootPath = hostEnvironment.WebRootPath;
+            _configuration = configuration;
         }
         public IActionResult Dashboard()
         {
@@ -113,16 +116,14 @@ namespace Aephy.WEB.Controllers
 
                     if (jsonObj["StatusCode"] == 200)
                     {
-                        string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/congratulation.html");
-                        body = body.Replace("##UserName##", registerModel.FirstName);
-                        if (registerModel.UserType == "Client")
-                        {
-                            body = body.Replace("##UserInformation##", "<h4><b>UserType : </b> Client </h4>");
-                        }
-                        else
-                        {
-                            body = body.Replace("##UserInformation##", "<h4><b>UserType : </b> Freelancer </h4> <h4><b>Lavel : </b> " + registerModel.FreelancerLevel + " </h4>");
-                        }
+                        string userId = Convert.ToString(jsonObj["Result"]["Id"]);
+                        string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/VerificationTemplate.html");
+                        //var id = data["Id"];
+                        //var id2 = Convert.ToString(data["Id"]);
+                        string verifyUrl = _configuration.GetValue<string>("VerifyURL:Url").Replace("{{UserId}}", userId);
+                        
+                        body = body.Replace("{{ first_name }}", registerModel.FirstName);
+                        body = body.Replace("{{ url }}", verifyUrl);
 
                         bool send = SendEmailHelper.SendEmail(registerModel.Email, "Welcome to Ephey", body);
 
@@ -200,5 +201,27 @@ namespace Aephy.WEB.Controllers
             }
             return "";
         }
+
+        public async Task<string> VerifyAccount(string userId)
+        {
+            try
+            {
+                if(userId != null)
+                {
+                    var verifyData = await _apiRepository.MakeApiCallAsync("api/Authenticate/VerifyAccount", HttpMethod.Post, userId);
+                    return verifyData;
+                }
+                else
+                {
+                    return "UserId not valid";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return "";
+        }
+
     }
 }

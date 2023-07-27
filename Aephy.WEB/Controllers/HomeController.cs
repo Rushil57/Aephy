@@ -218,7 +218,8 @@ namespace Aephy.WEB.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                //throw ex;
+                ViewBag.Active = false;
             }
             return View();
         }

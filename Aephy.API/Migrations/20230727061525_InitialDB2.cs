@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Aephy.API.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialDB2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

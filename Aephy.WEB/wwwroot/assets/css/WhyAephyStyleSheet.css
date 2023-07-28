@@ -652,6 +652,11 @@ h6 {
 }
 
 @media only screen and (max-width: 420px) and (min-width: 360px) {
+
+    .cls-whyAephy-carousel {
+        pointer-events: auto !important;
+    }
+
     .carousel-control-prev-icon {
         left: -17px;
     }
@@ -662,6 +667,11 @@ h6 {
 }
 
 @media only screen and (max-width: 530px) and (min-width: 420px) {
+
+    .cls-whyAephy-carousel {
+        pointer-events: auto !important;
+    }
+
     .carousel-control-prev-icon {
         left: -27px;
     }
@@ -672,6 +682,10 @@ h6 {
 }
 
 @media only screen and (max-width: 768px) and (min-width: 530px) {
+    .cls-whyAephy-carousel {
+        pointer-events: auto !important;
+    }
+
     .carousel-control-prev-icon {
         left: -37px;
     }
@@ -682,6 +696,11 @@ h6 {
 }
 
 @media only screen and (max-width: 768px) {
+
+    .cls-whyAephy-carousel {
+        pointer-events: auto !important;
+    }
+
     .carousel-control-prev-icon, .carousel-control-next-icon {
         font-size: 12px !important;
         width: 25px;
@@ -791,5 +810,14 @@ h6 {
 @media only screen and (min-device-width:540px) and (max-device-width: 540px) {
     .whyAephy-mobile-img {
         height: 40vh !important;
+    }
+}
+
+
+
+
+@media only screen and (min-width: 770px) {
+    .cls-whyAephy-carousel {
+        pointer-events: none !important;
     }
 }

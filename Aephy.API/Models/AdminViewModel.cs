@@ -144,13 +144,31 @@ namespace Aephy.API.Models
             public string? Description { get; set; }
 
             public string? ImageUpload { get; set; }
-            
+
             public string? ImagePath { get; set; }
         }
 
         public class UserIdModel
         {
             public string? Id { get; set; }
+        }
+
+        public class UserViewModel
+        {
+            public string? Id { get; set; }
+
+            public string? FirstName { get; set; }
+
+            public string? LastName { get; set; }
+
+            public string? EmailAddress { get; set; }
+
+            public string? UserRole { get; set; }
+
+            public string? FreelancerLevel { get; set; }
+
+
+
         }
     }
 }

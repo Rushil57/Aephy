@@ -842,7 +842,8 @@ namespace Aephy.API.Controllers
                             SolutionId = model.SolutionId,
                             Title = model.Title,
                             Level = model.Level,
-                            Description = model.Description
+                            Description = model.Description,
+                            IndustryId = model.IndustryId
                         };
                         _db.GigOpenRoles.Add(roles);
                         _db.SaveChanges();
@@ -868,6 +869,7 @@ namespace Aephy.API.Controllers
                             openRolesdata.Title = model.Title;
                             openRolesdata.Level = model.Level;
                             openRolesdata.Description = model.Description;
+                            openRolesdata.IndustryId = model.IndustryId;
                             _db.SaveChanges();
                         }
 

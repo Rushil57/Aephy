@@ -49,8 +49,23 @@
                                         <div class="col-12">
                                             <label for="Solutions" class="form-label">Solution</label>
                                             <div class="input-group" id="Solutions">
-                                                <select data-placeholder="Choose tags ..." id="drp-Solutions" name="drpSolutions" class="form-control dropdown">
+                                                <select data-placeholder="Choose tags ..." id="drp-Solutions" name="drpSolutions" class="form-control dropdown" onchange="GetSolutionDataById();">
                                                     <option value="">Choose Solutions</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12" id="Service">
+                                            <label for="Services" class="form-label">Services</label>
+                                            <div class="input-group" id="services">
+                                                <select data-placeholder="Choose tags ..." name="SolutionServices" id="drp-services" class="form-control" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" id="Industry">
+                                            <label for="Industries" class="form-label">Industries</label>
+                                            <div class="input-group" id="industries">
+                                                <select data-placeholder="Choose tags ..." name="Industries" id="drp-industries" class="form-control">
                                                 </select>
                                             </div>
                                         </div>
@@ -134,6 +149,7 @@
         var GigRolesData = {
             ID: id,
             SolutionId: $("#drp-Solutions").val(),
+            IndustryId: $('#drp-industries').val(),
             Title: $("#Title").val(),
             Level: $("#drp-Level").val(),
             Description: $("#RoleDescription").val()
@@ -167,6 +183,9 @@
         $('#drp-Solutions').val("").trigger('chosen:updated');
         $("#drp-Level").val("").trigger('chosen:updated');
         $(".modal-title").html("Add Roles");
+        $('#RoleDescription').val("");
+        $('#drp-services').val("").trigger('chosen:updated');
+        $("#drp-industries").val("").trigger('chosen:updated');
     }
 
     function GetRolesList() {
@@ -183,9 +202,11 @@
                     "columns": [
                         {
                             "data": "ID",
-                            "className": "cls-RolesId"
+                            "render": function (data, type, row) {
+                                return '<a class="cls-RolesId" onclick=GetDataById(' + data + ')>' + data + '</a>';
+                            }
                         },
-                        { "data": "SolutionId" },
+                        { "data": "SolutionName" },
                         { "data": "Title" },
                         { "data": "Level" },
                         { "data": "Description" },
@@ -207,8 +228,6 @@
             }
         });
     }
-
-
 
     function DeleteSolution(Id) {
 
@@ -241,6 +260,8 @@
         $("#addRolesModal").modal('hide')
     }
     function OpenAddRolesModalPopup() {
+        $('#Service').css("display", "none");
+        $('#Industry').css("display", "none");
         $("#addRolesModal").modal('show')
     }
 
@@ -262,12 +283,11 @@
         });
     }
 
-    $('#gigRolesList').on('click', '.cls-RolesId', function () {
-        var RolesId = $(this).closest('tr').find('td:eq(0)').text();
-        rolesId = parseInt(RolesId)
+    function GetDataById(Id) {
+        if (Id != 0) {
 
         var RolesData = {
-            ID: rolesId,
+                ID: Id,
         };
         $.ajax({
             type: "POST",
@@ -283,13 +303,54 @@
                     $('#drp-Solutions').val(result.Result.SolutionId).trigger('chosen:updated');
                     $("#Title").val(result.Result.Title)
                     $('#drp-Level').val(result.Result.Level).trigger('chosen:updated');
+                    $('#RoleDescription').val(result.Result.Description);
+                }
+                    $('#Service').css("display", "block");
+                    $('#Industry').css("display", "block");
+                    GetSolutionDataById();
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+        }
+    }
+    function GetSolutionDataById() {
+
+        $('#Service').css("display", "block");
+        $('#Industry').css("display", "block");
+
+        var SolutionId = $('#drp-Solutions').val();
+        var ID = parseInt(SolutionId);
+        var SolutionData = {
+            Id: ID,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutiondataById", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(SolutionData),
+            success: function (result) {
+                if (result != null) {
+                    var span = document.createElement('span');
+                    var industryvalues = new Array();
+                    var servicesvalues = new Array();
+
+                    $.each(result.Result.IndustryResult, function (index, value) {
+                        industryvalues.push(value.IndustryId)
+                    });
+
+                    $.each(result.Result.ServiceResult, function (index, value) {
+                        servicesvalues.push(value.ServicesId)
+                    });
+                    $('#drp-services').val(servicesvalues).trigger('chosen:updated');
+                    $('#drp-industries').val(industryvalues).trigger('chosen:updated');
                 }
             },
             error: function (result) {
                 alert("Error occured..");
             }
         });
-    });
-
-
+    }
 </script>

@@ -121,7 +121,6 @@ namespace Aephy.WEB.Admin.Controllers
             var rolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
             return rolesList;
         }
-
     }
 }
 

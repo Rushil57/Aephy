@@ -37,6 +37,8 @@ namespace Aephy.API.DBHelper
 
         public string? Description { get; set; }
 
+        public int IndustryId { get; set; }
+
         public DateTime CreatedDateTime { get; set; }
 	}
 	public class GigOpenRolesModel

@@ -51,7 +51,7 @@
                                             <label for="Solutions" class="form-label">Solution</label>
                                             <div class="input-group" id="Solutions">
                                                 <select data-placeholder="Choose tags ..." id="drp-Solutions" name="drpSolutions" class="form-control dropdown" onchange="GetSolutionDataById();">
-                                                    <option value="">Choose Solutions</option>
+                                                    <option value="0">Choose Solutions</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -355,7 +355,8 @@
 
         $('#Service').css("display", "block");
         $('#Industry').css("display", "block");
-        $('#drp-industries').empty()
+        $('#drp-industries').empty();
+        $('#txt-services').val("");
         var SolutionId = $('#drp-Solutions').val();
         var ID = parseInt(SolutionId);
         var SolutionData = {

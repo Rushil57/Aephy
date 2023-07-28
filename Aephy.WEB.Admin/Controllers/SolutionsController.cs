@@ -158,6 +158,13 @@ namespace Aephy.WEB.Admin.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<string> GetFreelancers()
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/freelancersList", HttpMethod.Get);
+            return userList;
+        }
+
         [HttpPost]
         public async Task<string> GetSolutiondataById([FromBody] SolutionIdModel solutionsModel)
         {

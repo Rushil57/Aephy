@@ -766,6 +766,48 @@ namespace Aephy.API.Controllers
         }
 
         [HttpGet]
+        [Route("freelancersList")]
+        public async Task<IActionResult> freelancersList()
+        {
+            try
+            {
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
+                List<UserViewModel> users = new List<UserViewModel>();
+                if (list.Count > 0)
+                {
+                    foreach (var data in list)
+                    {
+                        UserViewModel userdataStore = new UserViewModel();
+                        userdataStore.Id = data.Id;
+                        userdataStore.FirstName = data.FirstName;
+                        userdataStore.LastName = data.LastName;
+                        userdataStore.UserRole = data.UserType;
+                        userdataStore.EmailAddress = data.UserName;
+                        userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id && x.FreelancerLevel == "Project Manager/Project Architecture").Select(x => x.FreelancerLevel).FirstOrDefault();
+                        users.Add(userdataStore);
+                    }
+
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = users
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpGet]
         [Route("RolesList")]
         public async Task<IActionResult> RolesList()
         {
@@ -1188,7 +1230,8 @@ namespace Aephy.API.Controllers
                     {
                         SolutionId = model.SolutionId,
                         IndustryId = model.IndustryId,
-                        Description = model.Description
+                        Description = model.Description,
+                        AssignedFreelancerId = model.AssignedFreelancerId
                     };
                     _db.SolutionIndustryDetails.Add(solution);
                     _db.SaveChanges();
@@ -1205,6 +1248,7 @@ namespace Aephy.API.Controllers
                     if (data != null)
                     {
                         data.Description = model.Description;
+                        data.AssignedFreelancerId = model.AssignedFreelancerId;
                         _db.SaveChanges();
                     }
 

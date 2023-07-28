@@ -13,6 +13,8 @@ namespace Aephy.API.DBHelper
 
         public int IndustryId { get; set; }
 
+        public string? AssignedFreelancerId { get; set; }
+
         public string? ImagePath { get; set; }
 
         public string? BlobStorageBaseUrl { get; set; }

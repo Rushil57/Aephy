@@ -63,7 +63,7 @@ namespace Aephy.WEB.Admin.Controllers
         [HttpGet]
         public async Task<string> GetSolutionsList()
         {
-            var solutionList = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionList", HttpMethod.Get);
             return solutionList;
         }
 

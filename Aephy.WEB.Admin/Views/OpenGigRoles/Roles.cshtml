@@ -16,7 +16,8 @@
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
-                                <th scope="col">SolutionId</th>
+                                <th scope="col">Solution</th>
+                                <th scope="col">Industry</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Level</th>
                                 <th scope="col">Description</th>
@@ -58,8 +59,7 @@
                                         <div class="col-12" id="Service">
                                             <label for="Services" class="form-label">Services</label>
                                             <div class="input-group" id="services">
-                                                <select data-placeholder="Choose tags ..." name="SolutionServices" id="drp-services" class="form-control" disabled>
-                                                </select>
+                                                <input type="text" readonly id="txt-services" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="col-12" id="Industry">
@@ -110,11 +110,14 @@
     </div>
 </main>
 <script>
+    var allIndustries = [];
+    var allServices = [];
     $(function () {
         GetRolesList()
         $(".chosen-select").chosen();
         BindSolutions();
-
+        GetIndustriesList();
+        GetServiceList();
         //OpenGigRoles
         $("form[name='addRolesForm']").validate({
             rules: {
@@ -140,7 +143,37 @@
             }
         });
     });
+    function GetIndustriesList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetIndustries", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                allIndustries = result.Result;
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+    }
 
+        function GetServiceList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServices", "Lookup")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                allServices = result.Result;
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+    }
     function addRoles() {
         var id = $("#ID").val();
         if (id == null){
@@ -184,7 +217,7 @@
         $("#drp-Level").val("").trigger('chosen:updated');
         $(".modal-title").html("Add Roles");
         $('#RoleDescription').val("");
-        $('#drp-services').val("").trigger('chosen:updated');
+        $('#txt-services').val("");
         $("#drp-industries").val("").trigger('chosen:updated');
     }
 
@@ -207,6 +240,7 @@
                             }
                         },
                         { "data": "SolutionName" },
+                        { "data": "IndustryName" },
                         { "data": "Title" },
                         { "data": "Level" },
                         { "data": "Description" },
@@ -304,10 +338,12 @@
                     $("#Title").val(result.Result.Title)
                     $('#drp-Level').val(result.Result.Level).trigger('chosen:updated');
                     $('#RoleDescription').val(result.Result.Description);
+                        GetSolutionDataById();
+                    $('#drp-industries').val(result.Result.IndustryId).trigger('chosen:updated');
                 }
                     $('#Service').css("display", "block");
                     $('#Industry').css("display", "block");
-                    GetSolutionDataById();
+                    
             },
             error: function (result) {
                 alert("Error occured..");
@@ -319,7 +355,7 @@
 
         $('#Service').css("display", "block");
         $('#Industry').css("display", "block");
-
+        $('#drp-industries').empty()
         var SolutionId = $('#drp-Solutions').val();
         var ID = parseInt(SolutionId);
         var SolutionData = {
@@ -327,25 +363,29 @@
         };
         $.ajax({
             type: "POST",
+            async:false,
             url: "@Url.Action("GetSolutiondataById", "OpenGigRoles")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(SolutionData),
             success: function (result) {
                 if (result != null) {
-                    var span = document.createElement('span');
-                    var industryvalues = new Array();
-                    var servicesvalues = new Array();
-
-                    $.each(result.Result.IndustryResult, function (index, value) {
-                        industryvalues.push(value.IndustryId)
-                    });
-
-                    $.each(result.Result.ServiceResult, function (index, value) {
-                        servicesvalues.push(value.ServicesId)
-                    });
-                    $('#drp-services').val(servicesvalues).trigger('chosen:updated');
-                    $('#drp-industries').val(industryvalues).trigger('chosen:updated');
+                    
+                    if(result.Result.ServiceResult.length > 0){
+                        var serName = allServices.filter(x => x.Id == result.Result.ServiceResult[0].ServicesId)[0].ServicesName;
+                        if(serName != undefined){
+                            $('#txt-services').val(serName);
+                        }
+                    }
+                    if (result.Result.IndustryResult.length > 0) {
+                        for(var j =0; j<result.Result.IndustryResult.length;j++){
+                            var industry = allIndustries.filter(x => x.Id == result.Result.IndustryResult[j].IndustryId)[0];
+                            if (industry != undefined) {
+                                $('#drp-industries').append("<option value='" + industry.Id+ "'>"+industry.IndustryName+"</option>");
+                            }
+                        }
+                    }
+                    //$('#drp-industries').val(industryvalues).trigger('chosen:updated');
                 }
             },
             error: function (result) {

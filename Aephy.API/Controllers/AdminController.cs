@@ -414,29 +414,29 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("GetSolutionList")]
-        //public async Task<IActionResult> GetSolutionList()
-        //{
-        //    try
-        //    {
-        //        var list = _db.Solutions.ToList();
-        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-        //        {
-        //            StatusCode = StatusCodes.Status403Forbidden,
-        //            Message = "Success",
-        //            Result = list
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
-        //        {
-        //            StatusCode = StatusCodes.Status403Forbidden,
-        //            Message = ex.Message + ex.InnerException
-        //        });
-        //    }
-        //}
+        [HttpGet]
+        [Route("GetSolutionList")]
+        public async Task<IActionResult> GetSolutionList()
+        {
+            try
+            {
+                var list = _db.Solutions.ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
 
 
         [HttpPost]

@@ -134,6 +134,10 @@ namespace Aephy.API.Models
             public string? Description { get; set; }
 
             public DateTime CreatedDateTime { get; set; }
+
+            public string? Name { get; set; }
+
+            public string? ApproveOrReject { get; set; }
         }
 
         public class SolutionDescribeModel

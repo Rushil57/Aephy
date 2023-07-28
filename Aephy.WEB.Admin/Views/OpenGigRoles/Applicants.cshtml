@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "- Application List";
+}
+
+<main id="main" class="main">
+    <div class="row">
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">Application List</h5>
+                    <table class="table table-borderless datatable" id="ApplicationList">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Freelancer Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal" id="applicantsDetailsModal" tabindex="-1" aria-labelledby="applicantsDetailsModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Applicants Details</h4>
+                    <a class="close" onclick="CloseApplicationPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+
+
+                                    <input type="hidden" id="ApplicantsID" value="0">
+
+                                    <div class="col-12">
+                                        <label for="name" class="form-label">Name</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="freelancerName" name="name">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="name" class="form-label">Description</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="description">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="name" class="form-label">Resume</label>
+                                        <div class="input-group">
+                                            <iframe src='' id="resume">This is an embedded </iframe>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-primary" id="Approve" onclick="ApproveOrReject(this.id)">Approve</button>
+                                        <button type="button" class="btn btn-danger" id="Reject" onclick="ApproveOrReject(this.id)">Reject</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="CloseApplicationPopup();">cancel</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    $(function () {
+        GetApplicationDetails()
+    })
+
+    function GetApplicationDetails() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetApplicationList", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#ApplicationList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "render": function (data, type, row) {
+                                return '<a class="cls-RolesId" onclick=GetDataById(' + data + ')>' + data + '</a>';
+                            }
+                        },
+                        { "data": "Name" },
+                        { "data": "Description" },
+                        { "data": "CreatedDateTime" }
+
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function GetDataById(Id) {
+        var Data = {
+            ID: Id,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetApplicantsdataById", "OpenGigRoles")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                if (result.Result != null) {
+                    $("#applicantsDetailsModal").modal('show')
+                    var data = result.Result;
+                    $("#ApplicantsID").val(data.OpenGigRoles.ID)
+                    $("#freelancerName").val(data.FreelancerName)
+                    $("#description").val(data.OpenGigRoles.Description)
+                    $('#resume').attr('src', data.OpenGigRoles.CVUrlWithSas)
+
+                    //ApplicantsID
+                }
+
+            },
+            error: function (result) {
+                alert("Error occured..");
+            }
+        });
+
+    }
+
+    function CloseApplicationPopup() {
+        $("#ApplicantsID").val(0)
+        $("#freelancerName").val("")
+        $("#description").val("")
+        $("#applicantsDetailsModal").modal('hide')
+    }
+
+    function ApproveOrReject(value) {
+        if(value != null){
+            var data = {
+                ID: $("#ApplicantsID").val(),
+                ApproveOrReject: value,
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ApproveOrRejectFreelancer", "OpenGigRoles")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                   alert(result.Message)
+                    CloseApplicationPopup()
+
+                },  
+                error: function (result) {
+                    alert("Error occured..");
+                }
+            });
+        }
+
+    }
+</script>

@@ -20,11 +20,14 @@ namespace Aephy.WEB.Admin.Controllers
         private readonly IApiRepository _apiRepository;
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
+        
+        private const string ContainerName = "cvfiles";
 
         public OpenGigRolesController(IConfiguration configuration, IApiRepository apiRepository)
         {
             _apiRepository = apiRepository;
             _configuration = configuration;
+            _connectionString = configuration.GetConnectionString("AzureBlobStorage");
             _connectionString = "DefaultEndpointsProtocol=https;AccountName=aephystorageaccount;AccountKey=nEy6xh4P4m2d94iDgqq+yNB99bucjGMD1wp2L6sbsNFjHPaUQiCHgc5b4hmBmeRtYsiA/WvudVmV+AStwz3djw==;EndpointSuffix=core.windows.net";
         }
         public IActionResult Index()
@@ -36,6 +39,12 @@ namespace Aephy.WEB.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult Applicants()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<string> AddorEditRoles([FromBody]GigOpenRolesModel model)
         {
@@ -120,6 +129,119 @@ namespace Aephy.WEB.Admin.Controllers
         {
             var rolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
             return rolesList;
+        }
+
+
+        [HttpGet]
+        public async Task<string> GetApplicationList()
+        {
+            var applicationList = await _apiRepository.MakeApiCallAsync("api/Admin/GetApplicationList", HttpMethod.Get);
+            return applicationList;
+        }
+
+        [HttpPost]
+        public async Task<string> GetApplicantsdataById([FromBody] GigOpenRolesModel solutionsModel)
+        {
+            var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/GetApplicantsdataById", HttpMethod.Post, solutionsModel);
+            if(applicationdata  != "")
+            {
+                dynamic data = JsonConvert.DeserializeObject(applicationdata);
+                try
+                {
+                    if (data["StatusCode"] == 200)
+                    {
+                        string imagepath = data.Result.OpenGigRoles.CVUrlWithSas;
+                        string sasToken = GenerateSasToken(imagepath);
+                        var imageUrlWithSas = $"{data.Result.OpenGigRoles.CVUrlWithSas}?{sasToken}";
+                        data.Result.OpenGigRoles.CVUrlWithSas = imageUrlWithSas;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+
+                string convertjsonTostring = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return convertjsonTostring;
+            }
+            return applicationdata;
+        }
+
+        private string GenerateSasToken(string imageUrl)
+        {
+            // Get the blob container name and blob name from the image URL
+            string blobName = Path.GetFileName(imageUrl);
+
+            // Create a shared access policy that allows read access to the blob
+            BlobSasBuilder sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = ContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTime.UtcNow.AddMinutes(-5), // Adjust the start time if needed
+                ExpiresOn = DateTime.UtcNow.AddMinutes(10), // Adjust the expiry time if needed,
+                Protocol = SasProtocol.Https
+            };
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            // Get the Azure Blob Storage connection string from configuration
+            var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+            // Extract the AccountName and AccountKey from the connection string
+            var accountName = GetAccountNameFromConnectionString(connectionString);
+            var accountKey = GetAccountKeyFromConnectionString(connectionString);
+
+            // Create a StorageSharedKeyCredential using the AccountName and AccountKey
+            StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
+
+            // Generate the SAS token
+            string sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
+
+            return sasToken;
+        }
+
+        private string GetAccountNameFromConnectionString(string connectionString)
+        {
+            try
+            {
+                var accountNameStartIndex = connectionString.IndexOf("AccountName=", StringComparison.InvariantCultureIgnoreCase) + "AccountName=".Length;
+                var accountNameEndIndex = connectionString.IndexOf(";", accountNameStartIndex, StringComparison.InvariantCultureIgnoreCase);
+                var accountNameLength = accountNameEndIndex - accountNameStartIndex;
+                return connectionString.Substring(accountNameStartIndex, accountNameLength);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+            return "";
+        }
+
+        private string GetAccountKeyFromConnectionString(string connectionString)
+        {
+            try
+            {
+                var accountKeyStartIndex = connectionString.IndexOf("AccountKey=", StringComparison.InvariantCultureIgnoreCase) + "AccountKey=".Length;
+                var accountKeyEndIndex = connectionString.IndexOf(";", accountKeyStartIndex, StringComparison.InvariantCultureIgnoreCase);
+                var accountKeyLength = accountKeyEndIndex - accountKeyStartIndex;
+                return connectionString.Substring(accountKeyStartIndex, accountKeyLength);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+            return "";
+        }
+
+      
+        [HttpPost]
+        public async Task<string> ApproveOrRejectFreelancer([FromBody] GigOpenRolesModel solutionsModel)
+        {
+            var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/ApproveOrRejectFreelancer", HttpMethod.Post, solutionsModel);
+            return applicationdata;
         }
     }
 }

@@ -22,7 +22,9 @@ namespace Aephy.API.DBHelper
 		public string? BlobStorageBaseUrl { get; set; }
 		public string? CVUrlWithSas { get; set; }
 
-	}
+        public bool IsRejected { get; set; }
+
+    }
     public class GigOpenRoles
     {
 		[Key]

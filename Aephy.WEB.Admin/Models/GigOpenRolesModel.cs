@@ -15,5 +15,9 @@
         public int IndustryId { get; set; }
 
         public DateTime CreatedDateTime { get; set; }
-	}
+
+		public string? Name { get; set; }
+
+        public string? ApproveOrReject { get; set; }
+    }
 }

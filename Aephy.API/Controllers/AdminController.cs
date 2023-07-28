@@ -288,7 +288,7 @@ namespace Aephy.API.Controllers
                                     _db.SaveChanges();
 
                                     var checkIndustry = _db.SolutionIndustryDetails.Where(x => x.IndustryId == industry && x.SolutionId == model.Id).FirstOrDefault();
-                                    if(checkIndustry == null)
+                                    if (checkIndustry == null)
                                     {
                                         var solutionindustryDetails = new SolutionIndustryDetails()
                                         {
@@ -731,9 +731,9 @@ namespace Aephy.API.Controllers
             {
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin").ToListAsync();
                 List<UserViewModel> users = new List<UserViewModel>();
-                if(list.Count > 0)
+                if (list.Count > 0)
                 {
-                    foreach(var data in list)
+                    foreach (var data in list)
                     {
                         UserViewModel userdataStore = new UserViewModel();
                         userdataStore.Id = data.Id;
@@ -744,7 +744,7 @@ namespace Aephy.API.Controllers
                         userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault();
                         users.Add(userdataStore);
                     }
-                    
+
 
                 }
 
@@ -1181,7 +1181,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if(model.Id == 0)
+                if (model.Id == 0)
                 {
                     var solution = new SolutionIndustryDetails()
                     {
@@ -1229,10 +1229,10 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if(model.Id != null)
+                if (model.Id != null)
                 {
                     var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
-                   
+
                     if (userDetails != null)
                     {
                         userDetails.IsDeleted = true;
@@ -1256,6 +1256,123 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
+        }
+
+
+
+        //Application Section
+        [HttpGet]
+        [Route("GetApplicationList")]
+        public async Task<IActionResult> GetApplicationList()
+        {
+            try
+            {
+                var rolesApplications = _db.OpenGigRolesApplications.ToList();
+                List<AdminViewModel.GigOpenRolesModel> roles = new List<AdminViewModel.GigOpenRolesModel>();
+                if (rolesApplications.Count > 0)
+                {
+                    foreach (var data in rolesApplications)
+                    {
+                        AdminViewModel.GigOpenRolesModel gigRolesStore = new AdminViewModel.GigOpenRolesModel();
+                        gigRolesStore.ID = data.ID;
+                        gigRolesStore.Description = data.Description;
+                        gigRolesStore.CreatedDateTime = data.CreatedDateTime;
+                        gigRolesStore.Name = _db.Users.Where(x => x.Id == data.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
+                        roles.Add(gigRolesStore);
+                    }
+
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = roles
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetApplicantsdataById")]
+        public async Task<IActionResult> GetApplicantsdataById([FromBody] AdminViewModel.GigOpenRolesModel solutionsModel)
+        {
+            try
+            {
+                OpenGigRolesApplications openGigRoles = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
+                var freelancerName = string.Empty;
+                if (openGigRoles != null)
+                {
+                    freelancerName = _db.Users.Where(x => x.Id == openGigRoles.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = new
+                    {
+                        OpenGigRoles = openGigRoles,
+                        FreelancerName = freelancerName
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("ApproveOrRejectFreelancer")]
+        public async Task<IActionResult> ApproveOrRejectFreelancer([FromBody] AdminViewModel.GigOpenRolesModel solutionsModel)
+        {
+            try
+            {
+                if (solutionsModel.ID != 0)
+                {
+                    var freelancerData = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
+                    if (freelancerData != null)
+                    {
+                        if(solutionsModel.ApproveOrReject == "Approve".Trim())
+                        {
+                            freelancerData.IsApproved = true;
+                            _db.SaveChanges();
+                        }
+                        if(solutionsModel.ApproveOrReject == "Reject".Trim())
+                        {
+                            freelancerData.IsRejected = true; 
+                            _db.SaveChanges();
+                        }
+                    }
+                   
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    //Result = ex.Message + ex.InnerException
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = ex.Message + ex.InnerException
+                });
+            }
+
         }
     }
 }

@@ -791,7 +791,7 @@ namespace Aephy.API.Controllers
                     var IndName = "";
                     if (solInd != null)
                     {
-                        IndName = listIndustry.Where(s1 => s1.Id == solInd.IndustryId).FirstOrDefault()?.IndustryName;
+                        IndName = listIndustry.Where(s1 => s1.Id == x.IndustryId).FirstOrDefault()?.IndustryName;
                     }
                     var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
                     dynamic obj = new
@@ -801,6 +801,7 @@ namespace Aephy.API.Controllers
                         x.CreatedDateTime,
                         x.ID,
                         x.SolutionId,
+                        x.IndustryId,   
                         x.Description,
                         SolutionName = solutionName,
                         ServiceName = serviceName,

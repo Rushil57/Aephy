@@ -1316,3 +1316,11 @@ h6 {
 textarea.form-control {
     resize: none !important;
 }
+.file-preview {
+    display: none;
+    border-radius: 10px;
+    border: #a6a6a6 1px solid;
+    background-color: rgb(49, 148, 83, 0.5);
+    padding: 10px;
+    width: 100%;
+}

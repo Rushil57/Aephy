@@ -1,4 +1,4 @@
-﻿@{
+@{
 	ViewData["Title"] = "Open gig roles";
 	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 	if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
@@ -55,27 +55,10 @@
 					<select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
 						<option value="0">All Services</option>
 					</select>
-					@*<select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
-						<option value="0">All Services</option>
-						<option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
-						<option value="AI Engineering">AI Engineering</option>
-						<option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
-						<option value="AI Operations">AI Operations</option>
-					</select>*@
-
 					<!-- Show Numbers Of Rows -->
 					<select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
 						<option value="">All Solutions</option>
 					</select>
-					@*<select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
-						<option value="0">All Solutions</option>
-						<option value="AI Roadmap Development">AI Roadmap Development</option>
-						<option value="AI Readiness Assessment">AI Readiness Assessment</option>
-						<option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
-						<option value="AI Governance and Ethics">AI Governance and Ethics</option>
-						<option value="AI Business Case Development">AI Business Case Development</option>	
-					</select>*@
-
 					<!-- Show Numbers Of Rows -->
 					<select class="dropdown btn-dropdown" name="level" id="select-levels" onchange="getFilteredRoles();">
 						<option value="0">All Levels</option>
@@ -88,19 +71,6 @@
 					<select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
 						<option value="0">All Industies</option>
 					</select>
-
-					@*<select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
-                        <option value="0">All Industies</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Manufacturing">Manufacturing </option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Real Estate">Real Estate</option>
-                        <option value="Energy">Energy</option>
-                        <option value="Education">Education</option>
-                        <option value="Other Industries">Other Industries</option>
-                    </select>*@
 				</div>
 			</div>
 
@@ -118,78 +88,8 @@
 					</tr>
 
 				</thead>
-
-				@*<tbody>
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Strategy and Consulting
-						</td>
-						<td class="solutionId" data-solution-id="0">NA</td>
-							<td class="title" data-title="Data Analyst">Data Analyst</td>
-							<td class="level" data-level="Associate">Associate</td>
-							<td class="industryId" data-industry-id="0">NA</td>
-						<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Ai Engineering
-							</td>
-							<td class="solutionId" data-solution-id="0">NA</td>
-							<td class="title" data-title="Team Leader">Team Leader</td>
-							<td class="level" data-level="Project Manager">Project Manager</td>
-							<td class="industryId" data-industry-id="0">NA</td>
-							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Data Science and Engineering
-						</td>
-							<td class="solutionId" data-solution-id="0">NA</td>
-							<td class="title" data-title="NA">NA</td>
-							<td class="level" data-level="NA">NA</td>
-							<td class="industryId" data-industry-id="0">NA</td>
-							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Strategy and Consulting
-						</td>
-							<td class="solutionId" data-solution-id="0">NA</td>
-							<td class="title" data-title="NA">NA</td>
-							<td class="level" data-level="NA">NA</td>
-							<td class="industryId" data-industry-id="0">NA</td>
-							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Ai Engineering
-						</td>
-							<td class="solutionId" data-solution-id="0">Ai Data Engineering</td>
-							<td class="title" data-title="Data Engineering">Data Engineering</td>
-							<td class="level" data-level="Expert">Expert</td>
-							<td class="industryId" data-industry-id="0">Finance</td>
-							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-					<tr>
-							<td class="serviceId" data-service-id="0">
-							Data Science and Engineering
-						</td>
-							<td class="solutionId" data-solution-id="0">
-							AI Data Analysis
-						</td>
-							<td class="title" data-title="Data analyst">
-							Data analyst
-						</td>
-							<td class="level" data-level="Associate">Associate</td>
-							<td class="industryId" data-industry-id="0">Retail</td>
-							<td><a class="btn btn-success applyFor-btn">Apply</a></td>
-					</tr>
-				</tbody>*@
 			
-				</table>
+			</table>
 			
 			@*<!--		Start Pagination -->
 			<div class='pagination-container'>
@@ -262,20 +162,27 @@
 									<div class="col-12">
 										<label for="Description" class="form-label">Roles Description</label>
 										<div class="input-group">
-											<textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="max-height:80px;min-height:34px;" disabled></textarea>
+											<textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:150px;" disabled></textarea>
 										</div>
 									</div>
 									<div class="col-12">
 										<label for="Description" class="form-label">Description</label>
 										<div class="input-group">
-											<textarea type="text" class="form-control" id="Description" name="Description" style="max-height:80px;min-height:34px;"></textarea>
+											<textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;"></textarea>
 										</div>
 									</div>
 									<div class="col-12">
 										<label for="CVPath" class="form-label">Upload CV</label>
 										<div class="col-12 d-flex">
 											<div class="input-group">
-												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;">
+												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
+											</div>
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="col-12 d-flex">
+											<div class="input-group">
+												<input class="file-preview" type="text" id="filePreview" readonly>
 											</div>
 										</div>
 									</div>
@@ -389,7 +296,7 @@
 						{
 							"data": "ID",
 							"render": function (data, type, row) {
-								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" + ')">Apply</a>';
+								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
 
 							}
 						}
@@ -428,7 +335,8 @@
 						{
 							"data": "ID",
 							"render": function (data, type, row) {
-								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
+								//return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
+								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
 
 							}
 						}
@@ -501,11 +409,33 @@
 		}
 	}
 			// code to read selected table row cell data (values).
-	function GigApply(ID,Description) {
+	function GigApply(Id) {
 		OpenGigOpeningApplyModal();
-		$("#gigRole_id").val(ID);
-		if(Description == 'null')
-			Description = '';
-		$("#RoleDescription").val(Description);
+		$("#gigRole_id").val(Id);
+		$.ajax({
+			type: "post",
+			url: "@Url.Action("GetRolesDataById", "LandingPage")",
+			dataType: "json",
+			data:{ID:Id},
+			success: function (result) {
+				$("#RoleDescription").val(result.Result.Description);
+			},
+			error:function (result){
+				alert(result.Message)
+			}
+		});
+	}
+
+	function getFileData(myFile) {
+		var file = myFile.files[0];
+		if(file){
+			var filename = file.name;
+			$('#filePreview').css("display", "block");
+			$('#filePreview').val(filename);
+		}
+		else{
+			$('#filePreview').css("display", "none");
+			$('#filePreview').val("");
+		}
 	}
 </script>

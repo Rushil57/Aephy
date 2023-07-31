@@ -404,20 +404,27 @@
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Roles Description</label>
                                         <div class="input-group">
-                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="max-height:80px;min-height:34px;" disabled></textarea>
+                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:150px;" disabled></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Description</label>
                                         <div class="input-group">
-                                            <textarea type="text" class="form-control" id="Description" name="Description" style="max-height:80px;min-height:34px;"></textarea>
+                                            <textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="CVPath" class="form-label">Upload CV</label>
                                         <div class="col-12 d-flex">
                                             <div class="input-group">
-                                                <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;">
+                                                <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="col-12 d-flex">
+                                            <div class="input-group">
+                                                <input class="file-preview" type="text" id="filePreview" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -483,7 +490,7 @@
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + subObj.Level + '</td>';
                     htm += '<td>' + subObj.IndustryName + '</td>';
-                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ',' + "'" + subObj.Description + "'" + ')">Apply</a></td>';
+                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
                     htm += '</tr>';
                 }
                 $("#table-OpenRoles").find("tr:gt(0)").remove();
@@ -555,12 +562,32 @@
         }
     }
     // code to read selected table row cell data (values).
-    function GigApply(ID, Description) {
+    function GigApply(Id) {
         OpenGigOpeningApplyModal();
-        $("#gigRole_id").val(ID);
-        if (Description == 'null')
-            Description = '';
-        $("#RoleDescription").val(Description);
+        $("#gigRole_id").val(Id);
+        $.ajax({
+            type: "post",
+            url: "@Url.Action("GetRolesDataById", "LandingPage")",
+            dataType: "json",
+            data: { ID: Id },
+            success: function (result) {
+                $("#RoleDescription").val(result.Result.Description);
+            },
+            error: function (result) {
+                alert(result.Message)
+            }
+        });
     }
-
+    function getFileData(myFile) {
+        var file = myFile.files[0];
+        if (file) {
+            var filename = file.name;
+            $('#filePreview').css("display", "block");
+            $('#filePreview').val(filename);
+        }
+        else {
+            $('#filePreview').css("display", "none");
+            $('#filePreview').val("");
+        }
+    }
 </script>

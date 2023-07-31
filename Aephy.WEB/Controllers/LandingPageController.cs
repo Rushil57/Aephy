@@ -206,7 +206,21 @@ namespace Aephy.WEB.Controllers
 			return RolesList;
 		}
 
-		private static string GetEndpointSuffixFromConnectionString(string connectionString)
+        [HttpPost]
+        public async Task<string> GetRolesDataById(int ID)
+        {
+
+			if(ID != 0)
+			{
+				OpenGigRolesModel model = new OpenGigRolesModel();
+				model.ID = ID;
+				var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
+				return RolesList;
+			}
+			return "";
+        }
+
+        private static string GetEndpointSuffixFromConnectionString(string connectionString)
 		{
 			string[] parts = connectionString.Split(";");
 			foreach (var part in parts)

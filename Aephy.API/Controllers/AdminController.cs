@@ -1450,7 +1450,7 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "success",
+                    Message = solutionsModel.ApproveOrReject + "Successfully!",
                     Result = userData
                 });
 

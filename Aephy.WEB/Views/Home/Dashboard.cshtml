@@ -467,17 +467,18 @@
                                 <form class="row g-3 mt-3" name="MileStoneForm">
                                     <input type="hidden" id="MileStoneId" value="0" />
                                     <div class="col-12">
+                                        <label for="Title" class="form-label">Title</label>
+                                        <div class="input-group">
+                                            <input type="text" id="mileStoneTitle" class="form-control" name="milestonetitle" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
                                         <label for="Description" class="form-label">Description</label>
                                         <div class="input-group">
                                             <input type="text" id="mileStoneDescription" class="form-control" name="milestonedescription" />
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <label for="Description" class="form-label">Title</label>
-                                        <div class="input-group">
-                                            <input type="text" id="mileStoneTitle" class="form-control" name="milestonetitle" />
-                                        </div>
-                                    </div>
+                                   
                                     <div class="col-12">
                                         <label for="dueDate" class="form-label">Due Date</label>
                                         <div class="input-group">
@@ -724,6 +725,7 @@
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val()
         };
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("SaveMileStone", "Home")",
@@ -731,6 +733,7 @@
             dataType: "json",
             data: JSON.stringify(MileStoneData),
             success: function (result) {
+                $("#preloader").hide();
                 alert(result.Message);
                 ResetMileStoneForm()
             },
@@ -761,6 +764,8 @@
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val()
         };
+
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("UpdateIndustryOutline", "Home")",
@@ -770,6 +775,7 @@
             success: function (result) {
                 alert(result.Message);
                 ResetDetailsForm()
+                $("#preloader").hide();
             },
             error: function (result) {
                 alert("Error occured..");
@@ -786,6 +792,7 @@
     }
 
     function GetMiletoneList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetMiletoneList", "Home")",
@@ -808,7 +815,7 @@
                 }
                 $("#MileStoneTable").find("tr:gt(0)").remove();
                 $("#MileStoneTable tbody").append(htm);
-
+                $("#preloader").hide();
             },
             error: function (result) {
                 alert("failure");

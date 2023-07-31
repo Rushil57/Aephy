@@ -154,7 +154,7 @@
                 ID: $("#ApplicantsID").val(),
                 ApproveOrReject: value,
             }
-
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("ApproveOrRejectFreelancer", "OpenGigRoles")",
@@ -164,6 +164,7 @@
                 success: function (result) {
                    alert(result.Message)
                     CloseApplicationPopup()
+                    $("#preloader").hide();
 
                 },  
                 error: function (result) {

@@ -141,7 +141,9 @@ namespace Aephy.API.Controllers
                     RefreshToken = refreshToken,
                     UserType = model.UserType,
                     CreatedDateTime = DateTime.UtcNow,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    IsInvited = Convert.ToBoolean(model.IsInvited),
+                    IsActive = model.UserType == "Admin" ? true : false,
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)

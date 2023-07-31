@@ -17,5 +17,7 @@ namespace Aephy.API.Models
         public string? UserType { get; set; }
 
         public string? FreelancerLevel { get; set; }
+
+        public string? IsInvited { get; set; }
     }
 }

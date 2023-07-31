@@ -20,6 +20,7 @@
         public ClientDetail clientDetail { get; set; }
         public string? FreelancerLevel { get; set; }
         public IFormFile? ProfileImage { get; set; }
+        public string IsInvited { get; set; }
     }
 
     public class FreelancerDetail

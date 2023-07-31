@@ -24,6 +24,7 @@
                         </div>
 
                         <form name="registration">
+                            <input type="hidden" id="hidIsInvite" value="@Convert.ToString(ViewBag.IsInvited)" />
                             <div class="form-group cls-form">
                                 <label for="Name">First Name</label>
                                 <input type="text" class="form-control" name="firstname" id="FirstName">
@@ -132,6 +133,7 @@
     });
 
     function SaveUserData() {
+        debugger;
         var Userdata = {
             FirstName: $("#FirstName").val(),
             LastName: $("#LastName").val(),
@@ -140,6 +142,7 @@
             TermsCondition: $('#acceptTerms').is(':checked'),
             UserType: $("#userType").val(),
             FreelancerLevel: $("#drp-freelancer-level").val(),
+            IsInvited: $("#hidIsInvite").val()
         }
         $("#preloader").show();
         $.ajax({

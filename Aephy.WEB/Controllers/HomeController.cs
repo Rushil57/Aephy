@@ -20,7 +20,7 @@ using static System.Net.WebRequestMethods;
 namespace Aephy.WEB.Controllers
 {
     public class HomeController : Controller
-    { 
+    {
         private readonly IApiRepository _apiRepository;
         private const string ContainerName = "cvfiles";
         private readonly string _rootPath;
@@ -61,8 +61,9 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-        public ActionResult Register()
+        public ActionResult Register(bool isInvite)
         {
+            ViewBag.IsInvited = isInvite;
             return View();
         }
 
@@ -122,12 +123,12 @@ namespace Aephy.WEB.Controllers
 
                     dynamic jsonObj = JsonConvert.DeserializeObject(test);
 
-                    if (jsonObj["StatusCode"] == 200)
+                    if (jsonObj["StatusCode"] == 200 && registerModel.UserType != "Admin")
                     {
                         string userId = Convert.ToString(jsonObj["Result"]["Id"]);
                         string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/VerificationTemplate.html");
                         string verifyUrl = _configuration.GetValue<string>("VerifyURL:Url").Replace("{{UserId}}", userId);
-                        
+
                         body = body.Replace("{{ first_name }}", registerModel.FirstName);
                         body = body.Replace("{{ url }}", verifyUrl);
 
@@ -224,11 +225,11 @@ namespace Aephy.WEB.Controllers
                 {
                     var verifyData = await _apiRepository.MakeApiCallAsync("api/Authenticate/VerifyAccount", HttpMethod.Post, userId);
                     dynamic jsonObj = JsonConvert.DeserializeObject(verifyData);
-                    if(jsonObj["StatusCode"] == 200)
+                    if (jsonObj["StatusCode"] == 200)
                     {
                         ViewBag.Active = true;
                     }
-                }                
+                }
             }
             catch (Exception ex)
             {

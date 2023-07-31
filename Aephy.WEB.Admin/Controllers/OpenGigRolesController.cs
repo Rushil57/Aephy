@@ -1,5 +1,6 @@
 ﻿using Aephy.WEB.Admin.Models;
 using Aephy.WEB.Provider;
+using Azure;
 using Azure.Core.Pipeline;
 using Azure.Storage;
 using Azure.Storage.Blobs;
@@ -8,10 +9,6 @@ using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Diagnostics.Metrics;
-using System.Reflection.Metadata;
-using static Azure.Core.HttpHeader;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.WEB.Admin.Controllers
 {
@@ -20,7 +17,7 @@ namespace Aephy.WEB.Admin.Controllers
         private readonly IApiRepository _apiRepository;
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
-        
+
         private const string ContainerName = "cvfiles";
 
         public OpenGigRolesController(IConfiguration configuration, IApiRepository apiRepository)
@@ -236,12 +233,39 @@ namespace Aephy.WEB.Admin.Controllers
             return "";
         }
 
-      
+
         [HttpPost]
         public async Task<string> ApproveOrRejectFreelancer([FromBody] GigOpenRolesModel solutionsModel)
         {
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/ApproveOrRejectFreelancer", HttpMethod.Post, solutionsModel);
             return applicationdata;
+        }
+      
+        public IActionResult DownloadApplicantCV(string Cvname)
+        {
+            string connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+            string containerName = ContainerName;
+            try
+            {
+                string blobName = Path.GetFileName(Cvname);
+                BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+                BlobClient blob = container.GetBlobClient(blobName);
+                if (!blob.Exists())
+                {
+                    return NotFound();
+                }
+                BlobDownloadInfo downloadInfo = blob.Download();
+                var stream = new MemoryStream();
+                downloadInfo.Content.CopyTo(stream);
+                stream.Position = 0;
+                string suggestedFileName = blobName;
+                Response.Headers.Add("Content-Disposition", new Microsoft.Extensions.Primitives.StringValues(new[] { "attachment; filename=" + suggestedFileName }));
+                return new FileStreamResult(stream, "pdf/application"); 
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -40,26 +40,23 @@
 
 
                                     <input type="hidden" id="ApplicantsID" value="0">
-
-                                    <div class="col-12">
+                                    <input type="hidden" id="Cvpath" value="">
+                                    <div class="col-12 pt-3">
                                         <label for="name" class="form-label">Name</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="freelancerName" name="name">
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-12 pt-3">
                                         <label for="name" class="form-label">Description</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="description">
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
-                                        <label for="name" class="form-label">Resume</label>
-                                        <div class="input-group">
-                                            <iframe src='' id="resume">This is an embedded </iframe>
-                                        </div>
+                                    <div class="col-12 pt-3">
+                                        <label for="name" class="form-label"><a onclick="DownloadCv()" class="cls-resume-dwld">Download Resume</a></label>
                                     </div>
                                     <div class="text-center">
                                         <button type="button" class="btn btn-primary" id="Approve" onclick="ApproveOrReject(this.id)">Approve</button>
@@ -132,9 +129,7 @@
                     $("#ApplicantsID").val(data.OpenGigRoles.ID)
                     $("#freelancerName").val(data.FreelancerName)
                     $("#description").val(data.OpenGigRoles.Description)
-                    $('#resume').attr('src', data.OpenGigRoles.CVUrlWithSas)
-
-                    //ApplicantsID
+                    $("#Cvpath").val(data.OpenGigRoles.CVPath)
                 }
 
             },
@@ -150,6 +145,7 @@
         $("#freelancerName").val("")
         $("#description").val("")
         $("#applicantsDetailsModal").modal('hide')
+        $("#Cvpath").val("")
     }
 
     function ApproveOrReject(value) {
@@ -176,5 +172,10 @@
             });
         }
 
+    }
+
+    function DownloadCv(){
+        var Cvname = $("#Cvpath").val()
+        window.location = "@Url.Action("DownloadApplicantCV", "OpenGigRoles")?Cvname=" + Cvname;
     }
 </script>

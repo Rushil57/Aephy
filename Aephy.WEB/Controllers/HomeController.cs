@@ -498,5 +498,13 @@ namespace Aephy.WEB.Controllers
             }
             return "Something Went Wrong";
         }
+
+        [HttpPost]
+        public async Task<string> GetMileStoneById([FromBody] MileStoneIdViewModel model)
+        {
+            var milestonedata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMileStoneById", HttpMethod.Post, model);
+            return milestonedata;
+
+        }
     }
 }

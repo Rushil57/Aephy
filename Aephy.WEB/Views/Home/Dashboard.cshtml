@@ -153,7 +153,7 @@
                                 <table class="table table-borderless datatable" id="table-OpenRoles">
                                     <thead>
                                         <tr>
-                                            <th scope ="col">Id</th>
+                                            <th scope="col">Id</th>
                                             <th scope="col">Service</th>
                                             <th scope="col">Solution</th>
                                             <th scope="col">Title</th>
@@ -478,7 +478,7 @@
                                             <input type="text" id="mileStoneDescription" class="form-control" name="milestonedescription" />
                                         </div>
                                     </div>
-                                   
+
                                     <div class="col-12">
                                         <label for="dueDate" class="form-label">Due Date</label>
                                         <div class="input-group">
@@ -544,7 +544,7 @@
         });
 
         GetApprovedList()
-       
+
     });
     $(document).ready(function () {
         $("#preloader").show();
@@ -807,7 +807,8 @@
                     subObj = data[index];
 
                     htm += '<tr>';
-                    htm += '<td class="" >' + subObj.Id + '</td>';
+                    //htm += '<td class="" >' + subObj.Id + '</td>';
+                    htm += '<td onclick=EditMiletoneData(' + subObj.Id + ')>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.Description + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + moment(subObj.DueDate).format('YYYY-MM-DD') + '</td>';
@@ -820,6 +821,32 @@
             error: function (result) {
                 alert("failure");
                 $("#preloader").hide();
+            }
+        });
+    }
+
+    function EditMiletoneData(id) {
+        var data = {
+            Id: id,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetMileStoneById", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result != null) {
+                    $("#MileStonePopModal").modal('show')
+                    var data = result.Result;
+                    $("#MileStoneId").val(data.Id);
+                    $("#mileStoneDescription").val(data.Description);
+                    $("#mileStoneTitle").val(data.Title);
+                    $("#mileStonedueDate").val(moment(data.DueDate).format('YYYY-MM-DD'));
+                }
+            },
+            error: function (result) {
+                alert("Error occured..");
             }
         });
     }

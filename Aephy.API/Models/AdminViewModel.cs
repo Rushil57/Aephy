@@ -203,5 +203,10 @@ namespace Aephy.API.Models
             public int SolutionId { get; set; }
 
         }
+        public class MileStoneIdViewModel
+        {
+            public int Id { get; set; }
+        }
+
     }
 }

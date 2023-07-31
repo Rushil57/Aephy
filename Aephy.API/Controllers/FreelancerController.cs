@@ -175,22 +175,42 @@ namespace Aephy.API.Controllers
         {
             if(model != null)
             {
-                var milestone = new SolutionMilestone()
+                if(model.Id == 0)
                 {
-                    Title = model.Title,
-                    Description = model.Description,
-                    IndustryId = model.IndustryId,
-                    SolutionId = model.SolutionId,
-                    DueDate = model.DueDate,
-                    FreelancerId = model.FreelancerId
-                };
-                _db.SolutionMilestone.Add(milestone);
-                _db.SaveChanges();
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    var milestone = new SolutionMilestone()
+                    {
+                        Title = model.Title,
+                        Description = model.Description,
+                        IndustryId = model.IndustryId,
+                        SolutionId = model.SolutionId,
+                        DueDate = model.DueDate,
+                        FreelancerId = model.FreelancerId
+                    };
+                    _db.SolutionMilestone.Add(milestone);
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Saved Succesfully!."
+                    });
+                }
+                else
                 {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data Saved Succesfully!."
-                });
+                    var data = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if(data != null)
+                    {
+                        data.Description = model.Description;
+                        data.DueDate = model.DueDate;
+                        data.Title = model.Title;
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Updated Succesfully!."
+                        });
+                    }
+                }
+               
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
@@ -249,6 +269,25 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException
                 });
             }
+        }
+
+        //GetMileStoneById
+        [HttpPost]
+        [Route("GetMileStoneById")]
+        public async Task<IActionResult> GetMileStoneById([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                var data = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Result = data
+                });
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+
         }
     }
 }

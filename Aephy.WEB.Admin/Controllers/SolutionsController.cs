@@ -161,7 +161,7 @@ namespace Aephy.WEB.Admin.Controllers
         [HttpGet]
         public async Task<string> GetFreelancers()
         {
-            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/freelancersList", HttpMethod.Get);
+            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/getFreelancerByLevel", HttpMethod.Get);
             return userList;
         }
 

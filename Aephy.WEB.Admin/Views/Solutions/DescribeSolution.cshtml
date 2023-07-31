@@ -211,6 +211,7 @@
                 $("#SolutionTitle").val(result.Result.Solution.Title)
                 $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
                 $("#SolutionDescription").val(result.Result.Solution.Description)
+                $("#drp-assigned-freelancers").val(result.Result.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
                 $("#drp-services").val(result.Result.Services.ServicesId)
                 $('#drp-industries').val(result.Result.Industryname.Id).trigger('chosen:updated');
                  $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
@@ -231,6 +232,25 @@
     }
 
     function GetFreelancerList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetFreelancers", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#drp-assigned-freelancers").append($("<option     />").val(value.Id).text(value.FirstName + " " + value.LastName));
+                });
+                $('#drp-assigned-freelancers').trigger('chosen:updated');
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+    }
+
+    function GetAssignedFreelancerById(){
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetFreelancers", "Solutions")",

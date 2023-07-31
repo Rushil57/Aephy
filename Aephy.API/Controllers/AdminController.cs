@@ -766,8 +766,8 @@ namespace Aephy.API.Controllers
         }
 
         [HttpGet]
-        [Route("freelancersList")]
-        public async Task<IActionResult> freelancersList()
+        [Route("getFreelancerByLevel")]
+        public async Task<IActionResult> getFreelancerByLevel()
         {
             try
             {
@@ -783,11 +783,12 @@ namespace Aephy.API.Controllers
                         userdataStore.LastName = data.LastName;
                         userdataStore.UserRole = data.UserType;
                         userdataStore.EmailAddress = data.UserName;
-                        userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id && x.FreelancerLevel == "Project Manager/Project Architecture").Select(x => x.FreelancerLevel).FirstOrDefault();
-                        users.Add(userdataStore);
+                        userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault();
+                        if(userdataStore.FreelancerLevel == "Project Manager/Project Architecture")
+                        {
+                            users.Add(userdataStore);
+                        }
                     }
-
-
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1198,7 +1199,7 @@ namespace Aephy.API.Controllers
                 var industries = _db.Industries.Where(x => x.Id == solutionIndustry.IndustryId).FirstOrDefault();
                 Solutions solution = _db.Solutions.Where(x => x.Id == solutionIndustry.SolutionId).FirstOrDefault();
                 SolutionServices solutionServices = _db.SolutionServices.Where(x => x.SolutionId == solution.Id).FirstOrDefault();
-
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,

@@ -886,6 +886,71 @@ namespace Aephy.API.Controllers
                         x.SolutionId,
                         x.IndustryId,   
                         x.Description,
+                        x.isActive,
+                        SolutionName = solutionName,
+                        ServiceName = serviceName,
+                        IndustryName = IndName,
+
+                    };
+                    finalList.Add(obj);
+
+                });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = finalList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("ActiveRolesList")]
+        public async Task<IActionResult> ActiveRolesList()
+        {
+            try
+            {
+                var listDB = _db.GigOpenRoles.Where(x=>x.isActive == true).ToList();
+                var listSolution = _db.Solutions.ToList();
+                var listServiceSol = _db.SolutionServices.ToList();
+                var listService = _db.Services.ToList();
+                var listIndustry = _db.Industries.ToList();
+                var listIndustrySol = _db.SolutionIndustry.ToList();
+                List<dynamic> finalList = new List<dynamic>();
+                listDB.ForEach(x =>
+                {
+                    var solSer = listServiceSol.Where(t => t.SolutionId == x.SolutionId).FirstOrDefault();
+                    var serviceName = "";
+                    if (solSer != null)
+                    {
+                        serviceName = listService.Where(s => s.Id == solSer.ServicesId).FirstOrDefault()?.ServicesName;
+                    }
+
+                    var solInd = listIndustrySol.Where(t1 => t1.SolutionId == x.SolutionId).FirstOrDefault();
+                    var IndName = "";
+                    if (solInd != null)
+                    {
+                        IndName = listIndustry.Where(s1 => s1.Id == x.IndustryId).FirstOrDefault()?.IndustryName;
+                    }
+                    var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
+                    dynamic obj = new
+                    {
+                        x.Level,
+                        x.Title,
+                        x.CreatedDateTime,
+                        x.ID,
+                        x.SolutionId,
+                        x.IndustryId,
+                        x.Description,
+                        x.isActive,
                         SolutionName = solutionName,
                         ServiceName = serviceName,
                         IndustryName = IndName,
@@ -927,7 +992,8 @@ namespace Aephy.API.Controllers
                             Title = model.Title,
                             Level = model.Level,
                             Description = model.Description,
-                            IndustryId = model.IndustryId
+                            IndustryId = model.IndustryId,
+                            isActive = model.isActive
                         };
                         _db.GigOpenRoles.Add(roles);
                         _db.SaveChanges();
@@ -954,6 +1020,7 @@ namespace Aephy.API.Controllers
                             openRolesdata.Level = model.Level;
                             openRolesdata.Description = model.Description;
                             openRolesdata.IndustryId = model.IndustryId;
+                            openRolesdata.isActive = model.isActive;    
                             _db.SaveChanges();
                         }
 

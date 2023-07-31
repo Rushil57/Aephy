@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Aephy.API\Aephy.API.csproj" />
     <ProjectReference Include="..\Aephy.Helper\Aephy.Helper.csproj" />
   </ItemGroup>
 

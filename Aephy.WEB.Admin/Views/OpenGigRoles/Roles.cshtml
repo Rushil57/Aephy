@@ -21,6 +21,7 @@
                                 <th scope="col">Title</th>
                                 <th scope="col">Level</th>
                                 <th scope="col">Description</th>
+                                <th scope="col">isActive</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -93,6 +94,11 @@
                                             <div class="input-group">
                                                 <textarea class="form-control" id="RoleDescription" name="RoleDescription" style="height:150px;"></textarea>
                                             </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <input class="form-check-input" type="checkbox" id="isRoleActive" name="isRoleActive" checked="checked">&nbsp;&nbsp;
+                                            <label for="isRoleActive" class="form-label">Is Active</label>
                                         </div>
 
                                         <div class="text-center">
@@ -185,7 +191,8 @@
             IndustryId: $('#drp-industries').val(),
             Title: $("#Title").val(),
             Level: $("#drp-Level").val(),
-            Description: $("#RoleDescription").val()
+            Description: $("#RoleDescription").val(),
+            isActive: $("#isRoleActive").is(':checked')
         };
         $("#preloader").show();
         $.ajax({
@@ -219,6 +226,7 @@
         $('#RoleDescription').val("");
         $('#txt-services').val("");
         $("#drp-industries").val("").trigger('chosen:updated');
+        $("#isRoleActive").prop('checked', false);
     }
 
     function GetRolesList() {
@@ -244,6 +252,16 @@
                         { "data": "Title" },
                         { "data": "Level" },
                         { "data": "Description" },
+                        {   "data": "isActive",
+                            "render": function (data, type, row) {
+                                if (data == true) {
+                                    return '<span class="badge bg-success">' + data + '</span>';
+                                }
+                                else {
+                                    return '<span class="badge bg-danger">' + data + '</span>';
+                                }
+                            }
+                        },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
@@ -340,10 +358,14 @@
                     $('#RoleDescription').val(result.Result.Description);
                         GetSolutionDataById();
                     $('#drp-industries').val(result.Result.IndustryId).trigger('chosen:updated');
+                    if(result.Result.isActive){
+                            $("#isRoleActive").prop('checked', true);
+                    }else{
+                        $("#isRoleActive").prop('checked', false);
+                    }
                 }
                     $('#Service').css("display", "block");
                     $('#Industry').css("display", "block");
-                    
             },
             error: function (result) {
                 alert("Error occured..");

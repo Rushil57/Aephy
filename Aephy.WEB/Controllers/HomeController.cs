@@ -212,7 +212,7 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> GetRolesList()
         {
-            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesList", HttpMethod.Get);
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/ActiveRolesList", HttpMethod.Get);
             return RolesList;
         }
 
@@ -418,7 +418,7 @@ namespace Aephy.WEB.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("ImageFile", "Please select an image file.");
+                    ModelState.AddModelError("ImageFile", "Please select a CV file.");
                 }
             }
             catch (Exception ex)

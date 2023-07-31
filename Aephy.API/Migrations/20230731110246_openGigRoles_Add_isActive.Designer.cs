@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230731110246_openGigRoles_Add_isActive")]
+    partial class openGigRoles_Add_isActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,7 +204,7 @@ namespace Aephy.API.Migrations
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
-                    
+
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
@@ -345,46 +348,12 @@ namespace Aephy.API.Migrations
                     b.Property<int>("IndustryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProjectOutline")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SolutionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("SolutionIndustryDetails");
-                });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.SolutionMilestone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FreelancerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IndustryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolutionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SolutionMilestone");
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.SolutionServices", b =>

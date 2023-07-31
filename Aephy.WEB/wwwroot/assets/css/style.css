@@ -1324,3 +1324,18 @@ textarea.form-control {
     padding: 10px;
     width: 100%;
 }
+
+.section-title-size {
+    font-size: 18px !important;
+}
+
+.section-detail-size {
+    font-size: 17px !important;
+}
+.Project-title-size {
+    font-size: 25px !important;
+}
+
+.list-title-size {
+    font-size: 23px;
+}

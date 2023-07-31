@@ -1423,9 +1423,10 @@ namespace Aephy.API.Controllers
         {
             try
             {
+                var freelancerData = new OpenGigRolesApplications();
                 if (solutionsModel.ID != 0)
                 {
-                    var freelancerData = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
+                    freelancerData = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
                     if (freelancerData != null)
                     {
                         if(solutionsModel.ApproveOrReject == "Approve".Trim())
@@ -1441,11 +1442,14 @@ namespace Aephy.API.Controllers
                     }
                    
                 }
+
+                var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
+                
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "success",
-                    //Result = ex.Message + ex.InnerException
+                    Result = userData
                 });
 
             }

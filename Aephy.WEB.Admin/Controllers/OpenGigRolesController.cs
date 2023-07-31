@@ -1,4 +1,5 @@
-﻿using Aephy.WEB.Admin.Models;
+﻿using Aephy.Helper.Helpers;
+using Aephy.WEB.Admin.Models;
 using Aephy.WEB.Provider;
 using Azure;
 using Azure.Core.Pipeline;
@@ -9,6 +10,7 @@ using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aephy.WEB.Admin.Controllers
 {
@@ -17,15 +19,17 @@ namespace Aephy.WEB.Admin.Controllers
         private readonly IApiRepository _apiRepository;
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
+        private readonly string _rootPath;
 
         private const string ContainerName = "cvfiles";
 
-        public OpenGigRolesController(IConfiguration configuration, IApiRepository apiRepository)
+        public OpenGigRolesController(IConfiguration configuration, IApiRepository apiRepository, IWebHostEnvironment hostEnvironment)
         {
             _apiRepository = apiRepository;
             _configuration = configuration;
             _connectionString = configuration.GetConnectionString("AzureBlobStorage");
             _connectionString = "DefaultEndpointsProtocol=https;AccountName=aephystorageaccount;AccountKey=nEy6xh4P4m2d94iDgqq+yNB99bucjGMD1wp2L6sbsNFjHPaUQiCHgc5b4hmBmeRtYsiA/WvudVmV+AStwz3djw==;EndpointSuffix=core.windows.net";
+            _rootPath = hostEnvironment.WebRootPath;
         }
         public IActionResult Index()
         {
@@ -43,7 +47,7 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> AddorEditRoles([FromBody]GigOpenRolesModel model)
+        public async Task<string> AddorEditRoles([FromBody] GigOpenRolesModel model)
         {
             try
             {
@@ -52,7 +56,7 @@ namespace Aephy.WEB.Admin.Controllers
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditRoles", HttpMethod.Post, model);
                 return solutionData;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex.Message;
             }
@@ -122,7 +126,7 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> GetRolesdataById([FromBody]GigOpenRolesModel model)
+        public async Task<string> GetRolesdataById([FromBody] GigOpenRolesModel model)
         {
             var rolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
             return rolesList;
@@ -140,7 +144,7 @@ namespace Aephy.WEB.Admin.Controllers
         public async Task<string> GetApplicantsdataById([FromBody] GigOpenRolesModel solutionsModel)
         {
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/GetApplicantsdataById", HttpMethod.Post, solutionsModel);
-            if(applicationdata  != "")
+            if (applicationdata != "")
             {
                 dynamic data = JsonConvert.DeserializeObject(applicationdata);
                 try
@@ -153,7 +157,7 @@ namespace Aephy.WEB.Admin.Controllers
                         data.Result.OpenGigRoles.CVUrlWithSas = imageUrlWithSas;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return ex.Message + ex.InnerException;
                 }
@@ -238,9 +242,23 @@ namespace Aephy.WEB.Admin.Controllers
         public async Task<string> ApproveOrRejectFreelancer([FromBody] GigOpenRolesModel solutionsModel)
         {
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/ApproveOrRejectFreelancer", HttpMethod.Post, solutionsModel);
+
+            #region Send Application Status Email
+            dynamic jsonObj = JsonConvert.DeserializeObject(applicationdata);
+
+            string userName = Convert.ToString(jsonObj["Result"]["FirstName"]) + " " + Convert.ToString(jsonObj["Result"]["LastName"]);
+            string emailAddress = Convert.ToString(jsonObj["Result"]["Email"]);
+
+            string templateName = solutionsModel.ApproveOrReject == "Approve" ? "ApproveApplicationTemplate.html" : "RejectApplicationTemplate.html";
+            string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/" + templateName + "");
+            body = body.Replace("{{ user_name }}", userName);
+
+            bool send = SendEmailHelper.SendEmail(emailAddress, "Application Status", body);
+            #endregion
+
             return applicationdata;
         }
-      
+
         public IActionResult DownloadApplicantCV(string Cvname)
         {
             string connectionString = _configuration.GetConnectionString("AzureBlobStorage");
@@ -260,7 +278,7 @@ namespace Aephy.WEB.Admin.Controllers
                 stream.Position = 0;
                 string suggestedFileName = blobName;
                 Response.Headers.Add("Content-Disposition", new Microsoft.Extensions.Primitives.StringValues(new[] { "attachment; filename=" + suggestedFileName }));
-                return new FileStreamResult(stream, "pdf/application"); 
+                return new FileStreamResult(stream, "pdf/application");
             }
             catch (Exception ex)
             {

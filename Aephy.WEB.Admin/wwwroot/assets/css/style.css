@@ -1371,5 +1371,7 @@ td.cls-Solution, .cls-service, .cls-industries, .cls-RolesId {
     text-decoration: underline !important;
 }
 
-
+#MileStoneTable th{
+    font-weight:bold;
+}
     

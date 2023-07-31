@@ -153,6 +153,7 @@ namespace Aephy.API.Models
             public string? ImageUpload { get; set; }
 
             public string? ImagePath { get; set; }
+            public string? ActiveByAdmin { get; set; }
         }
 
         public class UserIdModel

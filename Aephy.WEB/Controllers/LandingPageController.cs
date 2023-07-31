@@ -122,7 +122,7 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> GetRolesList()
         {
-            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesList", HttpMethod.Get);
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/ActiveRolesList", HttpMethod.Get);
             return RolesList;
         }
 

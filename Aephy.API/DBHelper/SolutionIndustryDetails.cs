@@ -24,5 +24,9 @@ namespace Aephy.API.DBHelper
         public string? Description { get; set; }
 
         public string? ProjectOutline { get; set; }
+        public int IsApproved { get; set; }
+        public DateTime? ActionOn { get; set; }
+
+        public int IsActiveByAdmin { get; set; }
     }
 }

@@ -46,13 +46,13 @@
                                     <input type="hidden" id="SolutionDetailsId" value="0">
                                     <input type="hidden" id="ImagePath" value="">
 
-                                    <div class="col-12">
+                                    <div class="col-12" style="display:none;">
                                         <label for="SolutionTitle" class="form-label">Solution Title</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="SolutionTitle" name="SolutionTitle" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-12 cls-subtitle">
+                                    <div class="col-12 cls-subtitle" style="display:none;">
                                         <label for="Solution_SubTitle" class="form-label">Solution SubTitle</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="Solution_SubTitle" name="Solution_SubTitle" readonly>
@@ -66,13 +66,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" style="display:none;">
                                         <label for="SolutionDescription" class="form-label">Solution Description</label>
                                         <div class="input-group">
                                             <textarea class="form-control" id="SolutionDescription" name="SolutionDescription" style="height:100px;" readonly></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-12" id="img-id">
+                                    <div class="col-12" id="img-id" style="display:none;">
                                         <label for="SolutionImage" class="form-label">Image</label>
                                         <div class="input-group">
                                             <input type="file" class="form-control" id="SolutionImage" name="SolutionImage" disabled />
@@ -95,11 +95,51 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                    <div class="col-12">
+                                        <label for="IsActiveByAdmin" class="form-label">Is Active</label>
+                                        <div class="input-group" id="IsActiveByAdmindiv">
+                                            <input type="checkbox" id="IsActiveByAdmin" class="form-check-input" />
+                                        </div>
+                                    </div>
+
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-brand">Submit</button>
-                                        <button type="reset" class="btn btn-secondary" onclick="ResetSolutionIndustryDetailForm();">Reset</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="ResetSolutionIndustryDetailForm();">Close</button>
+                                    </div>
+
+                                    <hr />
+                                    Project Architecture - Details
+
+                                    <div class="col-12">
+                                        <label for="SolutionDescription" class="form-label">Project Outline</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="projectOutline" name="projectOutline" style="height:100px;" readonly></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="SolutionDescription" class="form-label">Milestone(s)</label>
+                                        <div class="input-group">
+                                            <table class="table" id="MileStoneTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Description</th>
+                                                        <th>Title</th>
+                                                        @*<th>DueDate</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="MileStonebody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" onclick="ActionByAdminOnSolution('1')" class="btn btn-brand">Approve</button>
+                                        <button type="button" onclick="ActionByAdminOnSolution('2')" class="btn btn-secondary">Reject</button>
                                     </div>
                                 </form><!-- Vertical Form -->
+                               
 
                             </div>
                         </div>
@@ -198,6 +238,7 @@
             Id: Id,
         };
          $("#drp-assigned-freelancers").empty();
+        $("#MileStoneTable tbody").empty();
         GetFreelancerList();
         $.ajax({
             type: "POST",
@@ -216,6 +257,25 @@
                 $('#drp-industries').val(result.Result.Industryname.Id).trigger('chosen:updated');
                  $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
                 $("#solutionImagepreview").find("span").first().remove();
+                $("#IsActiveByAdmin").prop('checked', result.Result.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true:false);
+                //
+                $("#projectOutline").val(result.Result.SolutionIndustryDetails.ProjectOutline);
+                //result.Result.MilestoneDetails
+                var htm = '';
+                for (index = 0; index < result.Result.MilestoneDetails.length; index++) {
+                    subObj = result.Result.MilestoneDetails[index];
+
+                    htm += '<tr>';
+                    //htm += '<td class="" >' + subObj.Id + '</td>';
+                    htm += '<td onclick=EditMiletoneData(' + subObj.Id + ')>' + subObj.Id + '</td>';
+                    htm += '<td>' + subObj.Description + '</td>';
+                    htm += '<td>' + subObj.Title + '</td>';
+                    //htm += '<td>' + moment(subObj.DueDate).format('YYYY-MM-DD') + '</td>';
+                    htm += '</tr>';
+                }
+                $("#MileStoneTable").find("tr:gt(0)").remove();
+                $("#MileStoneTable tbody").append(htm);
+                //
                 $('#solutionImagepreview').show();
                 var span = document.createElement('span');
                 span.innerHTML =
@@ -330,6 +390,7 @@
             Id: $("#SolutionDetailsId").val(),
             Description: $(".industrydescription").val(),
             AssignedFreelancerId: $("#drp-assigned-freelancers").val(),
+            ActiveByAdmin: $("#IsActiveByAdmin").prop('checked') ? 1 : 2
         };
         var formData = new FormData();
         for (var i = 0; i < files.length; i++) {
@@ -372,5 +433,28 @@
             $("#solutionImagepreview").hide();
             $("#ImagePath").val("");
             $('.cls-industriesdiv').remove();
+    }
+
+    function ActionByAdminOnSolution(actionVal){
+        try{
+            $("#preloader").show();
+        $.ajax({
+                url: '/Solutions/ActionByAdminOnSolution?solutionIndustryDetailsId=' + $("#SolutionDetailsId").val() + '&actionType=' + actionVal,
+            type: "POST",
+            data: {},
+            dataType: 'json',
+            success: function (result) {
+                $("#preloader").hide();
+                alert(result.Message);
+                ResetSolutionIndustryDetailForm();
+                GetSolutionList();
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                alert("Something Went Wrong!");
+            }
+        });
+        }
+        catch(err){alert(err);}
     }
 </script>

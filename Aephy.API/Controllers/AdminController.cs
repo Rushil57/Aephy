@@ -1307,6 +1307,8 @@ namespace Aephy.API.Controllers
                 Solutions solution = _db.Solutions.Where(x => x.Id == solutionIndustry.SolutionId).FirstOrDefault();
                 SolutionServices solutionServices = _db.SolutionServices.Where(x => x.SolutionId == solution.Id).FirstOrDefault();
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
+                var milestoneDetails = _db.SolutionMilestone.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
+                x.IndustryId == solutionIndustry.IndustryId).ToList();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -1316,8 +1318,9 @@ namespace Aephy.API.Controllers
                         Solution = solution,
                         SolutionIndustryDetails = solutionIndustry,
                         Industryname = industries,
-                        Services = solutionServices
-                    }
+                        Services = solutionServices,
+						MilestoneDetails = milestoneDetails
+					}
                 });
             }
             catch (Exception ex)
@@ -1339,7 +1342,8 @@ namespace Aephy.API.Controllers
                         SolutionId = model.SolutionId,
                         IndustryId = model.IndustryId,
                         Description = model.Description,
-                        AssignedFreelancerId = model.AssignedFreelancerId
+                        AssignedFreelancerId = model.AssignedFreelancerId,
+                        IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin)
                     };
                     _db.SolutionIndustryDetails.Add(solution);
                     _db.SaveChanges();
@@ -1357,6 +1361,7 @@ namespace Aephy.API.Controllers
                     {
                         data.Description = model.Description;
                         data.AssignedFreelancerId = model.AssignedFreelancerId;
+                        data.IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin);
                         _db.SaveChanges();
                     }
 
@@ -1367,6 +1372,29 @@ namespace Aephy.API.Controllers
                         Result = data.ImagePath
                     });
                 }
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+        [HttpPost]
+        [Route("ActionByAdminOnSolution")]
+        public async Task<IActionResult> ActionByAdminOnSolution(string solutionIndustryDetailsId, string action)
+        {
+            try
+            {
+                var solutionDetail = _db.SolutionIndustryDetails.Where(x => x.Id == Convert.ToInt32(solutionIndustryDetailsId)).FirstOrDefault();
+                solutionDetail.ActionOn = DateTime.Now;
+                solutionDetail.IsApproved = Convert.ToInt32(action);
+                _db.SaveChanges();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Updated Succesfully!",
+                    Result = ""
+                });
             }
 
             catch (Exception ex)

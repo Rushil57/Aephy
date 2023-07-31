@@ -482,6 +482,23 @@ namespace Aephy.WEB.Admin.Controllers
 
             return "";
         }
+
+        [HttpPost]
+        public async Task<string> ActionByAdminOnSolution(string solutionIndustryDetailsId, string actionType)
+        {
+            try
+            {
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/ActionByAdminOnSolution?solutionIndustryDetailsId="+ solutionIndustryDetailsId+ "&action="+ actionType, HttpMethod.Post, null);
+                
+                return solutionData;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
+        }
     }
 
 

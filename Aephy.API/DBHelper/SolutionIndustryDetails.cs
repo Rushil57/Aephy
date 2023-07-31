@@ -22,5 +22,7 @@ namespace Aephy.API.DBHelper
         public string? ImageUrlWithSas { get; set; }
 
         public string? Description { get; set; }
+
+        public string? ProjectOutline { get; set; }
     }
 }

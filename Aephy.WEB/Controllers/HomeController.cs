@@ -429,5 +429,74 @@ namespace Aephy.WEB.Controllers
 
 
         }
+
+        
+        [HttpGet]
+        public async Task<string> GetApprovedList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId != null)
+            {
+                GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
+                UserId.UserId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/ApprovedRolesList", HttpMethod.Get, UserId);
+                return aprroveList;
+            }
+            return "Something Went Wrong";
+        }
+
+       
+        [HttpPost]
+        public async Task<string> SaveMileStone([FromBody] MileStoneViewModel mileStone)
+        {
+            if (mileStone != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    mileStone.FreelancerId = userId;
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveMileStoneData", HttpMethod.Post, mileStone);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        [HttpPost]
+        public async Task<string> UpdateIndustryOutline([FromBody] SolutionIndustryDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateIndustryOutline", HttpMethod.Post, model);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        //GetMiletoneList
+        [HttpGet]
+        public async Task<string> GetMiletoneList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId != null)
+            {
+                GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
+                UserId.UserId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Get, UserId);
+                return aprroveList;
+            }
+            return "Something Went Wrong";
+        }
     }
 }

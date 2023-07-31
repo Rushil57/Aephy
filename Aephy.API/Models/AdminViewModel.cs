@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Aephy.API.DBHelper;
 
 namespace Aephy.API.Models
 {
@@ -174,6 +175,32 @@ namespace Aephy.API.Models
             public string? FreelancerLevel { get; set; }
 
 
+
+        }
+
+        public class MileStoneModel
+        {
+            public int Id { get; set; }
+            public string? Title { get; set; }
+            public string? Description { get; set; }
+            public int IndustryId { get; set; }
+
+            public int SolutionId { get; set; }
+            public DateTime DueDate { get; set; }
+
+            public string? FreelancerId { get; set; }
+
+        }
+
+        public class SolutionIndustryDetailsModel
+        {
+            public int Id { get; set; }
+
+            public string? ProjectOutline { get; set; }
+
+            public int IndustryId { get; set; }
+
+            public int SolutionId { get; set; }
 
         }
     }

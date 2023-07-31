@@ -1432,10 +1432,12 @@ namespace Aephy.API.Controllers
                         if(solutionsModel.ApproveOrReject == "Approve".Trim())
                         {
                             freelancerData.IsApproved = true;
+                            freelancerData.IsRejected = false;
                             _db.SaveChanges();
                         }
                         if(solutionsModel.ApproveOrReject == "Reject".Trim())
                         {
+                            freelancerData.IsApproved = false;
                             freelancerData.IsRejected = true; 
                             _db.SaveChanges();
                         }

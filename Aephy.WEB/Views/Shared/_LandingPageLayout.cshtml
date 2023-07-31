@@ -17,13 +17,13 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-@*    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    @*    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet">
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">*@
     @*<link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">*@
     <link href="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/css/jquery.dataTables.min.css" rel="stylesheet" />
-    
+
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
     <link href="~/assets/css/open-accessibility.min.css" rel="stylesheet" />
@@ -111,21 +111,21 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                 <li class="nav-item">
-                                                 <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                 </li>
-                                                 <li class="nav-item">
-                                                 <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                 </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                </li>
                                             }
                                             else
                                             {
                                                 <li class="nav-item">
-                                                <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
+                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
                                                 </li>
                                             }
                                         }
-                                        
+
                                     </ul>
 
                                     <hr class="header-bar" />
@@ -561,17 +561,17 @@
             $("#confirmation").modal('hide')
         }
 
-        	function clearForm(){
-		$("#ID").val("");
-		$("#FreelancerID").val("");
-		$("#ServiceID").val("");
-		$("#IndustriesID").val("");
-		$("#SolutionID").val("");
-		$("#Title").val("");
-		$("#Level").val("");
-		$("#Description").val("");
-		$("#CVPath").val("");
-	}
+        function clearForm(){
+            $("#ID").val("");
+            $("#FreelancerID").val("");
+            $("#ServiceID").val("");
+            $("#IndustriesID").val("");
+            $("#SolutionID").val("");
+            $("#Title").val("");
+            $("#Level").val("");
+            $("#Description").val("");
+            $("#CVPath").val("");
+        }
 
         function OpenPostModalPopup() {
             $("#confirmation").modal('show')
@@ -589,26 +589,26 @@
 
         $(function () {
             $("form[name='GigOpeningApplyForm']").validate({
-			rules: {
-				Description: { required: true },
-                CVPath:{required:true}
-			},
-			messages: {
-				Description: { required: "Please enter Description" },
-                CVPath:{required:"Please Upload your CV"}
-			},
-			errorPlacement: function (error, element) {
-				if (element.parent('.input-group').length) {
-					error.insertAfter(element.parent());
-				}
-				else {
-					error.insertAfter(element);
-				}
-			},
-			submitHandler: function (form) {
-				GigOpenRolesApply()
-			}
-		});
+                rules: {
+                    Description: { required: true },
+                    CVPath: { required: true }
+                },
+                messages: {
+                    Description: { required: "Please enter Description" },
+                    CVPath: { required: "Please Upload your CV" }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    GigOpenRolesApply()
+                }
+            });
             //$('body').openAccessibility({
             //    localization: ['en']
             //});

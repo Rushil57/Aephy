@@ -166,12 +166,6 @@
 										</div>
 									</div>
 									<div class="col-12">
-										<label for="Description" class="form-label">Description</label>
-										<div class="input-group">
-											<textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;"></textarea>
-										</div>
-									</div>
-									<div class="col-12">
 										<label for="CVPath" class="form-label">Upload CV</label>
 										<div class="col-12 d-flex">
 											<div class="input-group">
@@ -184,6 +178,12 @@
 											<div class="input-group">
 												<input class="file-preview" type="text" id="filePreview" readonly>
 											</div>
+										</div>
+									</div>
+									<div class="col-12">
+										<label for="Description" class="form-label">Additional Information</label>
+										<div class="input-group">
+											<textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;"></textarea>
 										</div>
 									</div>
 									<div class="text-center">
@@ -365,6 +365,7 @@
 	function clearApplyForm() {
 		$("#Description").val("");
 		$("#CVPath").val("");
+		$('#filePreview').css("display", "none");
 	}
 
 	function GigOpenRolesApply(){
@@ -419,6 +420,7 @@
 			// code to read selected table row cell data (values).
 	function GigApply(Id) {
 		OpenGigOpeningApplyModal();
+		clearApplyForm();
 		$("#gigRole_id").val(Id);
 		$.ajax({
 			type: "post",
@@ -436,6 +438,7 @@
 	}
 
 	function getFileData(myFile) {
+		$('#filePreview').css("display", "none");
 		var file = myFile.files[0];
 		if(file){
 			var filename = file.name;

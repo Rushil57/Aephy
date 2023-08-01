@@ -1309,6 +1309,17 @@ namespace Aephy.API.Controllers
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
                 var milestoneDetails = _db.SolutionMilestone.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
                 x.IndustryId == solutionIndustry.IndustryId).ToList();
+
+                var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
+                //var freeLancerPoolDetail = _db.Users.Where(x=> freeLancerPoolIds.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
+                //{
+                //    Id = x.Id,
+                //    FirstName = x.FirstName,
+                //    LastName = x.LastName,
+                //    Lavel = _db.FreelancerDetails.Where(y => y.UserId == x.Id).Select(y => y.FreelancerLevel).FirstOrDefault()
+                
+                //}).ToList();
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -1319,8 +1330,10 @@ namespace Aephy.API.Controllers
                         SolutionIndustryDetails = solutionIndustry,
                         Industryname = industries,
                         Services = solutionServices,
-						MilestoneDetails = milestoneDetails
-					}
+						MilestoneDetails = milestoneDetails,
+                        //FreeLancerPool = freeLancerPoolDetail,
+                        FreeLancerPoolIds = freeLancerPoolIds
+                    }
                 });
             }
             catch (Exception ex)
@@ -1342,7 +1355,7 @@ namespace Aephy.API.Controllers
                         SolutionId = model.SolutionId,
                         IndustryId = model.IndustryId,
                         Description = model.Description,
-                        AssignedFreelancerId = model.AssignedFreelancerId,
+                        //AssignedFreelancerId = model.AssignedFreelancerId,
                         IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin)
                     };
                     _db.SolutionIndustryDetails.Add(solution);
@@ -1360,10 +1373,30 @@ namespace Aephy.API.Controllers
                     if (data != null)
                     {
                         data.Description = model.Description;
-                        data.AssignedFreelancerId = model.AssignedFreelancerId;
+                        //data.AssignedFreelancerId = model.AssignedFreelancerId;
                         data.IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin);
-                        _db.SaveChanges();
+                        //_db.SaveChanges();
                     }
+
+                    var freelancerPoolData = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId).ToList();
+                    _db.FreelancerPool.RemoveRange(freelancerPoolData);
+                    //await _db.SaveChangesAsync();
+
+                    var freeLancerPoolListData = new List<FreelancerPool>();
+                    foreach (var item in model.AssignedFreelancerIds)
+                    {
+                        var freeLancerPool = new FreelancerPool
+                        {
+                            FreelancerID = item,
+                            SolutionID = model.SolutionId,
+                            IsProjectArchitect = model.IsArchitectIds.Contains(item),
+                        };
+
+                        freeLancerPoolListData.Add(freeLancerPool);
+                    }
+
+                    await _db.FreelancerPool.AddRangeAsync(freeLancerPoolListData);
+                    await _db.SaveChangesAsync();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {

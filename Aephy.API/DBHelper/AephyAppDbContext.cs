@@ -30,6 +30,7 @@ namespace Aephy.API.DBHelper
         public DbSet<SolutionMilestone> SolutionMilestone { get; set; }
 
         public DbSet<SolutionPoints> SolutionPoints { get; set; }
+        public DbSet<FreelancerPool> FreelancerPool { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

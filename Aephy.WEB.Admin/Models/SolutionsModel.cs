@@ -82,7 +82,9 @@ namespace Aephy.WEB.Admin.Models
         public int SolutionId { get; set; }
         public string? Description { get; set; }
 
-        public string? AssignedFreelancerId { get; set; }
+        public string[]? AssignedFreelancerIds { get; set; }
+
+        public string[]? IsArchitectIds { get; set; }
 
         public string? ImageUpload { get; set; }
 

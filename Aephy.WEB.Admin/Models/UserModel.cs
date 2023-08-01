@@ -21,4 +21,9 @@
     {
         public string? Id { get; set; }
     }
+
+    public class UserIdsModel
+    {
+        public string[]? Ids { get; set; }
+    }
 }

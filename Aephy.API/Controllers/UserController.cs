@@ -3,6 +3,7 @@ using Aephy.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aephy.API.Controllers
 {
@@ -342,6 +343,60 @@ namespace Aephy.API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetFreeLancerByType")]
+        public async Task<IActionResult> GetFreeLancerByType([FromBody] string freeLancerLavel)
+        {
+            try
+            {
+                var dbFreeLancerIds = await _db.FreelancerDetails.Where(x => x.FreelancerLevel == freeLancerLavel).Select(x=>x.UserId).ToListAsync();
+                var dbUsers = await _db.Users.Where(x=>dbFreeLancerIds.Contains(x.Id)).ToListAsync();
+                
+                if (dbUsers != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Found.", Result = dbUsers });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "No Data Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetFreeLancerByIds")]
+        public async Task<IActionResult> GetFreeLancerByIds([FromBody] UserIdsModel userIdsModel)
+        {
+            try
+            {
+                
+                var dbUsers = await _db.Users.Where(x => userIdsModel.Ids.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Lavel = _db.FreelancerDetails.Where(y=>y.UserId == x.Id).Select(y => y.FreelancerLevel).FirstOrDefault()
+                }).ToListAsync();
+
+                if (dbUsers != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Found.", Result = dbUsers });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "No Data Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
         }
     }

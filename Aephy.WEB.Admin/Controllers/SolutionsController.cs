@@ -48,7 +48,7 @@ namespace Aephy.WEB.Admin.Controllers
                 IFormFile imageFile = httpPostedFileBase;
 
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/AddorEditSolutionData", HttpMethod.Post, result);
-                if(solutionData != "")
+                if (solutionData != "")
                 {
                     dynamic data = JsonConvert.DeserializeObject(solutionData);
                     if (data["StatusCode"] == 200)
@@ -77,7 +77,7 @@ namespace Aephy.WEB.Admin.Controllers
 
                 return solutionData;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex.Message;
             }
@@ -382,7 +382,7 @@ namespace Aephy.WEB.Admin.Controllers
         public async Task<string> GetSolutionsIndustryDetailList()
         {
             var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDetailsList", HttpMethod.Get);
-           
+
 
             dynamic data = JsonConvert.DeserializeObject(serviceList);
             // var result = JsonConvert.DeserializeObject<SolutionsModel>(serviceList);
@@ -393,14 +393,14 @@ namespace Aephy.WEB.Admin.Controllers
                 {
                     foreach (var service in data.Result)
                     {
-                        if(service.ImagePath != null)
+                        if (service.ImagePath != null)
                         {
                             string imagepath = service.ImagePath;
                             string sasToken = GenerateSasToken(imagepath);
                             string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
                             service.ImageUrlWithSas = imageUrlWithSas;
                         }
-                        
+
 
                     }
 
@@ -427,7 +427,7 @@ namespace Aephy.WEB.Admin.Controllers
                 if (data["StatusCode"] == 200)
                 {
                     string imagepath = data.Result.Solution.ImagePath;
-                    if(imagepath != null)
+                    if (imagepath != null)
                     {
                         string sasToken = GenerateSasToken(imagepath);
                         imageUrlWithSas = $"{data.Result.Solution.ImagePath}?{sasToken}";
@@ -435,13 +435,13 @@ namespace Aephy.WEB.Admin.Controllers
                     }
 
                     string industryimage = data.Result.SolutionIndustryDetails.ImagePath;
-                    if(industryimage != null)
+                    if (industryimage != null)
                     {
                         string tokn = GenerateSasToken(industryimage);
                         var imageUrlWithSass = $"{data.Result.SolutionIndustryDetails.ImagePath}?{tokn}";
                         data.Result.SolutionIndustryDetails.ImageUrlWithSas = imageUrlWithSass;
                     }
-                   
+
                 }
             }
             catch (Exception ex)
@@ -464,13 +464,13 @@ namespace Aephy.WEB.Admin.Controllers
                     dynamic data = JsonConvert.DeserializeObject(solutionData);
                     if (data["StatusCode"] == 200)
                     {
-                        if(httpPostedFileBase != null)
+                        if (httpPostedFileBase != null)
                         {
                             int Id = result.Id;
                             var fileData = await SaveImageFile(httpPostedFileBase, Id);
                             var ok = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionIndustriesUpdateImage", HttpMethod.Post, fileData);
                         }
-                       
+
                     }
                 }
                 return solutionData;
@@ -488,8 +488,8 @@ namespace Aephy.WEB.Admin.Controllers
         {
             try
             {
-                var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/ActionByAdminOnSolution?solutionIndustryDetailsId="+ solutionIndustryDetailsId+ "&action="+ actionType, HttpMethod.Post, null);
-                
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Admin/ActionByAdminOnSolution?solutionIndustryDetailsId=" + solutionIndustryDetailsId + "&action=" + actionType, HttpMethod.Post, null);
+
                 return solutionData;
             }
             catch (Exception ex)
@@ -499,11 +499,24 @@ namespace Aephy.WEB.Admin.Controllers
 
             return "";
         }
+
+        public async Task<string> GetFreeLancerByType(string freeLancerLavel)
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/User/GetFreeLancerByType", HttpMethod.Post, freeLancerLavel);
+            dynamic data = JsonConvert.DeserializeObject(userList);
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+        }
+
+        [HttpPost]
+        public async Task<string> GetUsersByIds([FromBody] UserIdsModel userIdsModel)
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/User/GetFreeLancerByIds", HttpMethod.Post, userIdsModel);
+            dynamic data = JsonConvert.DeserializeObject(userList);
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+        }
     }
-
-
-
-
 }
 
 

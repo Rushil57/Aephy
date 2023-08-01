@@ -44,6 +44,7 @@
 
                                 <form class="row g-3 mt-3 cls-Solution" name="addSolutiondescribeForm">
                                     <input type="hidden" id="SolutionDetailsId" value="0">
+                                    <input type="hidden" id="SolutionId" value="0">
                                     <input type="hidden" id="ImagePath" value="">
 
                                     <div class="col-12" style="display:none;">
@@ -81,10 +82,24 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="drp-assigned-freelancers" class="form-label">Assigned Freelancer</label>
-                                        <div class="input-group" id="freelancer">
-                                            <select data-placeholder="Choose tags ..." id="drp-assigned-freelancers" name="freelancer" class="form-control">
-                                            </select>
+                                        <label for="drp-assigned-freelancers" class="form-label">
+                                            <a class="text-primary" onclick="OpenFreelancePopup();">Assigned Freelancer</a>
+                                        </label>
+                                        <div class="input-group">
+                                            <table class="table" id="AssignFreeLancerTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>First Name</th>
+                                                        <th>Last Name</th>
+                                                        <th>FreeLancer Lavel</th>
+                                                        <th>IsProjectArchitect</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="AssignFreeLancerbody">
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
 
@@ -150,8 +165,70 @@
     </div>
 </div>
 
+<div class="modal" id="addFreeLanceModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New User</h4>
+                <a class="close" onclick="ResetFreeLanceForm();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Vertical Form -->
+                                <form class="row g-3 mt-3" name="addInviteForm">
+
+                                    <div class="col-12">
+                                        <label for="FreeLancerLavel" class="form-label">Select Lavel</label>
+                                        <div class="input-group">
+                                            <select class="form-select" aria-label="Default select example" name="level" id="FreeLancerLavel">
+                                                <option value="">Select Level</option>
+                                                <option value="Experts">Experts</option>
+                                                <option value="Associate">Associate</option>
+                                                <option value="Project Manager">Project Manager</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="FreeLancers" class="form-label">Freelancers</label>
+                                        <div class="input-group">
+                                            <table class="table" id="FreeLancerTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>First Name</th>
+                                                        <th>Last Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="FreeLancerbody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="button" id="AddFreeLancer" class="btn btn-brand">Add FreeLancer</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="ResetFreeLanceForm();">Reset</button>
+                                    </div>
+                                </form><!-- Vertical Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
+
+    let finalIdsData = [];
+
     $(function () {
         $("form[name='addSolutiondescribeForm']").validate({
             rules: {
@@ -247,9 +324,11 @@
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
+
                 $("#EditsolutionModal").modal('show')
                 $("#SolutionDetailsId").val(result.Result.SolutionIndustryDetails.Id)
                 $("#SolutionTitle").val(result.Result.Solution.Title)
+                $("#SolutionId").val(result.Result.Solution.Id)
                 $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
                 $("#SolutionDescription").val(result.Result.Solution.Description)
                 $("#drp-assigned-freelancers").val(result.Result.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
@@ -284,6 +363,18 @@
                 document.getElementById('solutionImagepreview').insertBefore(span, null);
 
                 BindIndustriesControles(result.Result.Industryname, result.Result.SolutionIndustryDetails);
+
+
+
+                DestroyDatatable("#AssignFreeLancerTable");
+                finalIdsData = [];
+                if (result.Result.FreeLancerPoolIds.length > 0) {
+                    result.Result.FreeLancerPoolIds.forEach(function (key) {
+                        finalIdsData.push(key);
+                    });
+
+                    RefreshDataTable();
+                }
             },
             error: function (result) {
                 //alert("Error occured..");
@@ -384,14 +475,28 @@
     }
 
     function SaveDescribeSolutionData() {
+
+        var architectData = [];
+        //$(':checkbox:checked').each(function (i) {
+        //    architectData.push($(this).val());
+        //});
+
+        $("#chkArchitect:checked").each(function (i) {
+            architectData.push($(this).val());
+        });
+
+        console.log(architectData);
+
         var freelancerId = $("#drp-assigned-freelancers").val();
         var fileUpload = $(".industryImage").get(0);
         var files = fileUpload.files;
         var SolutionData = {
             Id: $("#SolutionDetailsId").val(),
             Description: $(".industrydescription").val(),
-            AssignedFreelancerId: $("#drp-assigned-freelancers").val(),
-            ActiveByAdmin: $("#IsActiveByAdmin").prop('checked') ? 1 : 2
+            AssignedFreelancerIds: finalIdsData,
+            IsArchitectIds: architectData,
+            ActiveByAdmin: $("#IsActiveByAdmin").prop('checked') ? 1 : 2,
+            SolutionId: $("#SolutionId").val()
         };
         var formData = new FormData();
         for (var i = 0; i < files.length; i++) {
@@ -432,6 +537,7 @@
         $("#drp-industries").val("").trigger('chosen:updated');
 
         $("#SolutionDetailsId").val(0);
+        $("#SolutionId").val(0);
         $(".SolutionImage").attr('src', "");
         $("#solutionImagepreview").hide();
         $("#ImagePath").val("");
@@ -465,4 +571,156 @@
             showToaster("error", "Error !", err);
         }
     }
+
+    function OpenFreelancePopup() {
+        $("#EditsolutionModal").modal('hide');
+        $("#addFreeLanceModal").modal('show');
+
+        DestroyDatatable("#FreeLancerTable");
+        $("#FreeLancerLavel").val('');
+    }
+
+    function ResetFreeLanceForm() {
+        $("#addFreeLanceModal").modal('hide');
+        $("#EditsolutionModal").modal('show');
+    }
+
+    $("#FreeLancerLavel").change(function () {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetFreeLancerByType", "Solutions")",
+            data: { freeLancerLavel: this.value },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                $('#FreeLancerTable').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    paging: false,
+                    lengthChange: false,
+                    searching: false,
+                    ordering: false,
+                    info: false,
+                    autoWidth: false,
+                    responsive: false,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return "<input type=\"checkBox\" id=\"" + row.Id + "\" value=\"" + row.Id + "\"/>";
+                            }
+                        },
+                        { "data": "FirstName" },
+                        { "data": "LastName" },
+                    ]
+                });
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+
+        });
+
+    });
+
+
+    $("#AddFreeLancer").click(function () {
+
+        $(':checkbox:checked').each(function (i) {
+            finalIdsData.push($(this).val());
+        });
+
+        if ($("#FreeLancerLavel").val() != '' && finalIdsData.length != 0) {
+            RefreshDataTable();
+        }
+        else
+        {
+            showToaster("error", "Validation Error !", "Please select Lavel or Freelancer");
+        }
+    });
+
+    function RemoveFreeLancer(id) {
+        const index = finalIdsData.indexOf(id);
+        if (index > -1) {
+            finalIdsData.splice(index, 1);
+        }
+
+        RefreshDataTable();
+        //showToaster("success", "Success", "Recored Deleted.");
+    }
+
+    function RefreshDataTable() {
+
+        var userIdsModel = {
+            Ids: finalIdsData,
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetUsersByIds", "Solutions")",
+            data: JSON.stringify(userIdsModel),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                $("#addFreeLanceModal").modal('hide');
+                $("#EditsolutionModal").modal('show');
+
+                $('#AssignFreeLancerTable').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    paging: false,
+                    lengthChange: false,
+                    searching: false,
+                    ordering: false,
+                    info: false,
+                    autoWidth: false,
+                    responsive: false,
+                    "columns": [
+                        { "data": "Id", "visible": false },
+                        { "data": "FirstName" },
+                        { "data": "LastName" },
+                        { "data": "Lavel" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                if (row.Lavel == "Project Manager") {
+                                    return "<input type=\"checkBox\" id=\"chkArchitect\" value=\"" + row.Id + "\" />";
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return "<a class=\"text-danger\" onclick=\"RemoveFreeLancer('" + row.Id + "');\">Delete</a>";
+                            }
+                        },
+                    ]
+                });
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function DestroyDatatable(tableId) {
+        var table = $(tableId).DataTable({
+            destroy: true,
+            paging: false,
+            lengthChange: false,
+            searching: false,
+            ordering: false,
+            info: false,
+            autoWidth: false,
+            responsive: false,
+        });
+        table.clear().draw();
+    }
+
 </script>

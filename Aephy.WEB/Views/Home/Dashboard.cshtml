@@ -275,7 +275,7 @@
                     </div>
                 </div><!-- End Recent Activity -->
                 <!-- News & Updates Traffic -->
-                <div class="card">
+                <div class="card news_card">
                     <div class="filter">
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -641,6 +641,27 @@
 
 
     $(document).ready(function () {
+
+        $('.sales-card').hide();
+        $('.revenue-card').hide();
+        $('.customers-card').hide();
+        $('.news_card').hide();
+
+        function makeTableScroll() {
+            var maxRows = 5;
+
+            var table = document.getElementById('table-OpenRoles');
+            var wrapper = table.parentNode;
+            var rowsInTable = table.rows.length;
+            var height = 0;
+            if (rowsInTable > maxRows) {
+                for (var i = 0; i < maxRows + 1; i++) {
+                    height += table.rows[i].clientHeight;
+                }
+                wrapper.style.height = height + "px";
+            }
+        }
+
         $("#preloader").show();
         if ("@Context.Session.GetString("LoggedUserRole").ToString()" == "Freelancer") {
             $('.only_freelancer').show();
@@ -669,6 +690,7 @@
                     }
                     $("#table-OpenRoles").find("tr:gt(0)").remove();
                     $("#table-OpenRoles tbody").append(htm);
+                    makeTableScroll();
                     $("#preloader").hide();
                 },
                 error: function (result) {

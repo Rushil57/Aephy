@@ -315,24 +315,26 @@
                     </div>
                 </div>
                 <div class="col-lg-7 d-flex flex-column content order-last order-lg-last" style="position:relative; justify-content:center; align-items:center;">
-                    <h3 class="justify-content-start align-items-center service-title-size">
-                        <label style="background-color:#fff; padding:0 1.3em 0 1.3em;">
-                            Join Us
-                        </label>
-                    </h3>
-                    <div style="text-align:center;">
-                        @{
-                            if (Context.Session.GetString("LoggedUser") != null)
-                            {
+                    @{
+                        if (Context.Session.GetString("LoggedUser") != null)
+                        {
+                            <div style="text-align:center;">
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Dashboard">Dashboard</a>
-                            }
-                            else
-                            {
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align:center;">
+                                <h3>
+                                    Join Us
+                                </h3>
+                            </div>
+                            <div style="text-align:center;">
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
-                            }
+                            </div>
                         }
-                    </div>
+                    }
                 </div>
             </div>
 

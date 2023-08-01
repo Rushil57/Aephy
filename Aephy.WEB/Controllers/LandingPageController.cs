@@ -13,19 +13,19 @@ namespace Aephy.WEB.Controllers
 {
     public class LandingPageController : Controller
     {
-		private readonly IApiRepository _apiRepository;
-		private const string ContainerName = "cvfiles";
-		private readonly IConfiguration _configuration;
-		private readonly string _connectionString;
+        private readonly IApiRepository _apiRepository;
+        private const string ContainerName = "cvfiles";
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-		public LandingPageController(IConfiguration configuration, IApiRepository apiRepository)
-		{
-			_apiRepository = apiRepository;
-			_configuration = configuration;
-			_connectionString = configuration.GetConnectionString("AzureBlobStorage");
-			_connectionString = "DefaultEndpointsProtocol=https;AccountName=aephystorageaccount;AccountKey=nEy6xh4P4m2d94iDgqq+yNB99bucjGMD1wp2L6sbsNFjHPaUQiCHgc5b4hmBmeRtYsiA/WvudVmV+AStwz3djw==;EndpointSuffix=core.windows.net";
-		}
-		public IActionResult Index()
+        public LandingPageController(IConfiguration configuration, IApiRepository apiRepository)
+        {
+            _apiRepository = apiRepository;
+            _configuration = configuration;
+            _connectionString = configuration.GetConnectionString("AzureBlobStorage");
+            _connectionString = "DefaultEndpointsProtocol=https;AccountName=aephystorageaccount;AccountKey=nEy6xh4P4m2d94iDgqq+yNB99bucjGMD1wp2L6sbsNFjHPaUQiCHgc5b4hmBmeRtYsiA/WvudVmV+AStwz3djw==;EndpointSuffix=core.windows.net";
+        }
+        public IActionResult Index()
         {
             return View();
         }
@@ -40,7 +40,8 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-        public ActionResult WhyAephy() {
+        public ActionResult WhyAephy()
+        {
             return View();
         }
 
@@ -85,28 +86,65 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
+        //   [HttpPost]
+        //   public async Task<ActionResult> BrowseSolution(string service,string solution,string industry)
+        //   {
+        //       string pagePath;
+        //       if (string.IsNullOrEmpty(service) || string.IsNullOrEmpty(solution) || string.IsNullOrEmpty(industry))
+        //       {
+        //           return View();
+        //       }
+        //       else
+        //       {
+        //           if (service != "default" && solution != "default" && industry != "default")
+        //           {
+        //BrowseSolutionModel model = new BrowseSolutionModel();
+        //model.Solution = Convert.ToInt16(solution);
+        //model.Industries = Convert.ToInt16(industry);
+        //model.Services = Convert.ToInt16(service);
+        //var data = await _apiRepository.MakeApiCallAsync("api/Admin/Getdropdownvalues", HttpMethod.Post, model);
+        //if(data != "")
+        //{
+        //                   dynamic jsonObj = JsonConvert.DeserializeObject(data);
+        //                   pagePath = jsonObj.Result.Services + " > " + jsonObj.Result.Solution + " / " + jsonObj.Result.Industry;
+
+        //                   ViewBag.pagePath = pagePath;
+
+        //                   TempData["pagePath"] = pagePath;
+
+        //                   return RedirectToAction("Project");
+        //               }
+
+        //           }
+        //       }
+        //       return View();
+        //   }
+
         [HttpPost]
-        public ActionResult BrowseSolution(string service,string solution,string industry)
+        public async Task<string> BrowseSolution(string Industry, string Services, string Solution)
         {
             string pagePath;
-            if (string.IsNullOrEmpty(service) || string.IsNullOrEmpty(solution) || string.IsNullOrEmpty(industry))
+            if (string.IsNullOrEmpty(Services) || string.IsNullOrEmpty(Solution) || string.IsNullOrEmpty(Industry))
             {
-                return View();
+                return "Enter Proper Details";
             }
             else
             {
-                if (service != "default" && solution != "default" && industry != "default")
+                if (Services != "default" && Solution != "default" && Industry != "default")
                 {
-                    pagePath = service + " > " + solution + " / " + industry ;
+
+                    pagePath = Services + " > " + Solution + " / " + Industry;
 
                     ViewBag.pagePath = pagePath;
 
                     TempData["pagePath"] = pagePath;
 
-                    return RedirectToAction("Project");
+
+
+                    return "Success";
                 }
             }
-            return View();
+            return "Enter Proper Details";
         }
 
         public ActionResult Project()
@@ -129,241 +167,242 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> ApplyForOpenGigRoles(IFormFile httpPostedFileBase, string GigOpenRolesData)
         {
-			try
-			{
+            try
+            {
 
-				IFormFile CVFile = httpPostedFileBase;
-				var result = JsonConvert.DeserializeObject<OpenGigRolesModel>(GigOpenRolesData);
+                IFormFile CVFile = httpPostedFileBase;
+                var result = JsonConvert.DeserializeObject<OpenGigRolesModel>(GigOpenRolesData);
 
-				
-				var freelancer = HttpContext.Session.GetString("LoggedUser");
-				result.FreelancerID = freelancer;
-				var currentDateTime = DateTime.Now;
-				result.CreatedDateTime = currentDateTime;
-				var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
-				dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
-				if (data != null)
-				{
-					if (data.Message == "Applied Successfully")
-					{
-						int Id = data.Result;
-						var d = await SaveCVFile(CVFile, Id);
-						var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
-						dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
-						if (ImageResponse != null)
-						{
-							return ImageResponse.Message;
-						}
-						else
-						{
-							return "Failed to Apply !";
-						}
-					}
-					else
-					{
-						return data.Message;
-					}
-				}
-			}catch (Exception ex)
-			{
-				return ex.Message;
-			}
-			return "Failed to Apply !";
-		}
 
-		[HttpGet]
-		public async Task<string> GetServices()
-		{
-			var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
-			return serviceList;
-		}
+                var freelancer = HttpContext.Session.GetString("LoggedUser");
+                result.FreelancerID = freelancer;
+                var currentDateTime = DateTime.Now;
+                result.CreatedDateTime = currentDateTime;
+                var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
+                dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
+                if (data != null)
+                {
+                    if (data.Message == "Applied Successfully")
+                    {
+                        int Id = data.Result;
+                        var d = await SaveCVFile(CVFile, Id);
+                        var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
+                        dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
+                        if (ImageResponse != null)
+                        {
+                            return ImageResponse.Message;
+                        }
+                        else
+                        {
+                            return "Failed to Apply !";
+                        }
+                    }
+                    else
+                    {
+                        return data.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return "Failed to Apply !";
+        }
 
-		[HttpGet]
-		public async Task<string> GetIndustries()
-		{
-			var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
-			return industryData;
-		}
+        [HttpGet]
+        public async Task<string> GetServices()
+        {
+            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
+            return serviceList;
+        }
 
-		[HttpGet]
-		public async Task<string> GetSolutions()
-		{
-			var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
-			return industryData;
-		}
+        [HttpGet]
+        public async Task<string> GetIndustries()
+        {
+            var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
+            return industryData;
+        }
 
-		[HttpGet]
-		public async Task<string> GetFilteredRolesList(int service, int solution, string level, int industry)
-		{
-			dynamic obj = new 
-			{
-				service = service,
-				level = level,
-				solution = solution,
-				industry = industry
-			};
-			var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilteredRolesList?serviceId="+service+"&solutionId="+solution+"&level="+level+"&industryId="+industry, HttpMethod.Get);
-			return RolesList;
-		}
+        [HttpGet]
+        public async Task<string> GetSolutions()
+        {
+            var industryData = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
+            return industryData;
+        }
+
+        [HttpGet]
+        public async Task<string> GetFilteredRolesList(int service, int solution, string level, int industry)
+        {
+            dynamic obj = new
+            {
+                service = service,
+                level = level,
+                solution = solution,
+                industry = industry
+            };
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilteredRolesList?serviceId=" + service + "&solutionId=" + solution + "&level=" + level + "&industryId=" + industry, HttpMethod.Get);
+            return RolesList;
+        }
 
         [HttpPost]
         public async Task<string> GetRolesDataById(int ID)
         {
 
-			if(ID != 0)
-			{
-				OpenGigRolesModel model = new OpenGigRolesModel();
-				model.ID = ID;
-				var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
-				return RolesList;
-			}
-			return "";
+            if (ID != 0)
+            {
+                OpenGigRolesModel model = new OpenGigRolesModel();
+                model.ID = ID;
+                var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
+                return RolesList;
+            }
+            return "";
         }
 
         private static string GetEndpointSuffixFromConnectionString(string connectionString)
-		{
-			string[] parts = connectionString.Split(";");
-			foreach (var part in parts)
-			{
-				string[] subparts = part.Split("=");
-				if (subparts.Length == 2 && subparts[0].Equals("EndpointSuffix"))
-				{
-					return subparts[1];
-				}
-			}
-			return null;
-		}
+        {
+            string[] parts = connectionString.Split(";");
+            foreach (var part in parts)
+            {
+                string[] subparts = part.Split("=");
+                if (subparts.Length == 2 && subparts[0].Equals("EndpointSuffix"))
+                {
+                    return subparts[1];
+                }
+            }
+            return null;
+        }
 
-		private string GenerateSasToken(string imageUrl)
-		{
-			// Get the blob container name and blob name from the image URL
-			string blobName = Path.GetFileName(imageUrl);
+        private string GenerateSasToken(string imageUrl)
+        {
+            // Get the blob container name and blob name from the image URL
+            string blobName = Path.GetFileName(imageUrl);
 
-			// Create a shared access policy that allows read access to the blob
-			BlobSasBuilder sasBuilder = new BlobSasBuilder()
-			{
-				BlobContainerName = ContainerName,
-				BlobName = blobName,
-				Resource = "b",
-				StartsOn = DateTime.UtcNow.AddMinutes(-5), // Adjust the start time if needed
-				ExpiresOn = DateTime.UtcNow.AddMinutes(10), // Adjust the expiry time if needed,
-				Protocol = SasProtocol.Https
-			};
-			sasBuilder.SetPermissions(BlobSasPermissions.Read);
+            // Create a shared access policy that allows read access to the blob
+            BlobSasBuilder sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = ContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTime.UtcNow.AddMinutes(-5), // Adjust the start time if needed
+                ExpiresOn = DateTime.UtcNow.AddMinutes(10), // Adjust the expiry time if needed,
+                Protocol = SasProtocol.Https
+            };
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
-			// Get the Azure Blob Storage connection string from configuration
-			var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+            // Get the Azure Blob Storage connection string from configuration
+            var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
 
-			// Extract the AccountName and AccountKey from the connection string
-			var accountName = GetAccountNameFromConnectionString(connectionString);
-			var accountKey = GetAccountKeyFromConnectionString(connectionString);
+            // Extract the AccountName and AccountKey from the connection string
+            var accountName = GetAccountNameFromConnectionString(connectionString);
+            var accountKey = GetAccountKeyFromConnectionString(connectionString);
 
-			// Create a StorageSharedKeyCredential using the AccountName and AccountKey
-			StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
+            // Create a StorageSharedKeyCredential using the AccountName and AccountKey
+            StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
 
-			// Generate the SAS token
-			string sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
+            // Generate the SAS token
+            string sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
 
-			return sasToken;
-		}
-
-
-		private string GetAccountNameFromConnectionString(string connectionString)
-		{
-			try
-			{
-				var accountNameStartIndex = connectionString.IndexOf("AccountName=", StringComparison.InvariantCultureIgnoreCase) + "AccountName=".Length;
-				var accountNameEndIndex = connectionString.IndexOf(";", accountNameStartIndex, StringComparison.InvariantCultureIgnoreCase);
-				var accountNameLength = accountNameEndIndex - accountNameStartIndex;
-				return connectionString.Substring(accountNameStartIndex, accountNameLength);
-			}
-			catch (Exception ex)
-			{
-
-			}
+            return sasToken;
+        }
 
 
-			return "";
-		}
+        private string GetAccountNameFromConnectionString(string connectionString)
+        {
+            try
+            {
+                var accountNameStartIndex = connectionString.IndexOf("AccountName=", StringComparison.InvariantCultureIgnoreCase) + "AccountName=".Length;
+                var accountNameEndIndex = connectionString.IndexOf(";", accountNameStartIndex, StringComparison.InvariantCultureIgnoreCase);
+                var accountNameLength = accountNameEndIndex - accountNameStartIndex;
+                return connectionString.Substring(accountNameStartIndex, accountNameLength);
+            }
+            catch (Exception ex)
+            {
 
-		private string GetAccountKeyFromConnectionString(string connectionString)
-		{
-			try
-			{
-				var accountKeyStartIndex = connectionString.IndexOf("AccountKey=", StringComparison.InvariantCultureIgnoreCase) + "AccountKey=".Length;
-				var accountKeyEndIndex = connectionString.IndexOf(";", accountKeyStartIndex, StringComparison.InvariantCultureIgnoreCase);
-				var accountKeyLength = accountKeyEndIndex - accountKeyStartIndex;
-				return connectionString.Substring(accountKeyStartIndex, accountKeyLength);
-			}
-			catch (Exception ex)
-			{
-
-			}
+            }
 
 
-			return "";
-		}
+            return "";
+        }
 
-		public async Task<OpenGigRolesCV> SaveCVFile(IFormFile CVFile, object Id)
-		{
-			OpenGigRolesCV opengigroles = new OpenGigRolesCV();
-			try
-			{
-				if (CVFile != null && CVFile.Length > 0)
-				{
-					string BlobStorageBaseUrl = string.Empty;
-					string CVPath = string.Empty;
-					string CVUrlWithSas = string.Empty;
+        private string GetAccountKeyFromConnectionString(string connectionString)
+        {
+            try
+            {
+                var accountKeyStartIndex = connectionString.IndexOf("AccountKey=", StringComparison.InvariantCultureIgnoreCase) + "AccountKey=".Length;
+                var accountKeyEndIndex = connectionString.IndexOf(";", accountKeyStartIndex, StringComparison.InvariantCultureIgnoreCase);
+                var accountKeyLength = accountKeyEndIndex - accountKeyStartIndex;
+                return connectionString.Substring(accountKeyStartIndex, accountKeyLength);
+            }
+            catch (Exception ex)
+            {
 
-					string fileName = Guid.NewGuid().ToString() + "_" + CVFile.FileName;
-
-					// Get the Azure Blob Storage connection string from configuration
-					var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
-
-					BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-					BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
-
-					BlobClient blobClient = containerClient.GetBlobClient(fileName);
-
-					using (var stream = CVFile.OpenReadStream())
-					{
-						await blobClient.UploadAsync(stream, overwrite: true);
-					}
-
-					CVPath = blobClient.Uri.ToString();
+            }
 
 
-					string sasToken = GenerateSasToken(CVPath);
+            return "";
+        }
+
+        public async Task<OpenGigRolesCV> SaveCVFile(IFormFile CVFile, object Id)
+        {
+            OpenGigRolesCV opengigroles = new OpenGigRolesCV();
+            try
+            {
+                if (CVFile != null && CVFile.Length > 0)
+                {
+                    string BlobStorageBaseUrl = string.Empty;
+                    string CVPath = string.Empty;
+                    string CVUrlWithSas = string.Empty;
+
+                    string fileName = Guid.NewGuid().ToString() + "_" + CVFile.FileName;
+
+                    // Get the Azure Blob Storage connection string from configuration
+                    var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream = CVFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+
+                    CVPath = blobClient.Uri.ToString();
 
 
-					string cvUrlWithSas = CVPath + sasToken;
+                    string sasToken = GenerateSasToken(CVPath);
+
+
+                    string cvUrlWithSas = CVPath + sasToken;
 
 
 
-					BlobStorageBaseUrl = containerClient.Uri.ToString();
+                    BlobStorageBaseUrl = containerClient.Uri.ToString();
 
 
-					CVUrlWithSas = cvUrlWithSas;
+                    CVUrlWithSas = cvUrlWithSas;
 
-					opengigroles.BlobStorageBaseUrl = BlobStorageBaseUrl;
-					opengigroles.CVPath = CVPath;
-					opengigroles.CVUrlWithSas = CVUrlWithSas;
-					opengigroles.ID = (int)(Id);
+                    opengigroles.BlobStorageBaseUrl = BlobStorageBaseUrl;
+                    opengigroles.CVPath = CVPath;
+                    opengigroles.CVUrlWithSas = CVUrlWithSas;
+                    opengigroles.ID = (int)(Id);
 
-					return opengigroles;
-				}
-				else
-				{
-					ModelState.AddModelError("ImageFile", "Please select an image file.");
-				}
-			}
-			catch (Exception ex)
-			{
+                    return opengigroles;
+                }
+                else
+                {
+                    ModelState.AddModelError("ImageFile", "Please select an image file.");
+                }
+            }
+            catch (Exception ex)
+            {
 
-			}
-			return opengigroles;
+            }
+            return opengigroles;
 
 
-		}
-	}
+        }
+    }
 }

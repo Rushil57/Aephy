@@ -36,6 +36,7 @@
     });
 
     function GetUserList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetUsers", "Users")",
@@ -67,7 +68,7 @@
 
                     ]
                 });
-
+                $("#preloader").hide();
             },
             error: function (result) {
                 //alert("failure");

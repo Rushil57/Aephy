@@ -11,42 +11,24 @@
             <div class="section-header">
                 <hr />
                 <h3 class="justify-content-start align-items-center service-title-size">
-                        <label class="mx-lg-5 mx-2" style="background-color:#fff; padding:0 1em 0 1em;color: #001973;">Browse Solutions</label>
+                    <label class="mx-lg-5 mx-2" style="background-color:#fff; padding:0 1em 0 1em;color: #001973;">Browse Solutions</label>
                 </h3>
             </div>
             <div class="row gy-4 mt-4 d-flex" style="background-color:#f5f5f5; border-radius:10px;">
                 <div class="col-12 d-block my-2 columnDdl">
-                    <select class="dropdown btn-dropdown" name="service" id="select-services">
+                    <select class="dropdown btn-dropdown cls-Services" name="service" id="select-services">
                         <option value="All">All Services</option>
-                        <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
-                        <option value="AI Engineering">AI Engineering</option>
-                        <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
-                        <option value="AI Operations">AI Operations</option>
                     </select>
 
-                    <select class="dropdown btn-dropdown" name="solution" id="select-solutions">
+                    <select class="dropdown btn-dropdown cls-solution" name="solution" id="select-solutions">
                         <option value="All">All Solutions</option>
-                        <option value="AI Roadmap Development">AI Roadmap Development</option>
-                        <option value="AI Readiness Assessment">AI Readiness Assessment</option>
-                        <option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
-                        <option value="AI Governance and Ethics">AI Governance and Ethics</option>
-                        <option value="AI Business Case Development">AI Business Case Development</option>
                     </select>
 
-                    <select class="dropdown btn-dropdown" name="service" id="select-industries">
+                    <select class="dropdown btn-dropdown cls-Industries" name="service" id="select-industries">
                         <option value="All">All Industies</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Manufacturing">Manufacturing </option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Real Estate">Real Estate</option>
-                        <option value="Energy">Energy</option>
-                        <option value="Education">Education</option>
-                        <option value="Other Industries">Other Industries</option>
                     </select>
 
-                     @* FINAL RELEASE*@
+                    @* FINAL RELEASE*@
                     <select class="dropdown btn-dropdown cls-temp-common" name="level" id="select-budget">
                         <option value="All">Budget</option>
                         <option value="100">100</option>
@@ -61,7 +43,7 @@
                 </div>
             </div>
 
-<!-- Solutions Card Row -->
+            <!-- Solutions Card Row -->
             <div class="row gy-4 py-4">
                 <div class="col-md-6 col-xl-4">
                     <div class="card shadow-lg">
@@ -198,52 +180,54 @@
                             </div>
 
                             <div class="col-lg-6 align-items-center order-3 order-lg-3 justify-content-center my-4" style="position:relative; display:grid;">
-                                @using (Html.BeginForm("BrowseSolution", "LandingPage", FormMethod.Post, new { enctype = "multipart/form-data", id = "BrowseSolution"}))
+                                @*  @using (Html.BeginForm("BrowseSolution", "LandingPage", FormMethod.Post, new { enctype = "multipart/form-data", id = "BrowseSolution" }))
                                 {
-                                    <div class="col d-flex flex-column">
-                                        <label data-aos="fade-up">Select Service</label>
-                                        <select class="dropdown btn-dropdown form-select" name="service" id="confirm-services" title="Select Services" required>
-                                            @*<option value="default" selected disabled>Select Service</option>*@
-                                            <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
-                                            <option value="AI Engineering">AI Engineering</option>
-                                            <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
-                                            <option value="AI Operations">AI Operations</option>
-                                        </select>
-                                    </div>
+                                <div class="col d-flex flex-column">
+                                <label data-aos="fade-up">Select Service</label>
+                                <select class="dropdown btn-dropdown form-select cls-Services" name="service" id="confirm-services" title="Select Services" required>
+                                </select>
+                                </div>
 
-                                    <div class="col d-flex flex-column">
-                                        <label data-aos="fade-up">Select Solution</label>
-                                        <select class="dropdown btn-dropdown form-select" name="solution" id="confirm-solutions" title="Select Solutions" required>
-                                            @*<option value="default" selected disabled>Select Solution</option>*@
-                                            <option value="AI Roadmap Development">AI Roadmap Development</option>
-                                            <option value="AI Readiness Assessment">AI Readiness Assessment</option>
-                                            <option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
-                                            <option value="AI Governance and Ethics">AI Governance and Ethics</option>
-                                            <option value="AI Business Case Development">AI Business Case Development</option>
-                                        </select>
-                                    </div>
+                                <div class="col d-flex flex-column">
+                                <label data-aos="fade-up">Select Solution</label>
+                                <select class="dropdown btn-dropdown form-select cls-solution" name="solution" id="confirm-solutions" title="Select Solutions" required>
+                                </select>
+                                </div>
 
-                                    <div class="col d-flex flex-column">
-                                        <label data-aos="fade-up">Select Industry</label>
-                                        <select class="dropdown btn-dropdown form-select" name="industry" id="confirm-industries" title="Select Industry" required>
-                                            Select Industry
-                                            @*<option value="default" selected disabled>Select Industry</option>*@
-                                            <option value="Retail">Retail</option>
-                                            <option value="Finance">Finance</option>
-                                            <option value="Healthcare">Healthcare</option>
-                                            <option value="Manufacturing">Manufacturing </option>
-                                            <option value="Marketing">Marketing</option>
-                                            <option value="Real Estate">Real Estate</option>
-                                            <option value="Energy">Energy</option>
-                                            <option value="Education">Education</option>
-                                            <option value="Other Industries">Other Industries</option>
-                                        </select>
-                                    </div>
+                                <div class="col d-flex flex-column">
+                                <label data-aos="fade-up">Select Industry</label>
+                                <select class="dropdown btn-dropdown form-select cls-Industries" name="industry" id="confirm-industries" title="Select Industry" required>
+                                Select Industry
+                                </select>
+                                </div>
 
-                                    <div class="col d-flex justify-content-end">
-                                        <input type="submit" name="confirm" value="Confirm" class="btn btn-brand my-3 mx-0" />
-                                    </div>
-                                }
+                                <div class="col d-flex justify-content-end">
+                                <input type="submit" name="confirm" value="Confirm" class="btn btn-brand my-3 mx-0" />
+                                </div>
+                                }*@
+                                <div class="col d-flex flex-column">
+                                    <label data-aos="fade-up">Select Service</label>
+                                    <select class="dropdown btn-dropdown form-select cls-Services" name="service" id="confirm-services" title="Select Services" required>
+                                    </select>
+                                </div>
+
+                                <div class="col d-flex flex-column">
+                                    <label data-aos="fade-up">Select Solution</label>
+                                    <select class="dropdown btn-dropdown form-select cls-solution" name="solution" id="confirm-solutions" title="Select Solutions" required>
+                                    </select>
+                                </div>
+
+                                <div class="col d-flex flex-column">
+                                    <label data-aos="fade-up">Select Industry</label>
+                                    <select class="dropdown btn-dropdown form-select cls-Industries" name="industry" id="confirm-industries" title="Select Industry" required>
+                                        Select Industry
+                                    </select>
+                                </div>
+
+                                <div class="col d-flex justify-content-end">
+                                    @*<button type="button" name="confirm" value="Confirm" class="btn btn-brand my-3 mx-0" />*@
+                                    <button type="button" class="btn btn-brand" onclick="GetSelectedValues()">Confirm</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -256,12 +240,14 @@
 </main>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
 
         $('.close').on('click', function () {
             $('#confirmationModal').modal('hide');
         });
-
+        BindIndustries()
+        BindServices()
+        BindSolution()
 
     });
 
@@ -307,27 +293,81 @@
         }
     }
 
-   /* function callProjectPage(){
 
-        var pagePath;
+    function BindIndustries() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetIndustryList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $(".cls-Industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                })
 
-        var confirmServices = $('#confirm-services').val();
-        var confirmSolutions = $('#confirm-solutions').val();
-        var confirmIndustries = $('#confirm-industries').val();
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
 
-        if (confirmServices != 'default' && confirmSolutions != 'default' && confirmIndustries != 'default'){
-            pagePath = confirmServices + " > " + confirmSolutions + " ( " + confirmIndustries + " ) ";
+    function BindServices() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServicesList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $(".cls-Services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                })
 
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("Project","LandingPage")',
-                data: { pagepath: pagePath },
-                success:function(result){
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
 
+    function BindSolution() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutionList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
+                })
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function GetSelectedValues() {
+        var Industries = $("#confirm-industries option:selected").text();
+        var Services = $("#confirm-services option:selected").text();
+        var Solution = $("#confirm-solutions option:selected").text();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("BrowseSolution", "LandingPage")",
+            data: { 'Industry': Industries, 'Services': Services, 'Solution': Solution },
+            success: function (result) {
+                if (result == "Success"){
+                    window.location.href = '/LandingPage/Project'
                 }
-            });
-        }else{
-            alert('please select a solution..')
-        }
-    } */
+                else{
+                    alert(result)
+                }
+                
+            },
+            error: function (result) {
+                alert("Something Went Wrong");
+            }
+        });
+    }
 </script>

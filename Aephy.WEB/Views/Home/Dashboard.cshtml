@@ -503,6 +503,7 @@
 
 
 <script>
+    var validator;
     $(function () {
         $("form[name='GigOpeningApplyForm']").validate({
             rules: {
@@ -527,7 +528,7 @@
         });
 
 
-        $("form[name='MileStoneForm']").validate({
+        validator = $("form[name='MileStoneForm']").validate({
             rules: {
                 milestonedescription: { required: true },
                 milestonetitle: { required: true },
@@ -537,6 +538,14 @@
                 milestonedescription: { required: "Please enter Description" },
                 milestonetitle: { required: "please enter title" },
                 milestoneduedate: { required: "Please Select date" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
             },
             submitHandler: function (form) {
                 SaveMilStoneData()
@@ -753,6 +762,7 @@
     }
 
     function ResetMileStoneForm() {
+        validator.resetForm();
         $("#MileStoneId").val(0);
         $("#mileStoneDescription").val("");
         $("#mileStoneTitle").val("");

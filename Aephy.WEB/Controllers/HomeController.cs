@@ -506,5 +506,31 @@ namespace Aephy.WEB.Controllers
             return milestonedata;
 
         }
+
+        
+        [HttpPost]
+        public async Task<string> GetIndustryList()
+        {
+            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
+            return Industrydata;
+
+        }
+
+        
+        [HttpGet]
+        public async Task<string> GetServicesList()
+        {
+            var Servicesdata = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
+            return Servicesdata;
+
+        }
+
+        [HttpGet]
+        public async Task<string> GetSolutionList()
+        {
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
+            return Solutiondata;
+
+        }
     }
 }

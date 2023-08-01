@@ -220,5 +220,16 @@ namespace Aephy.API.Models
             public string? FreelancerId { get; set; }
         }
 
+        public class UserCvFileModel
+        {
+            public string? UserId { get; set; }
+
+            public string? CVPath { get; set; }
+
+            public string? BlobStorageBaseUrl { get; set; }
+
+            public string? CVUrlWithSas { get; set; }
+        }
+
     }
 }

@@ -102,6 +102,7 @@
                                 </div>
 
                                 <div class="FreelancerFields" style="display:none;">
+                                    <input type="hidden" value="" id="CVPath-id" />
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Hourly Rate Per Day ($)</div>
                                         <div class="col-md-8 col-lg-9">
@@ -134,6 +135,13 @@
                                         <div class="col-lg-3 col-md-4 label">Freelancer Level</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="freelancerLevel" type="text" class="form-control drp-freelancer-level" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Resume</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <a onclick="DownloadCv()" class="cls-resume-dwld" style="cursor:pointer">Download Resume</a>
                                         </div>
                                     </div>
                                 </div>
@@ -237,6 +245,12 @@
                                                     <option value="Associate">Associate</option>
                                                     <option value="Project Manager/Project Architecture">Project Manager/Project Architecture</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="CVPath" class="col-md-4 col-lg-3 col-form-label">Upload CV</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;">
                                             </div>
                                         </div>
                                     </div>
@@ -363,6 +377,7 @@
                     $(".cls-client-address").val(result.Result.ClientAddress)
                     $(".description").val(result.Result.Description)
                     $(".drp-freelancer-level").val(result.Result.FreelancerLevel)
+                    $("#CVPath-id").val(result.Result.CVPath)
                 }
 
             },
@@ -393,43 +408,60 @@
     }
 
     function UpdateUserData() {
-        var FreelancerDetail = {
-            HourlyRate: $("#HourlyRate").val(),
-            Education : $("#Education").val(),
-            ProffessionalExperience: $("#ProffessionalExperience").val(),
-            FreelancerAddress: $("#Freelancer-Address").val(),
-        }
+        var filename = $("#CVPath").val();
+        var validFileExtentions = /(\.pdf|\.docx)$/i;
+        if (validFileExtentions.exec(filename)) {
+            $('#preloader').show();
+            var fileUpload = $("#CVPath").get(0);
+            var files = fileUpload.files;
 
-        var ClientDetail = {
-            Description: $("#Description").val(),
-            ClientAddress: $("#Client-Address").val(),
-        }
-
-        var Userdata = {
-            Id: $(".UserId").val(),
-            FirstName: $("#firstname").val(),
-            LastName: $("#lastName").val(),
-            UserType: $("#userType").val(),
-            Email: $("#emailId").val(),
-            freelancerDetail: FreelancerDetail,
-            clientDetail: ClientDetail
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("AddorEditUserData", "Home")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(Userdata),
-            success: function (result) {
-                //alert(result.Message)
-                showToaster("success", "Success", result.Message);
-            },
-            error: function (result) {
-                //alert("Something Went Wrong! ");
-                showToaster("error", "Error !", "Something went wrong !!");
+            var FreelancerDetail = {
+                HourlyRate: $("#HourlyRate").val(),
+                Education: $("#Education").val(),
+                ProffessionalExperience: $("#ProffessionalExperience").val(),
+                FreelancerAddress: $("#Freelancer-Address").val(),
             }
-        });
+
+            var ClientDetail = {
+                Description: $("#Description").val(),
+                ClientAddress: $("#Client-Address").val(),
+            }
+
+            var Userdata = {
+                Id: $(".UserId").val(),
+                FirstName: $("#firstname").val(),
+                LastName: $("#lastName").val(),
+                UserType: $("#userType").val(),
+                Email: $("#emailId").val(),
+                freelancerDetail: FreelancerDetail,
+                clientDetail: ClientDetail
+            }
+
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            formData.append("Userdata", JSON.stringify(Userdata));
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddorEditUserData", "Home")",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                },
+                error: function (result) {
+                    $('#preloader').hide();
+                    showToaster("error", "Error !", "Failure");
+
+                }
+            });
+        } else {
+            showToaster("error", "Error !", "You can upload only PDF or Document file..");
+            clearApplyForm();
+        }
     }
 
     function ChangePassword() {
@@ -463,15 +495,21 @@
         $("#renewPassword").val("")
     }
 
-    function CheckUserBasedonUserTye(role){
-        if(role == "Freelancer")
-        {
+    function CheckUserBasedonUserTye(role) {
+        if (role == "Freelancer") {
             $(".FreelancerFields").show();
             $(".ClientFields").hide()
         }
-        else{
+        else {
             $(".FreelancerFields").hide();
             $(".ClientFields").show();
+        }
+    }
+
+    function DownloadCv(){
+        var Cvname = $("#CVPath-id").val()
+        if(Cvname != ""){
+            window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
         }
     }
 </script>

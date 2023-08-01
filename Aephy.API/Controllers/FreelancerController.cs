@@ -101,6 +101,36 @@ namespace Aephy.API.Controllers
             });
         }
 
+
+
+        [HttpPost]
+        [Route("UpdateUserCV")]
+        public async Task<IActionResult> UpdateUserCV([FromBody] UserCvFileModel usercv)
+        {
+            if(usercv.UserId != null)
+            {
+                var userData = _db.FreelancerDetails.Where(x => x.UserId == usercv.UserId).FirstOrDefault();
+                if(userData != null)
+                {
+                    userData.BlobStorageBaseUrl = usercv.BlobStorageBaseUrl;
+                    userData.CVPath = usercv.CVPath;
+                    userData.CVUrlWithSas = usercv.CVUrlWithSas;
+                    _db.SaveChanges();
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Updated Successfully !"
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
         [HttpGet]
         [Route("ApprovedRolesList")]
         public async Task<IActionResult> ApprovedRolesList([FromBody] GetUserProfileRequestModel model)

@@ -20,5 +20,8 @@ namespace Aephy.API.DBHelper
         public string? Address { get; set; }
 
         public string? FreelancerLevel { get; set; }
+        public string? CVPath { get; set; }
+        public string? BlobStorageBaseUrl { get; set; }
+        public string? CVUrlWithSas { get; set; }
     }
 }

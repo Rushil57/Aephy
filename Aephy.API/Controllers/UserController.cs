@@ -79,6 +79,7 @@ namespace Aephy.API.Controllers
                                 ProffessionalExperience = freelancerDetails.ProffessionalExperience,
                                 FreelancerAddress = freelancerDetails.Address,
                                 FreelancerLevel = freelancerDetails.FreelancerLevel,
+                                CVPath = freelancerDetails.CVPath,
                             }
                         });
                     }

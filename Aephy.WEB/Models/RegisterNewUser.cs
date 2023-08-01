@@ -40,4 +40,15 @@
         public string? ClientAddress { get; set; }
         public string? Description { get; set; }
     }
+
+    public class UserCvFile
+    {
+        public string? UserId { get; set; }
+
+        public string? CVPath { get; set; }
+
+        public string? BlobStorageBaseUrl { get; set; }
+
+        public string? CVUrlWithSas { get; set; }
+    }
 }

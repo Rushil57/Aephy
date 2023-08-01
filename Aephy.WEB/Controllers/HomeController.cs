@@ -17,6 +17,7 @@ using WebApplication7.Models;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 using Aephy.API.DBHelper;
+using Azure.Storage.Blobs.Models;
 
 namespace Aephy.WEB.Controllers
 {
@@ -119,8 +120,9 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<string> AddorEditUserData([FromBody] RegisterNewUser registerModel)
+        public async Task<string> AddorEditUserData(IFormFile httpPostedFileBase, string Userdata)
         {
+            var registerModel = JsonConvert.DeserializeObject<RegisterNewUser>(Userdata);
             if (registerModel.Id == null)
             {
                 try
@@ -164,6 +166,13 @@ namespace Aephy.WEB.Controllers
                     if (userId != null)
                     {
                         var userData = await _apiRepository.MakeApiCallAsync("api/User/UpdateProfile", HttpMethod.Post, registerModel);
+                        dynamic data = JsonConvert.DeserializeObject(userData);
+                        if (data.StatusCode == 200)
+                        {
+                            
+                            var d = await SaveUserCVFile(httpPostedFileBase, registerModel.Id);
+                            var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateUserCV", HttpMethod.Post, d);
+                        }
                         return userData;
                     }
                 }
@@ -438,7 +447,70 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        
+
+        public async Task<UserCvFile> SaveUserCVFile(IFormFile CVFile, object Id)
+        {
+            UserCvFile opengigroles = new UserCvFile();
+            try
+            {
+                if (CVFile != null && CVFile.Length > 0)
+                {
+                    string BlobStorageBaseUrl = string.Empty;
+                    string CVPath = string.Empty;
+                    string CVUrlWithSas = string.Empty;
+
+                    string fileName = Guid.NewGuid().ToString() + "_" + CVFile.FileName;
+
+                    // Get the Azure Blob Storage connection string from configuration
+                    var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream = CVFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+
+                    CVPath = blobClient.Uri.ToString();
+
+
+                    string sasToken = GenerateSasToken(CVPath);
+
+
+                    string cvUrlWithSas = CVPath + sasToken;
+
+
+
+                    BlobStorageBaseUrl = containerClient.Uri.ToString();
+
+
+                    CVUrlWithSas = cvUrlWithSas;
+
+                    opengigroles.BlobStorageBaseUrl = BlobStorageBaseUrl;
+                    opengigroles.CVPath = CVPath;
+                    opengigroles.CVUrlWithSas = CVUrlWithSas;
+                    opengigroles.UserId = (string)Id;
+
+                    return opengigroles;
+                }
+                else
+                {
+                    ModelState.AddModelError("ImageFile", "Please select a CV file.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return opengigroles;
+
+
+        }
+
+
         [HttpGet]
         public async Task<string> GetApprovedList()
         {
@@ -601,6 +673,33 @@ namespace Aephy.WEB.Controllers
             else
             {
                 return "failed to receive data..";
+            }
+        }
+
+        public IActionResult DownloadApplicantCV(string Cvname)
+        {
+            string connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+            string containerName = ContainerName;
+            try
+            {
+                string blobName = Path.GetFileName(Cvname);
+                BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+                BlobClient blob = container.GetBlobClient(blobName);
+                if (!blob.Exists())
+                {
+                    return NotFound();
+                }
+                BlobDownloadInfo downloadInfo = blob.Download();
+                var stream = new MemoryStream();
+                downloadInfo.Content.CopyTo(stream);
+                stream.Position = 0;
+                string suggestedFileName = blobName;
+                Response.Headers.Add("Content-Disposition", new Microsoft.Extensions.Primitives.StringValues(new[] { "attachment; filename=" + suggestedFileName }));
+                return new FileStreamResult(stream, "pdf/application");
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
             }
         }
     }

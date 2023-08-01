@@ -367,7 +367,8 @@
 
             },
             error: function (result) {
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -385,7 +386,8 @@
             } else if (level == "Project Leader") {
                 UpdateUserData();
             } else {
-                alert('invalid insertion..')
+                //alert('invalid insertion..')
+                showToaster("error", "Error !", "invalid insertion..");
             }
         }
     }
@@ -420,10 +422,12 @@
             dataType: "json",
             data: JSON.stringify(Userdata),
             success: function (result) {
-                alert(result.Message)
+                //alert(result.Message)
+                showToaster("success", "Success", result.Message);
             },
             error: function (result) {
-                alert("Something Went Wrong! ");
+                //alert("Something Went Wrong! ");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -442,11 +446,13 @@
             dataType: "json",
             data: JSON.stringify(passwordData),
             success: function (result) {
-                alert(result.Message)
+                //alert(result.Message)
+                showToaster("success", "Success", result.Message);
                 ResetUpdateForm()
             },
             error: function (result) {
-                alert("Something Went Wrong! ");
+                //alert("Something Went Wrong! ");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

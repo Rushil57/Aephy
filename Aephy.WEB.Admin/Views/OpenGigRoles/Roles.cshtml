@@ -160,7 +160,8 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -176,7 +177,8 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -204,14 +206,16 @@
             success: function (result) {
                 $("#preloader").hide();
                 CloseAddRolesModalPopup();
-                alert(result.Message);
+                //alert(result.Message);
+                showToaster("success", "Success", result.Message);
                 ResetRolesForm();
                 GetRolesList();
             },
             error: function (err) {
                 $("#preloader").hide();
                 CloseAddRolesModalPopup();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
 
@@ -275,7 +279,8 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }
         });
@@ -296,12 +301,14 @@
                 data: JSON.stringify(RolesData),
                 success: function (result) {
                     $("#preloader").hide();
-                    alert(result.Message);
+                    //alert(result.Message);
+                    showToaster("success", "Success", result.Message);
                     GetRolesList();
                 },
                 error: function (result) {
                     $("#preloader").hide();
-                    alert("Error occured..");
+                    //alert("Error occured..");
+                    showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
         }
@@ -330,7 +337,8 @@
                 $('#drp-Solutions').trigger('chosen:updated');
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
             }
         });
     }
@@ -368,7 +376,8 @@
                     $('#Industry').css("display", "block");
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                    showToaster("error", "Error !", "Something went wrong !!");
             }
         });
         }
@@ -412,7 +421,8 @@
                 }
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

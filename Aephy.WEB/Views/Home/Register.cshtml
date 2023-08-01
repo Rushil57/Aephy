@@ -269,7 +269,6 @@ While using our Site, we may ask you to provide us with certain personally ident
     });
 
     function SaveUserData() {
-        debugger;
         var Userdata = {
             FirstName: $("#FirstName").val(),
             LastName: $("#LastName").val(),
@@ -290,19 +289,22 @@ While using our Site, we may ask you to provide us with certain personally ident
             success: function (result) {
                 $("#preloader").hide();
                 if (result.Message == "User created successfully") {
-                    alert(result.Message)
+                    //alert(result.Message)
+                    showToaster("success", "Success", result.Message);
 
                     window.location.href = '/Home/Login'
                     ResetForm()
                 }
                 else {
-                    alert(result.Message)
+                    //alert(result.Message)
+                    showToaster("error", "Error !", result.Message);
                 }
 
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("Error !");
+                //alert("Error !");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

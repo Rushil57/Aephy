@@ -15,7 +15,7 @@
                             <tr>
                                 <th style="width:10%">Id</th>
                                 <th style="width:10%">Title</th>
-                              @*  <th style="width:10%">Sub Title</th>*@
+                                @*  <th style="width:10%">Sub Title</th>*@
                                 <th style="width:30%">Description</th>
                                 <th style="width:20%">Image</th>
                                 <th style="width:10%">Services</th>
@@ -139,7 +139,7 @@
                                         <button type="button" onclick="ActionByAdminOnSolution('2')" class="btn btn-secondary">Reject</button>
                                     </div>
                                 </form><!-- Vertical Form -->
-                               
+
 
                             </div>
                         </div>
@@ -167,7 +167,7 @@
             }
         });
         GetSolutionList()
-        $(".cls-subtitle").css("display","none")
+        $(".cls-subtitle").css("display", "none")
 
     });
 
@@ -208,14 +208,13 @@
                         {
                             "data": "ImageUrlWithSas",
                             "render": function (data, type, row) {
-                                if(data != null)
-                                {
+                                if (data != null) {
                                     return '<img src="' + data + '" alt="Image" height="70" width="150" />';
                                 }
-                                else{
+                                else {
                                     return "<span></span>";
                                 }
-                                
+
                             }
                         },
                         { "data": "Services" },
@@ -227,7 +226,8 @@
 
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
             }
         });
     }
@@ -237,7 +237,7 @@
         var ServiceData = {
             Id: Id,
         };
-         $("#drp-assigned-freelancers").empty();
+        $("#drp-assigned-freelancers").empty();
         $("#MileStoneTable tbody").empty();
         GetFreelancerList();
         $.ajax({
@@ -255,9 +255,9 @@
                 $("#drp-assigned-freelancers").val(result.Result.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
                 $("#drp-services").val(result.Result.Services.ServicesId)
                 $('#drp-industries').val(result.Result.Industryname.Id).trigger('chosen:updated');
-                 $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
+                $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
                 $("#solutionImagepreview").find("span").first().remove();
-                $("#IsActiveByAdmin").prop('checked', result.Result.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true:false);
+                $("#IsActiveByAdmin").prop('checked', result.Result.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true : false);
                 //
                 $("#projectOutline").val(result.Result.SolutionIndustryDetails.ProjectOutline);
                 //result.Result.MilestoneDetails
@@ -286,7 +286,8 @@
                 BindIndustriesControles(result.Result.Industryname, result.Result.SolutionIndustryDetails);
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -305,12 +306,13 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
 
-    function GetAssignedFreelancerById(){
+    function GetAssignedFreelancerById() {
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetFreelancers", "Solutions")",
@@ -324,15 +326,14 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
 
-    function BindIndustriesControles(value,IndustryValue)
-    {
-        if (IndustryValue.Description == null)
-        {
+    function BindIndustriesControles(value, IndustryValue) {
+        if (IndustryValue.Description == null) {
             IndustryValue.Description = "";
         }
         var addcontrols = "<div class='cls-industriesdiv'>" +
@@ -382,7 +383,7 @@
         }
     }
 
-     function SaveDescribeSolutionData() {
+    function SaveDescribeSolutionData() {
         var freelancerId = $("#drp-assigned-freelancers").val();
         var fileUpload = $(".industryImage").get(0);
         var files = fileUpload.files;
@@ -407,16 +408,18 @@
             dataType: 'json',
             success: function (result) {
                 $("#preloader").hide();
-                alert(result.Message);
+                //alert(result.Message);
+                showToaster("success", "Success", result.Message);
                 ResetSolutionIndustryDetailForm();
                 GetSolutionList();
             },
             error: function (err) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
-     }
+    }
 
     function ResetSolutionIndustryDetailForm() {
         $("#EditsolutionModal").modal('hide');
@@ -427,34 +430,39 @@
         $("#SolutionImage").val("");
         $('#drp-services').val("").trigger('chosen:updated');
         $("#drp-industries").val("").trigger('chosen:updated');
-       
-            $("#SolutionDetailsId").val(0);
+
+        $("#SolutionDetailsId").val(0);
         $(".SolutionImage").attr('src', "");
-            $("#solutionImagepreview").hide();
-            $("#ImagePath").val("");
-            $('.cls-industriesdiv').remove();
+        $("#solutionImagepreview").hide();
+        $("#ImagePath").val("");
+        $('.cls-industriesdiv').remove();
     }
 
-    function ActionByAdminOnSolution(actionVal){
-        try{
+    function ActionByAdminOnSolution(actionVal) {
+        try {
             $("#preloader").show();
-        $.ajax({
+            $.ajax({
                 url: '/Solutions/ActionByAdminOnSolution?solutionIndustryDetailsId=' + $("#SolutionDetailsId").val() + '&actionType=' + actionVal,
-            type: "POST",
-            data: {},
-            dataType: 'json',
-            success: function (result) {
-                $("#preloader").hide();
-                alert(result.Message);
-                ResetSolutionIndustryDetailForm();
-                GetSolutionList();
-            },
-            error: function (err) {
-                $("#preloader").hide();
-                alert("Something Went Wrong!");
-            }
-        });
+                type: "POST",
+                data: {},
+                dataType: 'json',
+                success: function (result) {
+                    $("#preloader").hide();
+                    //alert(result.Message);
+                    showToaster("success", "Success", result.Message);
+                    ResetSolutionIndustryDetailForm();
+                    GetSolutionList();
+                },
+                error: function (err) {
+                    $("#preloader").hide();
+                    //alert("Something Went Wrong!");
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
         }
-        catch(err){alert(err);}
+        catch (err) {
+            //alert(err);
+            showToaster("error", "Error !", err);
+        }
     }
 </script>

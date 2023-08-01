@@ -225,7 +225,8 @@
 				$('#select-services').trigger('chosen:updated');
 			},
 			error: function (result) {
-				alert("failure");
+				//alert("failure");
+				showToaster("error", "Error !", "Failure");
 			}
 		});
 	}
@@ -243,7 +244,8 @@
 				$('#select-solutions').trigger('chosen:updated');
 			},
 			error: function (result) {
-				alert("failure");
+				//alert("failure");
+				showToaster("error", "Error !", "Failure");
 			}
 		});
 	}
@@ -260,7 +262,8 @@
 				$('#select-industries').trigger('chosen:updated');
 			},
 			error: function (result) {
-				alert("failure");
+				//alert("failure");
+				showToaster("error", "Error !", "Failure");
 			}
 		});
 	}
@@ -305,7 +308,8 @@
 				$("#preloader").hide();
 			},
 			error: function (result) {
-				alert("failure");
+				//alert("failure");
+				showToaster("error", "Error !", "Failure");
 				$("#preloader").hide();
 			}
 		});
@@ -345,7 +349,8 @@
 				$("#preloader").hide();
 			},
 			error: function (result) {
-				alert("failure");
+				//alert("failure");
+				showToaster("error", "Error !", "Failure");
 				$("#preloader").hide();
 			}
 		});
@@ -394,17 +399,20 @@
 				success: function (result) {
 					clearForm();
 					$('#preloader').hide();
-					alert(result)
+					//alert(result)
+					showToaster("success", "Success", result);
 					CloseGigOpeningApplyModal();
 				},
 				error: function (result) {
 					clearForm();
 					$('#preloader').hide();
-					alert("failure");
+					//alert("failure");
+					showToaster("error", "Error !", "Failure");
 				}
 			});
 		}else{
-			alert('You can upload only PDF or Document file..')
+			//alert('You can upload only PDF or Document file..')
+			showToaster("error", "Error !", "You can upload only PDF or Document file..");
 			clearForm();
 		}
 	}
@@ -421,7 +429,8 @@
 				$("#RoleDescription").val(result.Result.Description);
 			},
 			error:function (result){
-				alert(result.Message)
+				//alert(result.Message)
+				showToaster("error", "Error !", result.Message);
 			}
 		});
 	}

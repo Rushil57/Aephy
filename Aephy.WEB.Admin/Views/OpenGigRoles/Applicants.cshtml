@@ -106,7 +106,8 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }
         });
@@ -134,7 +135,8 @@
 
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
 
@@ -162,13 +164,15 @@
                 dataType: "json",
                 data: JSON.stringify(data),
                 success: function (result) {
-                   alert(result.Message)
+                   //alert(result.Message)
+                    showToaster("success", "Success", result.Message);
                     CloseApplicationPopup()
                     $("#preloader").hide();
 
                 },  
                 error: function (result) {
-                    alert("Error occured..");
+                    //alert("Error occured..");
+                    showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
         }

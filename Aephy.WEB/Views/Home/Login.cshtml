@@ -109,13 +109,15 @@
                     window.location.href = '/Home/Dashboard'
                 }
                 else{
-                    alert(result.Message)
+                    //alert(result.Message)
+                    showToaster("error", "Error !", result.Message);
                 }
 
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("Something went wrong!");
+                //alert("Something went wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -141,7 +143,8 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("Something Went Wrong!");
+                //alert("Something Went Wrong!");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

@@ -576,7 +576,8 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }
         });
@@ -625,17 +626,21 @@
                 success: function (result) {
                     clearApplyForm();
                     $('#preloader').hide();
-                    alert(result)
+                    //alert(result)
+                    showToaster("success", "Success", result);
                     CloseGigOpeningApplyModal();
                 },
                 error: function (result) {
                     clearApplyForm();
                     $('#preloader').hide();
-                    alert("failure");
+                    //alert("failure");
+                    showToaster("error", "Error !", "Failure");
+
                 }
             });
         } else {
-            alert('You can upload only PDF or Document file..')
+            //alert('You can upload only PDF or Document file..')
+            showToaster("error", "Error !", "You can upload only PDF or Document file..");
             clearApplyForm();
         }
     }
@@ -652,7 +657,8 @@
                 $("#RoleDescription").val(result.Result.Description);
             },
             error: function (result) {
-                alert(result.Message)
+                //alert(result.Message)
+                showToaster("error", "Error !", result.Message);
             }
         });
     }
@@ -699,7 +705,8 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }
         });
@@ -734,11 +741,13 @@
             data: JSON.stringify(MileStoneData),
             success: function (result) {
                 $("#preloader").hide();
-                alert(result.Message);
+                //alert(result.Message);
+                showToaster("success", "Success", result.Message);
                 ResetMileStoneForm()
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -773,12 +782,14 @@
             dataType: "json",
             data: JSON.stringify(MileStoneData),
             success: function (result) {
-                alert(result.Message);
+                //alert(result.Message);
+                showToaster("success", "Success", result.Message);
                 ResetDetailsForm()
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
@@ -819,7 +830,8 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }
         });
@@ -846,7 +858,8 @@
                 }
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

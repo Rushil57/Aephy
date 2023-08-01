@@ -41,16 +41,16 @@ public class InviteUserController : Controller
 
             if (!send)
             {
-                return Json(new { message = "Invitation sending failed." });
+                return Json(new { Message = "Invitation sending failed.", Status = false });
             }
             #endregion
 
-            return Json(new { message = "Invitation sending success." });
+            return Json(new { Message = "Invitation sending success.", Status = true });
 
         }
         else
         {
-            return Json(new { message = "Invitation sending failed. null data found." });
+            return Json(new { Message = "Invitation sending failed. null data found.", Status = false });
         }
     }
 

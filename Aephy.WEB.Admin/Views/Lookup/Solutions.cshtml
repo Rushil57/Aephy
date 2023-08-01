@@ -88,7 +88,8 @@
 
             },
             error: function (result) {
-                alert("failure");
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
             }
         });
     }
@@ -108,12 +109,14 @@
                 dataType: "json",
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
-                    alert(result.Message);
+                    //alert(result.Message);
+                    showToaster("success", "Success", result.Message);
                     GetSolutionList();
 
                 },
                 error: function (result) {
-                    alert("Error occured..");
+                    //alert("Error occured..");
+                    showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
         }
@@ -165,7 +168,8 @@
 
             },
             error: function (result) {
-                alert("Error occured..");
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

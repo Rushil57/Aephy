@@ -19,8 +19,6 @@
                                 <th scope="col">EmailAddress</th>
                                 <th scope="col">UserRole</th>
                                 <th scope="col">Level</th>
-                                @*<th></th>
-                                <th></th>*@
                             </tr>
                         </thead>
                     </table>
@@ -128,50 +126,15 @@
                         { "data": "EmailAddress" },
                         { "data": "UserRole" },
                         { "data": "FreelancerLevel" },
-                        //{
-                        //    "data": "Id",
-                        //    "render": function (data, type, row) {
-                        //        return '<a class="btn btn-primary">Edit</a>';
-                        //    }
-                        //},
-                        //{
-                        //    "data": "Id",
-                        //    "render": function (data, type, row) {
-                        //        return '<a class="btn btn-danger" onclick=DeleteUser("' + data + '")>Delete</a>';
-                        //    }
-                        //},
                     ]
                 });
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", "Failure");
             }
         });
     }
-
-    //function DeleteUser(Id) {
-    //    if (confirm('Are you sure want to delete Record?')) {
-    //        var ServiceData = {
-    //            Id: Id,
-    //        };
-    //        $.ajax({
-    //            type: "POST",
-    //            url: "@Url.Action("UpdateUserIsDelete", "Users")",
-    //            contentType: "application/json; charset=utf-8",
-    //            dataType: "json",
-    //            data: JSON.stringify(ServiceData),
-    //            success: function (result) {
-    //                alert(result.Message)
-    //                GetinvitedUserList()
-
-    //            },
-    //            error: function (result) {
-    //                alert("Error occured..");
-    //            }
-    //        });
-    //    }
-    //}
 
     function OpenInvitePopup() {
         $("#addInviteModal").modal('show')
@@ -197,12 +160,18 @@
             dataType: "json",
             data: JSON.stringify(InviteData),
             success: function (result) {
-                alert(result.message);
-                ResetInviteForm();
-                GetinvitedUserList();
+                console.log(result);
+                if (result.status) {
+                    showToaster("success", "Success", result.message);
+                    ResetInviteForm();
+                    GetinvitedUserList();
+                }
+                else{
+                    showToaster("error", "Error !", result.message);
+                }
             },
             error: function (result) {
-                alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }

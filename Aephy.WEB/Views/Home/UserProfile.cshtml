@@ -396,7 +396,7 @@
                 hourlyRate < 40 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 40 + '.');
             } else if (level == "Associate" && hourlyRate < 20) {
                 hourlyRate < 20 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 20 + '.');
-            } else if (level == "Project Manager" && hourlyRate < 80) {
+            } else if (level == "Project Manager/Project Architecture" && hourlyRate < 80) {
                 hourlyRate < 80 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 80 + '.');
             } else if (level == "Project Leader") {
                 UpdateUserData();
@@ -409,60 +409,64 @@
 
     function UpdateUserData() {
         var filename = $("#CVPath").val();
-        var validFileExtentions = /(\.pdf|\.docx)$/i;
-        if (validFileExtentions.exec(filename)) {
-            $('#preloader').show();
-            var fileUpload = $("#CVPath").get(0);
-            var files = fileUpload.files;
-
-            var FreelancerDetail = {
-                HourlyRate: $("#HourlyRate").val(),
-                Education: $("#Education").val(),
-                ProffessionalExperience: $("#ProffessionalExperience").val(),
-                FreelancerAddress: $("#Freelancer-Address").val(),
+        if (filename != "") {
+            var validFileExtentions = /(\.pdf|\.docx)$/i;
+            if (!(validFileExtentions.exec(filename))) {
+                showToaster("error", "Error !", "You can upload only PDF or Document file..");
+                return
             }
-
-            var ClientDetail = {
-                Description: $("#Description").val(),
-                ClientAddress: $("#Client-Address").val(),
-            }
-
-            var Userdata = {
-                Id: $(".UserId").val(),
-                FirstName: $("#firstname").val(),
-                LastName: $("#lastName").val(),
-                UserType: $("#userType").val(),
-                Email: $("#emailId").val(),
-                freelancerDetail: FreelancerDetail,
-                clientDetail: ClientDetail
-            }
-
-            var formData = new FormData();
-            for (var i = 0; i < files.length; i++) {
-                formData.append("httpPostedFileBase", files[i]);
-            }
-            formData.append("Userdata", JSON.stringify(Userdata));
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("AddorEditUserData", "Home")",
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (result) {
-                    showToaster("success", "Success", result.Message);
-                },
-                error: function (result) {
-                    $('#preloader').hide();
-                    showToaster("error", "Error !", "Failure");
-
-                }
-            });
-        } else {
-            showToaster("error", "Error !", "You can upload only PDF or Document file..");
-            clearApplyForm();
         }
+
+
+        $('#preloader').show();
+        var fileUpload = $("#CVPath").get(0);
+        var files = fileUpload.files;
+
+        var FreelancerDetail = {
+            HourlyRate: $("#HourlyRate").val(),
+            Education: $("#Education").val(),
+            ProffessionalExperience: $("#ProffessionalExperience").val(),
+            FreelancerAddress: $("#Freelancer-Address").val(),
+        }
+
+        var ClientDetail = {
+            Description: $("#Description").val(),
+            ClientAddress: $("#Client-Address").val(),
+        }
+
+        var Userdata = {
+            Id: $(".UserId").val(),
+            FirstName: $("#firstname").val(),
+            LastName: $("#lastName").val(),
+            UserType: $("#userType").val(),
+            Email: $("#emailId").val(),
+            freelancerDetail: FreelancerDetail,
+            clientDetail: ClientDetail
+        }
+
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append("httpPostedFileBase", files[i]);
+        }
+        formData.append("Userdata", JSON.stringify(Userdata));
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditUserData", "Home")",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                showToaster("success", "Success", result.Message);
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                showToaster("error", "Error !", "Failure");
+
+            }
+        });
     }
+
 
     function ChangePassword() {
         var passwordData = {
@@ -506,9 +510,9 @@
         }
     }
 
-    function DownloadCv(){
+    function DownloadCv() {
         var Cvname = $("#CVPath-id").val()
-        if(Cvname != ""){
+        if (Cvname != "") {
             window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
         }
     }

@@ -119,11 +119,9 @@ namespace Aephy.WEB.Controllers
             }
             return "";
         }
-
         [HttpPost]
-        public async Task<string> AddorEditUserData(IFormFile httpPostedFileBase, string Userdata)
+        public async Task<string> AddUserData([FromBody] RegisterNewUser registerModel)
         {
-            var registerModel = JsonConvert.DeserializeObject<RegisterNewUser>(Userdata);
             if (registerModel.Id == null)
             {
                 try
@@ -159,29 +157,40 @@ namespace Aephy.WEB.Controllers
                     throw ex;
                 }
             }
-            else
+
+            return "";
+        }
+
+
+        [HttpPost]
+        public async Task<string> EditUserData(IFormFile httpPostedFileBase, string Userdata)
+        {
+            var registerModel = JsonConvert.DeserializeObject<RegisterNewUser>(Userdata);
+
+            try
             {
-                try
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId != null)
                 {
-                    var userId = HttpContext.Session.GetString("LoggedUser");
-                    if (userId != null)
+                    var userData = await _apiRepository.MakeApiCallAsync("api/User/UpdateProfile", HttpMethod.Post, registerModel);
+                    dynamic data = JsonConvert.DeserializeObject(userData);
+                    if (data.StatusCode == 200)
                     {
-                        var userData = await _apiRepository.MakeApiCallAsync("api/User/UpdateProfile", HttpMethod.Post, registerModel);
-                        dynamic data = JsonConvert.DeserializeObject(userData);
-                        if (data.StatusCode == 200)
+                        if (httpPostedFileBase != null)
                         {
-                            
                             var d = await SaveUserCVFile(httpPostedFileBase, registerModel.Id);
                             var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateUserCV", HttpMethod.Post, d);
                         }
-                        return userData;
+
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+                    return userData;
                 }
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
 
             return "";
         }

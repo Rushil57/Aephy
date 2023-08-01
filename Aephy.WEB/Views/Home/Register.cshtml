@@ -282,7 +282,7 @@ While using our Site, we may ask you to provide us with certain personally ident
         $("#preloader").show();
         $.ajax({
             type: "POST",
-            url: "@Url.Action("AddorEditUserData", "Home")",
+            url: "@Url.Action("AddUserData", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(Userdata),

@@ -5,6 +5,7 @@
     ViewData["Title"] = "Dashboard";
     ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
     ViewData["Fullname"] = Context.Session.GetString("FullName");
+    ViewData["Level"] = @Context.Session.GetString("LoggedUserLevel");
 }
 
 <main id="main" class="main cls-fixed-common">
@@ -356,7 +357,7 @@
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Roles Description</label>
                                         <div class="input-group">
-                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:150px;" disabled></textarea>
+                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:150px;resize: vertical !important;" disabled></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -377,7 +378,7 @@
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Additional Information</label>
                                         <div class="input-group">
-                                            <textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;"></textarea>
+                                            <textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;resize: vertical !important;"></textarea>
                                         </div>
                                     </div>
                                     <div class="text-center">

@@ -88,16 +88,22 @@ namespace Aephy.WEB.Controllers
                 var FirstName = string.Empty;
                 var LastName = string.Empty;
                 var Role = string.Empty;
+                var Level = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj["StatusCode"] == 200)
                 {
-                    UserId = jsonObj.Result.UserId;
                     FirstName = jsonObj.Result.FirstName;
                     LastName = jsonObj.Result.LastName;
                     Role = jsonObj.Result.Role;
+                    Level = jsonObj.Result.Level;
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
+
+                    if(Level != "none")
+                    {
+                        HttpContext.Session.SetString("LoggedUserLevel", Level);
+                    }
                     HttpContext.Session.SetString("LoggedUser", UserId);
                 }
 

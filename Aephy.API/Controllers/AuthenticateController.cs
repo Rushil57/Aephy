@@ -69,6 +69,11 @@ namespace Aephy.API.Controllers
                             //Code for check user are active or not
                             if (user.IsActive)
                             {
+                                FreelancerDetails freelancer = new FreelancerDetails();
+                                if (user.UserType == "Freelancer")
+                                {
+                                    freelancer = _db.FreelancerDetails.Where(x => x.UserId == user.Id).FirstOrDefault();
+                                }
                                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                 {
                                     StatusCode = StatusCodes.Status200OK,
@@ -78,7 +83,8 @@ namespace Aephy.API.Controllers
                                         UserId = user.Id,
                                         FirstName = user.FirstName,
                                         LastName = user.LastName,
-                                        Role = user.UserType
+                                        Role = user.UserType,
+                                        Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none"
                                     }
                                 });
                             }

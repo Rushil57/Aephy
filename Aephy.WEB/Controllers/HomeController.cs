@@ -78,6 +78,7 @@ namespace Aephy.WEB.Controllers
             HttpContext.Session.Remove("LoggedUser");
             HttpContext.Session.Remove("FullName");
             HttpContext.Session.Remove("LoggedUserRole");
+            HttpContext.Session.Remove("LoggedUserLevel");
         }
 
         [HttpPost]

@@ -221,7 +221,7 @@
                         <li class="dropdown-header">
                             <h6>@ViewData["Fullname"]</h6>
                             <span>@ViewData["Role"]</span>
-                            <p style="font-size:12px;">@ViewData["Level"]</p>
+                            <p style="font-size:12px;">@Context.Session.GetString("LoggedUserLevel")</p>
                         </li>
                         <li>
                             <hr class="dropdown-divider">

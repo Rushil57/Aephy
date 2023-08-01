@@ -415,15 +415,24 @@
                                 <input type="hidden" id="IndustryId" value="0">
                                 <input type="hidden" id="ProjectOulineId" value="0">
                                 <div class="form-group pt-3">
-                                    <label for="Description">ProjectOutline</label>
-                                    <input type="text" class="form-control" id="industry-ProjectOutline" name="Decription" placeholder="Decription">
+                                    <label for="projectDetails">Project Details</label>
+                                    @*<input type="text" class="form-control" id="industry-ProjectDetails" name="ProjectDetails" placeholder="Project Details">*@
+                                    <textarea id="industry-ProjectDetails" class="form-control" name="ProjectDetails" rows="4" cols="50"></textarea>
+                                </div>
+
+                                <div class="form-group pt-3">
+                                    <label for="Description">Project Outline</label>
+                                    @*<input type="text" class="form-control" id="industry-ProjectOutline" name="Decription" placeholder="Project Outline">*@
+                                    <textarea id="industry-ProjectOutline" class="form-control" name="ProjectOutline" rows="4" cols="50"></textarea>
                                 </div>
 
                                 <div class="form-group pt-3">
                                     <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()">Add MileStone</button>
+                                    <button type="button" class="btn btn-primary" onclick="OpenPointsPopup()">Add Points</button>
                                 </div>
 
-                                <div id="MileStonediv" style="padding-top: 5%;">
+                                <div id="MileStonediv" style="padding-top: 3%;">
+                                    <label for="mileStone" class="cls-table-label">MileStones Grid</label>
                                     <table class="table" id="MileStoneTable">
                                         <thead style="border: 1px solid #e8e8e8;">
                                             <tr>
@@ -431,9 +440,25 @@
                                                 <th>Description</th>
                                                 <th>Title</th>
                                                 <th>DueDate</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody class="MileStonebody">
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div id="Pointsdiv" style="padding-top: 3%;">
+                                    <label for="points" class="cls-table-label">Points Grid</label>
+                                    <table class="table" id="PointsTable">
+                                        <thead style="border: 1px solid #e8e8e8;">
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Points</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                         </tbody>
                                     </table>
                                 </div>
@@ -503,6 +528,43 @@
 </div>
 
 
+
+<div class="modal" id="PointsPopModal" tabindex="-1" aria-labelledby="PointsPopModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Add Points</h4>
+                <a class="close" onclick="ResetPointsForm();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="row g-3 mt-3" name="PointsForm">
+                                    <input type="hidden" id="PointsId" value="0" />
+                                    <div class="col-12">
+                                        <label for="points" class="form-label">Points</label>
+                                        <div class="input-group">
+                                            <input type="text" id="pointsDetails-id" class="form-control" name="points" />
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button class="btn btn-secondary" onclick="ResetPointsForm();">Reset</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     var validator;
     $(function () {
@@ -553,46 +615,68 @@
             }
         });
 
-        GetApprovedList()
 
+
+        $("form[name='PointsForm']").validate({
+            rules: {
+                points: { required: true }
+            },
+            messages: {
+                points: { required: "Please enter points" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SavePointsData()
+            }
+        });
+        GetApprovedList()
     });
+
+
     $(document).ready(function () {
         $("#preloader").show();
         if ("@Context.Session.GetString("LoggedUserRole").ToString()" == "Freelancer") {
             $('.only_freelancer').show();
-        $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetRolesList", "Home")",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetRolesList", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
 
-                var index = 0;
-                var subObj = '';
-                var htm = '';
-                for (index = 0; index < result.Result.length; index++) {
-                    subObj = result.Result[index];
+                    var index = 0;
+                    var subObj = '';
+                    var htm = '';
+                    for (index = 0; index < result.Result.length; index++) {
+                        subObj = result.Result[index];
 
-                    htm += '<tr>';
-                    htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
-                    htm += '<td>' + subObj.ServiceName + '</td>';
-                    htm += '<td>' + subObj.SolutionName + '</td>';
-                    htm += '<td>' + subObj.Title + '</td>';
-                    htm += '<td>' + subObj.Level + '</td>';
-                    htm += '<td>' + subObj.IndustryName + '</td>';
-                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
-                    htm += '</tr>';
+                        htm += '<tr>';
+                        htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
+                        htm += '<td>' + subObj.ServiceName + '</td>';
+                        htm += '<td>' + subObj.SolutionName + '</td>';
+                        htm += '<td>' + subObj.Title + '</td>';
+                        htm += '<td>' + subObj.Level + '</td>';
+                        htm += '<td>' + subObj.IndustryName + '</td>';
+                        htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
+                        htm += '</tr>';
+                    }
+                    $("#table-OpenRoles").find("tr:gt(0)").remove();
+                    $("#table-OpenRoles tbody").append(htm);
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    //alert("failure");
+                    showToaster("error", "Error !", "Failure");
+                    $("#preloader").hide();
                 }
-                $("#table-OpenRoles").find("tr:gt(0)").remove();
-                $("#table-OpenRoles tbody").append(htm);
-                $("#preloader").hide();
-            },
-            error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
-                $("#preloader").hide();
-            }
-        });
+            });
         } else {
             $('.only_freelancer').hide();
         }
@@ -735,6 +819,7 @@
         $("#SolutionId").val(SolutionId)
         $("#IndustryId").val(IndustryId)
         GetMiletoneList()
+        GetPointsList()
     }
 
     function OpenMileStonePopup() {
@@ -759,12 +844,10 @@
             data: JSON.stringify(MileStoneData),
             success: function (result) {
                 $("#preloader").hide();
-                //alert(result.Message);
                 showToaster("success", "Success", result.Message);
                 ResetMileStoneForm()
             },
             error: function (result) {
-                //alert("Error occured..");
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
@@ -786,9 +869,10 @@
             return
         }
 
-        var MileStoneData = {
+        var DefineData = {
             Id: $("#ProjectOulineId").val(),
             ProjectOutline: $("#industry-ProjectOutline").val(),
+            ProjectDetails: $("#industry-ProjectDetails").val(),
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val()
         };
@@ -799,7 +883,7 @@
             url: "@Url.Action("UpdateIndustryOutline", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(MileStoneData),
+            data: JSON.stringify(DefineData),
             success: function (result) {
                 //alert(result.Message);
                 showToaster("success", "Success", result.Message);
@@ -815,19 +899,27 @@
 
     function ResetDetailsForm() {
         $("#industry-ProjectOutline").val("")
+        $("#industry-ProjectDetails").val("")
         $("#SolutionId").val(0)
         $("#IndustryId").val(0)
         ResetMileStoneForm()
         $("#DetailsPopModal").modal('hide')
     }
 
+
     function GetMiletoneList() {
+        var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val())
+        }
+
         $("#preloader").show();
         $.ajax({
-            type: "Get",
+            type: "POST",
             url: "@Url.Action("GetMiletoneList", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            data: JSON.stringify(data),
             success: function (result) {
                 var data = result.Result
                 var index = 0;
@@ -842,6 +934,7 @@
                     htm += '<td>' + subObj.Description + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + moment(subObj.DueDate).format('YYYY-MM-DD') + '</td>';
+                    htm += '<td><a class="btn btn-danger btn-sm" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
                     htm += '</tr>';
                 }
                 $("#MileStoneTable").find("tr:gt(0)").remove();
@@ -881,5 +974,129 @@
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
+    }
+
+    function OpenPointsPopup() {
+        if ($("#PointsTable tbody tr").length >= 3) {
+            showToaster("warning", "Warning !", "you have reached a limit for adding points");
+        } else {
+            $("#PointsPopModal").modal('show')
+        }
+
+    }
+    function SavePointsData() {
+        var PointsData = {
+            Id: $("#PointsId").val(),
+            Point: $("#pointsDetails-id").val(),
+            SolutionId: $("#SolutionId").val(),
+            IndustryId: $("#IndustryId").val()
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SavePoints", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(PointsData),
+            success: function (result) {
+                $("#preloader").hide();
+                showToaster("success", "Success", result.Message);
+                ResetPointsForm()
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function ResetPointsForm() {
+        $("#PointsId").val(0);
+        $("#pointsDetails-id").val("");
+        $("#PointsPopModal").modal('hide')
+        GetPointsList()
+    }
+
+    function GetPointsList() {
+
+        var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val())
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetPointsList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                var data = result.Result
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                for (index = 0; index < data.length; index++) {
+                    subObj = data[index];
+
+                    htm += '<tr>';
+                    htm += '<td>' + subObj.Id + '</td>';
+                    htm += '<td>' + subObj.point + '</td>';
+                    htm += '<td><a class="btn btn-danger btn-sm" onclick=DeletePointsById(' + subObj.Id + ')>Delete</a></td>';
+                    htm += '</tr>';
+                }
+                $("#PointsTable").find("tr:gt(0)").remove();
+                $("#PointsTable tbody").append(htm);
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function DeletePointsById(Id) {
+        if (confirm('Are you sure want to delete point?')) {
+            var Data = {
+                Id: Id,
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeletePoints", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(Data),
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                    GetPointsList()
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }
+
+    }
+
+    function DeleteMileStoneById(Id) {
+        if (confirm('Are you sure want to delete milestone?')) {
+            var Data = {
+                Id: Id,
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteMileStone", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(Data),
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                    GetMiletoneList()
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }
+
     }
 </script>

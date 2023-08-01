@@ -199,6 +199,8 @@ namespace Aephy.API.Models
 
             public string? ProjectOutline { get; set; }
 
+            public string? ProjectDetails { get; set; }
+
             public int IndustryId { get; set; }
 
             public int SolutionId { get; set; }
@@ -207,6 +209,15 @@ namespace Aephy.API.Models
         public class MileStoneIdViewModel
         {
             public int Id { get; set; }
+        }
+
+        public class MileStoneDetailsViewModel
+        {
+            public int IndustryId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public string? FreelancerId { get; set; }
         }
 
     }

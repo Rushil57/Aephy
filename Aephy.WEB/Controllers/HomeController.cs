@@ -16,6 +16,7 @@ using System.Reflection;
 using WebApplication7.Models;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
+using Aephy.API.DBHelper;
 
 namespace Aephy.WEB.Controllers
 {
@@ -96,6 +97,7 @@ namespace Aephy.WEB.Controllers
                     LastName = jsonObj.Result.LastName;
                     Role = jsonObj.Result.Role;
                     Level = jsonObj.Result.Level;
+                    UserId = jsonObj.Result.UserId;
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
@@ -490,16 +492,15 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
-        //GetMiletoneList
-        [HttpGet]
-        public async Task<string> GetMiletoneList()
+        [HttpPost]
+        public async Task<string> GetMiletoneList([FromBody] MileStoneDetailsViewModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId != null)
             {
-                GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
-                UserId.UserId = userId;
-                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Get, UserId);
+                //GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
+                model.FreelancerId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Post, model);
                 return aprroveList;
             }
             return "Something Went Wrong";
@@ -537,6 +538,70 @@ namespace Aephy.WEB.Controllers
             var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
             return Solutiondata;
 
+        }
+
+        [HttpPost]
+        public async Task<string> SavePoints([FromBody] SolutionPoints model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.FreelancerId = userId;
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SavePointsData", HttpMethod.Post, model);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+            }
+            return "Something Went Wrong";
+        }
+
+        [HttpPost]
+        public async Task<string> GetPointsList([FromBody] MileStoneDetailsViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId != null)
+            {
+                model.FreelancerId = userId;
+                var pointsList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsList", HttpMethod.Post, model);
+                return pointsList;
+            }
+            return "Something Went Wrong";
+        }
+
+
+        [HttpPost]
+        public async Task<string> DeletePoints([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                var pointsData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeletePointsById", HttpMethod.Post, model);
+                return pointsData;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        [HttpPost]
+        public async Task<string> DeleteMileStone([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                var pointsData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeleteMileStoneById", HttpMethod.Post, model);
+                return pointsData;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
         }
     }
 }

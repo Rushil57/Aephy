@@ -228,6 +228,7 @@ namespace Aephy.API.Controllers
                 if(data != null)
                 {
                     data.ProjectOutline = model.ProjectOutline;
+                    data.ProjectDetails = model.ProjectDetails;
                     _db.SaveChanges();
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -247,13 +248,13 @@ namespace Aephy.API.Controllers
         }
 
         
-        [HttpGet]
+        [HttpPost]
         [Route("GetMiletoneList")]
-        public async Task<IActionResult> GetMiletoneList([FromBody] GetUserProfileRequestModel model)
+        public async Task<IActionResult> GetMiletoneList([FromBody] MileStoneDetailsViewModel model)
         {
             try
             {
-                var milestoneList = _db.SolutionMilestone.Where(x => x.FreelancerId == model.UserId).ToList();
+                var milestoneList = _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId ).ToList();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -271,7 +272,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //GetMileStoneById
+        
         [HttpPost]
         [Route("GetMileStoneById")]
         public async Task<IActionResult> GetMileStoneById([FromBody] MileStoneIdViewModel model)
@@ -288,6 +289,113 @@ namespace Aephy.API.Controllers
 
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
 
+        }
+        [HttpPost]
+        [Route("SavePointsData")]
+        public async Task<IActionResult> SavePointsData([FromBody] SolutionPoints model)
+        {
+            if (model != null)
+            {
+                if (model.Id == 0)
+                {
+                    var points = new SolutionPoints()
+                    {
+                        point = model.point,
+                        IndustryId = model.IndustryId,
+                        SolutionId = model.SolutionId,
+                        FreelancerId = model.FreelancerId
+                    };
+                    _db.SolutionPoints.Add(points);
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Saved Succesfully!."
+                    });
+                }
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+        [HttpPost]
+        [Route("GetPointsList")]
+        public async Task<IActionResult> GetPointsList([FromBody] MileStoneDetailsViewModel model)
+        {
+            try
+            {
+                var pointsList = _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = pointsList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        
+        [HttpPost]
+        [Route("DeletePointsById")]
+        public async Task<IActionResult> DeletePointsById([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                var pointsData = _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefault();
+                if(pointsData != null)
+                {
+                    _db.SolutionPoints.Remove(pointsData);
+                    _db.SaveChanges();
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Delete Succesfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteMileStoneById")]
+        public async Task<IActionResult> DeleteMileStoneById([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                var milestoneData = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (milestoneData != null)
+                {
+                    _db.SolutionMilestone.Remove(milestoneData);
+                    _db.SaveChanges();
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Delete Succesfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
         }
     }
 }

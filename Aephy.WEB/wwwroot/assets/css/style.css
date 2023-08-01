@@ -1339,3 +1339,9 @@ textarea.form-control {
 .list-title-size {
     font-size: 23px;
 }
+
+
+.cls-table-label {
+    font-weight: bold;
+    padding-bottom: 1%;
+}

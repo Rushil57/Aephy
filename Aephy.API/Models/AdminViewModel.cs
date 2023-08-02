@@ -156,6 +156,9 @@ namespace Aephy.API.Models
 
             public string? ImagePath { get; set; }
             public string? ActiveByAdmin { get; set; }
+
+            public bool IsActiveForClient { get; set; }
+            public bool IsActiveForFreelancer { get; set; }
         }
 
         public class UserIdModel

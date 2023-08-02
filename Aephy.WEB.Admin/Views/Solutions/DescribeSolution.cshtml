@@ -112,11 +112,21 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-12" style="display:none">
                                         <label for="IsActiveByAdmin" class="form-label">Is Active</label>
                                         <div class="input-group" id="IsActiveByAdmindiv">
                                             <input type="checkbox" id="IsActiveByAdmin" class="form-check-input" />
                                         </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="IsActiveForFreelancer" class="form-label">Is Active For Freelancer</label>
+                                        <input type="checkbox" id="IsActiveForFreelancer" class="form-check-input" />
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="IsActiveForClient" class="form-label">Is Active For Client</label>
+                                        <input type="checkbox" id="IsActiveForClient" class="form-check-input" />
                                     </div>
 
                                     <div class="text-center">
@@ -370,6 +380,8 @@
                 $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
                 $("#solutionImagepreview").find("span").first().remove();
                 $("#IsActiveByAdmin").prop('checked', data.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true : false);
+                $("#IsActiveForFreelancer").prop('checked', data.SolutionIndustryDetails.IsActiveForFreelancer == 1 ? true : false);
+                $("#IsActiveForClient").prop('checked', data.SolutionIndustryDetails.IsActiveForClient == 1 ? true : false);
                 //
                 $("#projectOutline").val(data.SolutionIndustryDetails.ProjectOutline);
                 $("#projectDetails").val(data.SolutionIndustryDetails.ProjectDetails);
@@ -527,7 +539,6 @@
     }
 
     function SaveDescribeSolutionData() {
-
         var freelancerId = $("#drp-assigned-freelancers").val();
         var fileUpload = $(".industryImage").get(0);
         var files = fileUpload.files;
@@ -537,6 +548,8 @@
             AssignedFreelancerIds: finalIdsData,
             IsArchitectIds: architectData,
             ActiveByAdmin: $("#IsActiveByAdmin").prop('checked') ? 1 : 2,
+            IsActiveForFreelancer: $("#IsActiveForFreelancer").prop('checked') ? true : false,
+            IsActiveForClient: $("#IsActiveForClient").prop('checked') ? true : false,
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val(),
         };
@@ -767,7 +780,7 @@
     }
 
     function FillArchitect() {
-        
+
         architectData = [];
 
         $(".chkArchitect:checked").each(function (i) {

@@ -94,5 +94,8 @@ namespace Aephy.WEB.Admin.Models
 
         public string? ImagePath { get; set; }
         public string? ActiveByAdmin { get; set; }
+
+        public bool IsActiveForFreelancer { get; set; }
+        public bool IsActiveForClient { get; set; }
     }
 }

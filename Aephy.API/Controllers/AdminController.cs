@@ -1275,24 +1275,24 @@ namespace Aephy.API.Controllers
                 {
                     var industryname = string.Empty;
 
-                    var test1 = _db.SolutionServices.ToList();
-                    var test2 = _db.Services.ToList();
-                    var test3 = _db.Industries.ToList();
-                    var test4 = _db.Solutions.ToList();
+                    var solutionServiceList = _db.SolutionServices.ToList();
+                    var serviceList = _db.Services.ToList();
+                    var industriesList = _db.Industries.ToList();
+                    var solutionsList = _db.Solutions.ToList();
 
                     foreach (var list in solutionIndustries)
                     {
-                        var serviceId = test1.Where(x => x.SolutionId == list.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
-                        var Servicename = test2.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                        var serviceId = solutionServiceList.Where(x => x.SolutionId == list.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                        var Servicename = serviceList.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
                         SolutionsModel dataStore = new SolutionsModel();
-                        dataStore.Industries = test3.Where(x => x.Id == list.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                        dataStore.Industries = industriesList.Where(x => x.Id == list.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                         dataStore.Id = list.Id;
                         dataStore.Description = list.Description;
                         dataStore.ImagePath = list.ImagePath;
                         dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-                        dataStore.Title = test4.Where(x => x.Id == list.SolutionId).Select(x => x.Title).FirstOrDefault();
-                        dataStore.SubTitle = test4.Where(x => x.Id == list.SolutionId).Select(x => x.SubTitle).FirstOrDefault();
+                        dataStore.Title = solutionsList.Where(x => x.Id == list.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        dataStore.SubTitle = solutionsList.Where(x => x.Id == list.SolutionId).Select(x => x.SubTitle).FirstOrDefault();
                         dataStore.Services = Servicename;
                         solutionsModel.Add(dataStore);
                         industrylist.Clear();
@@ -1376,7 +1376,9 @@ namespace Aephy.API.Controllers
                         IndustryId = model.IndustryId,
                         Description = model.Description,
                         //AssignedFreelancerId = model.AssignedFreelancerId,
-                        IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin)
+                        IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin),
+                        IsActiveForFreelancer = model.IsActiveForClient,
+                        IsActiveForClient = model.IsActiveForClient
                     };
                     _db.SolutionIndustryDetails.Add(solution);
                     _db.SaveChanges();
@@ -1395,10 +1397,12 @@ namespace Aephy.API.Controllers
                         data.Description = model.Description;
                         //data.AssignedFreelancerId = model.AssignedFreelancerId;
                         data.IsActiveByAdmin = Convert.ToInt32(model.ActiveByAdmin);
+                        data.IsActiveForClient = model.IsActiveForClient;
+                        data.IsActiveForFreelancer = model.IsActiveForFreelancer;
                         //_db.SaveChanges();
                     }
 
-                    var freelancerPoolData = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId).ToList();
+                    var freelancerPoolData = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
                     _db.FreelancerPool.RemoveRange(freelancerPoolData);
                     //await _db.SaveChangesAsync();
 

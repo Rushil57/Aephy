@@ -30,5 +30,9 @@ namespace Aephy.API.DBHelper
         public int IsActiveByAdmin { get; set; }
 
         public string? ProjectDetails { get; set; }
+
+        public bool IsActiveForFreelancer { get; set; }
+        public bool IsActiveForClient { get; set; }
+
     }
 }

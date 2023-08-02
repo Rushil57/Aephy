@@ -1527,13 +1527,21 @@ namespace Aephy.API.Controllers
 
                     if (userDetails != null)
                     {
-                        List<Solutions> solutions = new List<Solutions>();
+                        List<dynamic> solutions = new List<dynamic>();
                         var solutionsList = _db.FreelancerPool.Where(x => x.FreelancerID == model.Id).ToList();
                         if (solutionsList.Count > 0)
                         {
-                            solutionsList.ForEach(model =>
+                            solutionsList.ForEach(mdl =>
                             {
-                                solutions.Add(_db.Solutions.Where(s => s.Id == model.SolutionID).FirstOrDefault());
+                                var sln = _db.Solutions.Where(s => s.Id == mdl.SolutionID).FirstOrDefault();
+                                var ind = _db.Industries.Where(x => x.Id == mdl.IndustryId).FirstOrDefault();
+                                solutions.Add(
+                                    new { 
+                                        sln?.Id,
+                                        sln?.Title,
+                                        ind?.IndustryName
+                                    }
+                                );
                             });
                         }
 

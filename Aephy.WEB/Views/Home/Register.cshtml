@@ -8,8 +8,25 @@
         height: fit-content;
         margin: 0 auto;
         overflow: hidden;
-        padding: 2rem;
+        padding:0 10px;
         color: var(--font - title);
+    }
+
+        .progressContainer .title {
+        font-size: 16px;
+            color: #d38b4e;
+        padding-bottom: 10px;
+    }
+    #clsPrivacyPolicyModal{
+        color: #d38b4e;
+        padding: 0 10px;
+        cursor:pointer;
+    }
+
+    #clsPrivacyPolicyModal:hover {
+        color: #c27714;
+        padding: 0 10px;
+            cursor: pointer;
     }
 </style>
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center">
@@ -93,8 +110,613 @@
                     <h4 class="modal-title">Terms & Conditions</h4>
                 <a class="close" href="#" data-dismiss="#privacyPolicyModal" onclick="CloseprivacyPolicyModal();"><i class="bi bi-x-circle"></i></a>
                 </div>
-                <div class="modal-body p-0">
+                <div class="modal-body p-4">
+                <!-- User Agreement -->
+                <div class="progressContainer d-flex flex-column">
+                    <div class="title section-title-size" data-open-accessibility-text-original="18px" style="font-size: 18px;">
+                        User Agreement
+                    </div>
+                    <p class="section-detail-size">
+                        This User Agreement (“Agreement”) governs the use of Aephy’s website and services (collectively, “Aephy” or the “Site” or the “Platform” ). By using Aephy, you agree to be bound by the terms and conditions of this Agreement. If you do not agree to these terms and conditions, you should not use the Site.
+                    </p>
+                    <ol>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Account Registration</h3>
+                            <p class="section-detail-size">
+                                In order to use certain features of Aephy, you must register for an account. When you register for an account, you may be required to provide us with some personal information, such as your name and email address. You agree that the information you provide to us is accurate and complete, and that you will keep it up-to-date. Your Account registration is subject to approval by Aephy. We reserve the right to decline a registration either to join Aephy or to add an Account of any type, for any lawful reason.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Account Eligibility</h3>
+                            <p class="section-detail-size">
+                                You must be at least 18 years old to register for an account on Aephy. By registering for an account, you represent and warrant that you are at least 18 years old and have the legal capacity to enter into this Agreement.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Account Profile</h3>
+                            <p class="section-detail-size">
+                                You are responsible for maintaining the accuracy and completeness of your account profile. You may not impersonate any person or entity, or misrepresent your affiliation with any person or entity, including using another person’s username, password, or other account information.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Account Types</h3>
+                            <p class="section-detail-size">
+                                Aephy offers 2 types of accounts, including Client Accounts and Freelancer Accounts. Each account type has different privileges and restrictions, and you are responsible for complying with the terms of this Agreement that apply to your account type.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Client Account</h3>
+                            <p class="section-detail-size">
+                                If you register for a Client Account, you may post requests for projects or buy projects provided by Freelancers and make payments through the Site. You are solely responsible for your interactions with Freelancers and the services that you receive from them. Aephy recommends Freelancers based on internal criteria, but we do not guarantee the quality or suitability of any services provided by Freelancers.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Freelancer Account</h3>
+                            <p class="section-detail-size">
+                                If you register for a Freelancer Account, you are eligible to apply for various gig roles. These roles include Project Architects, Project Managers, Experts, and Associates.
+                                Project Architects: Responsible for setting up the requirements and all the relevant information for small, medium, and large projects within a specific solution. Being a Project Manager within our platform is a prerequisite for this role.
+                                Project Managers: These professionals lead projects within a specific solution. They coordinate the efforts of Experts and Associates to ensure project completion.
+                                Experts: These are highly skilled professionals who specialize in a particular area of expertise. Their role involves lending their knowledge and skills to projects as needed.
+                                Associates: Entry-level professionals who provide support to Experts and Project Managers throughout the duration of a project.
+                                Once your application has been reviewed and accepted, your role will determine your access to certain advanced functionalities regarding project allocation.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Account Permissions</h3>
+                            <p class="section-detail-size">
+                                You may grant permissions to other users to access certain features of your account. You are responsible for any actions taken by users who have been granted permissions to access your account.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Identity Verification</h3>
+                            <p class="section-detail-size">
+                                Aephy may require you to verify your identity and location in order to use certain features of the Site, such as making payments or withdrawing funds. You agree to provide us with accurate and complete information for identity and location verification purposes, and you agree to cooperate with us in our efforts to verify your identity and location.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Usernames and Passwords</h3>
+                            <p class="section-detail-size">
+                                You are responsible for keeping your username and password confidential and secure, and for all activities that occur under your account. If you believe that your account has been compromised, you should immediately change your password and contact Aephy.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Purpose of platform</h3>
+                            <p class="section-detail-size">
+                                Our platform operates as a marketplace specifically designed for AI services, connecting clients in need of such projects with preselected freelancers who possess the necessary skills and expertise to complete the project successfully. Our platform’s goal is to offer to clients get the best value for their money. Furthermore, our platform uses an algorithm to match clients with the best freelancer for their project, taking into consideration factors such as the client's requirements, the freelancer's expertise and availability, and the project's complexity.
+                                To browse through the platform smoothly, we have created guidelines and categories to govern the work that is done on our platform.
+Our platform also provides users with a feedback system that enables clients to rate the quality of the work done by the freelancer. In addition, We facilitate transactions between clients and freelancers and provide tools and resources to help users manage their transactions. 
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">
+                                Relationship with platform
+                            </h3>
+                            <p class="section-detail-size">
+                                Users are independent contractors and not employees, agents, partners or joint ventures of platform. We do not control the services provided by users and do not guarantee the quality, safety or legality of the services provided. We are not responsible for any disputes or damages arising from transactions between users.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Taxes and Benefits</h3>
+                            <p class="section-detail-size">
+                                Users are responsible for paying all taxes associated with their earnings on our platform. We do not provide any benefits to users, including but not limited to healthcare, retirement or insurance benefits.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Marketplace Feedback</h3>
+                            <p class="section-detail-size">
+                                Users may leave feedback on their experiences with other users on our platform. We do not control the content of feedback and are not responsible for any feedback or comments made by users.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">User Content</h3>
+                            <p class="section-detail-size">
+                                Users are solely responsible for the content they post on our platform, including but not limited to profiles and messages. We reserve the right to remove any content that violates this Agreement or our policies.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Contractual Relationship Between Client and Freelancer</h3>
+                            <p class="section-detail-size">
+                                The Platform acts as a marketplace where clients can buy AI projects provided by freelancers. The Platform does not participate in any contractual relationship between the client and the freelancer.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Service Contracts and Direct Contracts</h3>
+                            <p class="section-detail-size">
+                                Clients may choose to engage with freelancers through a Service Contract. Service Contracts are agreements between clients and freelancers created on the Platform. These agreements are subject to the terms and conditions of the Platform. Direct Contracts are agreements between clients and freelancers that are not created on the Platform. The Platform does not support Direct Contacts and is not responsible for any disputes that may arise from Direct Contracts.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">
+                                Disputes Among Users
+                            </h3>
+                            <p class="section-detail-size">
+                                The Platform is not responsible for any disputes that may arise between users. However, the Platform may, at its discretion, provide dispute resolution services. Users agree to cooperate fully with the Platform in any dispute resolution process.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Confidential Information</h3>
+                            <p class="section-detail-size">
+                                Users agree to keep all information related to the Platform, its users, and its services confidential. Users may not disclose this information to any third party without the prior written consent of the Platform.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Worker Classification</h3>
+                            <p class="section-detail-size">
+                                The platform does not have an employer-employee relationship with any Freelancer. Each Freelancer is responsible for determining the status of their relationship with the platform and their clients, as well as any applicable tax obligations. The platform will not withhold taxes from any payments made to Freelancers.
+                            </p>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Freelancer Payment</h3>
+                            <p class="section-detail-size">
+                                Our platform provides flexibility for freelancers to set their hourly rate upon registration, certain boundaries may be applicable. Hourly rates remains locked for six months. During this six-month period, freelancers have the option to reduce their hourly rate if they choose to do so. However, any increase in their hourly rate can only be made after the end of the six-month period. Project architects receive an extra payment of 4% of the total project fees (including only personnel costs) for all the small projects they have created, even if they are not involved in the project, and an extra payment of 3% of the total project fees (including only personnel costs) for all the small projects they have created, even if they are not involved in the project. Additionally, when a client sends a message or requests a proposal for a custom project to a project manager, the project manager can be reserved for up to 3 days with a payment calculated based on the freelancer’s hourly rate. The reservation period begins when the freelancer replies. During this time, the freelancer won't receive other project notifications. If the freelancer fails to acknowledge or rejects the project, the client may be eligible for a refund.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Freelancer Ratings</h3>
+                            <p class="section-detail-size">
+                                As a freelancer, your rating is based on factors such as customer reviews, project reviews, meeting deadlines, professionalism, hourly rate, reviews between freelancers, availability, and project acceptance. Your rating is updated daily and affects your ability to receive work on our platform. We reserve the right to suspend or terminate your account if your rating falls below a certain threshold. Freelancer is selected based on rating and other criteria determined solely by the platform.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">User Ratings and Reviews</h3>
+                            <p class="section-detail-size">
+                                Users can rate and review each other based on their experience working together on a project. Ratings and reviews help the platform to make informed decisions about who to select for the projects. As a User of the Platform, you agree to provide honest and accurate ratings and reviews.
+
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Freelancer requirements</h3>
+                            <p class="section-detail-size">
+                                As a freelancer, your rating may be negatively affected if you fail to update your availability on a monthly basis or fail to take any projects within a 3-month period. If you wish to advance to a higher role, you must apply for that new role. Freelancers are advised to work a maximum of 8 hours per day. However, you may adjust your work hours to suit your schedule, provided it aligns with the client's agreement.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Platform Payroll Services</h3>
+                            <p class="section-detail-size">
+                                The platform does not provide payroll services for Freelancers. It is the responsibility of each Freelancer to manage their own payroll and tax obligations.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Aephy fees</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        Platform charges a service fee to clients on each project they purchase through the platform. This fee is calculated as a percentage of the project price and is clearly displayed to the client before they agree to purchase the project.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        The platform's fee structure is determined by project size, the involvement of a project architect, and reservation of a project manager by the client. 
+                                    </p>
+                                    <ol type="I">
+                                        <li>
+                                            <p class="section-detail-size">
+                                            For small projects (those involving less than 3 gigs), defined by a project architect, the platform imposes a service fee of 16% on the project fees (including only personnel costs). 
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p class="section-detail-size">
+                                                For medium and large projects defined by a project architect, an additional 11% service fee is applied on the project fees (personnel costs only).
+                                            </p>
+                                        </li>
+                                        </ol>
+                                    <p class="section-detail-size">
+                                        If a client chooses to add extra milestones to a project defined by a project architect, the fee structure is adjusted accordingly:
+                                    </p>
+                                    <ol type="I">
+                                        <li>
+                                            <p class="section-detail-size">
+                                                For small projects with additional milestones, the platform imposes an extra service fee of 20% on the additional milestone fees (personnel costs only). 
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p class="section-detail-size">
+                                                For medium and large projects with extra milestones, an additional service fee of 14% is applied to the additional milestone fees (personnel costs only). 
+                                            </p>
+                                        </li>
+                                    </ol>
+                                    <p class="section-detail-size">
+                                        For custom projects (those involving more than 2 gigs), the platform imposes an additional service fee of 14% on the project fees (personnel costs only).
+                                    Additionally, a service fee of 4% is charged to clients for reserving project managers.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        The platform reserves the right to change the service fee charged to clients at any time, however, any such changes will be communicated to clients in advance.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Fees for Freelancers</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        Freelancers are not charged any fees for using the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        In some cases, freelancers may be subject to payment processing fees from third-party payment processors if they choose to withdraw funds from their platform account.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        Freelancers are responsible for paying any taxes or other fees that may be required by law in connection with their use of the platform.                                    
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Client fees</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        Clients are responsible for paying the project price in full, whether it is a one-time payment or divided into milestones, as well as any applicable service fees, taxes, or other fees associated with their use of the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        Platform reserves the right to withhold any applicable taxes from the payments made to freelancers.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        Clients are responsible for providing accurate payment information and ensuring that they have sufficient funds in their payment method to cover the project price and any applicable fees.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">VAT and Other Taxes</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        Clients and freelancers are responsible for paying any VAT or other taxes that may be required by law in connection with their use of the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        platform may be required by law to collect and remit VAT or other taxes on behalf of clients or freelancers in certain jurisdictions.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        platform reserves the right to withhold any applicable taxes from the payments made to freelancers.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">No Fees for Finding Projects</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        platform does not charge any fees to clients or freelancers for finding or introducing them to projects or other users on the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        platform reserves the right to offer additional services or features for a fee in the future, however, any such changes will be communicated to users in advance.
+                                    </p>
+                                </li>                                
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Escrow Service</h3>
+                            <p class="section-detail-size">
+                                Our platform provides an escrow service to ensure that funds are held securely until a project is completed. Funds are released to the freelancer only when the client approves the completed project or when the dispute resolution process is successfully completed.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Client Payment</h3>
+                            <p class="section-detail-size">
+                                Clients must pay for all work completed under a Service Contract through our platform, using the approved payment methods. Clients may not pay freelancers outside of the platform. Clients must also ensure that their payment information is accurate and up to date.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Disbursements to Freelancers</h3>
+                            <p class="section-detail-size">
+                                Once funds are released from escrow, they will be disbursed to the freelancer's account on our platform. If the freelancer has selected a payment method that requires additional processing time, the disbursement may be delayed. The freelancer is responsible for ensuring that their payment information is accurate and up to date.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Non-Payment</h3>
+                            <p class="section-detail-size">
+                                If a client does not pay for completed work, the freelancer may initiate the dispute resolution process. If the dispute is found in the freelancer's favor, funds may be released to the freelancer from escrow. If the client defaults on a payment plan, the freelancer may terminate the Service Contract and pursue other legal remedies.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">
+                                Fund Returns
+                            </h3>
+                            <p class="section-detail-size">
+Once funds have been released from escrow and disbursed to the freelancer's account, there are no refunds or returns available. Clients are strictly prohibited from initiating a chargeback or reversing any payment made through our platform.
+Reservation Fees: Freelancers must submit a complete proposal within three days in order to receive the reservation fee. If they fail to do so, the client will be eligible for a refund of this fee. In the event of a significantly substandard proposal or if message exchanges by the freelancer are not helpful, the freelancer may be removed from the platform. The client will then be matched with another freelancer, the reservation and payment for whom may be covered by the platform, under the discretion of the platform.
+                                Waitlist Refunds: If a client has joined the waitlist and made any advance payments, they retain the right to request a refund prior to the initiation of any project. This is applicable only if no project has been initiated.
+These conditions are designed to maintain the integrity and fairness of our platform, ensuring all transactions occur in a manner that respects the commitments of both clients and freelancers.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Payment methods</h3>
+                            <p class="section-detail-size">
+                                We accept a variety of payment methods, including credit and debit cards, and electronic payment services. Clients may be subject to additional fees depending on their payment method. Freelancers are responsible for any fees associated with receiving payments on our platform.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Currency of payments</h3>
+                            <p class="section-detail-size">
+                                All payments on our platform are processed in U.S. dollars. If a client pays in a foreign currency, the payment will be converted to U.S. dollars using our platform's conversion rate. Freelancers are responsible for any fees or currency conversion charges associated with receiving payments in a foreign currency.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Records of Compliance</h3>
+                            <p class="section-detail-size">
+                                The platform will maintain records of compliance with the terms of this agreement and applicable laws and regulations.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Warranty Disclaimer</h3>
+                            <p class="section-detail-size">
+                                The platform makes no warranties or representations regarding the services provided by freelancers, or the accuracy or completeness of any information provided by clients or freelancers. The platform is not responsible for the quality or safety of any work product or services provided by freelancers.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Limitation of Liability</h3>
+                            <p class="section-detail-size">
+                                We are not liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with the use of our platform or the services provided through our platform, whether or not we have been advised of the possibility of such damages.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">
+                                Release
+                            </h3>
+                            <p class="section-detail-size">
+                                Clients and freelancers hereby release and waive any and all claims and liabilities against the platform arising from or in connection with the services provided by freelancers or the use of the platform.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Indemnification</h3>
+                            <p class="section-detail-size">
+                                Clients and freelancers agree to indemnify and hold the platform and its affiliates, officers, directors, employees, and agents harmless from and against any and all claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising from or in connection with their use of the platform or the services provided by freelancers.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Non-Circumvention</h3>
+                            <p class="section-detail-size">
+                                Users agree that they will not attempt to circumvent the platform by soliciting or accepting any project, contract, or work arrangement outside of the platform, whether directly or indirectly, with any client or freelancer they were introduced to through the platform, for a period of two (2) years from the date of their last use of the platform. This prohibition on circumvention includes, but is not limited to, using any information obtained through the platform, such as client or freelancer contact information, to solicit work outside of the platform. If a user is found to have breached this non-circumvention clause, the platform reserves the right to terminate the user's account and seek any legal remedies available to it.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Dispute Resolution</h3>
+                            <p class="section-detail-size">
+                                This User Agreement shall be governed by and construed in accordance with the laws of the jurisdiction where the Platform is registered and operated. Any dispute, controversy, or claim arising out of or in connection with this User Agreement, or the breach, termination, or invalidity thereof, shall be settled by arbitration administered by the appropriate arbitral institution in accordance with its rules. The place of arbitration shall be the jurisdiction where the Platform is registered and operated. The language to be used in the arbitral proceedings shall be English. The arbitration award shall be final and binding upon the parties.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Licenses and Third-Party Content</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        The platform allows you to access third-party content, which may be protected by copyright, trademark, or other intellectual property rights.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        You agree to respect all intellectual property rights in the content you access through the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        You agree that you will not use any content accessed through the platform for any purpose that is not expressly permitted by the content owner or by law.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        You acknowledge and agree that the platform does not grant you any ownership or other rights in the content accessed through the platform.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Permitted Actions on the Platform</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        You may use the platform only for lawful purposes and in accordance with the User Agreement
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        You may create an account, post projects, and submit proposals on the platform.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        You may use the platform to communicate with other users in connection with a project.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">General</h3>
+                            <ol type="a">
+                                <li>
+                                    <p class="section-detail-size">
+                                        The platform reserves the right to suspend or terminate your access to the platform if you violate the User Agreement.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        The platform reserves the right to remove any content that violates the User Agreement or is otherwise objectionable.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p class="section-detail-size">
+                                        This User Agreement represents the entire understanding between you and the Platform and supersedes all prior agreements and understandings. If any provision of this User Agreement is held to be invalid or unenforceable, such provision shall be struck and the remaining provisions shall be enforced. The Platform's failure to enforce any right or provision in this User Agreement shall not constitute a waiver of such right or provision unless acknowledged and agreed to by the Platform in writing.
+                                    </p>
+                                </li>
+                            </ol>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Definitions</h3>
+                            
+                            <p class="section-detail-size">
+                                "Platform" means the AI marketplace platform that connects Clients and Freelancers.
+                                "Client" means a user of the Platform who purchases AI projects from Freelancers.
+                                "Freelancer" means a user of the Platform who provides AI projects for Clients.
+                                "Service Contracts" means the contractual agreements between Clients and Freelancers for the provision of AI projects.
+                                "Direct Contracts" means the contractual agreements between Clients and Freelancers for the provision of AI projects outside of the Platform.
+                                "Escrow" means the holding of funds by the Platform on behalf of Clients and Freelancers until certain conditions are met.
+                                "Non-Circumvention" means the prohibition of Clients and Freelancers from bypassing the Platform to avoid paying Platform Fees for projects initiated through the Platform.
+                                "Platform Fees" means the fees charged by the Platform for the use of its services.
+                                ”Project Fees" means the fees charged by the Platform for a project. Project fees
+                                "Dispute Resolution" means the process by which disputes between Clients and Freelancers are resolved, including arbitration administered by the appropriate arbitral institution in accordance with its rules.
+                                "User Content" means any content, including but not limited to text, images, videos, and audio, that is posted, uploaded, or transmitted through the Platform by Users.
+                                “Content” refers to text, images, audio, video, and other material accessible through the platform.
+                                “User” refers to any person who uses the platform.
+                                “Account” refers to a user’s profile on the platform.
+                            </p>
+                        </li>
+
+                    </ol>
+                </div>
+
+                <!-- Terms of Use -->
                     <div class="progressContainer d-flex flex-column">
+                    <div class="title section-title-size" data-open-accessibility-text-original="18px" style="font-size: 18px;">
+                        Terms of Use
+                    </div>
+                    <p class="section-detail-size">
+                        By using our platform and services, you agree to be bound by the following terms and conditions. Please read these Terms of Use carefully before using our platform.
+                    </p>
+                        <ol>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Acceptance of Terms</h3>
+                                <p class="section-detail-size">
+                                By accessing or using our platform, you agree to be bound by these Terms of Use, our Privacy Policy, and any other policies, guidelines or rules that are applicable to our platform. If you do not agree to all of these Terms of Use, do not access or use our platform.
+                            </p>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Use of our Platform</h3>
+                            <p class="section-detail-size">
+                                You may use our platform and services only for lawful purposes and in accordance with these Terms of Use. You agree not to use our platform:
+                                In any way that violates any applicable national, federal, state, local, or international law or regulation.
+                                To engage in any conduct that restricts or inhibits anyone's use or enjoyment of the platform, or which, as determined by us, may harm us or users of the platform.
+                                To upload or transmit viruses, worms, Trojan horses, or any other malicious code.
+                                To collect or harvest any personally identifiable information, including account names, from the platform.
+                                To impersonate or attempt to impersonate us, a [platform name] employee, another user, or any other person or entity.
+                                To interfere with the proper working of our platform or services.
+                                For any purpose that is unlawful or prohibited by these Terms of Use.
+                            </p>
+                            </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">User Account</h3>
+                            <p class="section-detail-size">
+                                In order to access certain features of our platform, you may be required to register for a user account. You agree to provide accurate and complete information when creating an account, and to update your account information as necessary to ensure that it remains accurate and complete.
+                            </p>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Intellectual Property</h3>
+                            <p class="section-detail-size">
+                                Our platform and its entire contents, features, and functionality, including but not limited to all information, software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof, are owned by us, our licensors, or are sourced from freely available or open-source resources. All applicable contents are protected by Greek and international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
+                            
+                                You are permitted to use our platform and services for your personal, non-commercial use only. You must not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform, republish, download, store, or transmit any of the material on our platform, except as follows:
+
+                                Your computer may temporarily store copies of such materials in RAM incidental to your accessing and viewing those materials.
+                                You may store files that are automatically cached by your Web browser for display enhancement purposes.
+                                You may print or download one copy of a reasonable number of pages of the platform for your own personal, non-commercial use and not for further reproduction, publication, or distribution.
+                                If we provide desktop, mobile, or other applications for download, you may download a single copy to your computer or mobile device solely for your own personal, non-commercial use, provided you agree to be bound by our end-user license agreement for such applications.
+
+                                If you print, copy, modify, download, or otherwise use or provide any other person with access to any part of our platform in breach of these Terms of Use, your right to use our platform will stop immediately, and you must, at our option, return or destroy any copies of the materials you have made. Any unauthorized use may also violate applicable laws, including without limitation copyright and trademark laws and applicable communications regulations and statutes.
+                            </p>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Links to Third Party Websites</h3>
+                            <p class="section-detail-size">
+                                Our Service may contain links to third-party websites or services that are not owned or controlled by us. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services. You further acknowledge and agree that we shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such websites or services.
+                            </p>
+                        </li>
+                        
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Modifications to the Service and Prices</h3>
+                            <p class="section-detail-size">
+                                We reserve the right to modify or discontinue the Service at any time without prior notice. We shall not be liable to you or to any third party for any modification, price change, suspension, or discontinuance of the Service.
+                            </p>
+                        </li>
+                        
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Severability</h3>
+                            <p class="section-detail-size">
+                                If any provision of these Terms is held to be invalid or unenforceable by a court or other tribunal of competent jurisdiction, such provision shall be deemed modified to the minimum extent necessary to make it valid and enforceable. The remaining provisions of these Terms shall remain in full force and effect.
+                            </p>
+                        </li>
+
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Termination</h3>
+                            <p class="section-detail-size">
+                                We reserve the right to terminate your access to our platform and services at any time and for any reason without prior notice. Upon termination, all licenses and other rights granted to you under these Terms of Use will immediately cease.
+                            </p>
+                        </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Disclaimer of Warranties</h3>
+                            <p class="section-title-size">
+                                Our platform and services are provided on an "as is" and "as available" basis without any representation or warranty, express or implied, of any kind. We do not warrant that our platform or services will be uninterrupted or error-free, and we do not make any representations or warranties regarding the accuracy, completeness, reliability, or suitability of the information, materials, products, or services provided through our platform.
+                            </p>
+                            </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Limitation of Liability</h3>
+                            <p class="section-detail-size">
+                                In no event shall we be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:
+                                Your access to or use of, or inability to access or use, our platform or services.
+                                Any conduct or content of any third party on our platform, including without limitation, any defamatory, offensive, or illegal conduct of other users or third parties.
+                                Any content obtained from our platform or services or any damage caused by such content.
+                                Unauthorized access, use, or alteration of your transmissions or content.
+                                he deletion of, corruption of, or failure to store any content or other data maintained or transmitted by or through our platform or services.
+                                Any other matter relating to our platform or services.
+                                The limitations of liability in this section apply whether the alleged liability is based on contract, tort, negligence, strict liability, or any other basis, even if we have been advised of the possibility of such damage.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Indemnification</h3>
+                            <p class="section-detail-size">
+                                You agree to indemnify and hold us and our affiliates, officers, agents, and employees harmless from any claims, liabilities, damages, losses, and expenses, including without limitation, reasonable attorney's fees and costs, arising out of or in any way connected with:
+                                Your access to or use of our platform or services.
+                                Your violation of these Terms of Use or any applicable law, regulation, or third-party right.
+                                Your violation of any rights of another user or third party.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Governing Law and Jurisdiction</h3>
+                            <p class="section-detail-size">
+                                These Terms of Use and any disputes arising out of or related to our platform or services shall be governed by and construed in accordance with the laws of Greece, without giving effect to any choice or conflict of law provision or rule. Any legal suit, action, or proceeding arising out of or related to these Terms of Use or our platform or services shall be instituted exclusively in the courts of Greece.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Changes to these Terms of Use</h3>
+                            <p class="section-detail-size">
+                                We reserve the right to revise and update these Terms of Use from time to time in our sole discretion. All changes are effective immediately when we post them and apply to all access to and use of our platform thereafter. Your continued use of our platform following the posting of revised Terms of Use means that you accept and agree to the changes.
+                            </p>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                            <h3 class="list-title-size">Entire Agreement</h3>
+                            <p class="section-detail-size">
+                                These Terms of Use, together with our Privacy Policy and any other policies or agreements we may have with you, constitute the entire agreement between you and us regarding your use of our platform and services, and supersede all prior or contemporaneous communications and proposals, whether oral or written, between you and us.
+                            </p>
+                        </li>
+                        </ol>
+                    </div>
+
+                    <!-- Privacy Policy -->
+                    <div class="progressContainer d-flex flex-column">
+                    <div class="title section-title-size" data-open-accessibility-text-original="18px" style="font-size: 18px;">
+                        Privacy Policy
+                    </div>
                         <ol>
                             <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
                                 <h3 class="list-title-size">Information Collection and Use</h3>

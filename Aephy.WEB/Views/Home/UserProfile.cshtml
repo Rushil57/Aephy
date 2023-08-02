@@ -361,32 +361,54 @@
             url: "@Url.Action("GetUserData", "Home")",
             success: function (result) {
                 if (result != null) {
-                    CheckUserBasedonUserTye(result.Result.Role)
-                    $(".UserId").val(result.Result.UserId)
-                    $(".firstName").val(result.Result.FirstName)
-                    $(".lastName").val(result.Result.LastName)
-                    $(".role").val(result.Result.Role)
-                    $(".emailId").val(result.Result.Email)
-                    var Fullname = result.Result.FirstName + " " + result.Result.LastName
+                    var data = result.Result;
+                    CheckUserBasedonUserTye(data.Role)
+                    $(".UserId").val(data.UserId)
+                    $(".firstName").val(data.FirstName)
+                    $(".lastName").val(data.LastName)
+                    $(".role").val(data.Role)
+                    $(".emailId").val(data.Email)
+                    var Fullname = data.FirstName + " " + data.LastName
                     $("#fullName").text(Fullname)
-                    $("#userRole").text(result.Result.Role)
-                    $(".hourlyRate").val(result.Result.HourlyRate)
-                    $(".education").val(result.Result.Education)
-                    $(".proffessionalExperience").val(result.Result.ProffessionalExperience)
-                    $(".cls-freelancer-address").val(result.Result.FreelancerAddress)
-                    $(".cls-client-address").val(result.Result.ClientAddress)
-                    $(".description").val(result.Result.Description)
-                    $(".drp-freelancer-level").val(result.Result.FreelancerLevel)
-                    $("#CVPath-id").val(result.Result.CVPath)
+                    $("#userRole").text(data.Role)
+                    $(".hourlyRate").val(data.HourlyRate)
+                    $(".education").val(data.Education)
+                    $(".proffessionalExperience").val(data.ProffessionalExperience)
+                    $(".cls-freelancer-address").val(data.FreelancerAddress)
+                    $(".cls-client-address").val(data.ClientAddress)
+                    $(".description").val(data.Description)
+                    $(".drp-freelancer-level").val(data.FreelancerLevel)
+                    $("#CVPath-id").val(data.CVPath)
+                    addNameToFile(data.CVPath.split("/")[4]
+                    )
                 }
 
             },
             error: function (result) {
-                //alert("Something Went Wrong!");
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
+
+     function addNameToFile(url) {
+        getImgURL(url, (imgBlob) => {
+            let file = new File([imgBlob], url, { type: "pdf/application", lastModified: new Date().getTime() }, 'utf-8');
+            let container = new DataTransfer();
+            container.items.add(file);
+            document.querySelector('#CVPath').files = container.files;
+        })
+    }
+
+    function getImgURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            callback(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
+
 
     function validateManually() {
         var hourlyRate = $("#HourlyRate").val();
@@ -457,7 +479,8 @@
             processData: false,
             data: formData,
             success: function (result) {
-                showToaster("success", "Success", result.Message);
+                var test = result.split(",")[1].split(":")[1]
+                showToaster("success", "Success", test.replace(/\"/g, ""));
             },
             error: function (result) {
                 $('#preloader').hide();

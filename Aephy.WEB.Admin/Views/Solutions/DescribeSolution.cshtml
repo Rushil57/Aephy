@@ -314,6 +314,7 @@
         var ServiceData = {
             Id: Id,
         };
+         $("#preloader").show();
         $("#drp-assigned-freelancers").empty();
         $("#MileStoneTable tbody").empty();
         GetFreelancerList();
@@ -375,6 +376,7 @@
 
                     RefreshDataTable();
                 }
+                 $("#preloader").hide();
             },
             error: function (result) {
                 //alert("Error occured..");

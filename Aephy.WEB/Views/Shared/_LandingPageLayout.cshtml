@@ -157,16 +157,7 @@
                     </nav>
                 </div>
             </div>
-            @*<div class="row-lg-auto row-sm-12 row-md-12" id="external-buttons">
-            <div class="nav-scroller bg-white">
-            <nav class="nav nav-underline">
-            <a class="btn btn-brand ms-lg-3" href="#">Browse Solutions</a>
-            <a class="btn btn-brand ms-lg-3" href="#">
-            Post your Request
-            </a>
-            </nav>
-            </div>
-            </div>*@
+
             <div class="row-lg-auto row-sm-12 row-md-12" id="extra-service-row">
                 <div class="nav-scroller bg-white">
                     <nav class="nav">
@@ -204,18 +195,10 @@
                                             </div>
                                             <div class="email">
                                                 <h5 class="title-lbl">Mail Us @@</h5>
-                                                <a href="mailto:info@avidclan.com">ephylink@ephylink.com</a>
+                                                <a href="mailto:contact@ephylink.com"> contact@ephylink.com</a>
                                             </div>
                                         </div>
-                                        <div class="address">
-                                            <div class="address-icon">
-                                                <i class="bi bi-pin-map-fill"></i>
-                                            </div>
-                                            <div>
-                                                <h5 class="title-lbl">Visit Us On</h5>
-                                                <p>4551 Joanne Lane,  <br /> Massachusetts,  Andover - 01810</p>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -268,7 +251,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" rel="nofollow" target="_blank">
+                                        <a href="https://twitter.com/ephylink57412" rel="nofollow" target="_blank">
                                             <span class="bi bi-twitter"></span>
                                         </a>
                                     </li>
@@ -303,14 +286,18 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Select Project</h4>
+                    <h4 class="modal-title">Find Project</h4>
                     <a class="close" data-dismiss="#confirmation" onclick="ClosePostRequestModalPopup()">
                         <i class="bi bi-x-circle"></i>
                     </a>
                 </div>
                 <div class="modal-body p-0" style="background-color: #f5f5f5;">
+                  
                     <div class="container-fluid">
                         <div id="ServicesForm" style="border-radius:10px;display:block;">
+                            <div class="d-flex justify-content-end" style="padding:2%;">
+                                <a href="~/LandingPage/BrowseSolution" class="cls-availableSolution" id="availableSolution" style="color:rgb(211 139 78);">See Available Solutions</a>
+                            </div>
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 first-col" style="text-align: center;border-right: 1px solid #000;">
                                     <h3 data-aos="fade-up" style=" margin: auto;width: 50%;padding: 10px;">
@@ -501,29 +488,13 @@
             }
         });
 
-        let items = document.querySelectorAll('.carousel .carousel-item')
-
-        items.forEach((el) => {
-            const minPerSlide = 4
-            let next = el.nextElementSibling
-            for (var i = 1; i < minPerSlide; i++) {
-                if (!next) {
-                    // wrap carousel by using first child
-                    next = items[0]
-                }
-                let cloneChild = next.cloneNode(true)
-                el.appendChild(cloneChild.children[0])
-                next = next.nextElementSibling
-            }
-        })
-
         function GetClientForm(data) {
             var Buttonclickvalue = $('#PostButton').text();
             if (data.text == "Confirm") {
                 $("#confirmation").modal('hide')
             }
-            if(data.text == "Previous"){
-                if ($("#ClientForm").is(":visible")){
+            if (data.text == "Previous") {
+                if ($("#ClientForm").is(":visible")) {
                     $("#ServicesForm").css("display", "block")
                     $("#ClientForm").css("display", "none")
                     $("#PreviousButton").css("display", "none")
@@ -547,7 +518,7 @@
                     $("#PostButton").text("Next")
                     return
                 }
-                if ($("#ClientForm").is(":visible")){
+                if ($("#ClientForm").is(":visible")) {
                     $("#ServicesForm").css("display", "none")
                     $("#ClientForm").css("display", "none")
                     $("#WorkingHourForm").css("display", "block")
@@ -562,7 +533,7 @@
             $("#confirmation").modal('hide')
         }
 
-        function clearForm(){
+        function clearForm() {
             $("#ID").val("");
             $("#FreelancerID").val("");
             $("#ServiceID").val("");

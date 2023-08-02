@@ -379,8 +379,9 @@
                     $(".description").val(data.Description)
                     $(".drp-freelancer-level").val(data.FreelancerLevel)
                     $("#CVPath-id").val(data.CVPath)
-                    addNameToFile(data.CVPath.split("/")[4]
-                    )
+                    if(data.CVPath != ""){
+                        addNameToFile(data.CVPath.split("/")[4])
+                    }
                 }
 
             },

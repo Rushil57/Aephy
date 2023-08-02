@@ -25,6 +25,7 @@ namespace Aephy.WEB.Controllers
     {
         private readonly IApiRepository _apiRepository;
         private const string ContainerName = "cvfiles";
+        private const string ImageContainerName = "profileimages";
         private readonly string _rootPath;
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -618,6 +619,32 @@ namespace Aephy.WEB.Controllers
         public async Task<string> GetSolutionList()
         {
             var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
+            if(Solutiondata != null)
+            {
+                dynamic data = JsonConvert.DeserializeObject(Solutiondata);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+            }
             return Solutiondata;
 
         }
@@ -711,6 +738,39 @@ namespace Aephy.WEB.Controllers
             {
                 return NotFound();
             }
+        }
+
+        private string GenerateImageSasToken(string imageUrl)
+        {
+            // Get the blob container name and blob name from the image URL
+            string blobName = Path.GetFileName(imageUrl);
+
+            // Create a shared access policy that allows read access to the blob
+            BlobSasBuilder sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = ImageContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTime.UtcNow.AddMinutes(-5), // Adjust the start time if needed
+                ExpiresOn = DateTime.UtcNow.AddMinutes(10), // Adjust the expiry time if needed,
+                Protocol = SasProtocol.Https
+            };
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            // Get the Azure Blob Storage connection string from configuration
+            var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+            // Extract the AccountName and AccountKey from the connection string
+            var accountName = GetAccountNameFromConnectionString(connectionString);
+            var accountKey = GetAccountKeyFromConnectionString(connectionString);
+
+            // Create a StorageSharedKeyCredential using the AccountName and AccountKey
+            StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
+
+            // Generate the SAS token
+            string sasToken = sasBuilder.ToSasQueryParameters(credential).ToString();
+
+            return sasToken;
         }
     }
 }

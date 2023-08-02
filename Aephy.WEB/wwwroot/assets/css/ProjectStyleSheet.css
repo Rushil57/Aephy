@@ -187,10 +187,10 @@ h6 {
 }
 
 .title-path {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 32px;
     font-family: var(--font-secondary);
-    color: #444444;
+    color: #808080e0;
 }
 
 /*--------------------------------------------------------------
@@ -459,6 +459,7 @@ h6 {
     padding: 4px;
     border-radius: 3px;
     position: relative;
+    border-top: 1px solid gray;
 }
 
     .RButtons input {
@@ -637,13 +638,14 @@ h6 {
 
 .progressContainer {
     position: relative;
-/*    width: 300px;*/
+    /*    width: 300px;*/
     height: fit-content;
     margin: 0 auto;
     overflow: hidden;
     padding: 2rem;
     color: var(--font-title);
     background: #fff;
+    border-bottom: 1px solid grey;
     @include box-shadow(0 0 15px rgba(0, 0, 0, 0.3));
 }
 

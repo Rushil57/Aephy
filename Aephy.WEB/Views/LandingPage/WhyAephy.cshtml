@@ -88,85 +88,6 @@
         </div>
     </section>
 
-    <!-- ======= Why Section ======= -->
-    <section id="Why" class="Why pt-0">
-        <div class="container" data-aos="fade-up">
-            <div class="section-header">
-                <hr />
-                <h3 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Why</label></h3>
-            </div>
-            <div class="row gy-4">
-                <div id="whyaephyCarousel" class="carousel slide" data-interval="false">
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
-                                <div class="box">
-                                    <div class="title border-bottom">Efficiency</div>
-                                    <div class="icon-msg py-3">
-                                        <i class="bi bi-sign-merge-right"></i>
-                                    </div>
-                                    <div class="description">
-                                        Our platform streamlines the process of outsourcing projects, allowing businesses to save time and resources. By using our platform, you can easily manage your projects, communicate with your team, and track progress in real-time.
-                                    </div>
-                                </div>
-                            </div><!-- End Card Item -->
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
-                                <div class="box even-box">
-                                    <div class="title border-bottom">
-                                        Quality Assurance
-                                    </div>
-                                    <div class="icon-msg py-3">
-                                        <i class="bi bi-shield-check"></i>
-                                    </div>
-                                    <div class="description">
-                                        We understand the importance of high-quality work. That's why all our freelancers are pre-screened and highly qualified. Clients only pay if project requirements have been met, providing quality assurance and peace of mind.
-                                    </div>
-                                </div>
-                            </div><!-- End Card Item -->
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
-                                <div class="box">
-                                    <div class="title border-bottom">
-                                        Cost-Effectiveness
-                                    </div>
-                                    <div class="icon-msg py-3">
-                                        <i class="bi bi-currency-dollar"></i>
-                                    </div>
-                                    <div class="description">
-                                        We offer projects on our platform at the most competitive rates, allowing businesses to access high-quality solutions at a lower cost. Our pricing is transparent, and there are no hidden fees.
-                                    </div>
-                                </div>
-                            </div><!-- End Card Item -->
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
-                                <div class="box even-box">
-                                    <div class="title border-bottom">
-                                        Safe and Secure
-                                    </div>
-                                    <div class="icon-msg py-3">
-                                        <i class="bi bi-boxes"></i>
-                                    </div>
-                                    <div class="description">
-                                        Data privacy and security are our top priorities. We use the latest encryption technologies to protect your data and maintain strict privacy policies to ensure that your information is never shared with third parties.
-                                    </div>
-                                </div>
-                            </div><!-- End Card Item -->
-                        </div>
-                        <a class="carousel-control-prev bg-transparent w-aut cls-whyAephy-carousel" href="#whyaephyCarousel" role="button" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        </a>
-                        <a class="carousel-control-next bg-transparent w-aut cls-whyAephy-carousel" href="#whyaephyCarousel" role="button" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!-- End Services Section -->
     <!-- ======= How Section ======= -->
     <section id="How" class="How pt-0">
         <div class="container" data-aos="fade-up">
@@ -344,15 +265,15 @@
                     </div>
                 </div>
                 <div class="col-lg-7 content order-last order-lg-last pt-5">
-                        @{
-                            if (Context.Session.GetString("LoggedUser") != null)
-                            {
+                    @{
+                        if (Context.Session.GetString("LoggedUser") != null)
+                        {
                             <div style="text-align:center;">
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Dashboard">Dashboard</a>
                             </div>
-                            }
-                            else
-                            {
+                        }
+                        else
+                        {
                             <div style="text-align:center;">
                                 <h3>
                                     Join Us
@@ -361,14 +282,95 @@
                             <div style="text-align:center;">
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
                                 <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
-                                </div>
-                            }
+                            </div>
                         }
-                    
+                    }
+
                 </div>
             </div>
         </div>
     </section><!-- End Services Section -->
+
+    <!-- ======= Why Section ======= -->
+    <section id="Why" class="Why pt-0">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <hr />
+                <h3 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Why</label></h3>
+            </div>
+            <div class="row gy-4">
+                <div id="whyaephyCarousel" class="carousel slide" data-interval="false">
+                    <div class="carousel-inner" role="listbox">
+                        <div class="carousel-item active">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                                <div class="box">
+                                    <div class="title border-bottom">Efficiency</div>
+                                    <div class="icon-msg py-3">
+                                        <i class="bi bi-sign-merge-right"></i>
+                                    </div>
+                                    <div class="description">
+                                        Our platform streamlines the process of outsourcing projects, allowing businesses to save time and resources. By using our platform, you can easily manage your projects, communicate with your team, and track progress in real-time.
+                                    </div>
+                                </div>
+                            </div><!-- End Card Item -->
+                        </div>
+                        <div class="carousel-item">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                                <div class="box even-box">
+                                    <div class="title border-bottom">
+                                        Quality Assurance
+                                    </div>
+                                    <div class="icon-msg py-3">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <div class="description">
+                                        We understand the importance of high-quality work. That's why all our freelancers are pre-screened and highly qualified. Clients only pay if project requirements have been met, providing quality assurance and peace of mind.
+                                    </div>
+                                </div>
+                            </div><!-- End Card Item -->
+                        </div>
+                        <div class="carousel-item">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                                <div class="box">
+                                    <div class="title border-bottom">
+                                        Cost-Effectiveness
+                                    </div>
+                                    <div class="icon-msg py-3">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </div>
+                                    <div class="description">
+                                        We offer projects on our platform at the most competitive rates, allowing businesses to access high-quality solutions at a lower cost. Our pricing is transparent, and there are no hidden fees.
+                                    </div>
+                                </div>
+                            </div><!-- End Card Item -->
+                        </div>
+                        <div class="carousel-item">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                                <div class="box even-box">
+                                    <div class="title border-bottom">
+                                        Safe and Secure
+                                    </div>
+                                    <div class="icon-msg py-3">
+                                        <i class="bi bi-boxes"></i>
+                                    </div>
+                                    <div class="description">
+                                        Data privacy and security are our top priorities. We use the latest encryption technologies to protect your data and maintain strict privacy policies to ensure that your information is never shared with third parties.
+                                    </div>
+                                </div>
+                            </div><!-- End Card Item -->
+                        </div>
+                        <a class="carousel-control-prev bg-transparent w-aut cls-whyAephy-carousel" href="#whyaephyCarousel" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <a class="carousel-control-next bg-transparent w-aut cls-whyAephy-carousel" href="#whyaephyCarousel" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Services Section -->
+   
 
 </main>
 

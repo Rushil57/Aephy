@@ -10,40 +10,8 @@
         padding-bottom: 8px;
     }
 </style>
-<script>
-    function TrustedViewMore() {
-        $(".cls-trusted-btn").css("display", "none");
-        $(".cls-trusted-viewmore").css("display", "block");
-        $(".cls-trusted-lessbtn").css("display", "block");
-    }
-    function ProfessionalViewMore() {
-        $(".cls-professional-btn").css("display", "none");
-        $(".cls-professional-viewmore").css("display", "block");
-        $(".cls-professional-lessbtn").css("display", "block");
-    }
-    function TrustedViewLess() {
-        $(".cls-trusted-btn").css("display", "block");
-        $(".cls-trusted-viewmore").css("display", "none");
-        $(".cls-trusted-lessbtn").css("display", "none");
-    }
-    function ProfessionalViewLess() {
-        $(".cls-professional-btn").css("display", "block");
-        $(".cls-professional-viewmore").css("display", "none");
-        $(".cls-professional-lessbtn").css("display", "none");
-    }
-</script>
-<main id="main" class="main cls-fixed-common">
 
-    @*    <div class="pagetitle">
-    <h1>Form Elements</h1>
-    <nav>
-    <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-    <li class="breadcrumb-item">Forms</li>
-    <li class="breadcrumb-item active">Elements</li>
-    </ol>
-    </nav>
-    </div><!-- End Page Title -->*@
+<main id="main" class="main cls-fixed-common">
 
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero d-flex align-items-center">
@@ -139,7 +107,7 @@
                         </li>
                         <li class="learnmore">
                             <a class="btn btn-brand ms-lg-3 m-4" href="#" data-open-accessibility-text-original="16px" style="font-size: 16px;">Learn More</a>
-                         </li>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -182,117 +150,13 @@
         <div class="container" data-aos="fade-up">
 
             <div class="section-header mx-lg-4">
-                @*<span>Our Services</span>*@
                 <h2 class="label-title-size">Popular AI Solutions</h2>
             </div>
-
             <div class="container text-center my-3">
                 <div class="row mx-auto my-auto justify-content-center">
                     <div id="recipeCarousel" class="carousel slide" data-interval="false">
-                        <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/computer_vision.jpg" class="img-fluid">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                Computer Vision
-                                            </a>
-                                        </h3>
-                                        <p class="section-detail-size">
-                                            Improve accuracy and speed of visual data analysis, unlocking new insights and opportunities for your organization.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/speech_recognition.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                Speech Recognition
-                                            </a>
-                                        </h3>
-                                        <p class="section-detail-size">
-                                            Enhance communication with customers and improve customer service by enabling machines to interpret and respond to human speech.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/nlp.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                Natural Language Processing (NLP)
-                                            </a>
-                                        </h3>
-                                        <p class="section-detail-size">
-                                            Enhance communication with customers and improve customer service by enabling machines to understand and interpret human language.
-                                        </p>
-                                    </div>
+                        <div class="carousel-inner" role="listbox" id="ai-Section">
 
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/AI Governance and Ethics.jpg" class="img-fluid">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                AI Governance and Ethics
-                                            </a>
-                                        </h3>
-                                        <p class ="section-detail-size">
-                                            Improve accuracy and speed of visual data analysis, unlocking new insights and opportunities for your organization.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/AI Vendor Selection and Manageme.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                AI Vendor Selection and Manageme
-                                            </a>
-                                        </h3>
-                                        <p class="section-detail-size">
-                                            Enhance communication with customers and improve customer service by enabling machines to interpret and respond to human speech.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-img">
-                                            <img src="~/assets/img/popularsolutions/AI_Operations.jpg" class="img-fluid">
-                                        </div>
-                                        <h3>
-                                            <a href="service-details.html" class="stretched-link">
-                                                AI Operations
-                                            </a>
-                                        </h3>
-                                        <p class="section-detail-size">
-                                            Improve accuracy and speed of visual data analysis, unlocking new insights and opportunities for your organization.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -429,7 +293,6 @@
         </div>
     </section><!-- End Services Section -->
     <!-- ======= Shorted clients reviews Section ======= -->
-
     @* FINAL RELEASE*@
     <section id="shortreviews" class="shortreviews pt-0 cls-temp-common">
         <div class="container" data-aos="fade-up">
@@ -624,33 +487,14 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-7 order-lg-last order-last right-box px-0">
-                    @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
-                    @*<h2 data-aos="fade-up" style="color:#414141;">
-                    For AI Gigs
-                    </h2>*@
+
                     <div class="description">
-                        <p class="align-self-center border-bottom border-black section-detail-size">
+                        <p class="align-self-center section-detail-size">
                             Meet clients you’re excited to work with and take
                             your career to new heights.
                         </p>
                     </div>
-                    <div class="row align-self-center position-relative d-flex">
-                        <div class="col-4">
-                            <label class="btn ms-lg-3" href="#">
-                                Find opportunities
-                            </label>
-                        </div>
-                        <div class="col-5">
-                            <label class="btn ms-lg-3" href="#">
-                                Grow your career
-                            </label>
-                        </div>
-                        <div class="col-3 cls-level-up">
-                            <label class="btn ms-lg-3" href="#">
-                                Level up
-                            </label>
-                        </div>
-                    </div>
+
                     <div class="pt-4 extra-options">
                         <a class="btn btn-brand ms-lg-3" href="#" data-open-accessibility-text-original="16px" style="font-size: 16px;">Learn More</a>
                         <a class="btn btn-brand ms-lg-3" href="#" data-open-accessibility-text-original="16px" style="font-size: 16px;">Open Gig Roles</a>
@@ -695,3 +539,93 @@
     </section>
 
 </main><!-- End #main -->
+
+<script>
+
+    $(function () {
+        GetPopularSolution()
+    })
+
+    function GetPopularSolution() {
+         $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutionList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Result != 0) {
+                    var data = result.Result
+                    data = data.slice(0, 6);
+                    var popularAiSection = "";
+                    $.each(data, function (data, value) {
+                        var title = value.Title.length > 50 ? value.Title.substring(0, 50) + "..." : value.Title;
+                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+
+                        popularAiSection += '<div class="carousel-item" >' +
+                            '<div class="col-md-3">' +
+                            '<div class="card">' +
+                            '<div class="card-img">' +
+                            '<img src=' + value.ImageUrlWithSas + ' alt ="Image" class="img-fluid" data-aos="zoom-out">' +
+                            '</div>' +
+                            '<h3>' +
+                            '<a class="stretched-link">' + title + '</a>' +
+                            '</h3>' +
+                            '<p class="section-detail-size" >' + description + '</p>' +
+                           
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                    })
+                    $('#ai-Section').html(popularAiSection);
+                    $('.carousel-item').first().addClass('active');
+                    $('.carousel-indicators > li').first().addClass('active');
+                    var items2 = document.querySelectorAll('.carousel .carousel-item')
+
+                    items2.forEach((el) => {
+                        const minPerSlide = 4
+                        let next = el.nextElementSibling
+                        for (var i = 1; i < minPerSlide; i++) {
+                            if (!next) {
+                                next = items2[0]
+                            }
+                            let cloneChild = next.cloneNode(true)
+                            el.appendChild(cloneChild.children[0])
+                            next = next.nextElementSibling
+                        }
+                    })
+                    //$('#ai-Section').carousel();
+                }
+
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+
+    }
+
+    function TrustedViewMore() {
+        $(".cls-trusted-btn").css("display", "none");
+        $(".cls-trusted-viewmore").css("display", "block");
+        $(".cls-trusted-lessbtn").css("display", "block");
+    }
+    function ProfessionalViewMore() {
+        $(".cls-professional-btn").css("display", "none");
+        $(".cls-professional-viewmore").css("display", "block");
+        $(".cls-professional-lessbtn").css("display", "block");
+    }
+    function TrustedViewLess() {
+        $(".cls-trusted-btn").css("display", "block");
+        $(".cls-trusted-viewmore").css("display", "none");
+        $(".cls-trusted-lessbtn").css("display", "none");
+    }
+    function ProfessionalViewLess() {
+        $(".cls-professional-btn").css("display", "block");
+        $(".cls-professional-viewmore").css("display", "none");
+        $(".cls-professional-lessbtn").css("display", "none");
+    }
+</script>
+

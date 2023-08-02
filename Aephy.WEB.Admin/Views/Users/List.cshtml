@@ -1,6 +1,13 @@
 ﻿@{
     ViewData["Title"] = "- Users list";
 }
+
+<style>
+    #solutionsList{
+        width:100% !important;
+    }
+</style>
+
 <main id="main" class="main">
     <div class="row">
         <!-- Recent Sales -->
@@ -17,6 +24,7 @@
                                 <th scope="col">EmailAddress</th>
                                 <th scope="col">UserRole</th>
                                 <th scope="col">Level</th>
+                                <th scope="col">Solution</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -29,6 +37,37 @@
 
 
 </main>
+
+<div class="modal fade" id="userPopupModal" tabindex="-1" aria-labelledby="userPopupModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Add Industry</h4>
+                <a class="close" data-dismiss="#userPopupModal" onclick="closeUserPopupModal();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Solutions List</h5>
+
+                                <table class="table table-borderless datatable" id="solutionsList">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Solution Id</th>
+                                            <th scope="col">Solution Name</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(function () {
@@ -53,10 +92,16 @@
                         { "data": "EmailAddress" },
                         { "data": "UserRole" },
                         { "data": "FreelancerLevel" },
+                        { "data": "SolutionName" },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return '<a class="btn btn-primary">Edit</a>';
+                                if (row.SolutionID != 0){
+                                    return '<a class="btn btn-primary" onclick=SoutionsList("' + data + '")>View</a>';
+                                }
+                                else{
+                                    return '';
+                                }
                             }
                         },
                         {
@@ -75,6 +120,38 @@
                 showToaster("error", "Error !", "Failure");
             }
         });
+    }
+
+    function SoutionsList(Id){
+            var ServiceData = {
+                Id: Id,
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getFreelancerSolutionsById", "Users")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ServiceData),
+                success: function (result) {
+                    $('#userPopupModal').modal('show');
+                    $('#solutionsList').DataTable({
+                        destroy: true,
+                        data: result.Result,
+                        "columns": [
+
+                            { "data": "Id" },
+                            { "data": "Title" }
+                        ]
+                    });
+                },
+                error: function (result) {
+                    //alert("Error occured..");
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+//        }else{
+  //          showToaster("error", "No Data!", "This user is not working in any solution");
+    //    }
     }
 
     function DeleteUser(Id)
@@ -101,5 +178,10 @@
                 }
             });
         }
+    }
+
+    function closeUserPopupModal(){
+        $('#userPopupModal').modal('hide');
+        $('#solutionsList').find("tr:gt(0)").remove();
     }
 </script>

@@ -8,6 +8,36 @@
     ViewData["Level"] = @Context.Session.GetString("LoggedUserLevel");
 }
 
+<style>
+        .progressContainer {
+        position: relative;
+        height: fit-content;
+        margin: 0 auto;
+        overflow: hidden;
+        padding: 2rem;
+        color: var(--font - title);
+        }
+
+.dashboard .recent-sales::-webkit-scrollbar-track{
+	-webkit-box-shadow: none;
+	border-radius: 10px;
+	background-color: none;
+}
+
+.dashboard .recent-sales::-webkit-scrollbar
+{
+	width: 7px;
+    height:7px;
+	background-color: none;
+}
+
+.dashboard .recent-sales::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #d38b4e;
+}
+</style>
+
 <main id="main" class="main cls-fixed-common">
 
     <div class="pagetitle">
@@ -420,13 +450,13 @@
                                 <div class="form-group pt-3">
                                     <label for="projectDetails">Project Details</label>
                                     @*<input type="text" class="form-control" id="industry-ProjectDetails" name="ProjectDetails" placeholder="Project Details">*@
-                                    <textarea id="industry-ProjectDetails" class="form-control" name="ProjectDetails" rows="4" cols="50"></textarea>
+                                    <textarea id="industry-ProjectDetails" class="form-control" name="ProjectDetails" rows="4" cols="50" style="resize:vertical !important;"></textarea>
                                 </div>
 
                                 <div class="form-group pt-0">
                                     <label for="Description">Project Outline</label>
                                     @*<input type="text" class="form-control" id="industry-ProjectOutline" name="Decription" placeholder="Project Outline">*@
-                                    <textarea id="industry-ProjectOutline" class="form-control" name="ProjectOutline" rows="4" cols="50"></textarea>
+                                    <textarea id="industry-ProjectOutline" class="form-control" name="ProjectOutline" rows="4" cols="50" style="resize:vertical !important;"></textarea>
                                 </div>
 
                                 <div class="form-group pt-3">

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
@@ -20,6 +21,7 @@ using System.Xml.Linq;
 using static Aephy.API.Models.AdminViewModel;
 using static Azure.Core.HttpHeader;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
 {
@@ -730,29 +732,43 @@ namespace Aephy.API.Controllers
             try
             {
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin").ToListAsync();
+                var freelancerPoolList = _db.FreelancerPool.ToList();
+                var SolutionList = _db.Solutions.ToList();
                 List<UserViewModel> users = new List<UserViewModel>();
+                List<dynamic> userlist = new List<dynamic>();
                 if (list.Count > 0)
                 {
                     foreach (var data in list)
                     {
-                        UserViewModel userdataStore = new UserViewModel();
-                        userdataStore.Id = data.Id;
-                        userdataStore.FirstName = data.FirstName;
-                        userdataStore.LastName = data.LastName;
-                        userdataStore.UserRole = data.UserType;
-                        userdataStore.EmailAddress = data.UserName;
-                        userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault();
-                        users.Add(userdataStore);
+                        Solutions solData = new Solutions();
+                        if (data.UserType == "Freelancer")
+                        {
+                            var Solution = freelancerPoolList.Where(x => x.FreelancerID == data.Id).FirstOrDefault();
+                            if (Solution != null)
+                            {
+                                solData = _db.Solutions.Where(s => s.Id == Solution.SolutionID).FirstOrDefault();
+                            }
+                        }
+                        dynamic obj = new
+                        {
+                            Id = data.Id,
+                            FirstName = data.FirstName,
+                            LastName = data.LastName,
+                            UserRole = data.UserType,
+                            EmailAddress = data.UserName,
+                            FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault(),
+                            SolutionID = solData?.Id ?? 0,
+                            SolutionName = solData?.Title ?? "",
+                        };
+                        userlist.Add(obj);
                     }
-
-
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = users
+                    Result = userlist
                 });
             }
             catch (Exception ex)
@@ -1477,7 +1493,48 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetFreelancerSolutionList")]
+        public async Task<IActionResult> GetFreelancerSolutionList([FromBody] UserIdModel model)
+        {
+            try
+            {
+                if (model.Id != null)
+                {
+                    var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
 
+                    if (userDetails != null)
+                    {
+                        List<Solutions> solutions = new List<Solutions>();
+                        var solutionsList = _db.FreelancerPool.Where(x => x.FreelancerID == model.Id).ToList();
+                        if (solutionsList.Count > 0)
+                        {
+                            solutionsList.ForEach(model =>
+                            {
+                                solutions.Add(_db.Solutions.Where(s => s.Id == model.SolutionID).FirstOrDefault());
+                            });
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success",
+                            Result = solutions
+                        });
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Something Went Wrong"
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
 
         //Application Section
         [HttpGet]

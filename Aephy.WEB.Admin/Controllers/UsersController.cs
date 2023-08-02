@@ -1,6 +1,10 @@
 ﻿using Aephy.WEB.Admin.Models;
 using Aephy.WEB.Provider;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aephy.WEB.Admin.Controllers
 {
@@ -37,5 +41,11 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<string> getFreelancerSolutionsById([FromBody] UserIdModel userId)
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancerSolutionList", HttpMethod.Post, userId);
+            return userList;
+        }
     }
 }

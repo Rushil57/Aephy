@@ -1314,7 +1314,7 @@ namespace Aephy.API.Controllers
                 x.IndustryId == solutionIndustry.IndustryId).ToList();
 
                 var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
-               
+                var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1328,6 +1328,7 @@ namespace Aephy.API.Controllers
                         Services = solutionServices,
 						MilestoneDetails = milestoneDetails,
                         FreeLancerPoolIds = freeLancerPoolIds,
+                        ArchitectIds = architectIds,
                         PointsDetails = pointsDetails
                     }
                 });

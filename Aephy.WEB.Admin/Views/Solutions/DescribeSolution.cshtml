@@ -157,7 +157,7 @@
                                     </div>
 
 
-                                     <div class="col-12">
+                                    <div class="col-12">
                                         <label for="points" class="form-label">Point(s)</label>
                                         <div class="input-group">
                                             <table class="table" id="PointsTable">
@@ -251,7 +251,13 @@
 
 <script>
 
+    /*
+        hote code for finalIdsData and architectData dont change this array and array function.
+        without full flow knowladge change to hight chance to breack FreelancerPool table entry.
+    */
+
     let finalIdsData = [];
+    let architectData = [];
 
     $(function () {
         $("form[name='addSolutiondescribeForm']").validate({
@@ -338,7 +344,7 @@
         var ServiceData = {
             Id: Id,
         };
-         $("#preloader").show();
+        $("#preloader").show();
         $("#drp-assigned-freelancers").empty();
         $("#MileStoneTable tbody").empty();
         GetFreelancerList();
@@ -401,10 +407,10 @@
 
                 BindIndustriesControles(data.Industryname, data.SolutionIndustryDetails);
 
-
-
+                //--- FreeLancer pool entry bind --//
                 DestroyDatatable("#AssignFreeLancerTable");
                 finalIdsData = [];
+                architectData = [];
                 if (data.FreeLancerPoolIds.length > 0) {
                     data.FreeLancerPoolIds.forEach(function (key) {
                         finalIdsData.push(key);
@@ -412,7 +418,14 @@
 
                     RefreshDataTable();
                 }
-                 $("#preloader").hide();
+                if (data.ArchitectIds.length > 0) {
+                    data.ArchitectIds.forEach(function (key) {
+                        architectData.push(key);
+                    });
+                }
+                //--- FreeLancer pool entry bind end --//
+
+                $("#preloader").hide();
             },
             error: function (result) {
                 showToaster("error", "Error !", "Something went wrong !!");
@@ -512,17 +525,6 @@
     }
 
     function SaveDescribeSolutionData() {
-
-        var architectData = [];
-        //$(':checkbox:checked').each(function (i) {
-        //    architectData.push($(this).val());
-        //});
-
-        $("#chkArchitect:checked").each(function (i) {
-            architectData.push($(this).val());
-        });
-
-        console.log(architectData);
 
         var freelancerId = $("#drp-assigned-freelancers").val();
         var fileUpload = $(".industryImage").get(0);
@@ -672,8 +674,7 @@
         if ($("#FreeLancerLavel").val() != '' && finalIdsData.length != 0) {
             RefreshDataTable();
         }
-        else
-        {
+        else {
             showToaster("error", "Validation Error !", "Please select Lavel or Freelancer");
         }
     });
@@ -685,7 +686,6 @@
         }
 
         RefreshDataTable();
-        //showToaster("success", "Success", "Recored Deleted.");
     }
 
     function RefreshDataTable() {
@@ -724,7 +724,7 @@
                             "data": "Id",
                             "render": function (data, type, row) {
                                 if (row.Lavel == "Project Manager") {
-                                    return "<input type=\"checkBox\" id=\"chkArchitect\" value=\"" + row.Id + "\" />";
+                                    return "<input type=\"checkBox\" class=\"chkArchitect\" id=\"chk_" + row.Id + "\" value=\"" + row.Id + "\" onclick=\"FillArchitect();\" />";
                                 }
                                 else {
                                     return "";
@@ -734,11 +734,13 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return "<a class=\"text-danger\" onclick=\"RemoveFreeLancer('" + row.Id + "');\">Delete</a>";
+                                return "<a class=\"text-danger\" checked=\"true\" onclick=\"RemoveFreeLancer('" + row.Id + "');\">Delete</a>";
                             }
                         },
                     ]
                 });
+
+                CheckArchitect();
             },
             error: function (result) {
                 showToaster("error", "Error !", "Something went wrong !!");
@@ -758,6 +760,34 @@
             responsive: false,
         });
         table.clear().draw();
+    }
+
+    function FillArchitect() {
+        
+        architectData = [];
+
+        $(".chkArchitect:checked").each(function (i) {
+
+            if (architectData.length >= 1) {
+                showToaster("error", "Maximum Limit !", "Select only one architect per solution.");
+                CheckArchitect();
+            }
+            else {
+                architectData.push($(this).val());
+            }
+
+        });
+    }
+
+    function CheckArchitect() {
+
+        $(".chkArchitect:checked").each(function (i) {
+            $("#chk_" + $(this).val()).prop('checked', false);
+        });
+
+        architectData.forEach(function (key) {
+            $("#chk_" + key).prop('checked', true);
+        });
     }
 
 </script>

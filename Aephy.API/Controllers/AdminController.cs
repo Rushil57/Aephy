@@ -1258,24 +1258,31 @@ namespace Aephy.API.Controllers
                 if (solutionIndustries.Count > 0)
                 {
                     var industryname = string.Empty;
+
+                    var test1 = _db.SolutionServices.ToList();
+                    var test2 = _db.Services.ToList();
+                    var test3 = _db.Industries.ToList();
+                    var test4 = _db.Solutions.ToList();
+
                     foreach (var list in solutionIndustries)
                     {
-                        var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
-                        var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                        var serviceId = test1.Where(x => x.SolutionId == list.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                        var Servicename = test2.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
                         SolutionsModel dataStore = new SolutionsModel();
-                        dataStore.Industries = _db.Industries.Where(x => x.Id == list.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                        dataStore.Industries = test3.Where(x => x.Id == list.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                         dataStore.Id = list.Id;
                         dataStore.Description = list.Description;
                         dataStore.ImagePath = list.ImagePath;
                         dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-                        dataStore.Title = _db.Solutions.Where(x => x.Id == list.SolutionId).Select(x => x.Title).FirstOrDefault();
-                        dataStore.SubTitle = _db.Solutions.Where(x => x.Id == list.SolutionId).Select(x => x.SubTitle).FirstOrDefault();
+                        dataStore.Title = test4.Where(x => x.Id == list.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        dataStore.SubTitle = test4.Where(x => x.Id == list.SolutionId).Select(x => x.SubTitle).FirstOrDefault();
                         dataStore.Services = Servicename;
                         solutionsModel.Add(dataStore);
                         industrylist.Clear();
 
                     }
+
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1313,8 +1320,8 @@ namespace Aephy.API.Controllers
                 var pointsDetails = _db.SolutionPoints.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
                 x.IndustryId == solutionIndustry.IndustryId).ToList();
 
-                var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
-                var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
+                var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
+                var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1387,6 +1394,7 @@ namespace Aephy.API.Controllers
                             FreelancerID = item,
                             SolutionID = model.SolutionId,
                             IsProjectArchitect = model.IsArchitectIds.Contains(item),
+                            IndustryId = model.IndustryId,
                         };
 
                         freeLancerPoolListData.Add(freeLancerPool);

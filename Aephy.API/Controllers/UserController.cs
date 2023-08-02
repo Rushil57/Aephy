@@ -376,7 +376,6 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                
                 var dbUsers = await _db.Users.Where(x => userIdsModel.Ids.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
                 {
                     Id = x.Id,

@@ -45,6 +45,7 @@
                                 <form class="row g-3 mt-3 cls-Solution" name="addSolutiondescribeForm">
                                     <input type="hidden" id="SolutionDetailsId" value="0">
                                     <input type="hidden" id="SolutionId" value="0">
+                                    <input type="hidden" id="IndustryId" value="0">
                                     <input type="hidden" id="ImagePath" value="">
 
                                     <div class="col-12" style="display:none;">
@@ -360,6 +361,7 @@
                 $("#SolutionDetailsId").val(data.SolutionIndustryDetails.Id)
                 $("#SolutionTitle").val(data.Solution.Title)
                 $("#SolutionId").val(data.Solution.Id)
+                $("#IndustryId").val(data.Industryname.Id)
                 $("#Solution_SubTitle").val(data.Solution.SubTitle)
                 $("#SolutionDescription").val(data.Solution.Description)
                 $("#drp-assigned-freelancers").val(data.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
@@ -535,7 +537,8 @@
             AssignedFreelancerIds: finalIdsData,
             IsArchitectIds: architectData,
             ActiveByAdmin: $("#IsActiveByAdmin").prop('checked') ? 1 : 2,
-            SolutionId: $("#SolutionId").val()
+            SolutionId: $("#SolutionId").val(),
+            IndustryId: $("#IndustryId").val(),
         };
         var formData = new FormData();
         for (var i = 0; i < files.length; i++) {
@@ -577,6 +580,7 @@
 
         $("#SolutionDetailsId").val(0);
         $("#SolutionId").val(0);
+        $("#IndustryId").val(0);
         $(".SolutionImage").attr('src', "");
         $("#solutionImagepreview").hide();
         $("#ImagePath").val("");
@@ -648,7 +652,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return "<input type=\"checkBox\" id=\"" + row.Id + "\" value=\"" + row.Id + "\"/>";
+                                return "<input type=\"checkBox\" class=\"chkFreeLancers\" id=\"" + row.Id + "\" value=\"" + row.Id + "\"/>";
                             }
                         },
                         { "data": "FirstName" },
@@ -667,7 +671,7 @@
 
     $("#AddFreeLancer").click(function () {
 
-        $(':checkbox:checked').each(function (i) {
+        $('.chkFreeLancers:checked').each(function (i) {
             finalIdsData.push($(this).val());
         });
 

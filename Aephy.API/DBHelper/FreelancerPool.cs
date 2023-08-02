@@ -11,7 +11,10 @@ public class FreelancerPool
 
     public int SolutionID { get; set; }
 
+    public int IndustryId { get; set; }
+
     public string? FreelancerID { get; set; }
 
     public bool IsProjectArchitect { get; set; }
+
 }

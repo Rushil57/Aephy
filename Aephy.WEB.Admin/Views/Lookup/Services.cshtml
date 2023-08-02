@@ -210,11 +210,45 @@
         });
     }
 
-    function DeleteServices(id){
-        if (confirm('Are you sure want to delete services?')) {
+    function DeleteServices(id) {
+        //if (confirm('Are you sure want to delete services?')) {
+        //    var ServiceData = {
+        //        Id: id,
+        //    };
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "@Url.Action("DeleteServices", "Lookup")",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        data: JSON.stringify(ServiceData),
+        //        success: function (result) {
+        //            //alert(result.Message)
+        //            showToaster("success", "Success", result.Message);
+        //            GetServiceList()
+
+        //        },
+        //        error: function (result) {
+        //            //alert("Error occured..");
+        //            showToaster("error", "Error !", "Something went wrong !!");
+        //        }
+        //    });
+        //}
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
             var ServiceData = {
                 Id: id,
             };
+
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteServices", "Lookup")",
@@ -222,21 +256,20 @@
                 dataType: "json",
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
-                    //alert(result.Message)
                     showToaster("success", "Success", result.Message);
                     GetServiceList()
 
                 },
                 error: function (result) {
-                    //alert("Error occured..");
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
-        }
+
+        });
 
     }
 
-    function GetDataById(Id){
+    function GetDataById(Id) {
         if (Id != 0) {
             var ServiceData = {
                 Id: Id,

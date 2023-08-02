@@ -95,7 +95,43 @@
     }
     function DeleteSolution(ImageUrlWithSas, ImagePath, Id) {
 
-        if (confirm('Are you sure want to delete solution?')) {
+        //if (confirm('Are you sure want to delete solution?')) {
+        //    var ServiceData = {
+        //        Id: Id,
+        //        ImagePath: ImagePath,
+        //        ImageUrlWithSas: ImageUrlWithSas
+
+        //    };
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "@Url.Action("DeleteSolutions", "Solutions")",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        data: JSON.stringify(ServiceData),
+        //        success: function (result) {
+        //            //alert(result.Message);
+        //            showToaster("success", "Success", result.Message);
+        //            GetSolutionList();
+
+        //        },
+        //        error: function (result) {
+        //            //alert("Error occured..");
+        //            showToaster("error", "Error !", "Something went wrong !!");
+        //        }
+        //    });
+        //}
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
             var ServiceData = {
                 Id: Id,
                 ImagePath: ImagePath,
@@ -109,17 +145,16 @@
                 dataType: "json",
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
-                    //alert(result.Message);
                     showToaster("success", "Success", result.Message);
                     GetSolutionList();
 
                 },
                 error: function (result) {
-                    //alert("Error occured..");
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
-        }
+
+        });
     }
 
     function OpenAddIndustriesModalPopup() {

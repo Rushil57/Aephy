@@ -167,7 +167,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
-                                return '<a class="cls-industries" onclick=EditData("' + data + '");>'+ data +'</a>';
+                                return '<a class="cls-industries" onclick=EditData("' + data + '");>' + data + '</a>';
                             }
                         },
                         { "data": "IndustryName" },
@@ -209,7 +209,7 @@
             }
         });
     }
-    function EditData(Id){
+    function EditData(Id) {
         var industryData = {
             Id: Id,
             IndustryName: "",
@@ -222,7 +222,7 @@
             dataType: "json",
             data: JSON.stringify(industryData),
             success: function (result) {
-                if (result.Message == "Success"){
+                if (result.Message == "Success") {
                     OpenAddIndustriesModalPopup();
                     $('.main-title').html('Edit Industry');
                     var data = result.Result;
@@ -233,10 +233,10 @@
                     if (data.Active) {
                         $("#Active").prop('checked', true);
                     }
-                    if (data.IsActiveFreelancer){
+                    if (data.IsActiveFreelancer) {
                         $("#freelancerActive").prop('checked', true);
                     }
-                    if (data.IsActiveClient){
+                    if (data.IsActiveClient) {
                         $("#clientActive").prop('checked', true);
                     }
                 }
@@ -247,8 +247,44 @@
             }
         });
     }
-    function DeleteData(IndustryId){
-        if(confirm('Are you sure wants to delete this record?')){
+    function DeleteData(IndustryId) {
+        //if (confirm('Are you sure wants to delete this record?')) {
+        //    var IndustryData = {
+        //        Id: IndustryId,
+        //        IndustryName: "",
+        //        Active: true
+        //    };
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "@Url.Action("DeleteIndustry", "Lookup")",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        data: JSON.stringify(IndustryData),
+        //        success: function (result) {
+        //            //alert(result.Message)
+        //            showToaster("success", "Success", result.Message);
+        //            if (result.Message == "Deleted Successfully") {
+        //                GetServiceList();
+        //            }
+        //        },
+        //        error: function (result) {
+        //            //alert("Error occured..");
+        //            showToaster("error", "Error !", "Something went wrong !!");
+        //        }
+        //    });
+        //}
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
             var IndustryData = {
                 Id: IndustryId,
                 IndustryName: "",
@@ -261,17 +297,16 @@
                 dataType: "json",
                 data: JSON.stringify(IndustryData),
                 success: function (result) {
-                    //alert(result.Message)
                     showToaster("success", "Success", result.Message);
                     if (result.Message == "Deleted Successfully") {
                         GetServiceList();
                     }
                 },
                 error: function (result) {
-                    //alert("Error occured..");
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
-        }
+
+        });
     }
 </script>

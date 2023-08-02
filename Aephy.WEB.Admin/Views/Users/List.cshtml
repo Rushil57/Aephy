@@ -3,8 +3,8 @@
 }
 
 <style>
-    #solutionsList{
-        width:100% !important;
+    #solutionsList {
+        width: 100% !important;
     }
 </style>
 
@@ -96,10 +96,10 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                if (row.SolutionID != 0){
+                                if (row.SolutionID != 0) {
                                     return '<a class="btn btn-primary" onclick=SoutionsList("' + data + '")>View</a>';
                                 }
-                                else{
+                                else {
                                     return '';
                                 }
                             }
@@ -122,44 +122,77 @@
         });
     }
 
-    function SoutionsList(Id){
-            var ServiceData = {
-                Id: Id,
-            };
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("getFreelancerSolutionsById", "Users")",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(ServiceData),
-                success: function (result) {
-                    $('#userPopupModal').modal('show');
-                    $('#solutionsList').DataTable({
-                        destroy: true,
-                        data: result.Result,
-                        "columns": [
+    function SoutionsList(Id) {
+        var ServiceData = {
+            Id: Id,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getFreelancerSolutionsById", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(ServiceData),
+            success: function (result) {
+                $('#userPopupModal').modal('show');
+                $('#solutionsList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
 
-                            { "data": "Id" },
-                            { "data": "Title" }
-                        ]
-                    });
-                },
-                error: function (result) {
-                    //alert("Error occured..");
-                    showToaster("error", "Error !", "Something went wrong !!");
-                }
-            });
-//        }else{
-  //          showToaster("error", "No Data!", "This user is not working in any solution");
-    //    }
+                        { "data": "Id" },
+                        { "data": "Title" }
+                    ]
+                });
+            },
+            error: function (result) {
+                //alert("Error occured..");
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+        //        }else{
+        //          showToaster("error", "No Data!", "This user is not working in any solution");
+        //    }
     }
 
-    function DeleteUser(Id)
-    {
-        if (confirm('Are you sure want to delete Record?')) {
+    function DeleteUser(Id) {
+        //if (confirm('Are you sure want to delete Record?')) {
+        //    var ServiceData = {
+        //        Id: Id,
+        //    };
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "@Url.Action("UpdateUserIsDelete", "Users")",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        data: JSON.stringify(ServiceData),
+        //        success: function (result) {
+        //            //alert(result.Message)
+        //            showToaster("success", "Success", result.Message);
+        //            GetUserList()
+
+        //        },
+        //        error: function (result) {
+        //            //alert("Error occured..");
+        //            showToaster("error", "Error !", "Something went wrong !!");
+        //        }
+        //    });
+        //}
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
             var ServiceData = {
                 Id: Id,
             };
+
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("UpdateUserIsDelete", "Users")",
@@ -177,10 +210,10 @@
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
-        }
+        });
     }
 
-    function closeUserPopupModal(){
+    function closeUserPopupModal() {
         $('#userPopupModal').modal('hide');
         $('#solutionsList').find("tr:gt(0)").remove();
     }

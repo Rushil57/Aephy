@@ -840,7 +840,7 @@ namespace Aephy.API.Controllers
                         userdataStore.UserRole = data.UserType;
                         userdataStore.EmailAddress = data.UserName;
                         userdataStore.FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault();
-                        if(userdataStore.FreelancerLevel == "Project Manager/Project Architecture")
+                        if (userdataStore.FreelancerLevel == "Project Manager/Project Architecture")
                         {
                             users.Add(userdataStore);
                         }
@@ -900,7 +900,7 @@ namespace Aephy.API.Controllers
                         x.CreatedDateTime,
                         x.ID,
                         x.SolutionId,
-                        x.IndustryId,   
+                        x.IndustryId,
                         x.Description,
                         x.isActive,
                         SolutionName = solutionName,
@@ -934,7 +934,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var listDB = _db.GigOpenRoles.Where(x=>x.isActive == true).ToList();
+                var listDB = _db.GigOpenRoles.Where(x => x.isActive == true).ToList();
                 var listSolution = _db.Solutions.ToList();
                 var listServiceSol = _db.SolutionServices.ToList();
                 var listService = _db.Services.ToList();
@@ -1036,7 +1036,7 @@ namespace Aephy.API.Controllers
                             openRolesdata.Level = model.Level;
                             openRolesdata.Description = model.Description;
                             openRolesdata.IndustryId = model.IndustryId;
-                            openRolesdata.isActive = model.isActive;    
+                            openRolesdata.isActive = model.isActive;
                             _db.SaveChanges();
                         }
 
@@ -1336,7 +1336,7 @@ namespace Aephy.API.Controllers
                 var pointsDetails = _db.SolutionPoints.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
                 x.IndustryId == solutionIndustry.IndustryId).ToList();
 
-                var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
+                var freeLancerPoolIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId).Select(x => x.FreelancerID).ToList();
                 var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1349,7 +1349,7 @@ namespace Aephy.API.Controllers
                         SolutionIndustryDetails = solutionIndustry,
                         Industryname = industries,
                         Services = solutionServices,
-						MilestoneDetails = milestoneDetails,
+                        MilestoneDetails = milestoneDetails,
                         FreeLancerPoolIds = freeLancerPoolIds,
                         ArchitectIds = architectIds,
                         PointsDetails = pointsDetails
@@ -1470,17 +1470,35 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != null)
                 {
+                    //if (userDetails != null)
+                    //{
+                    //    userDetails.IsDeleted = true;
+                    //    _db.SaveChanges();
+
+                    //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    //    {
+                    //        StatusCode = StatusCodes.Status200OK,
+                    //        Message = "User Deleted Succesfully!"
+                    //    });
+                    //}
+
                     var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
-
-                    if (userDetails != null)
+                    _db.Users.Remove(userDetails);
+                    int status = await _db.SaveChangesAsync();
+                    if (status > 0)
                     {
-                        userDetails.IsDeleted = true;
-                        _db.SaveChanges();
-
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
                             Message = "User Deleted Succesfully!"
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Something Went Wrong"
                         });
                     }
                 }
@@ -1623,24 +1641,24 @@ namespace Aephy.API.Controllers
                     freelancerData = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
                     if (freelancerData != null)
                     {
-                        if(solutionsModel.ApproveOrReject == "Approve".Trim())
+                        if (solutionsModel.ApproveOrReject == "Approve".Trim())
                         {
                             freelancerData.IsApproved = true;
                             freelancerData.IsRejected = false;
                             _db.SaveChanges();
                         }
-                        if(solutionsModel.ApproveOrReject == "Reject".Trim())
+                        if (solutionsModel.ApproveOrReject == "Reject".Trim())
                         {
                             freelancerData.IsApproved = false;
-                            freelancerData.IsRejected = true; 
+                            freelancerData.IsRejected = true;
                             _db.SaveChanges();
                         }
                     }
-                   
+
                 }
 
                 var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
-                
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,

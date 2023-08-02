@@ -1310,15 +1310,11 @@ namespace Aephy.API.Controllers
                 var milestoneDetails = _db.SolutionMilestone.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
                 x.IndustryId == solutionIndustry.IndustryId).ToList();
 
+                var pointsDetails = _db.SolutionPoints.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
+                x.IndustryId == solutionIndustry.IndustryId).ToList();
+
                 var freeLancerPoolIds = _db.FreelancerPool.Where(x=>x.SolutionID == solutionIndustry.IndustryId).Select(x=>x.FreelancerID).ToList();
-                //var freeLancerPoolDetail = _db.Users.Where(x=> freeLancerPoolIds.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
-                //{
-                //    Id = x.Id,
-                //    FirstName = x.FirstName,
-                //    LastName = x.LastName,
-                //    Lavel = _db.FreelancerDetails.Where(y => y.UserId == x.Id).Select(y => y.FreelancerLevel).FirstOrDefault()
-                
-                //}).ToList();
+               
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1331,8 +1327,8 @@ namespace Aephy.API.Controllers
                         Industryname = industries,
                         Services = solutionServices,
 						MilestoneDetails = milestoneDetails,
-                        //FreeLancerPool = freeLancerPoolDetail,
-                        FreeLancerPoolIds = freeLancerPoolIds
+                        FreeLancerPoolIds = freeLancerPoolIds,
+                        PointsDetails = pointsDetails
                     }
                 });
             }

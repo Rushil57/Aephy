@@ -127,6 +127,13 @@
                                     Project Architecture - Details
 
                                     <div class="col-12">
+                                        <label for="ProjectDetails" class="form-label">Project Details</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="projectDetails" name="projectDetails" style="height:100px;" readonly></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
                                         <label for="SolutionDescription" class="form-label">Project Outline</label>
                                         <div class="input-group">
                                             <textarea class="form-control" id="projectOutline" name="projectOutline" style="height:100px;" readonly></textarea>
@@ -141,10 +148,27 @@
                                                         <th>Id</th>
                                                         <th>Description</th>
                                                         <th>Title</th>
-                                                        @*<th>DueDate</th>*@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="MileStonebody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+                                     <div class="col-12">
+                                        <label for="points" class="form-label">Point(s)</label>
+                                        <div class="input-group">
+                                            <table class="table" id="PointsTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Points</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -325,52 +349,64 @@
             dataType: "json",
             data: JSON.stringify(ServiceData),
             success: function (result) {
-
+                var data = result.Result;
                 $("#EditsolutionModal").modal('show')
-                $("#SolutionDetailsId").val(result.Result.SolutionIndustryDetails.Id)
-                $("#SolutionTitle").val(result.Result.Solution.Title)
-                $("#SolutionId").val(result.Result.Solution.Id)
-                $("#Solution_SubTitle").val(result.Result.Solution.SubTitle)
-                $("#SolutionDescription").val(result.Result.Solution.Description)
-                $("#drp-assigned-freelancers").val(result.Result.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
-                $("#drp-services").val(result.Result.Services.ServicesId)
-                $('#drp-industries').val(result.Result.Industryname.Id).trigger('chosen:updated');
+                $("#SolutionDetailsId").val(data.SolutionIndustryDetails.Id)
+                $("#SolutionTitle").val(data.Solution.Title)
+                $("#SolutionId").val(data.Solution.Id)
+                $("#Solution_SubTitle").val(data.Solution.SubTitle)
+                $("#SolutionDescription").val(data.Solution.Description)
+                $("#drp-assigned-freelancers").val(data.SolutionIndustryDetails.AssignedFreelancerId).trigger('chosen:updated');
+                $("#drp-services").val(data.Services.ServicesId)
+                $('#drp-industries').val(data.Industryname.Id).trigger('chosen:updated');
                 $('#drp-industries option').attr('disabled', true).trigger('chosen:updated');
                 $("#solutionImagepreview").find("span").first().remove();
-                $("#IsActiveByAdmin").prop('checked', result.Result.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true : false);
+                $("#IsActiveByAdmin").prop('checked', data.SolutionIndustryDetails.IsActiveByAdmin == 1 ? true : false);
                 //
-                $("#projectOutline").val(result.Result.SolutionIndustryDetails.ProjectOutline);
-                //result.Result.MilestoneDetails
+                $("#projectOutline").val(data.SolutionIndustryDetails.ProjectOutline);
+                $("#projectDetails").val(data.SolutionIndustryDetails.ProjectDetails);
                 var htm = '';
-                for (index = 0; index < result.Result.MilestoneDetails.length; index++) {
-                    subObj = result.Result.MilestoneDetails[index];
+                for (index = 0; index < data.MilestoneDetails.length; index++) {
+                    subObj = data.MilestoneDetails[index];
 
                     htm += '<tr>';
-                    //htm += '<td class="" >' + subObj.Id + '</td>';
-                    htm += '<td onclick=EditMiletoneData(' + subObj.Id + ')>' + subObj.Id + '</td>';
+                    htm += '<td>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.Description + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';
-                    //htm += '<td>' + moment(subObj.DueDate).format('YYYY-MM-DD') + '</td>';
                     htm += '</tr>';
                 }
                 $("#MileStoneTable").find("tr:gt(0)").remove();
                 $("#MileStoneTable tbody").append(htm);
-                //
+
+
+                var pointsTable = '';
+                for (index = 0; index < data.PointsDetails.length; index++) {
+                    subObj = data.PointsDetails[index];
+
+                    pointsTable += '<tr>';
+                    pointsTable += '<td>' + subObj.Id + '</td>';
+                    pointsTable += '<td>' + subObj.point + '</td>';
+                    pointsTable += '</tr>';
+                }
+                $("#PointsTable").find("tr:gt(0)").remove();
+                $("#PointsTable tbody").append(pointsTable);
+
+
                 $('#solutionImagepreview').show();
                 var span = document.createElement('span');
                 span.innerHTML =
-                    ['<img class="SolutionImage" src="', result.Result.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                    ['<img class="SolutionImage" src="', data.Solution.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
                         .join('');
                 document.getElementById('solutionImagepreview').insertBefore(span, null);
 
-                BindIndustriesControles(result.Result.Industryname, result.Result.SolutionIndustryDetails);
+                BindIndustriesControles(data.Industryname, data.SolutionIndustryDetails);
 
 
 
                 DestroyDatatable("#AssignFreeLancerTable");
                 finalIdsData = [];
-                if (result.Result.FreeLancerPoolIds.length > 0) {
-                    result.Result.FreeLancerPoolIds.forEach(function (key) {
+                if (data.FreeLancerPoolIds.length > 0) {
+                    data.FreeLancerPoolIds.forEach(function (key) {
                         finalIdsData.push(key);
                     });
 
@@ -379,7 +415,6 @@
                  $("#preloader").hide();
             },
             error: function (result) {
-                //alert("Error occured..");
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });

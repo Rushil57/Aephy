@@ -37,7 +37,7 @@ public class InviteUserController : Controller
             body = body.Replace("{{ user_name }}", InviteData.FirstName + " " + InviteData.LastName);
             body = body.Replace("{{ url }}", signUpUrl);
 
-            bool send = SendEmailHelper.SendEmail(InviteData.EmailAddress, "Welcome to Ephey", body);
+            bool send = SendEmailHelper.SendEmail(InviteData.EmailAddress, "Welcome to Ephylink", body);
 
             if (!send)
             {

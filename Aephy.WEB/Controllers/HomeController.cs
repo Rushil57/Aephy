@@ -142,7 +142,7 @@ namespace Aephy.WEB.Controllers
                         body = body.Replace("{{ first_name }}", registerModel.FirstName);
                         body = body.Replace("{{ url }}", verifyUrl);
 
-                        bool send = SendEmailHelper.SendEmail(registerModel.Email, "Welcome to Ephey", body);
+                        bool send = SendEmailHelper.SendEmail(registerModel.Email, "Welcome to Ephylink", body);
 
                         if (!send)
                         {

@@ -30,7 +30,7 @@ namespace Aephy.API.Controllers
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
-                    var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToList();
+                    var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).Take(3).ToList();
 
                     if (serviceData.Count > 0)
                     {

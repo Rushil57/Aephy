@@ -1536,7 +1536,8 @@ namespace Aephy.API.Controllers
                                 var sln = _db.Solutions.Where(s => s.Id == mdl.SolutionID).FirstOrDefault();
                                 var ind = _db.Industries.Where(x => x.Id == mdl.IndustryId).FirstOrDefault();
                                 solutions.Add(
-                                    new { 
+                                    new
+                                    {
                                         sln?.Id,
                                         sln?.Title,
                                         ind?.IndustryName
@@ -1574,6 +1575,11 @@ namespace Aephy.API.Controllers
             try
             {
                 var rolesApplications = _db.OpenGigRolesApplications.ToList();
+                var gigOpenRole = _db.GigOpenRoles.ToList();
+                var solutions = _db.Solutions.ToList();
+                var industries = _db.Industries.ToList();
+                var users = _db.Users.ToList();
+
                 List<AdminViewModel.GigOpenRolesModel> roles = new List<AdminViewModel.GigOpenRolesModel>();
                 if (rolesApplications.Count > 0)
                 {
@@ -1582,8 +1588,28 @@ namespace Aephy.API.Controllers
                         AdminViewModel.GigOpenRolesModel gigRolesStore = new AdminViewModel.GigOpenRolesModel();
                         gigRolesStore.ID = data.ID;
                         gigRolesStore.Description = data.Description;
-                        gigRolesStore.CreatedDateTime = data.CreatedDateTime;
-                        gigRolesStore.Name = _db.Users.Where(x => x.Id == data.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
+                        gigRolesStore.CreatedDateTime = data.CreatedDateTime.ToString("yyyy-MM-dd");
+                        
+                        //gigRolesStore.Name = _db.Users.Where(x => x.Id == data.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
+                        
+                        var userModel = users.Where(x => x.Id == data.FreelancerID).FirstOrDefault();
+                        if(userModel != null)
+                        {
+                            
+                            gigRolesStore.Name = userModel.FirstName;
+                        }
+
+                        var gigOpenRoleModel = gigOpenRole.Where(x => x.ID == data.GigOpenRoleId).FirstOrDefault();
+                        if (gigOpenRoleModel != null)
+                        {
+                            gigRolesStore.SolutionName = solutions.Where(x => x.Id == gigOpenRoleModel.SolutionId)
+                                                        .Select(x => x.Title).FirstOrDefault();
+                            gigRolesStore.IndustriesName = industries.Where(x => x.Id == gigOpenRoleModel.IndustryId)
+                                                            .Select(x => x.IndustryName).FirstOrDefault();
+
+                            gigRolesStore.FreeLancerLavel = gigOpenRoleModel.Level;
+                        }
+                        gigRolesStore.ApproveOrReject = data.IsApproved ? "Approve" : data.IsRejected ? "Reject" : "No Action";
                         roles.Add(gigRolesStore);
                     }
 
@@ -1614,10 +1640,13 @@ namespace Aephy.API.Controllers
             try
             {
                 OpenGigRolesApplications openGigRoles = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
+                GigOpenRoles gigOpenRoles = new GigOpenRoles();
+
                 var freelancerName = string.Empty;
                 if (openGigRoles != null)
                 {
                     freelancerName = _db.Users.Where(x => x.Id == openGigRoles.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
+                    gigOpenRoles = _db.GigOpenRoles.Where(x => x.ID == openGigRoles.GigOpenRoleId).FirstOrDefault();
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1627,7 +1656,8 @@ namespace Aephy.API.Controllers
                     Result = new
                     {
                         OpenGigRoles = openGigRoles,
-                        FreelancerName = freelancerName
+                        FreelancerName = freelancerName,
+                        GigOpenRoles = gigOpenRoles,
                     }
                 });
             }
@@ -1653,6 +1683,15 @@ namespace Aephy.API.Controllers
                         {
                             freelancerData.IsApproved = true;
                             freelancerData.IsRejected = false;
+
+                            var dbModel = new FreelancerPool
+                            {
+                                FreelancerID = freelancerData.FreelancerID,
+                                IndustryId = solutionsModel.IndustryId,
+                                SolutionID = solutionsModel.SolutionId
+                            };
+
+                            await _db.FreelancerPool.AddAsync(dbModel);
                             _db.SaveChanges();
                         }
                         if (solutionsModel.ApproveOrReject == "Reject".Trim())

@@ -13,8 +13,11 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Freelancer Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Date</th>
+                                <th scope="col">Industries Name</th>
+                                <th scope="col">Solution Name</th>
+                                <th scope="col">Lavel</th>
+                                <th scope="col">Apply On Date</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
                     </table>
@@ -40,6 +43,8 @@
 
 
                                     <input type="hidden" id="ApplicantsID" value="0">
+                                    <input type="hidden" id="SolutionId" value="0">
+                                    <input type="hidden" id="IndustryId" value="0">
                                     <input type="hidden" id="Cvpath" value="">
                                     <div class="col-12 pt-3">
                                         <label for="name" class="form-label">Name</label>
@@ -98,8 +103,24 @@
                             }
                         },
                         { "data": "Name" },
-                        { "data": "Description" },
-                        { "data": "CreatedDateTime" }
+                        { "data": "IndustriesName" },
+                        { "data": "SolutionName" },
+                        { "data": "FreeLancerLavel" },
+                        { "data": "CreatedDateTime" },
+                        {
+                            "data": "ApproveOrReject",
+                            "render": function (data, type, row) {
+                                if (data == "Approve") {
+                                    return '<span class="badge bg-success">' + data + '</span>';
+                                }
+                                else if (data == "Reject") {
+                                    return '<span class="badge bg-danger">' + data + '</span>';
+                                }
+                                else{
+                                    return '<span class="badge bg-primary">' + data + '</span>';
+                                }
+                            }
+                        },
 
                     ]
                 });
@@ -124,6 +145,8 @@
             dataType: "json",
             data: JSON.stringify(Data),
             success: function (result) {
+                console.log(result);
+
                 if (result.Result != null) {
                     $("#applicantsDetailsModal").modal('show')
                     var data = result.Result;
@@ -131,6 +154,8 @@
                     $("#freelancerName").val(data.FreelancerName)
                     $("#description").val(data.OpenGigRoles.Description)
                     $("#Cvpath").val(data.OpenGigRoles.CVPath)
+                    $("#IndustryId").val(data.GigOpenRoles.IndustryId)
+                    $("#SolutionId").val(data.GigOpenRoles.SolutionId)
                 }
 
             },
@@ -148,12 +173,16 @@
         $("#description").val("")
         $("#applicantsDetailsModal").modal('hide')
         $("#Cvpath").val("")
+        $("#SolutionId").val(0)
+        $("#IndustryId").val(0)
     }
 
     function ApproveOrReject(value) {
         if(value != null){
             var data = {
                 ID: $("#ApplicantsID").val(),
+                IndustryId: $("#IndustryId").val(),
+                SolutionId: $("#SolutionId").val(),
                 ApproveOrReject: value,
             }
             $("#preloader").show();

@@ -202,6 +202,8 @@ namespace Aephy.API.Models
 
             public string? FreelancerId { get; set; }
 
+            public string? ProjectType { get; set; }
+
         }
 
         public class SolutionIndustryDetailsModel
@@ -216,6 +218,8 @@ namespace Aephy.API.Models
 
             public int SolutionId { get; set; }
 
+            public string? ProjectType { get; set; }
+
         }
         public class MileStoneIdViewModel
         {
@@ -229,6 +233,8 @@ namespace Aephy.API.Models
             public int SolutionId { get; set; }
 
             public string? FreelancerId { get; set; }
+
+            public string? ProjectType { get; set; }
         }
 
         public class UserCvFileModel
@@ -241,6 +247,5 @@ namespace Aephy.API.Models
 
             public string? CVUrlWithSas { get; set; }
         }
-
     }
 }

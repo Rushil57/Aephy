@@ -19,6 +19,7 @@ using static System.Net.WebRequestMethods;
 using Aephy.API.DBHelper;
 using Azure.Storage.Blobs.Models;
 
+
 namespace Aephy.WEB.Controllers
 {
     public class HomeController : Controller
@@ -880,6 +881,19 @@ namespace Aephy.WEB.Controllers
             {
                 return "failed to receive data..";
             }
+        }
+
+        [HttpPost]
+        public async Task<string> GetSolutionDefineData([FromBody] MileStoneDetailsViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId != null)
+            {
+                //model.FreelancerId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetSolutionDefineData", HttpMethod.Post, model);
+                return aprroveList;
+            }
+            return "Something Went Wrong";
         }
     }
 }

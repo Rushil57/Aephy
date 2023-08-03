@@ -14,6 +14,8 @@
 
         public string? FreelancerId { get; set; }
 
+        public string? ProjectType { get; set; }
+
     }
 
     public class MileStoneDetailsViewModel
@@ -23,6 +25,8 @@
         public int SolutionId { get; set; }
 
         public string? FreelancerId { get; set; }
+
+        public string? ProjectType { get; set; }
     }
     public class MileStoneIdViewModel
     {
@@ -40,6 +44,8 @@
         public int IndustryId { get; set; }
 
         public int SolutionId { get; set; }
+
+        public string? ProjectType { get; set; }
 
     }
 }

@@ -1,0 +1,60 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Aephy.API.Migrations
+{
+    /// <inheritdoc />
+    public partial class Create_SolutionDefine_Table : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "ProjectType",
+                table: "SolutionPoints",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ProjectType",
+                table: "SolutionMilestone",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "SolutionDefine",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolutionIndustryDetailsId = table.Column<int>(type: "int", nullable: false),
+                    ProjectOutline = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProjectDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProjectType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SolutionDefine", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "SolutionDefine");
+
+            migrationBuilder.DropColumn(
+                name: "ProjectType",
+                table: "SolutionPoints");
+
+            migrationBuilder.DropColumn(
+                name: "ProjectType",
+                table: "SolutionMilestone");
+        }
+    }
+}

@@ -447,6 +447,16 @@
                                 <input type="hidden" id="SolutionId" value="0">
                                 <input type="hidden" id="IndustryId" value="0">
                                 <input type="hidden" id="ProjectOulineId" value="0">
+
+                                <div class="form-group pt-3">
+                                    <label for="ProjectType"> Select Project Type </label>
+                                    <select class="form-select" name="ProjectType" id="ProjectType">
+                                        <option value="SMALL">Small</option>
+                                        <option value="LARGE">Large</option>
+                                        <option value="MEDIUM">Medium</option>
+                                    </select>
+                                </div>
+
                                 <div class="form-group pt-3">
                                     <label for="projectDetails">Project Details</label>
                                     @*<input type="text" class="form-control" id="industry-ProjectDetails" name="ProjectDetails" placeholder="Project Details">*@
@@ -498,6 +508,7 @@
 
                                 <div class="form-group pt-3">
                                     <button type="button" class="btn btn-brand" onclick="SaveSolutionIndustryDescription()">Submit</button>
+                                    <button type="button" class="btn btn-secondary" onclick="ResetDetailsForm()">Close</button>
                                 </div>
 
                             </div>
@@ -829,6 +840,10 @@
         } else {
             $('.only_freelancer').hide();
         }
+
+        $("#ProjectType").change(function(){
+            GetSolutionDefineDetails()
+        });
     });
 
     function CloseGigOpeningApplyModal() {
@@ -964,11 +979,12 @@
     }
 
     function OpenDetailsPopModal(Id, SolutionId, IndustryId) {
-        $("#DetailsPopModal").modal('show')
-        $("#SolutionId").val(SolutionId)
-        $("#IndustryId").val(IndustryId)
-        GetMiletoneList()
-        GetPointsList()
+        $("#DetailsPopModal").modal('show');
+        $("#SolutionId").val(SolutionId);
+        $("#IndustryId").val(IndustryId);
+        GetMiletoneList();
+        GetPointsList();
+        GetSolutionDefineDetails();
     }
 
     function OpenMileStonePopup() {
@@ -982,7 +998,8 @@
             Title: $("#mileStoneTitle").val(),
             DueDate: $("#mileStonedueDate").val(),
             SolutionId: $("#SolutionId").val(),
-            IndustryId: $("#IndustryId").val()
+            IndustryId: $("#IndustryId").val(),
+            ProjectType: $("#ProjectType").val(),
         };
         $("#preloader").show();
         $.ajax({
@@ -1023,7 +1040,8 @@
             ProjectOutline: $("#industry-ProjectOutline").val(),
             ProjectDetails: $("#industry-ProjectDetails").val(),
             SolutionId: $("#SolutionId").val(),
-            IndustryId: $("#IndustryId").val()
+            IndustryId: $("#IndustryId").val(),
+            ProjectType: $("#ProjectType").val()
         };
 
         $("#preloader").show();
@@ -1036,7 +1054,7 @@
             success: function (result) {
                 //alert(result.Message);
                 showToaster("success", "Success", result.Message);
-                ResetDetailsForm()
+                //ResetDetailsForm()
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -1051,6 +1069,7 @@
         $("#industry-ProjectDetails").val("")
         $("#SolutionId").val(0)
         $("#IndustryId").val(0)
+        $("#ProjectType").val("SMALL")
         ResetMileStoneForm()
         $("#DetailsPopModal").modal('hide')
     }
@@ -1059,7 +1078,8 @@
     function GetMiletoneList() {
         var data = {
             SolutionId: parseInt($("#SolutionId").val()),
-            IndustryId: parseInt($("#IndustryId").val())
+            IndustryId: parseInt($("#IndustryId").val()),
+            ProjectType: $("#ProjectType").val(),
         }
 
         $("#preloader").show();
@@ -1138,8 +1158,10 @@
             Id: $("#PointsId").val(),
             Point: $("#pointsDetails-id").val(),
             SolutionId: $("#SolutionId").val(),
-            IndustryId: $("#IndustryId").val()
+            IndustryId: $("#IndustryId").val(),
+            ProjectType: $("#ProjectType").val()
         };
+
         $("#preloader").show();
         $.ajax({
             type: "POST",
@@ -1169,8 +1191,10 @@
 
         var data = {
             SolutionId: parseInt($("#SolutionId").val()),
-            IndustryId: parseInt($("#IndustryId").val())
+            IndustryId: parseInt($("#IndustryId").val()),
+            ProjectType: $("#ProjectType").val(),
         }
+
         $("#preloader").show();
         $.ajax({
             type: "POST",
@@ -1223,7 +1247,6 @@
                 }
             });
         }
-
     }
 
     function DeleteMileStoneById(Id) {
@@ -1254,5 +1277,43 @@
     }
     function showGuidelinesModal(){
         $('#guidelineModal').modal('show');
+    }
+
+    function GetSolutionDefineDetails(){
+
+        var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
+            ProjectType: $("#ProjectType").val()
+        };
+
+        $("#preloader").show();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionDefineData", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                debugger;
+                if(result.StatusCode == 200)
+                {
+                    $("#industry-ProjectDetails").val(result.Result.ProjectDetails);
+                    $("#industry-ProjectOutline").val(result.Result.ProjectOutline);
+                    GetMiletoneList();
+                    GetPointsList();
+                }
+                else
+                {
+                    showToaster("error", "Error !", "Failure");
+                }
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
     }
 </script>

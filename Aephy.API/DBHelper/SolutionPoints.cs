@@ -16,5 +16,7 @@ namespace Aephy.API.DBHelper
         public int IndustryId { get; set; }
 
         public string? FreelancerId { get; set; }
+
+        public string? ProjectType { get; set; }
     }
 }

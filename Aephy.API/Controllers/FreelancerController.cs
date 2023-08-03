@@ -107,10 +107,10 @@ namespace Aephy.API.Controllers
         [Route("UpdateUserCV")]
         public async Task<IActionResult> UpdateUserCV([FromBody] UserCvFileModel usercv)
         {
-            if(usercv.UserId != null)
+            if (usercv.UserId != null)
             {
                 var userData = _db.FreelancerDetails.Where(x => x.UserId == usercv.UserId).FirstOrDefault();
-                if(userData != null)
+                if (userData != null)
                 {
                     userData.BlobStorageBaseUrl = usercv.BlobStorageBaseUrl;
                     userData.CVPath = usercv.CVPath;
@@ -145,6 +145,7 @@ namespace Aephy.API.Controllers
                 var listIndustrySol = _db.SolutionIndustry.ToList();
                 var approvedJobs = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == model.UserId
                 && x.IsApproved).ToList();
+
                 List<dynamic> finalList = new List<dynamic>();
                 listDB.ForEach(x =>
                 {
@@ -176,7 +177,6 @@ namespace Aephy.API.Controllers
                             SolutionName = solutionName,
                             ServiceName = serviceName,
                             IndustryName = IndName,
-
                         };
                         finalList.Add(obj);
                     }
@@ -198,14 +198,14 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("SaveMileStoneData")]
         public async Task<IActionResult> SaveMileStoneData([FromBody] MileStoneModel model)
         {
-            if(model != null)
+            if (model != null)
             {
-                if(model.Id == 0)
+                if (model.Id == 0)
                 {
                     var milestone = new SolutionMilestone()
                     {
@@ -214,7 +214,8 @@ namespace Aephy.API.Controllers
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
                         DueDate = model.DueDate,
-                        FreelancerId = model.FreelancerId
+                        FreelancerId = model.FreelancerId,
+                        ProjectType = model.ProjectType
                     };
                     _db.SolutionMilestone.Add(milestone);
                     _db.SaveChanges();
@@ -227,11 +228,12 @@ namespace Aephy.API.Controllers
                 else
                 {
                     var data = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if(data != null)
+                    if (data != null)
                     {
                         data.Description = model.Description;
                         data.DueDate = model.DueDate;
                         data.Title = model.Title;
+                        data.ProjectType = model.ProjectType;
                         _db.SaveChanges();
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -240,26 +242,55 @@ namespace Aephy.API.Controllers
                         });
                     }
                 }
-               
+
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
 
         }
 
-       
+
         [HttpPost]
         [Route("UpdateIndustryOutline")]
         public async Task<IActionResult> UpdateIndustryOutline([FromBody] SolutionIndustryDetailsModel model)
         {
             if (model != null)
             {
-                var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
-                if(data != null)
+                var solutionIndustryDetails = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
+                                                && x.SolutionId == model.SolutionId).FirstOrDefault();
+                if (solutionIndustryDetails != null)
                 {
-                    data.ProjectOutline = model.ProjectOutline;
-                    data.ProjectDetails = model.ProjectDetails;
-                    _db.SaveChanges();
+                    //data.ProjectOutline = model.ProjectOutline;
+                    //data.ProjectDetails = model.ProjectDetails;
+                    //_db.SaveChanges();
+
+                    var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetails.Id
+                                                && x.ProjectType == model.ProjectType).FirstOrDefault();
+
+                    var solutionDefineModel = new SolutionDefine()
+                    {
+                        SolutionIndustryDetailsId = solutionIndustryDetails.Id,
+                        ProjectOutline = model.ProjectOutline,
+                        ProjectDetails = model.ProjectDetails,
+                        ProjectType = model.ProjectType,
+                        IsActive = true
+                    };
+
+                    if (solutionDefineData != null)
+                    {
+                        solutionDefineData.ProjectOutline = model.ProjectOutline;
+                        solutionDefineData.ProjectDetails = model.ProjectDetails;
+
+                        _db.SolutionDefine.Update(solutionDefineData);
+                    }
+                    else
+                    {
+                        solutionDefineModel.CreatedDateTime = DateTime.Now;
+                        await _db.SolutionDefine.AddAsync(solutionDefineModel);
+                    }
+
+                    await _db.SaveChangesAsync();
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -277,14 +308,17 @@ namespace Aephy.API.Controllers
 
         }
 
-        
+
         [HttpPost]
         [Route("GetMiletoneList")]
         public async Task<IActionResult> GetMiletoneList([FromBody] MileStoneDetailsViewModel model)
         {
             try
             {
-                var milestoneList = _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId ).ToList();
+                var milestoneList = _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId
+                && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+                && x.ProjectType == model.ProjectType).ToList();
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -302,7 +336,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("GetMileStoneById")]
         public async Task<IActionResult> GetMileStoneById([FromBody] MileStoneIdViewModel model)
@@ -333,7 +367,8 @@ namespace Aephy.API.Controllers
                         point = model.point,
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
-                        FreelancerId = model.FreelancerId
+                        FreelancerId = model.FreelancerId,
+                        ProjectType = model.ProjectType
                     };
                     _db.SolutionPoints.Add(points);
                     _db.SaveChanges();
@@ -353,7 +388,10 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var pointsList = _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).ToList();
+                var pointsList = _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId
+                && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+                && x.ProjectType == model.ProjectType).ToList();
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -371,7 +409,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("DeletePointsById")]
         public async Task<IActionResult> DeletePointsById([FromBody] MileStoneIdViewModel model)
@@ -379,7 +417,7 @@ namespace Aephy.API.Controllers
             try
             {
                 var pointsData = _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefault();
-                if(pointsData != null)
+                if (pointsData != null)
                 {
                     _db.SolutionPoints.Remove(pointsData);
                     _db.SaveChanges();
@@ -416,6 +454,55 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Delete Succesfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetSolutionDefineData")]
+        public async Task<IActionResult> GetSolutionDefineData([FromBody] MileStoneDetailsViewModel model)
+        {
+            try
+            {
+                int solutionIndustryDetailsId = await _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
+                && x.SolutionId == model.SolutionId).Select(x => x.Id).FirstOrDefaultAsync();
+
+                if (solutionIndustryDetailsId > 0)
+                {
+                    var solutionDefineMpdel = await _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetailsId
+                                                && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
+
+                    if (solutionDefineMpdel != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success",
+                            Result = solutionDefineMpdel
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Failed"
+                        });
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Failed"
                 });
             }
             catch (Exception ex)

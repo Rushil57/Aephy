@@ -51,19 +51,22 @@ section {
 
 .section-header {
     text-align: left;
-    padding: 10px 0;
+    padding: 30px 0 30px 60px;
     position: relative;
 }
 
     .section-header h2 {
-        font-size: 32px;
+        font-size: 25px;
         font-weight: 700;
         text-transform: uppercase;
-        margin-top: 20px;
-        color: var(--font-title); /*#001973*/
+        margin-bottom: 18px;
+        padding-bottom: 0;
+        color: rgba(58,58,58,0.3);
         position: relative;
         z-index: 2;
-        padding: 10px;
+        padding-bottom: 20px;
+        font-family: var(--font-secondary);
+        color: rgba(68,68,68,0.5);
     }
 
         .section-header h2:after {
@@ -79,33 +82,25 @@ section {
             margin: auto;
         }
 
-    .section-header span {
+    .section-header hr {
         position: absolute;
-        top: 46px;
-        color: rgba(14, 29, 52, 0.06);
+        top: 30px;
         left: 0;
         right: 0;
         z-index: 1;
-        font-weight: 700;
-        font-size: 56px;
-        text-transform: uppercase;
         line-height: 0;
-    }
-
-    .section-header p {
-        margin-bottom: 0;
-        position: relative;
-        z-index: 2;
     }
 
 @media (max-width: 640px) {
     .section-header h2 {
-        font-size: 28px;
-        margin-top: 15px;
+        font-size: 18px;
+        margin-bottom: 10px;
     }
 
-    .section-header span {
-        font-size: 38px;
+    .section-header {
+        text-align: left;
+        padding: 30px 0 30px 10px;
+        position: relative;
     }
 }
 
@@ -459,7 +454,6 @@ h6 {
     padding: 4px;
     border-radius: 3px;
     position: relative;
-    border-top: 1px solid gray;
 }
 
     .RButtons input {

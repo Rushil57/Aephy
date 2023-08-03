@@ -92,21 +92,7 @@
 			
 			</table>
 			
-			@*<!--		Start Pagination -->
-			<div class='pagination-container'>
-				<nav>
-					<ul class="pagination">
-
-						<li data-page="prev" class="btn bg-black bg-opacity-10 m-1">
-							<span> < <span class="sr-only"></span></span>
-						</li>
-						<!--	Here the JS Function Will Add the Rows -->
-						<li data-page="next" id="prev" class="btn bg-black bg-opacity-10 m-1">
-							<span> > <span class="sr-only"></span></span>
-						</li>
-					</ul>
-				</nav>
-			</div>*@
+			
 			</div>
 			<!--Row 2 Join Us-->
 			<div class="row justify-content-center" style="padding:50px 0;">
@@ -208,12 +194,12 @@
 
 	$(document).ready(function(){
 		GetRolesList();
-		BindServices();
-		BindSolutions();
-		BindIndustries();
+		BindGigServices();
+		BindGigSolutions();
+		BindGigIndustries();
 	});
 
-	function BindServices(){
+	function BindGigServices(){
 		$.ajax({
 			type: "Get",
 			url: "@Url.Action("GetServices", "LandingPage")",
@@ -232,7 +218,7 @@
 		});
 	}
 	
-	function BindSolutions() {
+	function BindGigSolutions() {
 		$.ajax({
 			type: "Get",
 			url: "@Url.Action("GetSolutions", "LandingPage")",
@@ -250,7 +236,7 @@
 			}
 		});
 	}
-	function BindIndustries() {
+	function BindGigIndustries() {
 		$.ajax({
 			type: "Get",
 			url: "@Url.Action("GetIndustries", "LandingPage")",

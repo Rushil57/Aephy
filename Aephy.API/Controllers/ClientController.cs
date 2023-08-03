@@ -192,58 +192,66 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-            else
+            //else
+            //{
+            //    try
+            //    {
+            //        List<Solutions> solutionList = _db.Solutions.Take(3).ToList();
+            //        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+            //        List<string> industrylist = new List<string>();
+
+            //        if (solutionList.Count > 0)
+            //        {
+            //            foreach (var list in solutionList)
+            //            {
+            //                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
+            //                var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+
+            //                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == list.Id).Select(x => x.IndustryId).ToList();
+            //                foreach (var industryId in industryIdlist)
+            //                {
+            //                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+            //                    industrylist.Add(industryname);
+            //                }
+            //                SolutionsModel dataStore = new SolutionsModel();
+            //                dataStore.Services = Servicename;
+            //                dataStore.Industries = string.Join(",", industrylist);
+            //                dataStore.Id = list.Id;
+            //                dataStore.Description = list.Description;
+            //                dataStore.ImagePath = list.ImagePath;
+            //                dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+            //                dataStore.Title = list.Title;
+            //                dataStore.SubTitle = list.SubTitle;
+            //                solutionsModel.Add(dataStore);
+            //                industrylist.Clear();
+            //            }
+            //        }
+            //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            //        {
+            //            StatusCode = StatusCodes.Status200OK,
+            //            Message = "Success",
+            //            Result = solutionsModel
+            //        });
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            //        {
+            //            StatusCode = StatusCodes.Status403Forbidden,
+            //            Message = ex.Message + ex.InnerException
+
+            //        });
+            //    }
+            //}
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
-                try
-                {
-                    List<Solutions> solutionList = _db.Solutions.Take(3).ToList();
-                    List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
-                    List<string> industrylist = new List<string>();
+                StatusCode = StatusCodes.Status403Forbidden,
+                Message = "Something Wennt Wrong"
 
-                    if (solutionList.Count > 0)
-                    {
-                        foreach (var list in solutionList)
-                        {
-                            var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
-                            var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+            });
 
-                            var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == list.Id).Select(x => x.IndustryId).ToList();
-                            foreach (var industryId in industryIdlist)
-                            {
-                                var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                industrylist.Add(industryname);
-                            }
-                            SolutionsModel dataStore = new SolutionsModel();
-                            dataStore.Services = Servicename;
-                            dataStore.Industries = string.Join(",", industrylist);
-                            dataStore.Id = list.Id;
-                            dataStore.Description = list.Description;
-                            dataStore.ImagePath = list.ImagePath;
-                            dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-                            dataStore.Title = list.Title;
-                            dataStore.SubTitle = list.SubTitle;
-                            solutionsModel.Add(dataStore);
-                            industrylist.Clear();
-                        }
-                    }
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Success",
-                        Result = solutionsModel
-                    });
-
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status403Forbidden,
-                        Message = ex.Message + ex.InnerException
-
-                    });
-                }
-            }
         }
 
         [HttpGet]
@@ -299,6 +307,53 @@ namespace Aephy.API.Controllers
 
                 });
             }
+        }
+
+        //GetSolutionDetailsInProject
+        [HttpPost]
+        [Route("GetSolutionDetailsInProject")]
+        public async Task<IActionResult> GetSolutionDetailsInProject([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var industryname = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x=> x.IndustryName).FirstOrDefault();
+                    var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
+                    var services = _db.SolutionServices.Where(x => x.SolutionId == model.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                    var serviceName = _db.Services.Where(x => x.Id == services).Select(x => x.ServicesName).FirstOrDefault();
+
+                    var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            ProjectData = data,
+                            ServiceName = serviceName,
+                            IndustryName = industryname,
+                            SolutionName = solutionName,
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+            
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status403Forbidden,
+                Message = "Something Wennt Wrong"
+
+            });
+
         }
     }
 }

@@ -14,9 +14,7 @@
                 <section id="Project" class="Project pt-4 mainProject">
                     <div class="container-flued projectBanner">
                         <div class="section-header">
-                            @*<span>For Ai Gigs</span>*@
-                            @*<h4 class="Project-title-size title-path">@ViewBag.pagePath</h4>*@
-                            <h4 class="Project-title-size title-path">@TempData["pagePath"]</h4>
+                            <h4 class="Project-title-size title-path" id="project-title"></h4>
                         </div>
                         <!-- First Row -->
                         <div class="row justify-content-center">
@@ -105,10 +103,10 @@
                             </div>
                             <!-- Second column -->
                             <div class="col-12 content order-first order-lg-first left-box">
-                                <img src="../assets/img/whyaephy/ai_roadmap_development.jpg" class="img-flued" style="width:100%" />
+                                <img src="" id="project-image" class="img-flued" style="width:100%" />
                                 <h3 class="pt-2 label-title-size title-path">Solution</h3>
-                                <p class="section-detail-size">
-                                    Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
+                                <p class="section-detail-size cls-project-description">
+                                    
                                 </p>
                             </div>
                         </div>
@@ -117,8 +115,8 @@
                         <div class="row justify-content-center second-row">
                             <div class="col-12 content d-flex flex-column">
                                 <h3 class="pt-2 label-title-size title-path">Solution</h3>
-                                <p class="section-detail-size">
-                                    Develop a comprehensive AI strategy and roadmap that is customized to meet the specific needs and goals of your retail organization. Our solution enables you to make informed decisions about AI investments and implement AI solutions that are aligned with your business objectives. Our expert team will work with you to understand your unique retail challenges and opportunities and develop a roadmap that will help you leverage AI to optimize your operations, enhance customer experiences, and drive business growth. With our tailored approach, you can be confident that you are investing in the right AI solutions that will provide maximum value and impact to your retail business.
+                                <p class="section-detail-size cls-project-description">
+                                    
                                 </p>
 
                                 <!--Description column-->
@@ -994,6 +992,7 @@
 
             $('#guidelineModal').modal('hide');
         });
+        GetProjectDetails()
     });
     function MilestoneViewMore(){
         $(".cls-milestone-showmore").css("display", "none");
@@ -1013,5 +1012,34 @@
 
     function CloseCustomisePopUp(){
         $('#CustomiseProjectPopUp').modal('hide');
+    }
+
+    function GetProjectDetails(){
+         $("#preloader").show();
+        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
+        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid
+        }
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionDataBasedonIndustries", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                var data = result.Result
+                $(".cls-project-description").text(data.ProjectData.Description)
+                $("#project-image").attr("src",data.ProjectData.ImageUrlWithSas)
+                var projectTitle = data.ServiceName +  " > " + data.SolutionName + " / " + data.IndustryName
+                $("#project-title").text(projectTitle)
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
     }
 </script>

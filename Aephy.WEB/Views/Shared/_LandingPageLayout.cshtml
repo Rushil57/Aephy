@@ -314,21 +314,21 @@
                                     <form action="#">
                                         <div class="col d-flex flex-column">
                                             <label data-aos="fade-up">Select Service</label>
-                                            <select class="dropdown form-select" name="service" id="select-services" onchange="ServicesValue()">
+                                            <select class="dropdown form-select" name="service" id="drp-popServices" onchange="ServicesValue()">
                                                 <option value="All">All Services</option>
                                             </select>
                                         </div>
 
                                          <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Select Solution</label>
-                                            <select class="dropdown form-select" name="level" id="select-solutions" onchange="SolutionValues()">
+                                            <select class="dropdown form-select" name="level" id="drp-popSolutions" onchange="SolutionValues()">
                                                 <option value="All">All Solutions</option>
                                             </select>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Select Industry</label>
-                                            <select class="dropdown form-select" name="solution" id="select-industries">
+                                            <select class="dropdown form-select" name="solution" id="drp-popIndustries">
                                                 <option value="All">All Industries</option>
                                             </select>
                                         </div>
@@ -528,9 +528,9 @@
         }
 
         function OpenPostModalPopup() {
-            $("#select-industries").val("All")
-            $("#select-services").val("All")
-            $("#select-solutions").val("All")
+            $("#drp-popIndustries").val("All")
+            $("#drp-popServices").val("All")
+            $("#drp-popSolutions").val("All")
             $("#confirmation").modal('show')
             $("#start-hour").val("");
             $("#end-hour").val("");
@@ -612,7 +612,7 @@
                 dataType: "json",
                 success: function (result) {
                     $.each(result.Result, function (data, value) {
-                        $("#select-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                        $("#drp-popIndustries").append($("<option     />").val(value.Id).text(value.IndustryName));
                     })
 
                 },
@@ -630,7 +630,7 @@
                 dataType: "json",
                 success: function (result) {
                     $.each(result.Result, function (data, value) {
-                        $("#select-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                        $("#drp-popServices").append($("<option     />").val(value.Id).text(value.ServicesName));
                     })
 
                 },
@@ -648,7 +648,7 @@
                 dataType: "json",
                 success: function (result) {
                     $.each(result.Result, function (data, value) {
-                        $("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                        $("#drp-popSolutions").append($("<option     />").val(value.Id).text(value.Title));
                     })
 
                 },
@@ -659,7 +659,7 @@
         }
 
         function ServicesValue(){
-            var ServiceId = $("#select-services").val()
+            var ServiceId = $("#drp-popServices").val()
             if (ServiceId == "All") {
                 ServiceId = 0
             }
@@ -676,13 +676,13 @@
                 success: function (result) {
                     if (result.Result.length != 0) {
                         var data = result.Result.SolutionData;
-                        $("#select-solutions option:not(:first)").remove()
-                        $("#select-industries option:not(:first)").remove()
+                        $("#drp-popSolutions option:not(:first)").remove()
+                        $("#drp-popIndustries option:not(:first)").remove()
                         $.each(data, function (data, value) {
-                            $("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                            $("#drp-popSolutions").append($("<option     />").val(value.Id).text(value.Title));
                         })
                         $.each(result.Result.IndustriesData, function (datas, values) {
-                            $("#select-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                            $("#drp-popIndustries").append($("<option     />").val(values.Id).text(values.IndustryName));
                         })
 
                     }
@@ -696,9 +696,9 @@
         }
 
         function SolutionValues(){
-            var SolutionId = $("#select-solutions").val()
+            var SolutionId = $("#drp-popSolutions").val()
             if (SolutionId == "All") {
-                GetServicesValues()
+                ServicesValue()
                 return
             }
             var data = {
@@ -714,9 +714,9 @@
                 success: function (result) {
                     if (result.Result.length != 0) {
                         var data = result.Result.SolutionData;
-                        $("#select-industries option:not(:first)").remove()
+                        $("#drp-popIndustries option:not(:first)").remove()
                         $.each(result.Result.IndustriesData, function (datas, values) {
-                            $("#select-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                            $("#drp-popIndustries").append($("<option     />").val(values.Id).text(values.IndustryName));
                         })
                     }
                     $("#preloader").hide();

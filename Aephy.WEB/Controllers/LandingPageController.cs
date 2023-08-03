@@ -132,15 +132,6 @@ namespace Aephy.WEB.Controllers
             {
                 if (Services != "default" && Solution != "default" && Industry != "default")
                 {
-
-                    pagePath = Services + " > " + Solution + " / " + Industry;
-
-                    ViewBag.pagePath = pagePath;
-
-                    TempData["pagePath"] = pagePath;
-
-
-
                     return "Success";
                 }
             }

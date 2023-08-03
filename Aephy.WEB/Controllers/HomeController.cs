@@ -895,5 +895,47 @@ namespace Aephy.WEB.Controllers
             }
             return "Something Went Wrong";
         }
+
+
+        //GetSolutionDataBasedonIndustries
+        [HttpPost]
+        public async Task<string> GetSolutionDataBasedonIndustries([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+
+                        string imagepath = data.Result.ProjectData.ImagePath;
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        string imageUrlWithSas = $"{data.Result.ProjectData.ImagePath}?{sasToken}";
+                        data.Result.ProjectData.ImageUrlWithSas = imageUrlWithSas;
+
+
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+
+
+
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
     }
 }

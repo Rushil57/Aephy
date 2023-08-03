@@ -963,7 +963,9 @@
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + subObj.Level + '</td>';
                     htm += '<td>' + subObj.IndustryName + '</td>';
-                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
+                    if(subObj.IsDefine){
+                        htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
+                    }
                     htm += '</tr>';
                 }
                 $("#ApprovedList").find("tr:gt(0)").remove();

@@ -143,6 +143,7 @@ namespace Aephy.API.Controllers
                 var listService = _db.Services.ToList();
                 var listIndustry = _db.Industries.ToList();
                 var listIndustrySol = _db.SolutionIndustry.ToList();
+                var freelancerPools = _db.FreelancerPool.ToList();
                 var approvedJobs = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == model.UserId
                 && x.IsApproved).ToList();
 
@@ -177,6 +178,8 @@ namespace Aephy.API.Controllers
                             SolutionName = solutionName,
                             ServiceName = serviceName,
                             IndustryName = IndName,
+                            IsDefine = freelancerPools.Any(p => p.IndustryId == x.IndustryId && p.SolutionID == x.SolutionId
+                            && p.FreelancerID == model.UserId && p.IsProjectArchitect)
                         };
                         finalList.Add(obj);
                     }

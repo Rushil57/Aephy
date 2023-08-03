@@ -1,6 +1,7 @@
 @{
 	ViewData["Title"] = "Open gig roles";
 	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+	ViewData["UserRole"] = Context.Session.GetString("LoggedUserRole");
 	if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
 	{
 		<style>
@@ -419,6 +420,7 @@
 	}
 			// code to read selected table row cell data (values).
 	function GigApply(Id) {
+		if('@ViewData["UserRole"]' == "Freelancer" ){
 		OpenGigOpeningApplyModal();
 		clearApplyForm();
 		$("#gigRole_id").val(Id);
@@ -435,6 +437,7 @@
 				showToaster("error", "Error !", result.Message);
 			}
 		});
+		}
 	}
 
 	function getFileData(myFile) {

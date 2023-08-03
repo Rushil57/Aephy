@@ -250,11 +250,44 @@
                                 return '<a class="cls-RolesId" onclick=GetDataById(' + data + ')>' + data + '</a>';
                             }
                         },
-                        { "data": "SolutionName" },
+                        {
+                            "data": "SolutionName",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var SolutionName = data.length > 30 ? data.substring(0, 30) + "..." : data;
+                                    return "<span title='" + data + "'>" + SolutionName + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+                            }
+                        },
                         { "data": "IndustryName" },
-                        { "data": "Title" },
+                        {
+                            "data": "Title",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var Title = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + Title + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+                            }
+                        },
                         { "data": "Level" },
-                        { "data": "Description" },
+                        { 
+                            "data": "Description",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + description + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+                            }
+                        },
                         {   "data": "isActive",
                             "render": function (data, type, row) {
                                 if (data == true) {

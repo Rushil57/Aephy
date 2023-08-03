@@ -276,19 +276,19 @@ h6 {
 .browseSolutions .icon-image {
     position: absolute;
     bottom: 0;
-    padding-bottom: 55px;
+    padding-bottom: 27px;
 }
 
     .browseSolutions .icon-image i {
         flex-shrink: 0;
-        font-size: 28px;
+        font-size: 28px !important;
         font-weight: 800;
         color: var(--brand);
         line-height: 0;
     }
 
     .browseSolutions .icon-image label {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         color: #444444;
         line-height: 0;

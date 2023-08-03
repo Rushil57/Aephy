@@ -44,120 +44,13 @@
             </div>
 
             <!-- Solutions Card Row -->
-            <div class="row gy-4 py-4">
-                <div class="col-md-6 col-xl-4">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <div class="card-img justify-content-lg-center">
-                                <img src="../assets/img/whyaephy/ai_roadmap_development.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                            </div>
-                            <h3>
-                                <a href="#" class="stretched-link section-title-size" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="checkData();">
-                                    AI Roadmap Development
-                                </a>
-                            </h3>
-                            <p class="section-detail-size">
-                                Develop a comprehensive AI strategy and roadmap tailored to your organization's specific needs and goals.
-                            </p>
-                            <div class="icon-image">
-                                <i class="bi bi-shop-window"></i>
-                                <label>Retail</label>
-                                <i class="bi bi-credit-card"></i>
-                                <label>Finance</label>
-                                <label class="pl-5">+ 7 more</label>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="price">
-                                <label>From $100</label>
-                            </div>
-                            <div class="like">
-                                <i class="bi bi-heart"></i>
-                            </div>
-                        </div>
-                        <!--/.card-body -->
-                    </div>
-                    <!--/.card -->
-                </div>
-                <!--/column -->
-
-                <div class="col-md-6 col-xl-4">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <div class="card-img justify-content-lg-center">
-                                <img src="../assets/img/whyaephy/ai_readiness_assesment.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                            </div>
-                            <h3>
-                                <a href="#" class="stretched-link section-title-size" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="checkData();">
-                                    AI Readiness Assessment
-                                </a>
-                            </h3>
-                            <p class="section-detail-size">
-                                Assess your organization's readiness for AI implementation and identify any gaps or areas of improvement.
-                            </p>
-                            <div class="icon-image">
-                                <i class="bi bi-shop-window"></i>
-                                <label>Retail</label>
-                                <i class="bi bi-credit-card"></i>
-                                <label>Finance</label>
-                                <label class="pl-5">+ 7 more</label>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="price">
-                                <label>From $100</label>
-                            </div>
-                            <div class="like">
-                                <i class="bi bi-heart"></i>
-                            </div>
-                        </div>
-                        <!--/.card-body -->
-                    </div>
-                    <!--/.card -->
-                </div>
-                <!--/column -->
-
-                <div class="col-md-6 col-xl-4">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <div class="card-img justify-content-lg-center">
-                                <img src="../assets/img/whyaephy/ai_readiness_assesment.jpg" alt="" class="img-fluid" data-aos="zoom-out">
-                            </div>
-                            <h3>
-                                <a href="#" class="stretched-link section-title-size" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="checkData();">
-                                    AI Readiness Assessment
-                                </a>
-                            </h3>
-                            <p class="section-detail-size">
-                                Assess your organization's readiness for AI implementation and identify any gaps or areas of improvement.
-                            </p>
-                            <div class="icon-image">
-                                <i class="bi bi-shop-window"></i>
-                                <label>Retail</label>
-                                <i class="bi bi-credit-card"></i>
-                                <label>Finance</label>
-                                <label class="pl-5">+ 7 more</label>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="price">
-                                <label>From $100</label>
-                            </div>
-                            <div class="like">
-                                <i class="bi bi-heart"></i>
-                            </div>
-                        </div>
-                        <!--/.card-body -->
-                    </div>
-                    <!--/.card -->
-                </div>
-                <!--/column -->
+            <div class="row gy-4 py-4" id="solution-Section">
             </div>
         </div>
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="confirmationModal" aria-labelledby="confirmationModal" aria-hidden="true">
+    <div class="modal" id="confirmationModal" aria-labelledby="confirmationModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -180,31 +73,6 @@
                             </div>
 
                             <div class="col-lg-6 align-items-center order-3 order-lg-3 justify-content-center my-4" style="position:relative; display:grid;">
-                                @*  @using (Html.BeginForm("BrowseSolution", "LandingPage", FormMethod.Post, new { enctype = "multipart/form-data", id = "BrowseSolution" }))
-                                {
-                                <div class="col d-flex flex-column">
-                                <label data-aos="fade-up">Select Service</label>
-                                <select class="dropdown btn-dropdown form-select cls-Services" name="service" id="confirm-services" title="Select Services" required>
-                                </select>
-                                </div>
-
-                                <div class="col d-flex flex-column">
-                                <label data-aos="fade-up">Select Solution</label>
-                                <select class="dropdown btn-dropdown form-select cls-solution" name="solution" id="confirm-solutions" title="Select Solutions" required>
-                                </select>
-                                </div>
-
-                                <div class="col d-flex flex-column">
-                                <label data-aos="fade-up">Select Industry</label>
-                                <select class="dropdown btn-dropdown form-select cls-Industries" name="industry" id="confirm-industries" title="Select Industry" required>
-                                Select Industry
-                                </select>
-                                </div>
-
-                                <div class="col d-flex justify-content-end">
-                                <input type="submit" name="confirm" value="Confirm" class="btn btn-brand my-3 mx-0" />
-                                </div>
-                                }*@
                                 <div class="col d-flex flex-column">
                                     <label data-aos="fade-up">Select Service</label>
                                     <select class="dropdown btn-dropdown form-select cls-Services" name="service" id="confirm-services" title="Select Services" required>
@@ -225,7 +93,6 @@
                                 </div>
 
                                 <div class="col d-flex justify-content-end">
-                                    @*<button type="button" name="confirm" value="Confirm" class="btn btn-brand my-3 mx-0" />*@
                                     <button type="button" class="btn btn-brand" onclick="GetSelectedValues()">Confirm</button>
                                 </div>
                             </div>
@@ -248,10 +115,12 @@
         BindIndustries()
         BindServices()
         BindSolution()
+        BindPopularSolutionsList()
 
     });
 
     function checkData() {
+        $("#confirmationModal").modal('show')
 
         const selectService = '#select-services';
         const selectSolution = '#select-solutions';
@@ -357,16 +226,74 @@
             url: "@Url.Action("BrowseSolution", "LandingPage")",
             data: { 'Industry': Industries, 'Services': Services, 'Solution': Solution },
             success: function (result) {
-                if (result == "Success"){
+                if (result == "Success") {
                     window.location.href = '/LandingPage/Project'
                 }
-                else{
+                else {
                     alert(result)
                 }
-                
+
             },
             error: function (result) {
                 alert("Something Went Wrong");
+            }
+        });
+    }
+
+    function BindPopularSolutionsList() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("BindPopularSolutionsList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Result != 0) {
+                    var solutiondata = result.Result;
+                    solutiondata = solutiondata.slice(0, 3);
+                    var solutionSection = "";
+                    $.each(solutiondata, function (data, value) {
+                        var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
+                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+                        var industryList = solutiondata[data].Industries.split(",")
+                        var count = 0;
+
+                        solutionSection += '<div class="col-md-6 col-xl-4" >' +
+                            '<div class="card shadow-lg">' +
+                            '<div class="card-body" >' +
+                            '<div class="card-img justify-content-lg-center" >' +
+                            '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
+                            '</div>' +
+                            '<h3>' +
+                            '<a href="#" class="stretched-link section-title-size" onclick="checkData();">' + title + '</a>' +
+                            '</h3>' +
+                            '<p class="section-detail-size">' + description + '</p>' +
+                            '<div class="icon-image">';
+                        if (industryList.length != 0) {
+                            var industry = industryList.slice(0, 2);
+                            $.each(industry, function (industrydata, industryValue) {
+                                var industrySection = '<i class="bi bi-shop-window"></i>' +
+                                    '<label> ' + industryValue + ' </label>';
+                                solutionSection += industrySection;
+                                count++;
+                            })
+
+
+                        }
+                        if (industryList.length != 0) {
+                            if (industryList.length > 2) {
+                                var industryLeft = industryList.length - count;
+                                solutionSection += '<label class="pl-5"> + ' + industryLeft + ' more </label>'
+                            }
+
+                        }
+                        solutionSection += '</div></div></div></div>';
+                    })
+                    $('#solution-Section').html(solutionSection);
+                }
+
+            },
+            error: function (result) {
+                alert("failure");
             }
         });
     }

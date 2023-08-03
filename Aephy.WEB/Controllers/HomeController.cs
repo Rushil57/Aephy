@@ -772,5 +772,34 @@ namespace Aephy.WEB.Controllers
 
             return sasToken;
         }
+
+        [HttpGet]
+        public async Task<string> BindPopularSolutionsList()
+        {
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionList", HttpMethod.Get);
+            dynamic data = JsonConvert.DeserializeObject(solutionList);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result)
+                    {
+                        string imagepath = service.ImagePath;
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                        service.ImageUrlWithSas = imageUrlWithSas;
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+        }
     }
 }

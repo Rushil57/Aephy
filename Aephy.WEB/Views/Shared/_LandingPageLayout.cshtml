@@ -314,40 +314,26 @@
                                     <form action="#">
                                         <div class="col d-flex flex-column">
                                             <label data-aos="fade-up">Select Service</label>
-                                            <select class="dropdown form-select" name="service" id="select-services">
+                                            <select class="dropdown form-select" name="service" id="select-services" onchange="ServicesValue()">
                                                 <option value="All">All Services</option>
-                                                <option value="AI Strategy and Consulting">AI Strategy and Consulting</option>
-                                                <option value="AI Engineering">AI Engineering</option>
-                                                <option value="AI Data Science and Analytics">AI Data Science and Analytics</option>
-                                                <option value="AI Operations">AI Operations</option>
+                                            </select>
+                                        </div>
+
+                                         <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Select Solution</label>
+                                            <select class="dropdown form-select" name="level" id="select-solutions" onchange="SolutionValues()">
+                                                <option value="All">All Solutions</option>
                                             </select>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Select Industry</label>
-                                            <select class="dropdown form-select" name="solution" id="select-solutions">
-                                                <option value="All">All Solutions</option>
-                                                <option value="AI Roadmap Development">AI Roadmap Development</option>
-                                                <option value="AI Readiness Assessment">AI Readiness Assessment</option>
-                                                <option value="AI Vendor Selection and Management">AI Vendor Selection and Management</option>
-                                                <option value="AI Governance and Ethics">AI Governance and Ethics</option>
-                                                <option value="AI Business Case Development">AI Business Case Development</option>
+                                            <select class="dropdown form-select" name="solution" id="select-industries">
+                                                <option value="All">All Industries</option>
                                             </select>
                                         </div>
 
-                                        <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Select Solution</label>
-                                            <select class="dropdown form-select" name="level" id="select-levels">
-                                                <option value="5000">All Levels</option>
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="15">15</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="70">70</option>
-                                                <option value="100">100</option>
-                                            </select>
-                                        </div>
+                                       
                                     </form>
                                 </div>
                             </div>
@@ -458,12 +444,8 @@
     </div>
 
     <!-- Vendor JS Files -->
-    @*<script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>*@
+    
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    @*<script src="~/assets/vendor/chart.js/chart.umd.js"></script>*@
-    @*<script src="~/assets/vendor/echarts/echarts.min.js"></script>*@
-    @*<script src="~/assets/vendor/quill/quill.min.js"></script>*@
-    @*<script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>*@
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/js/jquery.dataTables.min.js"></script>
@@ -546,6 +528,9 @@
         }
 
         function OpenPostModalPopup() {
+            $("#select-industries").val("All")
+            $("#select-services").val("All")
+            $("#select-solutions").val("All")
             $("#confirmation").modal('show')
             $("#start-hour").val("");
             $("#end-hour").val("");
@@ -557,6 +542,9 @@
             $("#PreviousButton").css("display", "none")
             $("#WorkingHourForm").css("display", "none")
             $("#PostButton").text("Next")
+            BindIndustries()
+            BindServices()
+            BindSolution()
         }
 
         $(function () {
@@ -615,6 +603,130 @@
 
             });
         })
+
+        function BindIndustries() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetIndustryList", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.each(result.Result, function (data, value) {
+                        $("#select-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                    })
+
+                },
+                error: function (result) {
+                    alert("failure");
+                }
+            });
+        }
+
+        function BindServices() {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetServicesList", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.each(result.Result, function (data, value) {
+                        $("#select-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                    })
+
+                },
+                error: function (result) {
+                    alert("failure");
+                }
+            });
+        }
+
+        function BindSolution() {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetSolutionList", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.each(result.Result, function (data, value) {
+                        $("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                    })
+
+                },
+                error: function (result) {
+                    alert("failure");
+                }
+            });
+        }
+
+        function ServicesValue(){
+            var ServiceId = $("#select-services").val()
+            if (ServiceId == "All") {
+                ServiceId = 0
+            }
+            var data = {
+                Id: ServiceId
+            }
+            $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSolutionBasedonServices", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Result.length != 0) {
+                        var data = result.Result.SolutionData;
+                        $("#select-solutions option:not(:first)").remove()
+                        $("#select-industries option:not(:first)").remove()
+                        $.each(data, function (data, value) {
+                            $("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                        })
+                        $.each(result.Result.IndustriesData, function (datas, values) {
+                            $("#select-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                        })
+
+                    }
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    alert("failure");
+                }
+            });
+        }
+
+        function SolutionValues(){
+            var SolutionId = $("#select-solutions").val()
+            if (SolutionId == "All") {
+                GetServicesValues()
+                return
+            }
+            var data = {
+                Id: SolutionId
+            }
+            $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSolutionBasedonSolutionSelected", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Result.length != 0) {
+                        var data = result.Result.SolutionData;
+                        $("#select-industries option:not(:first)").remove()
+                        $.each(result.Result.IndustriesData, function (datas, values) {
+                            $("#select-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                        })
+                    }
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    alert("failure");
+                }
+            });
+        }
     </script>
 </body>
 </html>

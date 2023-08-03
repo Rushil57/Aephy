@@ -54,6 +54,7 @@ namespace Aephy.API.Controllers
                             dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
                             dataStore.Title = solutiondata.Title;
                             solutionsModel.Add(dataStore);
+                            industrylist.Clear();
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel

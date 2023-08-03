@@ -16,16 +16,16 @@
             </div>
             <div class="row gy-4 mt-4 d-flex" style="background-color:#f5f5f5; border-radius:10px;">
                 <div class="col-12 d-block my-2 columnDdl">
-                    <select class="dropdown btn-dropdown cls-Services" name="service" id="select-services">
+                    <select class="dropdown btn-dropdown cls-Services" name="service" id="select-services" onchange="GetServicesValues()">
                         <option value="All">All Services</option>
                     </select>
 
-                    <select class="dropdown btn-dropdown cls-solution" name="solution" id="select-solutions">
+                    <select class="dropdown btn-dropdown cls-solution" name="solution" id="select-solutions" onchange="GetSolutionValues()">
                         <option value="All">All Solutions</option>
                     </select>
 
                     <select class="dropdown btn-dropdown cls-Industries" name="service" id="select-industries">
-                        <option value="All">All Industies</option>
+                        <option value="All">All Industries</option>
                     </select>
 
                     @* FINAL RELEASE*@
@@ -241,6 +241,7 @@
     }
 
     function BindPopularSolutionsList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("BindPopularSolutionsList", "Home")",
@@ -250,49 +251,132 @@
                 if (result.Result != 0) {
                     var solutiondata = result.Result;
                     solutiondata = solutiondata.slice(0, 3);
-                    var solutionSection = "";
-                    $.each(solutiondata, function (data, value) {
-                        var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
-                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
-                        var industryList = solutiondata[data].Industries.split(",")
-                        var count = 0;
-
-                        solutionSection += '<div class="col-md-6 col-xl-4" >' +
-                            '<div class="card shadow-lg">' +
-                            '<div class="card-body" >' +
-                            '<div class="card-img justify-content-lg-center" >' +
-                            '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
-                            '</div>' +
-                            '<h3>' +
-                            '<a href="#" class="stretched-link section-title-size" onclick="checkData();">' + title + '</a>' +
-                            '</h3>' +
-                            '<p class="section-detail-size">' + description + '</p>' +
-                            '<div class="icon-image">';
-                        if (industryList.length != 0) {
-                            var industry = industryList.slice(0, 2);
-                            $.each(industry, function (industrydata, industryValue) {
-                                var industrySection = '<i class="bi bi-shop-window"></i>' +
-                                    '<label> ' + industryValue + ' </label>';
-                                solutionSection += industrySection;
-                                count++;
-                            })
-
-
-                        }
-                        if (industryList.length != 0) {
-                            if (industryList.length > 2) {
-                                var industryLeft = industryList.length - count;
-                                solutionSection += '<label class="pl-5"> + ' + industryLeft + ' more </label>'
-                            }
-
-                        }
-                        solutionSection += '</div></div></div></div>';
-                    })
-                    $('#solution-Section').html(solutionSection);
+                    BindSolutionSection(solutiondata)
+                    $("#preloader").hide();
                 }
 
             },
             error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function GetServicesValues() {
+        var ServiceId = $("#select-services").val()
+        if (ServiceId == "All") {
+            ServiceId = 0
+        }
+        var data = {
+            Id: ServiceId
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionBasedonServices", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Result.length != 0) {
+                    var data = result.Result.SolutionData;
+                    $("#solution-Section").html("")
+                    $(".cls-solution option:not(:first)").remove()
+                    $(".cls-Industries option:not(:first)").remove()
+                    $.each(data, function (data, value) {
+                        $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
+                    })
+                    $.each(result.Result.IndustriesData, function (datas, values) {
+                        $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                    })
+                    BindSolutionSection(data)
+
+                }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                alert("failure");
+            }
+        });
+    }
+
+    function BindSolutionSection(solutiondata) {
+        var solutionSection = "";
+        $.each(solutiondata, function (data, value) {
+            var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
+            var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+            var industryList = solutiondata[data].Industries.split(",")
+            var count = 0;
+
+            solutionSection += '<div class="col-md-6 col-xl-4" >' +
+                '<div class="card shadow-lg">' +
+                '<div class="card-body" >' +
+                '<div class="card-img justify-content-lg-center" >' +
+                '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
+                '</div>' +
+                '<h3>' +
+                '<a href="#" class="stretched-link section-title-size" onclick="checkData();">' + title + '</a>' +
+                '</h3>' +
+                '<p class="section-detail-size">' + description + '</p>' +
+                '<div class="icon-image">';
+            if (industryList.length != 0) {
+                var industry = industryList.slice(0, 2);
+                $.each(industry, function (industrydata, industryValue) {
+                    var industrySection = '<i class="bi bi-shop-window"></i>' +
+                        '<label> ' + industryValue + ' </label>';
+                    solutionSection += industrySection;
+                    count++;
+                })
+            }
+            if (industryList.length != 0) {
+                if (industryList.length > 2) {
+                    var industryLeft = industryList.length - count;
+                    solutionSection += '<label class="pl-5"> + ' + industryLeft + ' more </label>'
+                }
+
+            }
+            solutionSection += '</div></div></div></div>';
+
+
+        })
+        $('#solution-Section').html(solutionSection);
+
+
+    }
+
+    function GetSolutionValues() {
+        var SolutionId = $("#select-solutions").val()
+        if (SolutionId == "All") {
+            GetServicesValues()
+            return
+        }
+        var data = {
+            Id: SolutionId
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionBasedonSolutionSelected", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Result.length != 0) {
+                    var data = result.Result.SolutionData;
+                    $("#solution-Section").html("")
+                    $(".cls-Industries option:not(:first)").remove()
+                  
+                    $.each(result.Result.IndustriesData, function (datas, values) {
+                        $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                    })
+                    BindSolutionSection(data)
+
+                }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
                 alert("failure");
             }
         });

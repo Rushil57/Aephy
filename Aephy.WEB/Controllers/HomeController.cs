@@ -536,7 +536,7 @@ namespace Aephy.WEB.Controllers
             return "Something Went Wrong";
         }
 
-       
+
         [HttpPost]
         public async Task<string> SaveMileStone([FromBody] MileStoneViewModel mileStone)
         {
@@ -597,7 +597,7 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        
+
         [HttpPost]
         public async Task<string> GetIndustryList()
         {
@@ -606,7 +606,7 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        
+
         [HttpGet]
         public async Task<string> GetServicesList()
         {
@@ -800,6 +800,86 @@ namespace Aephy.WEB.Controllers
             }
             string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
             return jsonString;
+        }
+
+
+        [HttpPost]
+        public async Task<string> GetSolutionBasedonServices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnServices", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.SolutionData)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<string> GetSolutionBasedonSolutionSelected([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnSolutionSelected", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.SolutionData)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+
+
+
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
         }
     }
 }

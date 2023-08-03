@@ -247,5 +247,14 @@ namespace Aephy.API.Models
 
             public string? CVUrlWithSas { get; set; }
         }
+
+        public class SolutionDefineRequestViewModel
+        {
+            public int IndustryId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public string? ProjectType { get; set; }
+        }
     }
 }

@@ -516,6 +516,13 @@ namespace Aephy.WEB.Admin.Controllers
             string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
             return jsonString;
         }
+
+        [HttpPost]
+        public async Task<string> GetSolutionDefineData([FromBody] SolutionDefineRequestViewModel model)
+        {
+            var aprroveList = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionDefineData", HttpMethod.Post, model);
+            return aprroveList;
+        }
     }
 }
 

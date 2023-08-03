@@ -138,6 +138,17 @@
                                     Project Architecture - Details
 
                                     <div class="col-12">
+                                        <label for="ProjectType" class="form-label">Select Project Type</label>
+                                        <div class="input-group">
+                                            <select class="form-select" name="ProjectType" id="ProjectType">
+                                                <option value="SMALL">Small</option>
+                                                <option value="LARGE">Large</option>
+                                                <option value="MEDIUM">Medium</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
                                         <label for="ProjectDetails" class="form-label">Project Details</label>
                                         <div class="input-group">
                                             <textarea class="form-control" id="projectDetails" name="projectDetails" style="height:100px;" readonly></textarea>
@@ -287,6 +298,10 @@
         GetSolutionList()
         $(".cls-subtitle").css("display", "none")
 
+        $("#ProjectType").change(function () {
+            GetSolutionDefineDetails()
+        });
+
     });
 
     function GetSolutionList() {
@@ -383,30 +398,41 @@
                 $("#IsActiveForFreelancer").prop('checked', data.SolutionIndustryDetails.IsActiveForFreelancer == 1 ? true : false);
                 $("#IsActiveForClient").prop('checked', data.SolutionIndustryDetails.IsActiveForClient == 1 ? true : false);
                 //
-                $("#projectOutline").val(data.SolutionIndustryDetails.ProjectOutline);
-                $("#projectDetails").val(data.SolutionIndustryDetails.ProjectDetails);
-                var htm = '';
-                for (index = 0; index < data.MilestoneDetails.length; index++) {
-                    subObj = data.MilestoneDetails[index];
+                //$("#projectOutline").val(data.SolutionIndustryDetails.ProjectOutline);
+                //$("#projectDetails").val(data.SolutionIndustryDetails.ProjectDetails);
 
-                    htm += '<tr>';
-                    htm += '<td>' + subObj.Id + '</td>';
-                    htm += '<td>' + subObj.Description + '</td>';
-                    htm += '<td>' + subObj.Title + '</td>';
-                    htm += '</tr>';
+
+                if (data.SolutionDefine != null) {
+                    $("#projectOutline").val(data.SolutionDefine.ProjectOutline);
+                    $("#projectDetails").val(data.SolutionDefine.ProjectDetails);
+                }
+
+                var htm = '';
+                if (data.MilestoneDetails.length > 0) {
+                    for (index = 0; index < data.MilestoneDetails.length; index++) {
+                        subObj = data.MilestoneDetails[index];
+
+                        htm += '<tr>';
+                        htm += '<td>' + subObj.Id + '</td>';
+                        htm += '<td>' + subObj.Description + '</td>';
+                        htm += '<td>' + subObj.Title + '</td>';
+                        htm += '</tr>';
+                    }
                 }
                 $("#MileStoneTable").find("tr:gt(0)").remove();
                 $("#MileStoneTable tbody").append(htm);
 
 
                 var pointsTable = '';
-                for (index = 0; index < data.PointsDetails.length; index++) {
-                    subObj = data.PointsDetails[index];
+                if (data.PointsDetails.length > 0) {
+                    for (index = 0; index < data.PointsDetails.length; index++) {
+                        subObj = data.PointsDetails[index];
 
-                    pointsTable += '<tr>';
-                    pointsTable += '<td>' + subObj.Id + '</td>';
-                    pointsTable += '<td>' + subObj.point + '</td>';
-                    pointsTable += '</tr>';
+                        pointsTable += '<tr>';
+                        pointsTable += '<td>' + subObj.Id + '</td>';
+                        pointsTable += '<td>' + subObj.point + '</td>';
+                        pointsTable += '</tr>';
+                    }
                 }
                 $("#PointsTable").find("tr:gt(0)").remove();
                 $("#PointsTable tbody").append(pointsTable);
@@ -594,6 +620,7 @@
         $("#SolutionDetailsId").val(0);
         $("#SolutionId").val(0);
         $("#IndustryId").val(0);
+        $("#ProjectType").val("SMALL");
         $(".SolutionImage").attr('src', "");
         $("#solutionImagepreview").hide();
         $("#ImagePath").val("");
@@ -804,6 +831,77 @@
 
         architectData.forEach(function (key) {
             $("#chk_" + key).prop('checked', true);
+        });
+    }
+
+
+    function GetSolutionDefineDetails() {
+
+        var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
+            ProjectType: $("#ProjectType").val()
+        };
+
+        $("#preloader").show();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionDefineData", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result);
+                debugger;
+                var data = result.Result;
+                if (result.StatusCode == 200) {
+
+                    if (data.SolutionDefine != null) {
+                        $("#projectDetails").val(data.SolutionDefine.ProjectDetails);
+                        $("#projectOutline").val(data.SolutionDefine.ProjectOutline);
+                    }
+                    var htm = '';
+                    if (data.SolutionMilestone.length > 0) {
+                        for (index = 0; index < data.SolutionMilestone.length; index++) {
+                            subObj = data.SolutionMilestone[index];
+
+                            htm += '<tr>';
+                            htm += '<td>' + subObj.Id + '</td>';
+                            htm += '<td>' + subObj.Description + '</td>';
+                            htm += '<td>' + subObj.Title + '</td>';
+                            htm += '</tr>';
+                        }
+                    }
+                    $("#MileStoneTable").find("tr:gt(0)").remove();
+                    $("#MileStoneTable tbody").append(htm);
+
+
+                    var pointsTable = '';
+                    if (data.SolutionPoints.length > 0) {
+                        for (index = 0; index < data.SolutionPoints.length; index++) {
+                            subObj = data.SolutionPoints[index];
+
+                            pointsTable += '<tr>';
+                            pointsTable += '<td>' + subObj.Id + '</td>';
+                            pointsTable += '<td>' + subObj.point + '</td>';
+                            pointsTable += '</tr>';
+                        }
+                    }
+                    $("#PointsTable").find("tr:gt(0)").remove();
+                    $("#PointsTable tbody").append(pointsTable);
+
+                    $("#preloader").hide();
+                }
+                else {
+                    showToaster("error", "Error !", "Failure");
+                }
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
         });
     }
 

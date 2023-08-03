@@ -98,4 +98,13 @@ namespace Aephy.WEB.Admin.Models
         public bool IsActiveForFreelancer { get; set; }
         public bool IsActiveForClient { get; set; }
     }
+
+    public class SolutionDefineRequestViewModel
+    {
+        public int IndustryId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public string? ProjectType { get; set; }
+    }
 }

@@ -1331,13 +1331,15 @@ namespace Aephy.API.Controllers
                 SolutionServices solutionServices = _db.SolutionServices.Where(x => x.SolutionId == solution.Id).FirstOrDefault();
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
                 var milestoneDetails = _db.SolutionMilestone.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
-                x.IndustryId == solutionIndustry.IndustryId).ToList();
+                x.IndustryId == solutionIndustry.IndustryId && x.ProjectType == "SMALL").ToList();
 
                 var pointsDetails = _db.SolutionPoints.Where(x => x.SolutionId == solutionIndustry.SolutionId &&
-                x.IndustryId == solutionIndustry.IndustryId).ToList();
+                x.IndustryId == solutionIndustry.IndustryId && x.ProjectType == "SMALL").ToList();
 
                 var freeLancerPoolIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId).Select(x => x.FreelancerID).ToList();
                 var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
+
+                var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustry.Id && x.ProjectType == "SMALL").FirstOrDefault();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1352,7 +1354,8 @@ namespace Aephy.API.Controllers
                         MilestoneDetails = milestoneDetails,
                         FreeLancerPoolIds = freeLancerPoolIds,
                         ArchitectIds = architectIds,
-                        PointsDetails = pointsDetails
+                        PointsDetails = pointsDetails,
+                        SolutionDefine = solutionDefine
                     }
                 });
             }
@@ -1589,13 +1592,13 @@ namespace Aephy.API.Controllers
                         gigRolesStore.ID = data.ID;
                         gigRolesStore.Description = data.Description;
                         gigRolesStore.CreatedDateTime = data.CreatedDateTime.ToString("yyyy-MM-dd");
-                        
+
                         //gigRolesStore.Name = _db.Users.Where(x => x.Id == data.FreelancerID).Select(x => x.FirstName).FirstOrDefault();
-                        
+
                         var userModel = users.Where(x => x.Id == data.FreelancerID).FirstOrDefault();
-                        if(userModel != null)
+                        if (userModel != null)
                         {
-                            
+
                             gigRolesStore.Name = userModel.FirstName;
                         }
 
@@ -1724,6 +1727,58 @@ namespace Aephy.API.Controllers
                 });
             }
 
+        }
+
+        [HttpPost]
+        [Route("GetSolutionDefineData")]
+        public async Task<IActionResult> GetSolutionDefineData([FromBody] SolutionDefineRequestViewModel model)
+        {
+            try
+            {
+                int solutionIndustryDetailsId = await _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
+                && x.SolutionId == model.SolutionId).Select(x => x.Id).FirstOrDefaultAsync();
+
+                if (solutionIndustryDetailsId > 0)
+                {
+                    var solutionDefineMpdel = await _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetailsId
+                                                && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
+
+                    var solutionMilestone = await _db.SolutionMilestone.Where(x=>x.SolutionId == model.SolutionId
+                                                    && x.IndustryId == model.IndustryId 
+                                                    && x.ProjectType == model.ProjectType).ToListAsync();
+
+                    var solutionPoints = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId
+                                                    && x.IndustryId == model.IndustryId
+                                                    && x.ProjectType == model.ProjectType).ToListAsync();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            SolutionDefine = solutionDefineMpdel,
+                            SolutionMilestone = solutionMilestone,
+                            SolutionPoints = solutionPoints
+                        }
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Failed"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
         }
     }
 }

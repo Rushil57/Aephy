@@ -277,20 +277,23 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                if (result.Result.length != 0) {
-                    var data = result.Result.SolutionData;
-                    $("#solution-Section").html("")
-                    $(".cls-solution option:not(:first)").remove()
-                    $(".cls-Industries option:not(:first)").remove()
-                    $.each(data, function (data, value) {
-                        $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
-                    })
-                    $.each(result.Result.IndustriesData, function (datas, values) {
-                        $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
-                    })
-                    BindSolutionSection(data)
+                var data = result.Result.SolutionData;
+                if (value != true) {
+                    if (result.Result.length != 0) {
 
+                        $("#solution-Section").html("")
+                        BindSolutionSection(data)
+                    }
                 }
+                $(".cls-solution option:not(:first)").remove()
+                $(".cls-Industries option:not(:first)").remove()
+                $.each(data, function (data, value) {
+                    $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
+                })
+                $.each(result.Result.IndustriesData, function (datas, values) {
+                    $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                })
+
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -368,17 +371,17 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                if (result.Result.length != 0) {
-                    var data = result.Result.SolutionData;
-                    $("#solution-Section").html("")
-                    $(".cls-Industries option:not(:first)").remove()
-
-                    $.each(result.Result.IndustriesData, function (datas, values) {
-                        $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
-                    })
-                    BindSolutionSection(data)
-
+                var data = result.Result.SolutionData;
+                if (value != true) {
+                    if (result.Result.length != 0) {
+                        $("#solution-Section").html("")
+                        BindSolutionSection(data)
+                    }
                 }
+                $(".cls-Industries option:not(:first)").remove()
+                $.each(result.Result.IndustriesData, function (datas, values) {
+                    $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                })
                 $("#preloader").hide();
             },
             error: function (result) {

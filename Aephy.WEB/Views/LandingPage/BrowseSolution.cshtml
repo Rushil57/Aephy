@@ -342,7 +342,7 @@
 
         })
         $('#solution-Section').html(solutionSection);
-
+        $("#select-services").trigger('change');
 
     }
 
@@ -397,7 +397,7 @@
             var splitUrl = name.replaceAll("%", " ")
             var serviceName = splitUrl.replaceAll("20", "")
             $("#select-services option:contains('" + serviceName + "')").attr('selected', 'selected');
-            $("#select-services").trigger('change');
+            
         }
     }
 </script>

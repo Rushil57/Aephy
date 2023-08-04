@@ -51,7 +51,7 @@ section {
 
 .section-header {
     text-align: left;
-   /* padding: 30px 0 30px 60px;*/
+    padding: 30px 0 30px 60px;
     position: relative;
 }
 

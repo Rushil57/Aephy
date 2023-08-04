@@ -952,27 +952,34 @@
                 var index = 0;
                 var subObj = '';
                 var htm = '';
-                for (index = 0; index < result.Result.length; index++) {
-                    subObj = result.Result[index];
+                var resultLength = result.Result.length;
+                if(resultLength > 0){
+                    for (index = 0; index < resultLength; index++) {
+                        subObj = result.Result[index];
 
-                    htm += '<tr>';
-                    htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
-                    htm += '<td>' + subObj.ServiceName + '</td>';
-                    htm += '<td>' + subObj.SolutionName + '</td>';
-                    htm += '<td>' + subObj.Title + '</td>';
-                    htm += '<td>' + subObj.Level + '</td>';
-                    htm += '<td>' + subObj.IndustryName + '</td>';
-                    if(subObj.IsDefine){
-                        htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
+                        htm += '<tr>';
+                        htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
+                        htm += '<td>' + subObj.ServiceName + '</td>';
+                        htm += '<td>' + subObj.SolutionName + '</td>';
+                        htm += '<td>' + subObj.Title + '</td>';
+                        htm += '<td>' + subObj.Level + '</td>';
+                        htm += '<td>' + subObj.IndustryName + '</td>';
+                        if(subObj.IsDefine){
+                            htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
+                        }
+                        htm += '</tr>';
                     }
-                    htm += '</tr>';
+                }else{
+                    htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
                 }
                 $("#ApprovedList").find("tr:gt(0)").remove();
                 $("#ApprovedList tbody").append(htm);
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
+                var htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+                $("#ApprovedList").find("tr:gt(0)").remove();
+                $("#ApprovedList tbody").append(htm);
                 showToaster("error", "Error !", "Failure");
                 $("#preloader").hide();
             }

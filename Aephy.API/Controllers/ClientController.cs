@@ -30,7 +30,7 @@ namespace Aephy.API.Controllers
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
-                    var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).Take(3).ToList();
+                    var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToList();
 
                     if (serviceData.Count > 0)
                     {
@@ -81,7 +81,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    List<Solutions> solutionList = _db.Solutions.Take(3).ToList();
+                    List<Solutions> solutionList = _db.Solutions.ToList();
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();

@@ -220,31 +220,17 @@
     }
 
     function GetSelectedValues() {
-        var Industries = $("#confirm-industries option:selected").text();
-        var Services = $("#confirm-services option:selected").text();
-        var Solution = $("#confirm-solutions option:selected").text();
-
         var IndustryId = $("#confirm-industries").val();
         var SolutionId = $("#confirm-solutions").val();
+        var ServiceId = $("#confirm-services").val();
+
+        if (IndustryId == null || SolutionId == null || ServiceId == null) {
+            alert("Enter Proper Details")
+            return
+        }
         sessionStorage.setItem("IndustryId", IndustryId)
         sessionStorage.setItem("SolutionId", SolutionId)
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("BrowseSolution", "LandingPage")",
-            data: { 'Industry': Industries, 'Services': Services, 'Solution': Solution },
-            success: function (result) {
-                if (result == "Success") {
-                    window.location.href = '/LandingPage/Project'
-                }
-                else {
-                    alert(result)
-                }
-
-            },
-            error: function (result) {
-                alert("Something Went Wrong");
-            }
-        });
+        window.location.href = '/LandingPage/Project'
     }
 
     function BindPopularSolutionsList() {
@@ -257,7 +243,6 @@
             success: function (result) {
                 if (result.Result != 0) {
                     var solutiondata = result.Result;
-                    solutiondata = solutiondata.slice(0, 3);
                     BindSolutionSection(solutiondata)
                     $("#preloader").hide();
                 }
@@ -271,13 +256,13 @@
 
     function GetServicesValues(value) {
         var ServiceId;
-        if(value){
+        if (value) {
             ServiceId = $("#confirm-services").val()
         }
-        else{
+        else {
             ServiceId = $("#select-services").val()
         }
-        
+
         if (ServiceId == "All") {
             ServiceId = 0
         }
@@ -361,13 +346,13 @@
 
     function GetSolutionValues(value) {
         var SolutionId;
-        if(value){
+        if (value) {
             SolutionId = $("#confirm-solutions").val()
         }
-        else{
+        else {
             SolutionId = $("#select-solutions").val()
         }
-         
+
         if (SolutionId == "All") {
             GetServicesValues(false)
             return
@@ -387,7 +372,7 @@
                     var data = result.Result.SolutionData;
                     $("#solution-Section").html("")
                     $(".cls-Industries option:not(:first)").remove()
-                  
+
                     $.each(result.Result.IndustriesData, function (datas, values) {
                         $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
                     })

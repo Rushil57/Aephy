@@ -35,21 +35,21 @@
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projType" value="small" checked />
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked />
                                                 <h4>Small</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projType" value="medium" />
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="medium" />
                                                 <h4>Medium</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projType" value="large" />
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large" />
                                                 <h4>Large</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="row me-lg-2 me-4 detailRow">
                                         <div class="col key section-detail-size">Duration</div>
-                                        <div class="col val section-detail-size">2 Weeks</div>
+                                        <div class="col val section-detail-size">-</div>
                                     </div>
                                     <div class="row me-lg-2 me-4 detailRow">
                                         <div class="col key section-detail-size">Team Size</div>
@@ -305,7 +305,7 @@
                          @* FINAL RELEASE*@
                         <!--Ratings Scorecard row-->
                         <div class="row ratingProgress">
-                            <div class="section-header">
+                            <div class="pt-3">
                                 <h3 class="justify-content-start align-items-center label-title-size title-path"><label style="background-color:#fff; padding:0 0 0 0.5em;">Solution Reviews</label></h3>
                             </div>
                             <div class="col-12 d-flex px-0">
@@ -661,21 +661,21 @@
                         <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projType" value="small" checked />
+                                    <input class="form-check-input" type="radio" name="projSizeweb" value="small" checked />
                                     <h4>Small</h4>
                                     <h5 style="opacity:0.5;">$-</h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projType" value="medium" />
+                                    <input class="form-check-input" type="radio" name="projSizeweb" value="medium" />
                                     <h4>Medium</h4>
                                     <h5 style="opacity:0.5;">$-</h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projType" value="large" />
+                                    <input class="form-check-input" type="radio" name="projSizeweb" value="large" />
                                     <h4>Large</h4>
                                     <h5 style="opacity:0.5;">$-</h5>
                                 </label>
@@ -683,7 +683,7 @@
                         </div>
                         <div class="row me-lg-2 me-4 detailRow">
                             <div class="col key section-detail-size">Duration</div>
-                            <div class="col val text-end section-detail-size">2 Weeks</div>
+                            <div class="col val text-end section-detail-size">-</div>
                         </div>
                         <div class="row me-lg-2 me-4 detailRow">
                             <div class="col key section-detail-size">Team Size</div>
@@ -983,6 +983,35 @@
 <script>
     $(document).ready(function () {
 
+        $("input[name^='projSize']").change(function(){
+    var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
+    $otherRadioButtons.prop('checked', $(this).prop('checked'));
+});
+
+       // var radios = document.querySelectorAll('input[type=radio][name="projSize"]');
+
+        //function changeHandler(event) {
+          // if ( this.value === 'small' ) {
+            //    alert("Small")
+              //  $()
+               //console.log('value', 'Small');
+           //} else if ( this.value === 'medium' ) {
+             // alert("medium")
+       //        console.log('value', 'medium');
+        //   }else{
+         //      alert("Large")
+          //     console.log('value', 'Large');
+      //     }
+      //  }
+
+//        Array.prototype.forEach.call(radios, function(radio) {
+//           radio.addEventListener('change', changeHandler);
+ //       });
+
+        //$('#projSize').on('change',function(){
+            //var checked = this.value;
+          //  ('#projType').value = checked;
+        //}); 
         $('.close').on('click', function () {
             $('#milestonesModal').modal('hide');
 

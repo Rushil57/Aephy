@@ -117,10 +117,10 @@
         BindBrowseSolutionServices()
         BindBrowseSolution()
         BindPopularSolutionsList()
-       // SetServiceValue()
+        // SetServiceValue()
     });
 
-    function checkData() {
+    function checkData(Id,service) {
         $("#confirmationModal").modal('show')
 
         const selectService = '#select-services';
@@ -130,14 +130,14 @@
         var selectedService = $(selectService).val();
         var selectedSolution = $(selectSolution).val();
         var selectedIndustries = $(selectIndustrie).val();
-        var defaultSelect = 'default';
+        var defaultSelect = 'All';
 
         if (selectedService != 'All') {
             $('#confirm-services').val(selectedService);
             $('#confirm-services').find(':not(:selected)').prop('disabled', true);
             $('#confirm-services').css('cursor', 'not-allowed');
         } else {
-            $('#confirm-services').val(defaultSelect);
+            $('#confirm-services').val(service);
             $('#confirm-services').find(':not(:selected)').removeAttr('disabled', true);
             $('#confirm-services').css('cursor', 'default');
         }
@@ -147,9 +147,10 @@
             $('#confirm-solutions').find(':not(:selected)').prop('disabled', true);
             $('#confirm-solutions').css('cursor', 'not-allowed');
         } else {
-            $('#confirm-solutions').val(defaultSelect);
+            $('#confirm-solutions').val(Id);
             $('#confirm-solutions').find(':not(:selected)').removeAttr('disabled');
             $('#confirm-solutions').css('cursor', 'default');
+            GetSolutionValues(true)
         }
 
         if (selectedIndustries != 'All') {
@@ -167,6 +168,7 @@
     function BindBrowseSolutionIndustries() {
         $.ajax({
             type: "POST",
+            async: false,
             url: "@Url.Action("GetIndustryList", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -185,6 +187,7 @@
     function BindBrowseSolutionServices() {
         $.ajax({
             type: "Get",
+            async: false,
             url: "@Url.Action("GetServicesList", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -237,6 +240,7 @@
         $("#preloader").show();
         $.ajax({
             type: "Get",
+            async: false,
             url: "@Url.Action("BindPopularSolutionsList", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -255,6 +259,7 @@
     }
 
     function GetServicesValues(value) {
+
         var ServiceId;
         if (value) {
             ServiceId = $("#confirm-services").val()
@@ -262,7 +267,6 @@
         else {
             ServiceId = $("#select-services").val()
         }
-
         if (ServiceId == "All") {
             ServiceId = 0
         }
@@ -272,6 +276,7 @@
         $("#preloader").show();
         $.ajax({
             type: "POST",
+            async: false,
             url: "@Url.Action("GetSolutionBasedonServices", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -292,7 +297,6 @@
                 $.each(result.Result.IndustriesData, function (datas, values) {
                     $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
                 })
-
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -317,7 +321,7 @@
                 '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
                 '</div>' +
                 '<h3>' +
-                '<a href="#" class="stretched-link section-title-size" onclick="checkData();">' + title + '</a>' +
+                '<a href="#" class="stretched-link section-title-size" onclick=checkData(' + value.Id + ',' + value.solutionServices + ');>' + title + '</a>' +
                 '</h3>' +
                 '<p class="section-detail-size">' + description + '</p>' +
                 '<div class="icon-image">';
@@ -342,7 +346,7 @@
 
         })
         $('#solution-Section').html(solutionSection);
-        $("#select-services").trigger('change');
+        //$("#select-services").trigger('change');
 
     }
 
@@ -365,6 +369,7 @@
         $("#preloader").show();
         $.ajax({
             type: "POST",
+            async: false,
             url: "@Url.Action("GetSolutionBasedonSolutionSelected", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -390,14 +395,16 @@
         });
     }
 
-    function SetServiceValue(){
-        var url = window.location.search.split("?")[1]
-        if (url != undefined) {
-            var name = url.split("=")[1]
-            var splitUrl = name.replaceAll("%", " ")
-            var serviceName = splitUrl.replaceAll("20", "")
+    function SetServiceValue() {
+         $("#preloader").show();
+        var urlParams = new URLSearchParams(window.location.search);
+        var serviceName = urlParams.get('service');
+        if (serviceName != undefined) {
             $("#select-services option:contains('" + serviceName + "')").attr('selected', 'selected');
-            
+            setTimeout(function () {
+                GetServicesValues(false)
+            }, 2000);
         }
+        $("#preloader").hide();
     }
 </script>

@@ -384,18 +384,23 @@
                                 <!-- Vertical Form -->
                                 <form class="row g-3 mt-3" name="GigOpeningApplyForm">
                                     <input type="hidden" id="gigRole_id" value="0">
+                                    <input type="hidden" id="user-CvPath" value="">
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Role Description</label>
                                         <div class="input-group">
                                             <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:330px;resize: vertical !important;" disabled></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" id="resume-div">
                                         <label for="CVPath" class="form-label">Upload CV</label>
                                         <div class="col-12 d-flex">
+                                            <input type="hidden" id="ChangeCvUpload" value="true"/>
                                             <div class="input-group">
                                                 <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
                                             </div>
+                                        </div>
+                                        <div class="input-group pt-3" style="display:none" id="dwld-resume">
+                                             <a onclick="DownloadCv()" class="cls-resume-dwld">Download resume</a>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -713,7 +718,7 @@
             },
             messages: {
                 Description: { required: "Please enter Description" },
-                CVPath: { required: "Please Upload your CV" }
+                CVPath: { required: "Please Upload Cv" }
             },
             errorPlacement: function (error, element) {
                 if (element.parent('.input-group').length) {
@@ -856,11 +861,15 @@
         $("#Description").val("");
         $("#CVPath").val("");
         $('#filePreview').css("display", "none");
+          $("#dwld-resume").css("display", "none")
+                    $("#user-CvPath").val("")
     }
 
     function GigOpenRolesApply() {
 
         var filename = $("#CVPath").val();
+        
+        
         var validFileExtentions = /(\.pdf|\.docx)$/i;
         if (validFileExtentions.exec(filename)) {
             $('#preloader').show();
@@ -872,8 +881,9 @@
                 GigOpenRoleId: $("#gigRole_id").val(),
                 IsApproved: false,
                 Description: $("#Description").val(),
+                AlreadyExistCv : $("#ChangeCvUpload").val()
             }
-
+            
             var formData = new FormData();
             for (var i = 0; i < files.length; i++) {
                 // fileData.append(files[i].name, files[i]);
@@ -919,7 +929,14 @@
             dataType: "json",
             data: { ID: Id },
             success: function (result) {
-                $("#RoleDescription").val(result.Result.Description);
+                var data = result.Result;
+                $("#RoleDescription").val(data.OpenRoles.Description);
+                if(data.FreelancerDetail.CVUrlWithSas != null)
+                {
+                    $("#dwld-resume").show()
+                    $("#user-CvPath").val(data.FreelancerDetail.CVPath)
+                    addNameToFile(data.FreelancerDetail.CVPath.split("/")[4])
+                }
             },
             error: function (result) {
                 //alert(result.Message)
@@ -927,7 +944,28 @@
             }
         });
     }
+
+      function addNameToFile(url) {
+        getImgURL(url, (imgBlob) => {
+            let file = new File([imgBlob], url, { type: "pdf/application", lastModified: new Date().getTime() }, 'utf-8');
+            let container = new DataTransfer();
+            container.items.add(file);
+            document.querySelector('#CVPath').files = container.files;
+        })
+    }
+
+    function getImgURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            callback(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
+
     function getFileData(myFile) {
+        $("#ChangeCvUpload").val(false)
         $('#filePreview').css("display", "none");
         var file = myFile.files[0];
         if (file) {
@@ -1323,5 +1361,13 @@
                 $("#preloader").hide();
             }
         });
+    }
+
+
+    function DownloadCv() {
+        var Cvname = $("#user-CvPath").val()
+        if (Cvname != "") {
+            window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
+        }
     }
 </script>

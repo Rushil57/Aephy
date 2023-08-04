@@ -106,7 +106,7 @@ namespace Aephy.WEB.Controllers
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
 
-                    if(Level != "none")
+                    if (Level != "none")
                     {
                         HttpContext.Session.SetString("LoggedUserLevel", Level);
                     }
@@ -283,29 +283,44 @@ namespace Aephy.WEB.Controllers
                 var currentDateTime = DateTime.Now;
                 result.CreatedDateTime = currentDateTime;
                 var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
+                
                 dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
-                if (data != null)
+                if (result.AlreadyExistCv)
                 {
-                    if (data.Message == "Applied Successfully")
+                    int Id = data.Result;
+                    OpenGigRolesCV opengigroles = new OpenGigRolesCV();
+                    opengigroles.AlreadyExist = true;
+                    opengigroles.ID = Id;
+                    opengigroles.FreelancerId = freelancer;
+                    var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, opengigroles);
+                    return data.Message;
+                }
+                else
+                {
+                    if (data != null)
                     {
-                        int Id = data.Result;
-                        var d = await SaveCVFile(CVFile, Id);
-                        var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
-                        dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
-                        if (ImageResponse != null)
+                        if (data.Message == "Applied Successfully")
                         {
-                            return ImageResponse.Message;
+                            int Id = data.Result;
+                            var d = await SaveCVFile(CVFile, Id);
+                            var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateCV", HttpMethod.Post, d);
+                            dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
+                            if (ImageResponse != null)
+                            {
+                                return ImageResponse.Message;
+                            }
+                            else
+                            {
+                                return "Failed to Apply !";
+                            }
                         }
                         else
                         {
-                            return "Failed to Apply !";
+                            return data.Message;
                         }
                     }
-                    else
-                    {
-                        return data.Message;
-                    }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -402,7 +417,7 @@ namespace Aephy.WEB.Controllers
             OpenGigRolesCV opengigroles = new OpenGigRolesCV();
             try
             {
-                if (CVFile != null && CVFile.Length > 0)
+                if (CVFile != null)
                 {
                     string BlobStorageBaseUrl = string.Empty;
                     string CVPath = string.Empty;
@@ -442,6 +457,7 @@ namespace Aephy.WEB.Controllers
                     opengigroles.CVPath = CVPath;
                     opengigroles.CVUrlWithSas = CVUrlWithSas;
                     opengigroles.ID = (int)(Id);
+                    opengigroles.AlreadyExist = false;
 
                     return opengigroles;
                 }
@@ -620,7 +636,7 @@ namespace Aephy.WEB.Controllers
         public async Task<string> GetSolutionList()
         {
             var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
-            if(Solutiondata != null)
+            if (Solutiondata != null)
             {
                 dynamic data = JsonConvert.DeserializeObject(Solutiondata);
                 try

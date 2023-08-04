@@ -1096,18 +1096,23 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("RolesDataById")]
-        public async Task<IActionResult> RolesDataById([FromBody] GigOpenRoles model)
+        public async Task<IActionResult> RolesDataById([FromBody] OpenGigRolesModel model)
         {
             try
             {
                 GigOpenRoles openRoles = _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                FreelancerDetails freelancerDetail = _db.FreelancerDetails.Where(x => x.UserId == model.FreelancerID).FirstOrDefault();
                 if (openRoles != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
                         Message = "Success",
-                        Result = openRoles
+                        Result = new
+                        {
+                            OpenRoles = openRoles,
+                            FreelancerDetail = freelancerDetail
+                        }
                     });
                 }
                 else

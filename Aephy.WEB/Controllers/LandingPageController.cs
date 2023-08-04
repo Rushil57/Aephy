@@ -190,8 +190,10 @@ namespace Aephy.WEB.Controllers
 
             if (ID != 0)
             {
+                var userId = HttpContext.Session.GetString("LoggedUser");
                 OpenGigRolesModel model = new OpenGigRolesModel();
                 model.ID = ID;
+                model.FreelancerID = userId;
                 var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/RolesDataById", HttpMethod.Post, model);
                 return RolesList;
             }

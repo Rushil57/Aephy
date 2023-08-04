@@ -1386,3 +1386,9 @@ textarea.form-control {
         text-decoration: revert;
         text-align: center;
     }
+
+.cls-resume-dwld {
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+}

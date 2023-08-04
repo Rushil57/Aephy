@@ -10,6 +10,8 @@
         public string? Description { get; set; }
 		public string? CVPath { get; set; }
 		public string? CVUrlWithSas { get; set; }
+
+        public bool AlreadyExistCv { get; set; }
 	}
 
     public class OpenGigRolesCV
@@ -21,5 +23,9 @@
         public string? BlobStorageBaseUrl { get; set; }
 
         public string? CVUrlWithSas { get; set; }
+
+        public bool AlreadyExist { get; set; }
+
+        public string? FreelancerId { get; set; }
     }
 }

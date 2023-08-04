@@ -110,6 +110,8 @@ namespace Aephy.API.Models
             public string? Description { get; set; }
             public string? CVPath { get; set; }
             public string? CVUrlWithSas { get; set; }
+
+            public bool AlreadyExistCv { get; set; }
         }
 
         public class OpenGigRolesCV
@@ -121,6 +123,9 @@ namespace Aephy.API.Models
             public string? BlobStorageBaseUrl { get; set; }
 
             public string? CVUrlWithSas { get; set; }
+            public bool AlreadyExist { get; set; }
+
+            public string? FreelancerId { get; set; }
         }
         public class GigOpenRolesModel
         {

@@ -46,6 +46,7 @@ namespace Aephy.API.Controllers
                                 industrylist.Add(industryname);
                             }
                             SolutionsModel dataStore = new SolutionsModel();
+                            dataStore.solutionServices = model.Id;
                             dataStore.Industries = string.Join(",", industrylist);
                             //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
                             dataStore.Id = solutiondata.Id;
@@ -103,6 +104,7 @@ namespace Aephy.API.Controllers
                             }
                             SolutionsModel dataStore = new SolutionsModel();
                             dataStore.Services = Servicename;
+                             dataStore.solutionServices = serviceId;
                             dataStore.Industries = string.Join(",", industrylist);
                             dataStore.Id = list.Id;
                             dataStore.Description = list.Description;
@@ -279,6 +281,7 @@ namespace Aephy.API.Controllers
                         }
                         SolutionsModel dataStore = new SolutionsModel();
                         dataStore.Services = Servicename;
+                        dataStore.solutionServices = serviceId;
                         dataStore.Industries = string.Join(",", industrylist);
                         dataStore.Id = list.Id;
                         dataStore.Description = list.Description;

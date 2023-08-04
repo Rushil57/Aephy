@@ -74,26 +74,42 @@ namespace Aephy.API.Controllers
         [Route("UpdateCV")]
         public async Task<IActionResult> UpdateCV([FromBody] OpenGigRolesCV OpengigroleCv)
         {
-            //return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
-            if (OpengigroleCv.ID != 0)
+            if (OpengigroleCv.AlreadyExist)
             {
-                var UpdateImage = _db.OpenGigRolesApplications.Where(x => x.ID == OpengigroleCv.ID).FirstOrDefault();
-                if (UpdateImage != null)
+                var applicantsDetails = _db.OpenGigRolesApplications.Where(x => x.ID == OpengigroleCv.ID).FirstOrDefault();
+                var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == OpengigroleCv.FreelancerId).FirstOrDefault();
+                if (freelancerDetails != null)
                 {
-
-                    UpdateImage.BlobStorageBaseUrl = OpengigroleCv.BlobStorageBaseUrl;
-                    UpdateImage.CVPath = OpengigroleCv.CVPath;
-                    UpdateImage.CVUrlWithSas = OpengigroleCv.CVUrlWithSas;
-
+                    applicantsDetails.CVUrlWithSas = freelancerDetails.CVUrlWithSas;
+                    applicantsDetails.CVPath = freelancerDetails.CVPath;
+                    applicantsDetails.BlobStorageBaseUrl = freelancerDetails.BlobStorageBaseUrl;
                     _db.SaveChanges();
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Applied Successfully !"
-                    });
                 }
             }
+            else
+            {
+                if (OpengigroleCv.ID != 0)
+                {
+                    var UpdateImage = _db.OpenGigRolesApplications.Where(x => x.ID == OpengigroleCv.ID).FirstOrDefault();
+                    if (UpdateImage != null)
+                    {
+
+                        UpdateImage.BlobStorageBaseUrl = OpengigroleCv.BlobStorageBaseUrl;
+                        UpdateImage.CVPath = OpengigroleCv.CVPath;
+                        UpdateImage.CVUrlWithSas = OpengigroleCv.CVUrlWithSas;
+
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Applied Successfully !"
+                        });
+                    }
+                }
+            }
+            //return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status200OK,

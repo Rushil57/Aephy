@@ -110,7 +110,6 @@
 
 <script>
     $(document).ready(function () {
-
         $('.close').on('click', function () {
             $('#confirmationModal').modal('hide');
         });
@@ -118,7 +117,7 @@
         BindBrowseSolutionServices()
         BindBrowseSolution()
         BindPopularSolutionsList()
-
+       // SetServiceValue()
     });
 
     function checkData() {
@@ -193,6 +192,7 @@
                 $.each(result.Result, function (data, value) {
                     $(".cls-Services").append($("<option     />").val(value.Id).text(value.ServicesName));
                 })
+                SetServiceValue()
 
             },
             error: function (result) {
@@ -280,7 +280,6 @@
                 var data = result.Result.SolutionData;
                 if (value != true) {
                     if (result.Result.length != 0) {
-
                         $("#solution-Section").html("")
                         BindSolutionSection(data)
                     }
@@ -389,5 +388,16 @@
                 alert("failure");
             }
         });
+    }
+
+    function SetServiceValue(){
+        var url = window.location.search.split("?")[1]
+        if (url != undefined) {
+            var name = url.split("=")[1]
+            var splitUrl = name.replaceAll("%", " ")
+            var serviceName = splitUrl.replaceAll("20", "")
+            $("#select-services option:contains('" + serviceName + "')").attr('selected', 'selected');
+            $("#select-services").trigger('change');
+        }
     }
 </script>

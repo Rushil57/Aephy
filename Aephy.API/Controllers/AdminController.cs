@@ -781,6 +781,42 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("getUserByID")]
+        public async Task<IActionResult> getUserByID([FromBody] UserIdModel userdata)
+        {
+            try
+            {
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin").ToListAsync();
+                var data = list.Where(u => u.Id == userdata.Id).FirstOrDefault();
+                var freelancerPoolList = _db.FreelancerPool.ToList();                 
+                        dynamic obj = new
+                        {
+                            Id = data.Id,
+                            FirstName = data.FirstName,
+                            LastName = data.LastName,
+                            UserRole = data.UserType,
+                            EmailAddress = data.UserName,
+                            FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault(),
+                        };
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = obj
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
         [HttpGet]
         [Route("InvitedUserList")]
         public async Task<IActionResult> InvitedUserList()

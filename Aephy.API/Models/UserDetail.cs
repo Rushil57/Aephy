@@ -12,7 +12,6 @@
     {
         public string[]? Ids { get; set; }
     }
-
     public class UserWiseLavelDetail
     {
         public string? Id { get; set; }

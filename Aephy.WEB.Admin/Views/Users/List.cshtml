@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "- Users list";
 }
-
 <style>
     #solutionsList {
         width: 100% !important;
@@ -27,6 +26,7 @@
                                 <th scope="col">Solution</th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -42,7 +42,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title main-title">Solutions List</h4>
+                <h4 class="modal-title main-title">Edit User</h4>
                 <a class="close" data-dismiss="#userPopupModal" onclick="closeUserPopupModal();"><i class="bi bi-x-circle"></i></a>
             </div>
             <div class="modal-body p-0">
@@ -70,10 +70,136 @@
     </div>
 </div>
 
+<div class="modal" id="editUserModalPopup" tabindex="-1" aria-labelledby="editUserModalPopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update User</h4>
+                <a class="close" onclick="CloseEditUserModalPopup();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form class="row g-3 mt-3" name="editUserForm">
+                                    <input type="hidden" id="Id" value="0">
+
+                                    <div class="col-12">
+                                        <label for="FirstName" class="form-label">FirstName</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="FirstName" name="FirstName" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="LastName" class="form-label">LastName</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="LastName" name="LastName" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="EmailAddress" class="form-label">Email Address</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="EmailAddress" name="EmailAddress" readonly>
+                                        </div>
+                                    </div>                                    
+                                    <div class="col-12">
+                                        <label for="UserRole" class="form-label">User Role</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="UserRole" name="UserRole" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="freelancer-level">
+                                        <label for="FreelancerLevel">Levels</label>
+                                        <select class="form-select" aria-label="Default select example" name="level" id="FreelancerLevel">
+                                            <option value="">Select Level</option>
+                                            <option value="Experts">Experts</option>
+                                            <option value="Associate">Associate</option>
+                                            <option value="Project Manager">Project Manager</option>
+                                        </select>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand" id="update_btn">Update</button>
+                                    </div>
+                                </form><!-- Vertical Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+
     $(function () {
+        $.validator.setDefaults({ ignore: ":hidden:not(.chosen-select)" })
+        $("form[name='editUserForm']").validate({
+            rules: {
+                level: { required: true }
+            },
+            messages: {
+                level: { required: "please select valid level" }
+                //SolutionImage: { required: "Please chhose an image" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                editUser();
+            }
+        });
         GetUserList()
     });
+
+    function OpenEditUserModalPopup() {
+        resetUsersForm();
+        $("#editUserModalPopup").modal('show')
+    }
+    function CloseEditUserModalPopup() {
+        $("#editUserModalPopup").modal('hide')
+    }
+
+    function resetUsersForm() {
+        $("#FirstName").val("");
+        $("#LastName").val("");
+        $("#EmailAddress").val("");
+        $("#UserRole").val("");
+    }
+
+    function editUser(){
+        var freelancerDetails = {
+            Id: $('#Id').val(),
+            FreelancerLevel: $('#FreelancerLevel').val()
+        }
+
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditFreelancerData", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(freelancerDetails),
+            success: function (result) {
+                showToaster("success", "Success", result.Message);
+                CloseEditUserModalPopup();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                CloseEditUserModalPopup();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
 
     function GetUserList() {
         $("#preloader").show();
@@ -103,6 +229,12 @@
                                 else {
                                     return '';
                                 }
+                            }
+                        },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                    return '<a class="btn btn-success" onclick=GetUserById("' + data + '")>Edit</a>';
                             }
                         },
                         {
@@ -146,6 +278,44 @@
                         {"data": "IndustryName" }
                     ]
                 });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+
+    function GetUserById(userId) {
+        var UserData = {
+            Id: userId
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getUserById", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(UserData),
+            success: function (result) {
+                if (result != null) {
+                    OpenEditUserModalPopup();
+                    $("#Id").val(result.Result.Id);
+                    $("#FirstName").val(result.Result.FirstName);
+                    $("#LastName").val(result.Result.LastName);
+                    $("#EmailAddress").val(result.Result.EmailAddress);
+                    $("#UserRole").val(result.Result.UserRole);
+                    if(result.Result.UserRole == "Freelancer"){
+                        $('#freelancer-level').show();
+                        $('#update_btn').show();
+                        $('#FreelancerLevel').val(result.Result.FreelancerLevel).trigger('chosen:updated');
+                    }else{
+                        $('#freelancer-level').hide();
+                        $('#update_btn').hide();
+                    }
+                }
                 $("#preloader").hide();
             },
             error: function (result) {

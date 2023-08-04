@@ -252,6 +252,30 @@ namespace Aephy.API.Controllers
 
         }
 
+        [HttpPost]
+        [Route("UpdateFreelancerById")]
+        public async Task<IActionResult> UpdateFreelancerById([FromBody] UserViewModel userData)
+        {
+            try
+            {
+                FreelancerDetails openRolesdata = _db.FreelancerDetails.Where(x => x.UserId == userData.Id).FirstOrDefault();
+                if (openRolesdata != null)
+                {
+                    openRolesdata.FreelancerLevel = userData.FreelancerLevel;
+                    _db.SaveChanges();
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "User Updated Succesfully!."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+        }
 
         [HttpPost]
         [Route("UpdateIndustryOutline")]

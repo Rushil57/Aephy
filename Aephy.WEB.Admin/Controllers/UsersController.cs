@@ -47,5 +47,19 @@ namespace Aephy.WEB.Admin.Controllers
             var userList = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancerSolutionList", HttpMethod.Post, userId);
             return userList;
         }
+
+        [HttpPost]
+        public async Task<string> getUserById([FromBody] UserIdModel userId)
+        {
+            var userList = await _apiRepository.MakeApiCallAsync("api/Admin/getUserByID", HttpMethod.Post, userId);
+            return userList;
+        }
+
+        [HttpPost]
+        public async Task<string> EditFreelancerData([FromBody] UserModel userId)
+        {
+            var updateResponse = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateFreelancerById", HttpMethod.Post, userId);
+            return updateResponse;
+        }
     }
 }

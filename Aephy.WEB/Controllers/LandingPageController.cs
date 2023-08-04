@@ -86,58 +86,6 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-        //   [HttpPost]
-        //   public async Task<ActionResult> BrowseSolution(string service,string solution,string industry)
-        //   {
-        //       string pagePath;
-        //       if (string.IsNullOrEmpty(service) || string.IsNullOrEmpty(solution) || string.IsNullOrEmpty(industry))
-        //       {
-        //           return View();
-        //       }
-        //       else
-        //       {
-        //           if (service != "default" && solution != "default" && industry != "default")
-        //           {
-        //BrowseSolutionModel model = new BrowseSolutionModel();
-        //model.Solution = Convert.ToInt16(solution);
-        //model.Industries = Convert.ToInt16(industry);
-        //model.Services = Convert.ToInt16(service);
-        //var data = await _apiRepository.MakeApiCallAsync("api/Admin/Getdropdownvalues", HttpMethod.Post, model);
-        //if(data != "")
-        //{
-        //                   dynamic jsonObj = JsonConvert.DeserializeObject(data);
-        //                   pagePath = jsonObj.Result.Services + " > " + jsonObj.Result.Solution + " / " + jsonObj.Result.Industry;
-
-        //                   ViewBag.pagePath = pagePath;
-
-        //                   TempData["pagePath"] = pagePath;
-
-        //                   return RedirectToAction("Project");
-        //               }
-
-        //           }
-        //       }
-        //       return View();
-        //   }
-
-        [HttpPost]
-        public async Task<string> BrowseSolution(string Industry, string Services, string Solution)
-        {
-            string pagePath;
-            if (string.IsNullOrEmpty(Services) || string.IsNullOrEmpty(Solution) || string.IsNullOrEmpty(Industry))
-            {
-                return "Enter Proper Details";
-            }
-            else
-            {
-                if (Services != "default" && Solution != "default" && Industry != "default")
-                {
-                    return "Success";
-                }
-            }
-            return "Enter Proper Details";
-        }
-
         public ActionResult Project()
         {
             return View();

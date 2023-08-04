@@ -777,7 +777,7 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> BindPopularSolutionsList()
         {
-            var solutionList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionList", HttpMethod.Get);
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionList", HttpMethod.Get);
             dynamic data = JsonConvert.DeserializeObject(solutionList);
             try
             {

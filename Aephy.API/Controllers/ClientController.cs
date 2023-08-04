@@ -37,7 +37,7 @@ namespace Aephy.API.Controllers
                         foreach (var data in serviceData)
                         {
                             var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
-                            var industryList = _db.SolutionIndustry.Where(x => x.SolutionId == data).Select(x => x.IndustryId).ToList();
+                            var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
                             foreach (var industryId in industryList)
                             {
                                 var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
@@ -93,7 +93,7 @@ namespace Aephy.API.Controllers
                             var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                             var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
-                            var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == list.Id).Select(x => x.IndustryId).ToList();
+                            var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
                             foreach (var industryId in industryIdlist)
                             {
                                 var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
@@ -151,7 +151,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     var solutiondata = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
-                    var industryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutiondata.Id).Select(x => x.IndustryId).ToList();
+                    var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
                     if(industryList.Count > 0)
                     {
                         foreach (var industryId in industryList)
@@ -253,16 +253,16 @@ namespace Aephy.API.Controllers
             });
 
         }
-
+        
         [HttpGet]
         [Route("GetPopularSolutionList")]
         public async Task<IActionResult> GetPopularSolutionList()
         {
             try
             {
-                List<Solutions> solutionList = _db.Solutions.Take(3).ToList();
+                List<Solutions> solutionList = _db.Solutions.ToList();
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
-                List<Industries> industrylistDetails = new List<Industries>();
+                List<string> industrylist = new List<string>();
 
                 if (solutionList.Count > 0)
                 {
@@ -271,15 +271,15 @@ namespace Aephy.API.Controllers
                         var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                         var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
-                        var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == list.Id).Select(x => x.IndustryId).ToList();
+                        var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
                         foreach (var industryId in industryIdlist)
                         {
-                            var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
-                            industrylistDetails.Add(industry);
+                            var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                            industrylist.Add(industryname);
                         }
                         SolutionsModel dataStore = new SolutionsModel();
                         dataStore.Services = Servicename;
-                       // dataStore.solutionIndustriesList = industrylistDetails;
+                        dataStore.Industries = string.Join(",", industrylist);
                         dataStore.Id = list.Id;
                         dataStore.Description = list.Description;
                         dataStore.ImagePath = list.ImagePath;
@@ -287,14 +287,14 @@ namespace Aephy.API.Controllers
                         dataStore.Title = list.Title;
                         dataStore.SubTitle = list.SubTitle;
                         solutionsModel.Add(dataStore);
-                        industrylistDetails.Clear();
+                        industrylist.Clear();
                     }
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result =  solutionsModel
+                    Result = solutionsModel
                 });
 
             }
@@ -309,7 +309,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //GetSolutionDetailsInProject
+
         [HttpPost]
         [Route("GetSolutionDetailsInProject")]
         public async Task<IActionResult> GetSolutionDetailsInProject([FromBody] MileStoneDetailsViewModel model)

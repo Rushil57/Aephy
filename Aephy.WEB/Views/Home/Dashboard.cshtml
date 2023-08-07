@@ -1100,7 +1100,7 @@
             success: function (result) {
                 //alert(result.Message);
                 showToaster("success", "Success", result.Message);
-                //ResetDetailsForm()
+                ResetDetailsForm()
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -1342,7 +1342,7 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                debugger;
+                
                 if(result.StatusCode == 200)
                 {
                     $("#industry-ProjectDetails").val(result.Result.ProjectDetails);

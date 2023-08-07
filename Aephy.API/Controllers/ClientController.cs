@@ -327,6 +327,9 @@ namespace Aephy.API.Controllers
                     var serviceName = _db.Services.Where(x => x.Id == services).Select(x => x.ServicesName).FirstOrDefault();
 
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
+                    var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
+                    var milestoneData = _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToList();
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -337,6 +340,8 @@ namespace Aephy.API.Controllers
                             ServiceName = serviceName,
                             IndustryName = industryname,
                             SolutionName = solutionName,
+                            SolutionDefine = solutionDefine,
+                            MileStone = milestoneData,
                         }
                     });
                 }

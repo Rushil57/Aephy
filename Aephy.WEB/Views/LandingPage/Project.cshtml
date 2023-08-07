@@ -133,25 +133,22 @@
                                     <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Project</label></h2>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked />
+                                        <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked onchange="GetProjectTypeValue()"/>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Medium" value="medium" />
+                                        <input type="radio" id="projSize" name="projSize" label="Medium" value="medium" onchange="GetProjectTypeValue()"/>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Large" value="large" />
+                                        <input type="radio" id="projSize" name="projSize" label="Large" value="large" onchange="GetProjectTypeValue()"/>
                                     </div>
                                 </div>
 
                                 <!--Description column-->
 
                                 <h4 class="pt-2 label-title-size title-path">Project Outline</h4>
-                                <p style="display:block;">
-                                    Describe Project Outline
+                                <p style="display:block;" id="project-outline-div">
+                                  
                                 </p>
-                                @*<div class="d-flex align-self-start">
-                                <a href=""  class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                </div>*@
                             </div>
                         </div>
                     </div>
@@ -163,8 +160,8 @@
                         <div class="row justify-content-center">
                             <div class="col-12 content d-flex flex-column">
                                 <h3 class="pt-2 label-title-size title-path">Project Details</h3>
-                                <p class="section-detail-size">
-                                    Our goal is to offer the most suitable project to your needs that will transform your business. <br />Paragraph 0: Project is undertaken by our project leader and associate. Duration of the project is x (determined bysenior project leader).
+                                <p class="section-detail-size" id="project-details-div">
+                                    
                                 </p>
                                 
                                 @*<div class="d-flex align-self-start">
@@ -181,32 +178,8 @@
                             <!-- first row -->
                             <div class="progressContainer d-flex flex-column px-0">
                                 <h3 class="pt-2 label-title-size title-path" style="padding:0 0 0 0.5em;">Milestone</h3>
-                                <ul class="progress">
-                                    <li class="progress__item progress__item--completed">
-                                        <p class="progress__title Project-title-size">Milestone 1</p>
-                                        @*                                        <p class="progress__info">Milestone Homepage / About/Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage / About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
-                                        *@                                        <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                                    </li>
-                                    <li class="progress__item progress__item--active">
-                                        <p class="progress__title Project-title-size">Milestone 2</p>
-                                        @*<p class="progress__info">Milestone 2 Homepage / About / Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage/ About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>*@
-                                        <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                                    </li>
-                                    <li class="progress__item">
-                                        <p class="progress__title Project-title-size">Milestone 3</p>
-                                        @*<p class="progress__info">Next Step</p>*@
-                                        <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                                    </li>
-                                    <li class="progress__item">
-                                        <p class="progress__title Project-title-size">Milestone 4</p>
-                                        @*<p class="progress__info">Describe</p>*@
-                                        <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                                    </li>
-                                    <li class="progress__item">
-                                        <p class="progress__title Project-title-size">Milestone 5</p>
-                                        @*<p class="progress__info">Describe</p>*@
-                                        <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                                    </li>
+                                <ul class="progress" id="progress-div">
+                                  
                                 </ul>
                                 <div class="d-flex align-self-start" style="padding:1rem 0 0 1em;">
                                     <a href="" class="cls-milestone-popup" id="clsMilestonePopup" data-bs-toggle="modal" data-bs-target="#milestonesModal">View Details</a>
@@ -516,23 +489,23 @@
                                         <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="200">
                                             <div class="box">
                                                 <div class="title">
-                                                    Anna1 – Expert AI Roadmap Development
+                                Amir – Expert Data Strategy Development
                                                 </div>
                                                 <div class="detailReview">
-                                                    Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
+                                Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
                                                 </div>
                                             </div>
                                             <div class="content">
                                                 <div class="image">
-                                                    <div>AL</div>
+                                                    <div>AK</div>
                                                 </div>
                                                 <div class="info">
-                                                    <div class="name">   Anna Lakhani</div>
+                                <div class="name">Amir Khan</div>
                                                     <div class="stars">
                                                         <i class="bi bi-star-fill"></i>
                                                         <i class="bi bi-star-fill"></i>
                                                         <i class="bi bi-star-fill"></i>
-                                                        <label>4.8/5</label>
+                                    <label>4.7 / 5</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -542,23 +515,23 @@
                                         <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="200">
                                             <div class="box">
                                                 <div class="title">
-                                                    Anna2 – Expert AI Roadmap Development
+                                Zahir – Expert Computer Vision
                                                 </div>
                                                 <div class="detailReview">
-                                                    Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
+                                Zahir is an expert in computer vision with a strong focus on marketing analytics. He has helped numerous clients achieve better audience segmentation and content personalization, resulting in significant improvements in customer engagement.
                                                 </div>
                                             </div>
                                             <div class="content">
                                                 <div class="image">
-                                                    <div>AL</div>
+                                                    <div>ZM</div>
                                                 </div>
                                                 <div class="info">
-                                                    <div class="name">   Anna Lakhani</div>
+                                <div class="name">Zahir Modi</div>
                                                     <div class="stars">
                                                         <i class="bi bi-star-fill"></i>
                                                         <i class="bi bi-star-fill"></i>
                                                         <i class="bi bi-star-fill"></i>
-                                                        <label>4.8/5</label>
+                                    <label>4.9 / 5</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -713,32 +686,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="progressContainer d-flex flex-column">
-                        <ul class="progress">
-                            <li class="progress__item progress__item--completed">
-                                <p class="progress__title">Milestone 1</p>
-                                <p class="progress__info">Milestone Homepage / About/Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage / About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
-                                <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                            </li>
-                            <li class="progress__item progress__item--active">
-                                <p class="progress__title">Milestone 2</p>
-                                <p class="progress__info">Milestone 2 Homepage / About / Careers 27th June Milestone 2 Homepage / About / About us 28th June Milestone 2 Homepage/ About / About 28th June Milestone 2 Homepage / About / Contact 3rd July Milestone 2 Homepage / About/Careers / Open roles 5th July Milestone 2 Homepage / Gig openings / Open gig roles 5th July Milestone 2 Homepage / Gig openings 6th July</p>
-                                <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                            </li>
-                            <li class="progress__item cls-milestone-hide">
-                                <p class="progress__title">Milestone 3</p>
-                                <p class="progress__info">Next Step</p>
-                                <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                            </li>
-                            <li class="progress__item cls-milestone-hide">
-                                <p class="progress__title">Milestone 4</p>
-                                <p class="progress__info">Describe</p>
-                                <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                            </li>
-                            <li class="progress__item cls-milestone-hide">
-                                <p class="progress__title">Milestone 5</p>
-                                <p class="progress__info">Describe</p>
-                                <p class="progress__info__date"><i class="bi bi-calendar-week"></i>Due Jul 7</p>
-                            </li>
+                        <ul class="progress" id="milestone-Popup-div">
                         </ul>
                         <div class="d-flex align-self-start btn-more-less" style="padding:1rem 0 0 1em;">
                             <a class="cls-milestone-showmore cls-milestone" onclick="MilestoneViewMore();" id="clsMilestoneShowmore">View Details<i class="bi bi-caret-down-fill"></i></a>
@@ -987,31 +935,6 @@
     var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
     $otherRadioButtons.prop('checked', $(this).prop('checked'));
 });
-
-       // var radios = document.querySelectorAll('input[type=radio][name="projSize"]');
-
-        //function changeHandler(event) {
-          // if ( this.value === 'small' ) {
-            //    alert("Small")
-              //  $()
-               //console.log('value', 'Small');
-           //} else if ( this.value === 'medium' ) {
-             // alert("medium")
-       //        console.log('value', 'medium');
-        //   }else{
-         //      alert("Large")
-          //     console.log('value', 'Large');
-      //     }
-      //  }
-
-//        Array.prototype.forEach.call(radios, function(radio) {
-//           radio.addEventListener('change', changeHandler);
- //       });
-
-        //$('#projSize').on('change',function(){
-            //var checked = this.value;
-          //  ('#projType').value = checked;
-        //}); 
         $('.close').on('click', function () {
             $('#milestonesModal').modal('hide');
 
@@ -1045,9 +968,12 @@
          $("#preloader").show();
         var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
         var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var projecttype = $('input[name=projSize]:checked').val()
+
         var data = {
             IndustryId : Industryid,
-            SolutionId : Solutionid
+            SolutionId : Solutionid,
+            ProjectType : projecttype,
         }
          $.ajax({
             type: "POST",
@@ -1061,6 +987,105 @@
                 $("#project-image").attr("src",data.ProjectData.ImageUrlWithSas)
                 var projectTitle = data.ServiceName +  " > " + data.SolutionName + " / " + data.IndustryName
                 $("#project-title").text(projectTitle)
+                  if(data.SolutionDefine != null)
+                {
+                $("#project-outline-div").text(data.SolutionDefine.ProjectDetails)
+                $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                }
+                else{
+                    $("#project-outline-div").text("No Data Available")
+                $("#project-details-div").text("No Data Available")
+                }
+
+                if(data.MileStone != ""){
+                     var milestoneSection = "";
+                     var milestonePopupsection = "";
+                     $.each(data.MileStone, function (datas, values) {
+                         milestoneSection +=  '<li class="progress__item">' +
+                                        '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
+                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +moment(values.DueDate).format('YYYY-MM-DD')+'</p>' +
+                                    '</li>'
+
+                        milestonePopupsection +=  '<li class="progress__item">' +
+                                '<p class="progress__title">'+ values.Title+'</p>' +
+                                '<p class="progress__info">'+values.Description+'</p>' +
+                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+moment(values.DueDate).format('YYYY-MM-DD')+'</p>'+
+                            '</li>';
+                    })
+                    $('#progress-div').html(milestoneSection);
+                    $('#milestone-Popup-div').html(milestonePopupsection);
+                    $(".cls-milestone-popup").css("display","block")
+                }
+                else{
+                    $("#progress-div").text("No data Available")
+                    $(".cls-milestone-popup").css("display","none")
+
+                }
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function GetProjectTypeValue(){
+        $("#preloader").show();
+        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
+        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var projecttype = $('input[name=projSize]:checked').val()
+
+        var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid,
+            ProjectType : projecttype,
+        }
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionDataBasedonIndustries", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                var data = result.Result
+                if(data.SolutionDefine != null)
+                {
+                    $("#project-outline-div").text(data.SolutionDefine.ProjectDetails)
+                $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                }
+                else{
+                    
+                    $("#project-outline-div").text("No Data Available")
+                $("#project-details-div").text("No Data Available")
+                }
+
+                if(data.MileStone != ""){
+                     var milestoneSection = "";
+                       var milestonePopupsection = "";
+                     $.each(data.MileStone, function (datas, values) {
+                         milestoneSection +=  '<li class="progress__item">' +
+                                        '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
+                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +moment(values.DueDate).format('YYYY-MM-DD')+'</p>' +
+                                    '</li>'
+                         
+                                      milestonePopupsection +=  '<li class="progress__item">' +
+                                '<p class="progress__title">'+ values.Title+'</p>' +
+                                '<p class="progress__info">'+values.Description+'</p>' +
+                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+moment(values.DueDate).format('YYYY-MM-DD')+'</p>'+
+                            '</li>';
+                      //$("input[name=projSize][value='"+ values.ProjectType +"']").prop("checked",true);
+                      //$("input[name=projSizeweb][value='"+ values.ProjectType +"']").prop("checked",true);
+                    })
+                    $('#progress-div').html(milestoneSection);
+                     $('#milestone-Popup-div').html(milestonePopupsection);
+                      $(".cls-milestone-popup").css("display","block")
+                }
+                 else{
+                    $("#progress-div").text("No data Available")
+                    $(".cls-milestone-popup").css("display","none")
+
+                }
                  $("#preloader").hide();
             },
             error: function (result) {

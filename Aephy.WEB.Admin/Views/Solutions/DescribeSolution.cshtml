@@ -428,7 +428,12 @@
                 if (data.PointsDetails.length > 0) {
                     for (index = 0; index < data.PointsDetails.length; index++) {
                         subObj = data.PointsDetails[index];
-
+                        if (subObj.PointKey == null || subObj.PointKey == undefined) {
+                            subObj.PointKey = ""
+                        }
+                        if (subObj.PointValue == null || subObj.PointValue == undefined) {
+                            subObj.PointValue = ""
+                        }
                         pointsTable += '<tr>';
                         pointsTable += '<td>' + subObj.Id + '</td>';
                         pointsTable += '<td>' + subObj.PointKey + '</td>';
@@ -859,7 +864,7 @@
             data: JSON.stringify(data),
             success: function (result) {
                 console.log(result);
-                debugger;
+
                 var data = result.Result;
                 if (result.StatusCode == 200) {
 
@@ -887,10 +892,16 @@
                     if (data.SolutionPoints.length > 0) {
                         for (index = 0; index < data.SolutionPoints.length; index++) {
                             subObj = data.SolutionPoints[index];
-
+                            if (subObj.PointKey == null || subObj.PointKey == undefined) {
+                                subObj.PointKey = ""
+                            }
+                            if (subObj.PointValue == null || subObj.PointValue == undefined) {
+                                subObj.PointValue = ""
+                            }
                             pointsTable += '<tr>';
                             pointsTable += '<td>' + subObj.Id + '</td>';
-                            pointsTable += '<td>' + subObj.point + '</td>';
+                            pointsTable += '<td>' + subObj.PointKey + '</td>';
+                            pointsTable += '<td>' + subObj.PointValue + '</td>';
                             pointsTable += '</tr>';
                         }
                     }

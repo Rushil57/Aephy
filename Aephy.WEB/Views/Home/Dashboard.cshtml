@@ -1295,7 +1295,12 @@
                 var htm = '';
                 for (index = 0; index < data.length; index++) {
                     subObj = data[index];
-
+                     if(subObj.PointKey == null || subObj.PointKey == undefined){
+                             subObj.PointKey = ""
+                         }
+                         if(subObj.PointValue == null || subObj.PointValue == undefined){
+                             subObj.PointValue = ""
+                         }
                     htm += '<tr>';
                     htm += '<td>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.PointKey + '</td>';

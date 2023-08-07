@@ -153,6 +153,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     var solutiondata = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var servicesData = _db.SolutionServices.Where(x => x.SolutionId == model.Id).Select(x=>x.ServicesId).FirstOrDefault();
                     var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
                     if(industryList.Count > 0)
                     {
@@ -167,6 +168,7 @@ namespace Aephy.API.Controllers
 
                     SolutionsModel dataStore = new SolutionsModel();
                     dataStore.Industries = string.Join(",", industrylist);
+                    dataStore.solutionServices = servicesData;
                    // dataStore.solutionIndustriesList = industrylistDetails;
                     dataStore.Id = solutiondata.Id;
                     dataStore.Description = solutiondata.Description;
@@ -321,11 +323,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var industryname = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x=> x.IndustryName).FirstOrDefault();
-                    var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
-                    var services = _db.SolutionServices.Where(x => x.SolutionId == model.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
-                    var serviceName = _db.Services.Where(x => x.Id == services).Select(x => x.ServicesName).FirstOrDefault();
-
+                  
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToList();
@@ -336,10 +334,6 @@ namespace Aephy.API.Controllers
                         Message = "Success",
                         Result = new
                         {
-                            ProjectData = data,
-                            ServiceName = serviceName,
-                            IndustryName = industryname,
-                            SolutionName = solutionName,
                             SolutionDefine = solutionDefine,
                             MileStone = milestoneData,
                         }
@@ -355,6 +349,55 @@ namespace Aephy.API.Controllers
                 }
             }
             
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status403Forbidden,
+                Message = "Something Wennt Wrong"
+
+            });
+
+        }
+
+        //GetProjectDetails
+
+        [HttpPost]
+        [Route("GetProjectDetails")]
+        public async Task<IActionResult> GetProjectDetails([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var industryname = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                    var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
+                    var services = _db.SolutionServices.Where(x => x.SolutionId == model.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                    var serviceName = _db.Services.Where(x => x.Id == services).Select(x => x.ServicesName).FirstOrDefault();
+
+                    var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            ProjectData = data,
+                            ServiceName = serviceName,
+                            IndustryName = industryname,
+                            SolutionName = solutionName,
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,

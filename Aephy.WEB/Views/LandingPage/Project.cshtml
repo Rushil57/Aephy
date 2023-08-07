@@ -968,16 +968,14 @@
          $("#preloader").show();
         var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
         var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
-        var projecttype = $('input[name=projSize]:checked').val()
-
+     
         var data = {
             IndustryId : Industryid,
             SolutionId : Solutionid,
-            ProjectType : projecttype,
         }
          $.ajax({
             type: "POST",
-            url: "@Url.Action("GetSolutionDataBasedonIndustries", "Home")",
+            url: "@Url.Action("GetProjectDetails", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(data),
@@ -987,40 +985,7 @@
                 $("#project-image").attr("src",data.ProjectData.ImageUrlWithSas)
                 var projectTitle = data.ServiceName +  " > " + data.SolutionName + " / " + data.IndustryName
                 $("#project-title").text(projectTitle)
-                  if(data.SolutionDefine != null)
-                {
-                $("#project-outline-div").text(data.SolutionDefine.ProjectDetails)
-                $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
-                }
-                else{
-                    $("#project-outline-div").text("No Data Available")
-                $("#project-details-div").text("No Data Available")
-                }
-
-                if(data.MileStone != ""){
-                     var milestoneSection = "";
-                     var milestonePopupsection = "";
-                     $.each(data.MileStone, function (datas, values) {
-                         milestoneSection +=  '<li class="progress__item">' +
-                                        '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
-                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +moment(values.DueDate).format('YYYY-MM-DD')+'</p>' +
-                                    '</li>'
-
-                        milestonePopupsection +=  '<li class="progress__item">' +
-                                '<p class="progress__title">'+ values.Title+'</p>' +
-                                '<p class="progress__info">'+values.Description+'</p>' +
-                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+moment(values.DueDate).format('YYYY-MM-DD')+'</p>'+
-                            '</li>';
-                    })
-                    $('#progress-div').html(milestoneSection);
-                    $('#milestone-Popup-div').html(milestonePopupsection);
-                    $(".cls-milestone-popup").css("display","block")
-                }
-                else{
-                    $("#progress-div").text("No data Available")
-                    $(".cls-milestone-popup").css("display","none")
-
-                }
+                GetProjectTypeValue()
                  $("#preloader").hide();
             },
             error: function (result) {
@@ -1043,46 +1008,46 @@
         }
          $.ajax({
             type: "POST",
-            url: "@Url.Action("GetSolutionDataBasedonIndustries", "Home")",
+            url: "@Url.Action("GetProjectDetailsbasedOnType", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
                 var data = result.Result
-                if(data.SolutionDefine != null)
-                {
-                    $("#project-outline-div").text(data.SolutionDefine.ProjectDetails)
-                $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                if(data.SolutionDefine != null){
+                    $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
+                    $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
                 }
                 else{
-                    
-                    $("#project-outline-div").text("No Data Available")
-                $("#project-details-div").text("No Data Available")
+                   $("#project-outline-div").text("No Data Available")
+                   $("#project-details-div").text("No Data Available")
                 }
-
                 if(data.MileStone != ""){
                      var milestoneSection = "";
-                       var milestonePopupsection = "";
+                     var milestonePopupsection = "";
                      $.each(data.MileStone, function (datas, values) {
-                         milestoneSection +=  '<li class="progress__item">' +
+                       milestoneSection +=  '<li class="progress__item">' +
                                         '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
                                         '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +moment(values.DueDate).format('YYYY-MM-DD')+'</p>' +
                                     '</li>'
                          
-                                      milestonePopupsection +=  '<li class="progress__item">' +
+                        milestonePopupsection +=  '<li class="progress__item">' +
                                 '<p class="progress__title">'+ values.Title+'</p>' +
                                 '<p class="progress__info">'+values.Description+'</p>' +
                                 '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+moment(values.DueDate).format('YYYY-MM-DD')+'</p>'+
                             '</li>';
-                      //$("input[name=projSize][value='"+ values.ProjectType +"']").prop("checked",true);
-                      //$("input[name=projSizeweb][value='"+ values.ProjectType +"']").prop("checked",true);
+                      
                     })
                     $('#progress-div').html(milestoneSection);
-                     $('#milestone-Popup-div').html(milestonePopupsection);
-                      $(".cls-milestone-popup").css("display","block")
+                    $('#milestone-Popup-div').html(milestonePopupsection);
+                       $('#progress-div li:first').addClass('progress__item--active');
+                    $('#milestone-Popup-div li:first').addClass('progress__item--active');
+                    $(".cls-milestone-popup").css("display","block")
                 }
                  else{
                     $("#progress-div").text("No data Available")
+                    $("#progress-div").css("fontSize", "16px");
+                    $("#progress-div").css("padding-left", "14px");
                     $(".cls-milestone-popup").css("display","none")
 
                 }

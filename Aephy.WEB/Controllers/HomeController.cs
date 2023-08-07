@@ -913,14 +913,28 @@ namespace Aephy.WEB.Controllers
         }
 
 
-        //GetSolutionDataBasedonIndustries
         [HttpPost]
-        public async Task<string> GetSolutionDataBasedonIndustries([FromBody] MileStoneDetailsViewModel model)
+        public async Task<string> GetProjectDetailsbasedOnType([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
+                return solutionData;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<string> GetProjectDetails([FromBody] MileStoneDetailsViewModel model)
         {
             if (model != null)
             {
 
-                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetProjectDetails", HttpMethod.Post, model);
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
                 try
                 {

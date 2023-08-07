@@ -267,9 +267,10 @@ namespace Aephy.API.Controllers
                         Description = model.Description,
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
-                        DueDate = model.DueDate,
+                        DueDate = DateTime.MinValue,
                         FreelancerId = model.FreelancerId,
-                        ProjectType = model.ProjectType
+                        ProjectType = model.ProjectType,
+                        Days = model.Days
                     };
                     _db.SolutionMilestone.Add(milestone);
                     _db.SaveChanges();
@@ -285,9 +286,10 @@ namespace Aephy.API.Controllers
                     if (data != null)
                     {
                         data.Description = model.Description;
-                        data.DueDate = model.DueDate;
+                        data.DueDate = DateTime.MinValue;
                         data.Title = model.Title;
                         data.ProjectType = model.ProjectType;
+                        data.Days = model.Days;
                         _db.SaveChanges();
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

@@ -1015,13 +1015,13 @@
                      $.each(data.MileStone, function (datas, values) {
                        milestoneSection +=  '<li class="progress__item">' +
                                         '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
-                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +moment(values.DueDate).format('YYYY-MM-DD')+'</p>' +
+                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
                                     '</li>'
                          
                         milestonePopupsection +=  '<li class="progress__item">' +
                                 '<p class="progress__title">'+ values.Title+'</p>' +
                                 '<p class="progress__info">'+values.Description+'</p>' +
-                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+moment(values.DueDate).format('YYYY-MM-DD')+'</p>'+
+                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
                             '</li>';
                       
                     })

@@ -203,11 +203,12 @@ namespace Aephy.API.Models
             public int IndustryId { get; set; }
 
             public int SolutionId { get; set; }
-            public DateTime DueDate { get; set; }
+            public DateTime? DueDate { get; set; }
 
             public string? FreelancerId { get; set; }
 
             public string? ProjectType { get; set; }
+            public int Days { get; set; }
 
         }
 

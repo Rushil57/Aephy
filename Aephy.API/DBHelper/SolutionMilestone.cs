@@ -22,5 +22,6 @@ namespace Aephy.API.DBHelper
         public string? FreelancerId { get; set; }
 
         public string? ProjectType { get; set; }
+        public int Days { get; set; }
     }
 }

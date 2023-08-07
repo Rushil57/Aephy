@@ -192,6 +192,7 @@
                 showToaster("success", "Success", result.Message);
                 CloseEditUserModalPopup();
                 $("#preloader").hide();
+                GetUserList();
             },
             error: function (result) {
                 $("#preloader").hide();
@@ -256,7 +257,7 @@
     }
 
     function SoutionsList(Id) {
-        var ServiceData = {
+        var SolutionData = {
             Id: Id,
         };
         $("#preloader").show();
@@ -265,7 +266,7 @@
             url: "@Url.Action("getFreelancerSolutionsById", "Users")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(ServiceData),
+            data: JSON.stringify(SolutionData),
             success: function (result) {
                 $('#userPopupModal').modal('show');
                 $('#solutionsList').DataTable({

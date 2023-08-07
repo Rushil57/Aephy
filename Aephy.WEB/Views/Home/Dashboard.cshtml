@@ -876,17 +876,19 @@
                     var subObj = '';
                     var htm = '';
                     for (index = 0; index < result.Result.length; index++) {
-                        subObj = result.Result[index];
+                        if(index <= 9){
+                            subObj = result.Result[index];
 
-                        htm += '<tr>';
-                        htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
-                        htm += '<td>' + subObj.ServiceName + '</td>';
-                        htm += '<td>' + subObj.SolutionName + '</td>';
-                        htm += '<td>' + subObj.Title + '</td>';
-                        htm += '<td>' + subObj.Level + '</td>';
-                        htm += '<td>' + subObj.IndustryName + '</td>';
-                        htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
-                        htm += '</tr>';
+                            htm += '<tr>';
+                            htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
+                            htm += '<td>' + subObj.ServiceName + '</td>';
+                            htm += '<td>' + subObj.SolutionName + '</td>';
+                            htm += '<td>' + subObj.Title + '</td>';
+                            htm += '<td>' + subObj.Level + '</td>';
+                            htm += '<td>' + subObj.IndustryName + '</td>';
+                            htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
+                            htm += '</tr>';
+                        }
                     }
                     $("#table-OpenRoles").find("tr:gt(0)").remove();
                     $("#table-OpenRoles tbody").append(htm);

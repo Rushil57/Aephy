@@ -552,7 +552,9 @@
             span.innerHTML =
                 ['<img class="SolutionImage" src="', IndustryValue.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
                     .join('');
-            document.getElementById('solutionDetailsImagepreview_' + value.IndustryName).insertBefore(span, null);
+                    if(document.getElementById('solutionDetailsImagepreview_' + value.IndustryName) != null){
+                        document.getElementById('solutionDetailsImagepreview_' + value.IndustryName).insertBefore(span, null);
+                    }
         }
     }
 
@@ -567,7 +569,11 @@
                 span.innerHTML =
                     ['<img class="SolutionImage" src="', e.target.result, '" title="', escape(e.name), '" style="height:200px;width:200px;"/>']
                         .join('');
-                document.getElementById('solutionDetailsImagepreview_' + name).insertBefore(span, null);
+
+                        if(document.getElementById('solutionDetailsImagepreview_' + name) != null){
+                            document.getElementById('solutionDetailsImagepreview_' + name).insertBefore(span, null);
+                        }
+                
             });
 
             reader.readAsDataURL(value.files[0]);

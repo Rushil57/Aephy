@@ -1391,7 +1391,7 @@ textarea.form-control {
     display: block;
     position: relative;
     color: #d38b4e;
-    padding:5px 5px;
+    padding: 5px 5px 15px 5px;
     text-decoration: revert;
     text-align: center;
 }
@@ -1399,7 +1399,7 @@ textarea.form-control {
     .view_action_Link:hover {
         display: block;
         position: relative;
-        padding: 5px 5px;
+        padding: 5px 5px 15px 5px;
         color: rgb(211, 139, 78, 0.7);
         text-decoration: revert;
         text-align: center;

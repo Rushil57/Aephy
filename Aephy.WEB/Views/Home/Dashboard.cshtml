@@ -18,20 +18,24 @@
         color: var(--font - title);
         }
 
-.dashboard .recent-sales::-webkit-scrollbar-track{
+        #hidden_item{
+            display:none;
+        }
+
+.dashboard .material_scroll::-webkit-scrollbar-track{
 	-webkit-box-shadow: none;
 	border-radius: 10px;
 	background-color: none;
 }
 
-.dashboard .recent-sales::-webkit-scrollbar
+.dashboard .material_scroll::-webkit-scrollbar
 {
 	width: 7px;
     height:7px;
 	background-color: none;
 }
 
-.dashboard .recent-sales::-webkit-scrollbar-thumb
+.dashboard .material_scroll::-webkit-scrollbar-thumb
 {
 	border-radius: 10px;
 	background-color: #d38b4e;
@@ -163,7 +167,7 @@
                     </div><!-- End Customers Card -->
                     <!-- Recent Openings -->
                     <div class="col-12 only_freelancer">
-                        <div class="card recent-sales overflow-auto">
+                        <div class="card recent-sales overflow-auto material_scroll">
 
                             <div class="filter" style="display: none;">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -180,9 +184,6 @@
 
                             <div class="card-body">
                                 <h5 class="card-title">Recent Opening</h5>
-                                <div class="d-flex justify-content-end">
-                                    <a href="~/LandingPage/OpenGigRoles" class="view_action_Link">View All Roles</a>
-                                </div>
                                 <table class="table table-borderless datatable" id="table-OpenRoles">
                                     <thead>
                                         <tr>
@@ -198,23 +199,25 @@
                                     <tbody>
                                     </tbody>
                                 </table>
-
+                                <div class="d-flex justify-content-center">
+                                    <a href="~/LandingPage/OpenGigRoles" class="view_action_Link">View All Roles</a>
+                                </div>
                             </div>
 
                         </div>
                     </div><!-- End Recent Sales -->
                     <!-- Top Selling -->
                     <div class="col-12">
-                        <div class="card top-selling overflow-auto">
-                            <div class="card-body pb-0">
+                        <div class="card top-selling overflow-auto material_scroll">
+                            <div class="card-body pb-0" style="height:303px;">
                                 <h5 class="card-title">Approved Positions - Authorized for Project Requests</h5>
                                 <table class="table table-borderless" id="ApprovedList">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Id</th>
+                                            <th scope="col" id="hidden_item">Id</th>
                                             <th scope="col">Service</th>
                                             <th scope="col">Solution</th>
-                                            <th scope="col">Title</th>
+                                            <th scope="col" id="hidden_item">Title</th>
                                             <th scope="col">Level</th>
                                             <th scope="col">Industry</th>
                                             <th scope="col"></th>
@@ -489,7 +492,7 @@
                                                 <th>Id</th>
                                                 <th>Description</th>
                                                 <th>Title</th>
-                                                <th>DueDate</th>
+                                                <th>Days</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -556,8 +559,13 @@
                                             <input type="text" id="mileStoneDescription" class="form-control" name="milestonedescription" />
                                         </div>
                                     </div>
-
                                     <div class="col-12">
+                                        <label for="Days" class="form-label">Days</label>
+                                        <div class="input-group">
+                                            <input type="text" id="txtMilestoneDays" class="form-control" name="txtMilestoneDays" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12" style="display:none;">
                                         <label for="dueDate" class="form-label">Due Date</label>
                                         <div class="input-group">
                                             @*<input type="text" id="mileStonedueDate" class="form-control" name="milestoneduedate" />*@
@@ -773,12 +781,12 @@
             rules: {
                 milestonedescription: { required: true },
                 milestonetitle: { required: true },
-                milestoneduedate: { required: true },
+                txtMilestoneDays: { required: true },
             },
             messages: {
-                milestonedescription: { required: "Please enter Description" },
+                milestonedescription: { required: "Please enter description" },
                 milestonetitle: { required: "please enter title" },
-                milestoneduedate: { required: "Please Select date" }
+                txtMilestoneDays: { required: "Please enter days" }
             },
             errorPlacement: function (error, element) {
                 if (element.parent('.input-group').length) {
@@ -839,6 +847,18 @@
                     height += table.rows[i].clientHeight;
                 }
                 wrapper.style.height = height + "px";
+            }
+
+            height = 0;
+            var table_Approve = document.getElementById('ApprovedList');
+            var wrapper_Approve = table_Approve.parentNode;
+            var rowsInTable_Approve = table_Approve.rows.length;
+            var height_Approve = 0;
+            if (rowsInTable_Approve > maxRows) {
+                for (var i = 0; i < maxRows + 1; i++) {
+                    height += table_Approve.rows[i].clientHeight;
+                }
+                wrapper_Approve.style.height = height + "px";
             }
         }
 
@@ -1033,10 +1053,10 @@
                         subObj = result.Result[index];
 
                         htm += '<tr>';
-                        htm += '<td class="cls-RolesId" >' + subObj.ID + '</td>';
+                        htm += '<td class="cls-RolesId" id="hidden_item">' + subObj.ID + '</td>';
                         htm += '<td>' + subObj.ServiceName + '</td>';
                         htm += '<td>' + subObj.SolutionName + '</td>';
-                        htm += '<td>' + subObj.Title + '</td>';
+                        htm += '<td id="hidden_item">' + subObj.Title + '</td>';
                         htm += '<td>' + subObj.Level + '</td>';
                         htm += '<td>' + subObj.IndustryName + '</td>';
                         if(subObj.IsDefine){
@@ -1079,7 +1099,8 @@
             Id: $("#MileStoneId").val(),
             Description: $("#mileStoneDescription").val(),
             Title: $("#mileStoneTitle").val(),
-            DueDate: $("#mileStonedueDate").val(),
+            //DueDate: $("#mileStonedueDate").val(),
+            Days: $("#txtMilestoneDays").val(),
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val(),
             ProjectType: $("#ProjectType").val(),
@@ -1107,6 +1128,7 @@
         $("#MileStoneId").val(0);
         $("#mileStoneDescription").val("");
         $("#mileStoneTitle").val("");
+        $("#txtMilestoneDays").val("0");
         $("#mileStonedueDate").val("");
         $("#MileStonePopModal").modal('hide')
         GetMiletoneList()
@@ -1185,7 +1207,7 @@
                     htm += '<td onclick=EditMiletoneData(' + subObj.Id + ')>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.Description + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';
-                    htm += '<td>' + moment(subObj.DueDate).format('YYYY-MM-DD') + '</td>';
+                    htm += '<td>' + subObj.Days + '</td>';
                     htm += '<td><a class="btn btn-danger btn-sm" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
                     htm += '</tr>';
                 }
@@ -1217,6 +1239,7 @@
                     var data = result.Result;
                     $("#MileStoneId").val(data.Id);
                     $("#mileStoneDescription").val(data.Description);
+                    $("#txtMilestoneDays").val(data.Days);
                     $("#mileStoneTitle").val(data.Title);
                     $("#mileStonedueDate").val(moment(data.DueDate).format('YYYY-MM-DD'));
                 }
@@ -1295,7 +1318,7 @@
                 var htm = '';
                 for (index = 0; index < data.length; index++) {
                     subObj = data[index];
-                     if(subObj.PointKey == null || subObj.PointKey == undefined){
+                    if(subObj.PointKey == null || subObj.PointKey == undefined){
                              subObj.PointKey = ""
                          }
                          if(subObj.PointValue == null || subObj.PointValue == undefined){

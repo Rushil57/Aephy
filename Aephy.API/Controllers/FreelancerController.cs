@@ -443,6 +443,8 @@ namespace Aephy.API.Controllers
                     var points = new SolutionPoints()
                     {
                         point = model.point,
+                        PointKey= model.PointKey,
+                        PointValue = model.PointValue,
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
                         FreelancerId = model.FreelancerId,

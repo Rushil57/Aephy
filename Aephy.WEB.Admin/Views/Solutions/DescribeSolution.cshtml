@@ -180,13 +180,14 @@
 
 
                                     <div class="col-12">
-                                        <label for="points" class="form-label">Point(s)</label>
+                                        <label for="points" class="form-label">Highlight(s)</label>
                                         <div class="input-group">
                                             <table class="table" id="PointsTable">
                                                 <thead style="border: 1px solid #e8e8e8;">
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Points</th>
+                                                        <th>Label</th>
+                                                        <th>Value</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
@@ -430,7 +431,8 @@
 
                         pointsTable += '<tr>';
                         pointsTable += '<td>' + subObj.Id + '</td>';
-                        pointsTable += '<td>' + subObj.point + '</td>';
+                        pointsTable += '<td>' + subObj.PointKey + '</td>';
+                        pointsTable += '<td>' + subObj.PointValue + '</td>';
                         pointsTable += '</tr>';
                     }
                 }

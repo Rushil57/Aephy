@@ -327,6 +327,7 @@ namespace Aephy.API.Controllers
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToList();
+                    var pointsData = _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -336,6 +337,7 @@ namespace Aephy.API.Controllers
                         {
                             SolutionDefine = solutionDefine,
                             MileStone = milestoneData,
+                            PointsData = pointsData
                         }
                     });
                 }

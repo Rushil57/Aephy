@@ -18,5 +18,9 @@ namespace Aephy.API.DBHelper
         public string? FreelancerId { get; set; }
 
         public string? ProjectType { get; set; }
+
+        public string? PointKey { get; set; }
+
+        public string? PointValue { get; set; }
     }
 }

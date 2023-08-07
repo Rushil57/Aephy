@@ -321,9 +321,9 @@
                 '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
                 '</div>' +
                 '<h3>' +
-                "<a href='#' class='stretched-link section-title-size' title='" + value.Title + "'  onclick=checkData(" + value.Id + "," + value.solutionServices + ")>" + title + "</a>" +
+                '<a class="stretched-link section-title-size" title="' + value.Title + '"  onclick=checkData(' + value.Id + ',' + value.solutionServices + ')>' + title + '</a>' +
                 '</h3>' +
-                '<p class="section-detail-size">' + description + '</p>' +
+                '<p class="section-detail-size" title="' + value.Description + '">' + description + '</p>' +
                 '<div class="icon-image">';
             if (industryList != "") {
                 var industry = industryList.slice(0, 2);
@@ -386,6 +386,7 @@
                 $.each(result.Result.IndustriesData, function (datas, values) {
                     $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
                 })
+                //$(".cls-Services").val(data[0].solutionServices)
                 $("#preloader").hide();
             },
             error: function (result) {

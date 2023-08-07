@@ -75,7 +75,7 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Sales <span>| Today</span></h5>
+                                <h5 class="card-title">Projects <span>| This Year</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -478,7 +478,7 @@
 
                                 <div class="form-group pt-3">
                                     <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()">Add Milestone</button>
-                                    <button type="button" class="btn btn-primary" onclick="OpenPointsPopup()">Add Points</button>
+                                    <button type="button" class="btn btn-primary" onclick="OpenPointsPopup()">Add Highlights</button>
                                 </div>
 
                                 <div id="MileStonediv" style="padding-top: 3%;">
@@ -499,12 +499,13 @@
                                 </div>
 
                                 <div id="Pointsdiv" style="padding-top: 3%;">
-                                    <label for="points" class="cls-table-label">Points Grid</label>
+                                    <label for="points" class="cls-table-label">Highlights Grid</label>
                                     <table class="table" id="PointsTable">
                                         <thead style="border: 1px solid #e8e8e8;">
                                             <tr>
                                                 <th>Id</th>
-                                                <th>Points</th>
+                                                <th>Label</th>
+                                                <th>Value</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -584,7 +585,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title main-title">Add Points</h4>
+                <h4 class="modal-title main-title">Add Highlights</h4>
                 <a class="close" onclick="ResetPointsForm();"><i class="bi bi-x-circle"></i></a>
             </div>
             <div class="modal-body p-0">
@@ -595,9 +596,16 @@
                                 <form class="row g-3 mt-3" name="PointsForm">
                                     <input type="hidden" id="PointsId" value="0" />
                                     <div class="col-12">
-                                        <label for="points" class="form-label">Points</label>
+                                        <label for="points" class="form-label">Label</label>
                                         <div class="input-group">
-                                            <input type="text" id="pointsDetails-id" class="form-control" name="points" />
+                                            <input type="text" id="pointsKey-id" class="form-control" name="pointsKey" />
+                                        </div>
+                                    </div>
+
+                                     <div class="col-12">
+                                        <label for="points" class="form-label">Value</label>
+                                        <div class="input-group">
+                                            <input type="text" id="pointsValue-id" class="form-control" name="pointsValue" />
                                         </div>
                                     </div>
                                     <div class="text-center">
@@ -789,10 +797,12 @@
 
         $("form[name='PointsForm']").validate({
             rules: {
-                points: { required: true }
+                pointsKey: { required: true },
+                pointsValue: { required: true }
             },
             messages: {
-                points: { required: "Please enter points" }
+                pointsKey: { required: "Please enter points key" },
+                pointsValue : { required: "Please enter points value" }
             },
             errorPlacement: function (error, element) {
                 if (element.parent('.input-group').length) {
@@ -812,9 +822,9 @@
 
     $(document).ready(function () {
 
-        $('.sales-card').hide();
-        $('.revenue-card').hide();
-        $('.customers-card').hide();
+        //$('.sales-card').hide();
+        //$('.revenue-card').hide();
+        //$('.customers-card').hide();
         $('.news_card').hide();
 
         function makeTableScroll() {
@@ -1229,7 +1239,9 @@
     function SavePointsData() {
         var PointsData = {
             Id: $("#PointsId").val(),
-            Point: $("#pointsDetails-id").val(),
+            //Point: $("#pointsDetails-id").val(),
+            PointKey :$("#pointsKey-id").val(),
+            PointValue :$("#pointsValue-id").val(),
             SolutionId: $("#SolutionId").val(),
             IndustryId: $("#IndustryId").val(),
             ProjectType: $("#ProjectType").val()
@@ -1255,7 +1267,8 @@
 
     function ResetPointsForm() {
         $("#PointsId").val(0);
-        $("#pointsDetails-id").val("");
+        $("#pointsKey-id").val("");
+        $("#pointsValue-id").val("");
         $("#PointsPopModal").modal('hide')
         GetPointsList()
     }
@@ -1285,7 +1298,8 @@
 
                     htm += '<tr>';
                     htm += '<td>' + subObj.Id + '</td>';
-                    htm += '<td>' + subObj.point + '</td>';
+                    htm += '<td>' + subObj.PointKey + '</td>';
+                    htm += '<td>' + subObj.PointValue + '</td>';
                     htm += '<td><a class="btn btn-danger btn-sm" onclick=DeletePointsById(' + subObj.Id + ')>Delete</a></td>';
                     htm += '</tr>';
                 }

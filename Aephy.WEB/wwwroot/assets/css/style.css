@@ -1387,6 +1387,24 @@ textarea.form-control {
         text-align: center;
     }
 
+.view_action_Link {
+    display: block;
+    position: relative;
+    color: #d38b4e;
+    padding:5px 5px;
+    text-decoration: revert;
+    text-align: center;
+}
+
+    .view_action_Link:hover {
+        display: block;
+        position: relative;
+        padding: 5px 5px;
+        color: rgb(211, 139, 78, 0.7);
+        text-decoration: revert;
+        text-align: center;
+    }
+
 .cls-resume-dwld {
     color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
     text-decoration: underline !important;

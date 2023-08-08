@@ -1608,3 +1608,13 @@ progress::-webkit-progress-value {
 /*.cls-carouselproject-mobile{
     display:none;
 }*/
+
+#project-image{
+    height:55%;
+    width:100%;
+}
+@media(max-width:992px){
+    #project-image {
+        height: 100% !important;
+    }
+}

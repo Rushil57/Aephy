@@ -201,6 +201,13 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        [HttpGet]
+        public async Task<string> getSolutioncheckOut()
+        {
+            var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Admin/checkOut", HttpMethod.Get);
+            return checkOutResponse;
+        }
+
         private static string GetEndpointSuffixFromConnectionString(string connectionString)
         {
             string[] parts = connectionString.Split(";");

@@ -79,8 +79,7 @@
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                                            <input type="submit" name="btnBuy" value="Buy ($-)" class="btn btn-brand" style="font-size: 16px;width: 50%;">
-                                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                                        <input type="submit" name="btnBuy" value="Buy ($-)" class="btn btn-brand" style="width: 50%;" onclick="buySolutionCheckout();">                                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                                         </div>
                                     </div>
                                 </div>
@@ -663,8 +662,8 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                                <input type="submit" name="btnBuy" value="Buy ($-)" class="btn btn-brand" style="width: 50%;">
-                                <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                            <input type="submit" name="btnBuy" value="Buy ($-)" class="btn btn-brand" style="width: 50%;" onclick="buySolutionCheckout();">                                
+                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                             </div>
                         </div>
                     </div>
@@ -997,6 +996,31 @@
                 $("#project-title").text(projectTitle)
                 GetProjectTypeValue()
                  $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function buySolutionCheckout(){
+        /*
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+        */
+       $("#preloader").show();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
+            success: function (result) {
+                var checkout_link = result.Result;
+                if(checkout_link != null){
+                    window.location.href = checkout_link;
+                }
+                showToaster("success", "Success", result.Message);
+                $("#preloader").hide();
             },
             error: function (result) {
                 $("#preloader").hide();

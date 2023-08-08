@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using Newtonsoft.Json;
+using Stripe.Checkout;
+using Stripe;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -789,16 +791,16 @@ namespace Aephy.API.Controllers
             {
                 var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin").ToListAsync();
                 var data = list.Where(u => u.Id == userdata.Id).FirstOrDefault();
-                var freelancerPoolList = _db.FreelancerPool.ToList();                 
-                        dynamic obj = new
-                        {
-                            Id = data.Id,
-                            FirstName = data.FirstName,
-                            LastName = data.LastName,
-                            UserRole = data.UserType,
-                            EmailAddress = data.UserName,
-                            FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault(),
-                        };
+                var freelancerPoolList = _db.FreelancerPool.ToList();
+                dynamic obj = new
+                {
+                    Id = data.Id,
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
+                    UserRole = data.UserType,
+                    EmailAddress = data.UserName,
+                    FreelancerLevel = _db.FreelancerDetails.Where(x => x.UserId == data.Id).Select(x => x.FreelancerLevel).FirstOrDefault(),
+                };
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1784,8 +1786,8 @@ namespace Aephy.API.Controllers
                     var solutionDefineMpdel = await _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetailsId
                                                 && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
 
-                    var solutionMilestone = await _db.SolutionMilestone.Where(x=>x.SolutionId == model.SolutionId
-                                                    && x.IndustryId == model.IndustryId 
+                    var solutionMilestone = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId
+                                                    && x.IndustryId == model.IndustryId
                                                     && x.ProjectType == model.ProjectType).ToListAsync();
 
                     var solutionPoints = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId
@@ -1818,6 +1820,60 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        //Application Section
+        [HttpGet]
+        [Route("checkOut")]
+        public async Task<IActionResult> checkOut()
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = "sk_test_51NcndQSEtmOn47Zj9wmGZXP6MxXu66bdakmxiFLTqmI3lUliPyEBKsW1WLfGuPe7jVcy4XTYIDgDZOV5szLT8S7X00SjdYZtWp";
+                var options = new SessionCreateOptions
+                {
+                    SuccessUrl = "https://example.com/success",
+                    CancelUrl = "https://example.com/success",
+                    LineItems = new List<SessionLineItemOptions>
+                    {
+                        new SessionLineItemOptions
+                        {
+                            PriceData = new SessionLineItemPriceDataOptions
+                            {
+                                UnitAmount = (long)(100),
+                                Currency = "usd",
+                                ProductData = new SessionLineItemPriceDataProductDataOptions
+                                {
+                                    Name = "AI Roadmap Development",
+                                    Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
+                                }
+                            },
+                            Quantity = 1,
+                        },
+                    },
+                    Mode = "payment",
+                };
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                Response.Headers.Add("Location", session.Url);
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Payment Success..",
+                    Result =  session.Url
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
                 });
             }
         }

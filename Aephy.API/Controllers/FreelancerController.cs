@@ -353,6 +353,8 @@ namespace Aephy.API.Controllers
                         ProjectOutline = model.ProjectOutline,
                         ProjectDetails = model.ProjectDetails,
                         ProjectType = model.ProjectType,
+                        Duration = model.Duration,
+                        TeamSize = model.TeamSize,
                         IsActive = true
                     };
 
@@ -360,7 +362,8 @@ namespace Aephy.API.Controllers
                     {
                         solutionDefineData.ProjectOutline = model.ProjectOutline;
                         solutionDefineData.ProjectDetails = model.ProjectDetails;
-
+                        solutionDefineData.Duration = model.Duration;
+                        solutionDefineData.TeamSize = model.TeamSize;
                         _db.SolutionDefine.Update(solutionDefineData);
                     }
                     else

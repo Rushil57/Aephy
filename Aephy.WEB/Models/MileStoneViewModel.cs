@@ -50,5 +50,9 @@
 
         public string? ProjectType { get; set; }
 
+        public string? Duration { get; set; }
+
+        public int TeamSize { get; set; }
+
     }
 }

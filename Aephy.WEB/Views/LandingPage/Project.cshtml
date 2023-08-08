@@ -49,7 +49,7 @@
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large" onchange="GetProjectTypeValue1(this)"/>
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large" onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Large</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
@@ -63,9 +63,19 @@
                                         <div class="col key section-detail-size">Team Size</div>
                                         <div class="col val section-detail-size">2</div>
                                     </div>*@
+                                    <div class="projectDetails-div">
+                                        <div class="row me-lg-2 me-4 detailRow">
+                                                <div class="col key section-detail-size">Duration</div>
+                                                <div class="col val section-detail-size cls-duration"></div>
+                                        </div>
+                                        <div class="row me-lg-2 me-4 detailRow">
+                                            <div class="col key section-detail-size">Team Size &nbsp;<a data-toggle="popover" class="login-popover"><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a></div>
+                                            <div class="col val section-detail-size cls-team-size"></div>
+                                        </div>
+                                    </div>
                                       <div class="projectPoints-div">
 
-                        </div>
+                                        </div>
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
@@ -638,6 +648,16 @@
                             <div class="col key section-detail-size">Team Size</div>
                             <div class="col val text-end section-detail-size">2</div>
                         </div>*@
+                        <div class="projectDetails-div">
+                              <div class="row me-lg-2 me-4 detailRow">
+                                 <div class="col key section-detail-size">Duration</div>
+                                 <div class="col val text-end section-detail-size cls-duration"></div>
+                              </div>
+                              <div class="row me-lg-2 me-4 detailRow">
+                                <div class="col key section-detail-size">Team Size &nbsp;<a data-toggle="popover" class="login-popover"><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a></div>
+                                <div class="col val text-end section-detail-size cls-team-size"></div>
+                              </div>
+                        </div>
                         <div class="projectPoints-div">
 
                         </div>
@@ -908,12 +928,13 @@
     </div>
 
 <script>
+    //var popover;
     $(document).ready(function () {
 
         $("input[name^='projSize']").change(function(){
-    var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
-    $otherRadioButtons.prop('checked', $(this).prop('checked'));
-});
+        var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
+         $otherRadioButtons.prop('checked', $(this).prop('checked'));
+        });
         $('.close').on('click', function () {
             $('#milestonesModal').modal('hide');
 
@@ -921,7 +942,17 @@
 
             $('#guidelineModal').modal('hide');
         });
+        //$('.login-popover').on('click', function () {
+        //       $('.login-popover').popover({
+        //           content: 'Test Data' + new Date(),
+        //            trigger: 'click'
+        //        });
+        //});
+         //popover = $('[data-toggle="popover"]').popover();
+        
         GetProjectDetails()
+
+       // $('[data-toggle="popover"]').popover();
     });
     function MilestoneViewMore(){
         $(".cls-milestone-showmore").css("display", "none");
@@ -1004,10 +1035,45 @@
                 if(data.SolutionDefine != null){
                     $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
                     $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                    
+                    if(data.SolutionDefine.Duration != null){
+                        $(".cls-duration").text(data.SolutionDefine.Duration)
+                    }
+                    else{
+                        $(".cls-duration").text("-")
+                    }
+                    
+                    if(data.SolutionDefine.TeamSize == 0){
+                         if(projecttype == "medium"){
+                        $(".cls-team-size").text(3)
+                        }
+                        if(projecttype == "large"){
+                            $(".cls-team-size").text(5)
+                        }
+                        if(projecttype == "small"){
+                            $(".cls-team-size").text(2)
+                        }
+                    }
+                    else{
+                        $(".cls-team-size").text(data.SolutionDefine.TeamSize)
+                    }
+                    
                 }
                 else{
                    $("#project-outline-div").text("No Data Available")
                    $("#project-details-div").text("No Data Available")
+                    $(".cls-duration").text("-")
+                    console.log(projecttype)
+                    if(projecttype == "medium"){
+                        $(".cls-team-size").text(3)
+                    }
+                    if(projecttype == "large"){
+                        $(".cls-team-size").text(5)
+                    }
+                    if(projecttype == "small"){
+                        $(".cls-team-size").text(2)
+                    }
+                    //$(".cls-team-size").text(data.SolutionDefine.TeamSize)
                 }
                 if(data.MileStone != ""){
                      var milestoneSection = "";
@@ -1060,6 +1126,32 @@
                 else{
                     $(".projectPoints-div").html("");
                 }
+
+                var newContent = "";
+                if(projecttype == "medium"){
+                    newContent = "1 Project Manager + 1 Expert + 1 Associate";
+                }
+                else if(projecttype == "large"){
+                    newContent = "1 Project Leader + 2 Experts + 2 Associates";
+                }
+                else if(projecttype == "small"){
+                    newContent = "1 Project Manager + 1 Associate";
+                }
+                $(".login-popover").attr('title',newContent);
+                //var popover = $('[data-bs-toggle="popover"]');
+                ////var popover = $('[data-toggle="popover"]').popover();
+                //if(projecttype == "medium"){
+                //    var newContent = "1 Project Manager + 1 Expert + 1 Associate";
+                //    popover.attr('data-bs-content', newContent);
+                //    var popoverInstance = new bootstrap.Popover(document.querySelector('.login-popover'));
+                //    popoverInstance.update();
+                //}
+                //        if(projecttype == "large"){
+                //            $(".popover-body").text("1 Project Leader + 2 Experts + 2 Associates")
+                //        }
+                //        if(projecttype == "small"){
+                //            $(".popover-body").text("1 Project Manager + 1 Associate")
+                //        }
                  $("#preloader").hide();
             },
             error: function (result) {

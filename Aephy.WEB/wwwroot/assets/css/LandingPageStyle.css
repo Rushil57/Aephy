@@ -1886,3 +1886,7 @@ padding-top: 5%;
 .cls-temp-common{
     display: none !important;
 }
+
+.cls-team-info-icon {
+    color: var(--aephy) !important;
+}

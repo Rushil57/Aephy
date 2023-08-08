@@ -161,6 +161,16 @@
                                             <textarea class="form-control" id="projectOutline" name="projectOutline" style="height:100px;" readonly></textarea>
                                         </div>
                                     </div>
+
+                                    <div class="col-12">
+                                        <label for="ProjectDuration" class="form-label">Project Duration</label>
+                                        <input type="text" class="form-control" id="industry-ProjectDuration" name="ProjectDuration" placeholder="Project Duration" readonly>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="TeamSize" class="form-label">Team Size</label>
+                                        <input type="text" class="form-control" id="industry-TeamSize" name="TeamSize" value="2" readonly>
+                                    </div>
                                     <div class="col-12">
                                         <label for="SolutionDescription" class="form-label">Milestone(s)</label>
                                         <div class="input-group">
@@ -413,6 +423,7 @@
                 if (data.SolutionDefine != null) {
                     $("#projectOutline").val(data.SolutionDefine.ProjectOutline);
                     $("#projectDetails").val(data.SolutionDefine.ProjectDetails);
+                    $("#industry-ProjectDuration").val(data.SolutionDefine.Duration)
                 }
 
                 var htm = '';
@@ -650,6 +661,8 @@
 
         $("#projectDetails").val('');
         $("#projectOutline").val('');
+        $("#industry-ProjectDuration").val("");
+        $("#industry-TeamSize").val(2);
     }
 
     function ActionByAdminOnSolution(actionVal) {
@@ -881,10 +894,15 @@
 
                 var data = result.Result;
                 if (result.StatusCode == 200) {
-
                     if (data.SolutionDefine != null) {
                         $("#projectDetails").val(data.SolutionDefine.ProjectDetails);
                         $("#projectOutline").val(data.SolutionDefine.ProjectOutline);
+                        $("#industry-ProjectDuration").val(data.SolutionDefine.Duration)
+                    }
+                    else{
+                        $("#projectDetails").val("");
+                        $("#projectOutline").val("");
+                        $("#industry-ProjectDuration").val("")
                     }
                     var htm = '';
                     if (data.SolutionMilestone.length > 0) {
@@ -927,6 +945,16 @@
                 }
                 else {
                     showToaster("error", "Error !", "Failure");
+                }
+                var ProjectType = $("#ProjectType").val();
+                if (ProjectType == "LARGE") {
+                    $("#industry-TeamSize").val(5);
+                }
+                if (ProjectType == "MEDIUM") {
+                    $("#industry-TeamSize").val(3);
+                }
+                if (ProjectType == "SMALL") {
+                    $("#industry-TeamSize").val(2);
                 }
             },
             error: function (result) {

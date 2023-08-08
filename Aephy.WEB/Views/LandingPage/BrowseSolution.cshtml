@@ -142,7 +142,7 @@
         if (selectedSolution != 'All') {
             $('#confirm-solutions').val(selectedSolution);
             $('#confirm-solutions').find(':not(:selected)').prop('disabled', true);
-            $('#confirm-solutions').css('cursor', 'not-allowed'); 
+            $('#confirm-solutions').css('cursor', 'not-allowed');
         } else {
             $('#confirm-solutions').val(Id);
             $('#confirm-solutions').find(':not(:selected)').removeAttr('disabled');
@@ -281,9 +281,16 @@
             success: function (result) {
                 var data = result.Result.SolutionData;
                 if (value != true) {
-                    if (result.Result.length != 0) {
+                    if (data.length != 0) {
                         $("#solution-Section").html("")
                         BindSolutionSection(data)
+                        $(".cls-temp").remove()
+                    }
+                    else {
+                        $("#solution-Section").html("")
+                        $(".cls-temp").remove()
+                        $("<p class='cls-temp'>No Data Available</p>").insertAfter("#solution-Section");
+                        $(".cls-temp").css("fontSize", "16px");
                     }
                 }
                 $(".cls-solution option:not(:first)").remove()

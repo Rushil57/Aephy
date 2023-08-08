@@ -20,4 +20,6 @@ public class SolutionDefine
     public DateTime CreatedDateTime { get; set; }
 
     public bool IsActive { get; set; }
+    public string? Duration { get; set; }
+    public int TeamSize { get; set; }
 }

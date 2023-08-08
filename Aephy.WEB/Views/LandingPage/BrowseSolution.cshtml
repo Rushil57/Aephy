@@ -110,9 +110,6 @@
 
 <script>
     $(document).ready(function () {
-        $('.close').on('click', function () {
-            $('#confirmationModal').modal('hide');
-        });
         BindBrowseSolutionIndustries()
         BindBrowseSolutionServices()
         BindBrowseSolution()
@@ -145,7 +142,7 @@
         if (selectedSolution != 'All') {
             $('#confirm-solutions').val(selectedSolution);
             $('#confirm-solutions').find(':not(:selected)').prop('disabled', true);
-            $('#confirm-solutions').css('cursor', 'not-allowed');
+            $('#confirm-solutions').css('cursor', 'not-allowed'); 
         } else {
             $('#confirm-solutions').val(Id);
             $('#confirm-solutions').find(':not(:selected)').removeAttr('disabled');
@@ -397,7 +394,7 @@
     }
 
     function SetServiceValue() {
-         $("#preloader").show();
+        $("#preloader").show();
         var urlParams = new URLSearchParams(window.location.search);
         var serviceName = urlParams.get('service');
         if (serviceName != undefined) {
@@ -408,4 +405,9 @@
         }
         $("#preloader").hide();
     }
+
+    $('.close').on('click', function () {
+        $('#confirmationModal').modal('hide');
+        GetServicesValues(false)
+    });
 </script>

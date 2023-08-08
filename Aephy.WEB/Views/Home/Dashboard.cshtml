@@ -423,7 +423,7 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-brand">Submit</button>
-                                        <button class="btn btn-secondary" onclick="clearApplyForm();">Reset</button>
+                                        <button class="btn btn-secondary" onclick="clearApplyForm();" type="button">Reset</button>
                                     </div>
                                 </form><!-- Vertical Form -->
 
@@ -753,6 +753,7 @@
 
 <script>
     var validator;
+    var pointsvalidator;
     $(function () {
         $("form[name='GigOpeningApplyForm']").validate({
             rules: {
@@ -803,7 +804,7 @@
 
 
 
-        $("form[name='PointsForm']").validate({
+        pointsvalidator = $("form[name='PointsForm']").validate({
             rules: {
                 pointsKey: { required: true },
                 pointsValue: { required: true }
@@ -920,8 +921,8 @@
         $("#Description").val("");
         $("#CVPath").val("");
         $('#filePreview').css("display", "none");
-          $("#dwld-resume").css("display", "none")
-                    $("#user-CvPath").val("")
+          //$("#dwld-resume").css("display", "none")
+                    //$("#user-CvPath").val("")
     }
 
     function GigOpenRolesApply() {
@@ -1206,7 +1207,7 @@
 
                     htm += '<tr>';
                     //htm += '<td class="" >' + subObj.Id + '</td>';
-                    htm += '<td onclick=EditMiletoneData(' + subObj.Id + ')>' + subObj.Id + '</td>';
+                    htm += '<td onclick=EditMiletoneData(' + subObj.Id + ') class=cls-milestone>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.Description + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + subObj.Days + '</td>';
@@ -1291,6 +1292,7 @@
     }
 
     function ResetPointsForm() {
+        pointsvalidator.resetForm()
         $("#PointsId").val(0);
         $("#pointsKey-id").val("");
         $("#pointsValue-id").val("");

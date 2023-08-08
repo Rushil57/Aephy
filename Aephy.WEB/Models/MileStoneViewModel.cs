@@ -32,6 +32,8 @@
     public class MileStoneIdViewModel
     {
         public int Id { get; set; }
+
+        public string? UserId { get; set; }
     }
 
     public class SolutionIndustryDetailsViewModel

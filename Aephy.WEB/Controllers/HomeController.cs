@@ -618,12 +618,19 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> GetIndustryList()
         {
-            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Client/IndustriesListBasedonUserType", HttpMethod.Post,model);
             return Industrydata;
 
         }
 
-
+            
         [HttpGet]
         public async Task<string> GetServicesList()
         {
@@ -635,33 +642,40 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> GetSolutionList()
         {
-            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
-            if (Solutiondata != null)
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
             {
-                dynamic data = JsonConvert.DeserializeObject(Solutiondata);
-                try
-                {
-                    if (data.Result != null)
-                    {
-                        foreach (var service in data.Result)
-                        {
-                            string imagepath = service.ImagePath;
-                            string sasToken = GenerateImageSasToken(imagepath);
-                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
-                            service.ImageUrlWithSas = imageUrlWithSas;
-
-                        }
-
-                    }
-
-                }
-                catch (Exception ex)
-                {
-
-                }
-                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
-                return jsonString;
+                userId = "";
             }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post,model);
+            //if (Solutiondata != null)
+            //{
+            //    dynamic data = JsonConvert.DeserializeObject(Solutiondata);
+            //    try
+            //    {
+            //        if (data.Result != null)
+            //        {
+            //            foreach (var service in data.Result)
+            //            {
+            //                string imagepath = service.ImagePath;
+            //                string sasToken = GenerateImageSasToken(imagepath);
+            //                string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+            //                service.ImageUrlWithSas = imageUrlWithSas;
+
+            //            }
+
+            //        }
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //    }
+            //    string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            //    return jsonString;
+            //}
             return Solutiondata;
 
         }
@@ -793,7 +807,14 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> BindPopularSolutionsList()
         {
-            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionList", HttpMethod.Get);
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if(userId == null)
+            {
+                userId = "";
+            }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionList", HttpMethod.Post,model);
             dynamic data = JsonConvert.DeserializeObject(solutionList);
             try
             {
@@ -825,6 +846,12 @@ namespace Aephy.WEB.Controllers
         {
             if (model != null)
             {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+                }
+                model.UserId = userId;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnServices", HttpMethod.Post, model);
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
                 try
@@ -863,7 +890,12 @@ namespace Aephy.WEB.Controllers
         {
             if (model != null)
             {
-
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+                }
+                model.UserId = userId;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnSolutionSelected", HttpMethod.Post, model);
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
                 try

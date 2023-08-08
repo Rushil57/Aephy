@@ -282,21 +282,26 @@
                 dataType: "json",
                 data: JSON.stringify(ServiceData),
                 success: function (result) {
-                    if (result != null) {
-                        var data = result.Result;
-                        $("#addServicesModal").modal('show')
-                        $("#ServiceId").val(data.Id);
-                        $("#ServiceName").val(data.ServicesName);
-                        var active = data.Active;
-                        if (active) {
-                            $("#isActive").prop('checked', true);
+                    if (result.Message == "Success"){
+                        if (result != null) {
+                            var data = result.Result;
+                            $("#addServicesModal").modal('show')
+                            $("#ServiceId").val(data.Id);
+                            $("#ServiceName").val(data.ServicesName);
+                            var active = data.Active;
+                            if (active) {
+                                $("#isActive").prop('checked', true);
+                            }
+                            if (data.IsActiveFreelancer) {
+                                $("#freelancerActive").prop('checked', true);
+                            }
+                            if (data.IsActiveClient) {
+                                $("#clientActive").prop('checked', true);
+                            }
                         }
-                        if (data.IsActiveFreelancer) {
-                            $("#freelancerActive").prop('checked', true);
-                        }
-                        if (data.IsActiveClient) {
-                            $("#clientActive").prop('checked', true);
-                        }
+                    }
+                    else{
+                        showToaster("error", "Error !", result.Message);
                     }
                 },
                 error: function (result) {

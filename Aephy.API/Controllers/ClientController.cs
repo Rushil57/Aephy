@@ -23,13 +23,15 @@ namespace Aephy.API.Controllers
         [Route("GetPopularSolutionBasedOnServices")]
         public async Task<IActionResult> GetPopularSolutionBasedOnServices([FromBody] MileStoneIdViewModel model)
         {
-            if(model.Id != 0)
+            if (model.Id != 0)
             {
                 try
                 {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
+                    List<int> industryList = new List<int>();
                     var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToList();
 
                     if (serviceData.Count > 0)
@@ -37,25 +39,37 @@ namespace Aephy.API.Controllers
                         foreach (var data in serviceData)
                         {
                             var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
-                            var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
-                            foreach (var industryId in industryList)
+                            if (model.UserId != "" && CheckType != "Client")
                             {
-                                var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
-                                industrylistDetails.Add(industry);
-                                var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                industrylist.Add(industryname);
+                                industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
                             }
-                            SolutionsModel dataStore = new SolutionsModel();
-                            dataStore.solutionServices = model.Id;
-                            dataStore.Industries = string.Join(",", industrylist);
-                            //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
-                            dataStore.Id = solutiondata.Id;
-                            dataStore.Description = solutiondata.Description;
-                            dataStore.ImagePath = solutiondata.ImagePath;
-                            dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
-                            dataStore.Title = solutiondata.Title;
-                            solutionsModel.Add(dataStore);
-                            industrylist.Clear();
+                            else
+                            {
+                                industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            }
+                            //var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            if (industryList.Count > 0)
+                            {
+                                foreach (var industryId in industryList)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industrylistDetails.Add(industry);
+                                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    industrylist.Add(industryname);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.solutionServices = model.Id;
+                                dataStore.Industries = string.Join(",", industrylist);
+                                //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
+                                dataStore.Id = solutiondata.Id;
+                                dataStore.Description = solutiondata.Description;
+                                dataStore.ImagePath = solutiondata.ImagePath;
+                                dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
+                                dataStore.Title = solutiondata.Title;
+                                solutionsModel.Add(dataStore);
+                                industrylist.Clear();
+                            }
+
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -64,8 +78,8 @@ namespace Aephy.API.Controllers
                         Message = "Success",
                         Result = new
                         {
-                           SolutionData =  solutionsModel,
-                           IndustriesData = industrylistDetails.Distinct()
+                            SolutionData = solutionsModel,
+                            IndustriesData = industrylistDetails.Distinct()
                         }
                     });
                 }
@@ -82,10 +96,12 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
                     List<Solutions> solutionList = _db.Solutions.ToList();
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
+                    List<int> industryIdlist = new List<int>();
 
                     if (solutionList.Count > 0)
                     {
@@ -94,26 +110,38 @@ namespace Aephy.API.Controllers
                             var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                             var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
-                            var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
-                            foreach (var industryId in industryIdlist)
+                            if (model.UserId != "" && CheckType != "Client")
                             {
-                                var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
-                                industrylistDetails.Add(industry);
-                                var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                industrylist.Add(industryname);
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
                             }
-                            SolutionsModel dataStore = new SolutionsModel();
-                            dataStore.Services = Servicename;
-                             dataStore.solutionServices = serviceId;
-                            dataStore.Industries = string.Join(",", industrylist);
-                            dataStore.Id = list.Id;
-                            dataStore.Description = list.Description;
-                            dataStore.ImagePath = list.ImagePath;
-                            dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-                            dataStore.Title = list.Title;
-                            dataStore.SubTitle = list.SubTitle;
-                            solutionsModel.Add(dataStore);
-                            industrylist.Clear();
+                            else
+                            {
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            }
+                            //var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            if (industryIdlist.Count > 0)
+                            {
+                                foreach (var industryId in industryIdlist)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industrylistDetails.Add(industry);
+                                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    industrylist.Add(industryname);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.Services = Servicename;
+                                dataStore.solutionServices = serviceId;
+                                dataStore.Industries = string.Join(",", industrylist);
+                                dataStore.Id = list.Id;
+                                dataStore.Description = list.Description;
+                                dataStore.ImagePath = list.ImagePath;
+                                dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                                dataStore.Title = list.Title;
+                                dataStore.SubTitle = list.SubTitle;
+                                solutionsModel.Add(dataStore);
+                                industrylist.Clear();
+                            }
+
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -140,7 +168,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("GetPopularSolutionBasedOnSolutionSelected")]
         public async Task<IActionResult> GetPopularSolutionBasedOnSolutionSelected([FromBody] MileStoneIdViewModel model)
@@ -149,13 +177,24 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
+                    List<int> industryList = new List<int>();
+
                     var solutiondata = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
-                    var servicesData = _db.SolutionServices.Where(x => x.SolutionId == model.Id).Select(x=>x.ServicesId).FirstOrDefault();
-                    var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
-                    if(industryList.Count > 0)
+                    var servicesData = _db.SolutionServices.Where(x => x.SolutionId == model.Id).Select(x => x.ServicesId).FirstOrDefault();
+                    if (model.UserId != "" && CheckType != "Client")
+                    {
+                        industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                    }
+                    else
+                    {
+                        industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                    }
+                    // var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                    if (industryList.Count > 0)
                     {
                         foreach (var industryId in industryList)
                         {
@@ -164,18 +203,20 @@ namespace Aephy.API.Controllers
                             var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
                             industrylist.Add(industryname);
                         }
+                        SolutionsModel dataStore = new SolutionsModel();
+                        dataStore.Industries = string.Join(",", industrylist);
+                        dataStore.solutionServices = servicesData;
+                        // dataStore.solutionIndustriesList = industrylistDetails;
+                        dataStore.Id = solutiondata.Id;
+                        dataStore.Description = solutiondata.Description;
+                        dataStore.ImagePath = solutiondata.ImagePath;
+                        dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
+                        dataStore.Title = solutiondata.Title;
+                        solutionsModel.Add(dataStore);
+
                     }
 
-                    SolutionsModel dataStore = new SolutionsModel();
-                    dataStore.Industries = string.Join(",", industrylist);
-                    dataStore.solutionServices = servicesData;
-                   // dataStore.solutionIndustriesList = industrylistDetails;
-                    dataStore.Id = solutiondata.Id;
-                    dataStore.Description = solutiondata.Description;
-                    dataStore.ImagePath = solutiondata.ImagePath;
-                    dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
-                    dataStore.Title = solutiondata.Title;
-                    solutionsModel.Add(dataStore);
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -257,16 +298,18 @@ namespace Aephy.API.Controllers
             });
 
         }
-        
-        [HttpGet]
+
+        [HttpPost]
         [Route("GetPopularSolutionList")]
-        public async Task<IActionResult> GetPopularSolutionList()
+        public async Task<IActionResult> GetPopularSolutionList(GetUserProfileRequestModel model)
         {
             try
             {
+                var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
                 List<Solutions> solutionList = _db.Solutions.ToList();
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
+                List<int> industryIdlist = new List<int>();
 
                 if (solutionList.Count > 0)
                 {
@@ -275,24 +318,36 @@ namespace Aephy.API.Controllers
                         var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                         var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
 
-                        var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
-                        foreach (var industryId in industryIdlist)
+                        if (model.UserId != "" && CheckType != "Client")
                         {
-                            var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                            industrylist.Add(industryname);
+                            industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
                         }
-                        SolutionsModel dataStore = new SolutionsModel();
-                        dataStore.Services = Servicename;
-                        dataStore.solutionServices = serviceId;
-                        dataStore.Industries = string.Join(",", industrylist);
-                        dataStore.Id = list.Id;
-                        dataStore.Description = list.Description;
-                        dataStore.ImagePath = list.ImagePath;
-                        dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-                        dataStore.Title = list.Title;
-                        dataStore.SubTitle = list.SubTitle;
-                        solutionsModel.Add(dataStore);
-                        industrylist.Clear();
+                        else
+                        {
+                            industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                        }
+
+                        if (industryIdlist.Count > 0)
+                        {
+                            foreach (var industryId in industryIdlist)
+                            {
+                                var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                industrylist.Add(industryname);
+                            }
+                            SolutionsModel dataStore = new SolutionsModel();
+                            dataStore.Services = Servicename;
+                            dataStore.solutionServices = serviceId;
+                            dataStore.Industries = string.Join(",", industrylist);
+                            dataStore.Id = list.Id;
+                            dataStore.Description = list.Description;
+                            dataStore.ImagePath = list.ImagePath;
+                            dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                            dataStore.Title = list.Title;
+                            dataStore.SubTitle = list.SubTitle;
+                            solutionsModel.Add(dataStore);
+                            industrylist.Clear();
+                        }
+
                     }
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -323,7 +378,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                  
+
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToList();
@@ -350,7 +405,7 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-            
+
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
@@ -360,7 +415,7 @@ namespace Aephy.API.Controllers
 
         }
 
-        //GetProjectDetails
+
 
         [HttpPost]
         [Route("GetProjectDetails")]
@@ -406,6 +461,104 @@ namespace Aephy.API.Controllers
                 Message = "Something Wennt Wrong"
 
             });
+
+        }
+
+       
+        [HttpPost]
+        [Route("GetSolutionListBasedonType")]
+        public async Task<IActionResult> GetSolutionListBasedonType([FromBody] GetUserProfileRequestModel model)
+        {
+
+            try
+            {
+                var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                List<SolutionIndustryDetails> industryIdlist = new List<SolutionIndustryDetails>();
+                List<Solutions> solutions = new List<Solutions>();
+
+                if (model.UserId != "" && CheckType != "Client")
+                {
+                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).ToList();
+                }   
+                else
+                {
+                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).ToList();
+                }
+                if (industryIdlist.Count > 0)
+                {
+                    foreach(var data in industryIdlist)
+                    {
+                        Solutions solutionModal = new Solutions();
+                        solutionModal = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
+                        solutions.Add(solutionModal);
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = solutions.Distinct().ToList()
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
+            }
+
+        }
+
+       
+        [HttpPost]
+        [Route("IndustriesListBasedonUserType")]
+        public async Task<IActionResult> IndustriesListBasedonUserType([FromBody] GetUserProfileRequestModel model)
+        {
+
+            try
+            {
+                var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                List<int> industryIdlist = new List<int>();
+                List<Industries> IndustryList = new List<Industries>();
+
+                if (model.UserId != "" && CheckType != "Client")
+                {
+                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                }
+                else
+                {
+                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                }
+                if (industryIdlist.Count > 0)
+                {
+                    foreach (var data in industryIdlist)
+                    {
+                        Industries industriesModal = new Industries();
+                        var industryDetail = _db.Industries.Where(x => x.Id == data).FirstOrDefault();
+                        IndustryList.Add(industryDetail);
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = IndustryList.Distinct().ToList()
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
+            }
 
         }
     }

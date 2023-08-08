@@ -139,16 +139,16 @@ namespace Aephy.API.Controllers
                     var servicesData = _db.Services.Where(x => x.Id == model.Id).FirstOrDefault();
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
-                        StatusCode = StatusCodes.Status403Forbidden,
+                        StatusCode = StatusCodes.Status200OK,
                         Message = "Success",
                         Result = servicesData
                     });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
-                        StatusCode = StatusCodes.Status403Forbidden,
+                        StatusCode = StatusCodes.Status200OK,
                         Message = "Id not found"
                     });
                 }
@@ -157,9 +157,9 @@ namespace Aephy.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
+                    StatusCode = StatusCodes.Status200OK,
                     Message = ex.Message + ex.InnerException
                 });
             }
@@ -185,11 +185,11 @@ namespace Aephy.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = ex.Message + ex.InnerException });
                 }
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong" });
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Id Not Found" });
         }
 
 
@@ -255,7 +255,7 @@ namespace Aephy.API.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
                     }
                 }
                 else
@@ -348,7 +348,7 @@ namespace Aephy.API.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
                     }
                 }
             }

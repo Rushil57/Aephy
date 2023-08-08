@@ -316,12 +316,12 @@
 
             solutionSection += '<div class="col-md-6 col-xl-4" >' +
                 '<div class="card shadow-lg">' +
-                '<div class="card-body" >' +
+                '<div class="card-body" onclick=checkData(' + value.Id + ',' + value.solutionServices + ')>' +
                 '<div class="card-img justify-content-lg-center" >' +
                 '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data - aos="zoom-out">' +
                 '</div>' +
                 '<h3>' +
-                '<a class="stretched-link section-title-size" title="' + value.Title + '"  onclick=checkData(' + value.Id + ',' + value.solutionServices + ')>' + title + '</a>' +
+                '<a style="color:#001973;" class="section-title-size" title="' + value.Title + '">' + title + '</a>' +
                 '</h3>' +
                 '<p class="section-detail-size" title="' + value.Description + '">' + description + '</p>' +
                 '<div class="icon-image">';

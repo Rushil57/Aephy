@@ -163,6 +163,8 @@ namespace Aephy.API.Controllers
                 var approvedJobs = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == model.UserId
                 && x.IsApproved).ToList();
 
+                var freelancerDetails = _db.FreelancerDetails.Where(flnc => flnc.UserId == model.UserId).FirstOrDefault();
+
                 List<dynamic> finalList = new List<dynamic>();
                 listDB.ForEach(x =>
                 {
@@ -215,26 +217,27 @@ namespace Aephy.API.Controllers
                     {
                         IndName = listIndustry.Where(s1 => s1.Id == fp.IndustryId).FirstOrDefault()?.IndustryName;
                     }
-                    if (fp.IsProjectArchitect)
-                    {
-                        dynamic obj = new
-                        {
-                            Level = "Project architect",
-                            Title = "-",
-                            CreatedDateTime = "",
-                            ID = 0,
-                            SolutionId = fp?.SolutionID,
-                            fp?.IndustryId,
-                            Description = "",
-                            SolutionName = solutionName,
-                            ServiceName = serviceName,
-                            IndustryName = IndName,
-                            IsDefine = true
-                        };
-                        finalList.Add(obj);
-                    }
-                });
 
+                    dynamic obj = new
+                    {
+                        Level = fp.IsProjectArchitect ? "Project Manager/Project Architect" : freelancerDetails?.FreelancerLevel,
+                        Title = "-",
+                        CreatedDateTime = "",
+                        ID = 0,
+                        SolutionId = fp?.SolutionID,
+                        fp?.IndustryId,
+                        Description = "",
+                        SolutionName = solutionName,
+                        ServiceName = serviceName,
+                        IndustryName = IndName,
+                        IsDefine = fp?.IsProjectArchitect
+                    };
+                    finalList.Add(obj);
+                });
+                if (finalList.Count > 0)
+                {
+                    finalList = finalList.Distinct().ToList();
+                }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,

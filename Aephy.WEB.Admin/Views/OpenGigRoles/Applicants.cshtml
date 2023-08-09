@@ -40,11 +40,10 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-
-
                                     <input type="hidden" id="ApplicantsID" value="0">
                                     <input type="hidden" id="SolutionId" value="0">
                                     <input type="hidden" id="IndustryId" value="0">
+                                    <input type="hidden" id="FreelancerId" value="">
                                     <input type="hidden" id="Cvpath" value="">
                                     <div class="col-12 pt-3">
                                         <label for="name" class="form-label">Name</label>
@@ -156,6 +155,7 @@
                     $("#Cvpath").val(data.OpenGigRoles.CVPath)
                     $("#IndustryId").val(data.GigOpenRoles.IndustryId)
                     $("#SolutionId").val(data.GigOpenRoles.SolutionId)
+                    $("#FreelancerId").val(data.OpenGigRoles.FreelancerID)
                 }
 
             },
@@ -175,6 +175,7 @@
         $("#Cvpath").val("")
         $("#SolutionId").val(0)
         $("#IndustryId").val(0)
+        $("#FreelancerId").val("");
     }
 
     function ApproveOrReject(value) {
@@ -184,6 +185,7 @@
                 IndustryId: $("#IndustryId").val(),
                 SolutionId: $("#SolutionId").val(),
                 ApproveOrReject: value,
+                FreelancerId: $("#FreelancerId").val(),
             }
             $("#preloader").show();
             $.ajax({
@@ -196,6 +198,7 @@
                    //alert(result.Message)
                     showToaster("success", "Success", result.Message);
                     CloseApplicationPopup()
+                    GetApplicationDetails()
                     $("#preloader").hide();
 
                 },  

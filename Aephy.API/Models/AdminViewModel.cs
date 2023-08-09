@@ -150,6 +150,8 @@ namespace Aephy.API.Models
             public string? IndustriesName { get; set; }
             public string? SolutionName { get; set; }
             public string? FreeLancerLavel { get; set; }
+
+            public string? FreelancerId { get; set; }
         }
 
         public class SolutionDescribeModel

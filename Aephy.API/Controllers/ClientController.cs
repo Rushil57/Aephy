@@ -3,6 +3,7 @@ using Aephy.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using static Aephy.API.Models.AdminViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -32,7 +33,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     List<int> industryList = new List<int>();
-                    var serviceData = _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToList();
+                    var serviceData = await _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToListAsync();
 
                     if (serviceData.Count > 0)
                     {
@@ -187,7 +188,7 @@ namespace Aephy.API.Controllers
                     var servicesData = _db.SolutionServices.Where(x => x.SolutionId == model.Id).Select(x => x.ServicesId).FirstOrDefault();
                     if (model.UserId != "" && CheckType != "Client")
                     {
-                        industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                        industryList = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
                     }
                     else
                     {
@@ -320,11 +321,11 @@ namespace Aephy.API.Controllers
 
                         if (model.UserId != "" && CheckType != "Client")
                         {
-                            industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                            industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
                         }
                         else
                         {
-                            industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToListAsync();
                         }
 
                         if (industryIdlist.Count > 0)
@@ -381,8 +382,8 @@ namespace Aephy.API.Controllers
 
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
-                    var milestoneData = _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToList();
-                    var pointsData = _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                    var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                    var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -478,11 +479,11 @@ namespace Aephy.API.Controllers
 
                 if (model.UserId != "" && CheckType != "Client")
                 {
-                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).ToList();
+                    industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).ToListAsync();
                 }   
                 else
                 {
-                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).ToList();
+                    industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).ToListAsync();
                 }
                 if (industryIdlist.Count > 0)
                 {
@@ -527,11 +528,11 @@ namespace Aephy.API.Controllers
 
                 if (model.UserId != "" && CheckType != "Client")
                 {
-                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                    industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
                 }
                 else
                 {
-                    industryIdlist = _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                    industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).Select(x => x.IndustryId).ToListAsync();
                 }
                 if (industryIdlist.Count > 0)
                 {

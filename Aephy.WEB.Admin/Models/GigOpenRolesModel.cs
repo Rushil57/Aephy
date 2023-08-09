@@ -21,5 +21,7 @@
 		public string? Name { get; set; }
 
         public string? ApproveOrReject { get; set; }
+
+		public string? FreelancerId { get; set; }
     }
 }

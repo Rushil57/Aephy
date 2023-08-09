@@ -1574,7 +1574,7 @@ namespace Aephy.API.Controllers
                     if (userDetails != null)
                     {
                         List<dynamic> solutions = new List<dynamic>();
-                        var solutionsList = _db.FreelancerPool.Where(x => x.FreelancerID == model.Id).ToList();
+                        var solutionsList = await _db.FreelancerPool.Where(x => x.FreelancerID == model.Id).ToListAsync();
                         if (solutionsList.Count > 0)
                         {
                             solutionsList.ForEach(mdl =>
@@ -1620,11 +1620,11 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var rolesApplications = _db.OpenGigRolesApplications.ToList();
-                var gigOpenRole = _db.GigOpenRoles.ToList();
-                var solutions = _db.Solutions.ToList();
-                var industries = _db.Industries.ToList();
-                var users = _db.Users.ToList();
+                var rolesApplications = await _db.OpenGigRolesApplications.ToListAsync();
+                var gigOpenRole = await _db.GigOpenRoles.ToListAsync();
+                var solutions = await _db.Solutions.ToListAsync();
+                var industries = await _db.Industries.ToListAsync();
+                var users = await _db.Users.ToListAsync();
 
                 List<AdminViewModel.GigOpenRolesModel> roles = new List<AdminViewModel.GigOpenRolesModel>();
                 if (rolesApplications.Count > 0)
@@ -1730,21 +1730,33 @@ namespace Aephy.API.Controllers
                             freelancerData.IsApproved = true;
                             freelancerData.IsRejected = false;
 
-                            var dbModel = new FreelancerPool
+                            var data = _db.FreelancerPool.Where(x => x.FreelancerID == solutionsModel.FreelancerId && x.SolutionID == solutionsModel.SolutionId && x.IndustryId == solutionsModel.IndustryId).FirstOrDefault();
+                            if (data == null)
                             {
-                                FreelancerID = freelancerData.FreelancerID,
-                                IndustryId = solutionsModel.IndustryId,
-                                SolutionID = solutionsModel.SolutionId
-                            };
+                                var dbModel = new FreelancerPool
+                                {
+                                    FreelancerID = freelancerData.FreelancerID,
+                                    IndustryId = solutionsModel.IndustryId,
+                                    SolutionID = solutionsModel.SolutionId
+                                };
 
-                            await _db.FreelancerPool.AddAsync(dbModel);
-                            _db.SaveChanges();
+                                await _db.FreelancerPool.AddAsync(dbModel);
+                                _db.SaveChanges();
+                            }
+
                         }
                         if (solutionsModel.ApproveOrReject == "Reject".Trim())
                         {
                             freelancerData.IsApproved = false;
                             freelancerData.IsRejected = true;
                             _db.SaveChanges();
+
+                            var data = _db.FreelancerPool.Where(x => x.FreelancerID == solutionsModel.FreelancerId && x.SolutionID == solutionsModel.SolutionId && x.IndustryId == solutionsModel.IndustryId).FirstOrDefault();
+                            if (data != null)
+                            {
+                                _db.FreelancerPool.Remove(data);
+                                _db.SaveChanges();
+                            }
                         }
                     }
 
@@ -1864,7 +1876,7 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "Payment Success..",
-                    Result =  session.Url
+                    Result = session.Url
                 });
             }
             catch (Exception ex)

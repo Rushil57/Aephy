@@ -65,7 +65,7 @@
                                     <div class="text-center">
                                         <button type="button" class="btn btn-primary" id="Approve" onclick="ApproveOrReject(this.id)">Approve</button>
                                         <button type="button" class="btn btn-danger" id="Reject" onclick="ApproveOrReject(this.id)">Reject</button>
-                                        <button type="reset" class="btn btn-secondary" onclick="CloseApplicationPopup();">cancel</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="CloseApplicationPopup();">Cancel</button>
                                     </div>
 
                                 </div>
@@ -156,6 +156,12 @@
                     $("#IndustryId").val(data.GigOpenRoles.IndustryId)
                     $("#SolutionId").val(data.GigOpenRoles.SolutionId)
                     $("#FreelancerId").val(data.OpenGigRoles.FreelancerID)
+                    if (data.OpenGigRoles.IsApproved){
+                        $("#Approve").attr("disabled", true);
+                    }
+                    if (data.OpenGigRoles.IsRejected) {
+                        $("#Reject").attr("disabled", true);
+                    }
                 }
 
             },
@@ -176,6 +182,8 @@
         $("#SolutionId").val(0)
         $("#IndustryId").val(0)
         $("#FreelancerId").val("");
+        $("#Approve").attr("disabled", false);
+        $("#Reject").attr("disabled", false);
     }
 
     function ApproveOrReject(value) {

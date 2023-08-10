@@ -642,7 +642,7 @@ namespace Aephy.API.Controllers
                     if(freelancerData != null)
                     {
                         _db.OpenGigRolesApplications.Remove(freelancerData);
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

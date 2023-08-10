@@ -93,7 +93,7 @@
                                                         <th>Id</th>
                                                         <th>First Name</th>
                                                         <th>Last Name</th>
-                                                        <th>FreeLancer Lavel</th>
+                                                        <th>Freelancer Level</th>
                                                         <th>IsProjectArchitect</th>
                                                         <th>Delete</th>
                                                     </tr>
@@ -239,11 +239,11 @@
                                 <form class="row g-3 mt-3" name="addInviteForm">
 
                                     <div class="col-12">
-                                        <label for="FreeLancerLavel" class="form-label">Select Lavel</label>
+                                        <label for="FreeLancerLavel" class="form-label">Select Level</label>
                                         <div class="input-group">
                                             <select class="form-select" aria-label="Default select example" name="level" id="FreeLancerLavel">
                                                 <option value="">Select Level</option>
-                                                <option value="Experts">Experts</option>
+                                                <option value="Expert">Expert</option>
                                                 <option value="Associate">Associate</option>
                                                 <option value="Project Manager">Project Manager</option>
                                             </select>
@@ -757,7 +757,7 @@
             RefreshDataTable();
         }
         else {
-            showToaster("error", "Validation Error !", "Please select Lavel or Freelancer");
+            showToaster("error", "Validation Error !", "Please select Level or Freelancer");
         }
     });
 

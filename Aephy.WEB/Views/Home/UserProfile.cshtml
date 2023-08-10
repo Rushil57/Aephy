@@ -241,7 +241,7 @@
                                             <div class="col-md-8 col-lg-9">
                                                 <select class="form-select drp-freelancer-level" aria-label="Default select example" name="level" id="level" disabled="true">
                                                     <option value="">Select Level</option>
-                                                    <option value="Experts">Experts</option>
+                                                    <option value="Expert">Expert</option>
                                                     <option value="Associate">Associate</option>
                                                     <option value="Project Manager/Project Architecture">Project Manager/Project Architecture</option>
                                                 </select>
@@ -415,7 +415,7 @@
         var hourlyRate = $("#HourlyRate").val();
         var level = $("#level").val();
         if (hourlyRate != null && level != null) {
-            if (level == "Experts") {
+            if (level == "Expert") {
                 hourlyRate < 40 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 40 + '.');
             } else if (level == "Associate" && hourlyRate < 20) {
                 hourlyRate < 20 ? UpdateUserData() : alert('Hourly rate for ' + level + ' cannot be greater than $' + 20 + '.');

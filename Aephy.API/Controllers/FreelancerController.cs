@@ -234,15 +234,33 @@ namespace Aephy.API.Controllers
                     };
                     finalList.Add(obj);
                 });
+                List<dynamic> list = new List<dynamic>();
                 if (finalList.Count > 0)
                 {
-                    finalList = finalList.Distinct().ToList();
+                   
+                    if (finalList.Count > 0)
+                    {
+                        foreach (var item in finalList)
+                        {
+                            if (list.Count > 0)
+                            {
+                                if (!list.Any(x => x.SolutionId == item.SolutionId && x.IndustryId == item.IndustryId))
+                                {
+                                    list.Add(item);
+                                }
+                            }
+                            else
+                            {
+                                list.Add(item);
+                            }
+                        }
+                    }
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
+                    StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = finalList
+                    Result = list
                 });
             }
             catch (Exception ex)
@@ -591,6 +609,53 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Failed"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+       
+        [HttpPost]
+        [Route("DeleteFreelancerSolution")]
+        public async Task<IActionResult> DeleteFreelancerSolution([FromBody] MileStoneDetailsViewModel model)
+        {
+            try
+            {
+                var freelancerPooldata = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId && x.FreelancerID == model.FreelancerId).FirstOrDefault();
+                if(freelancerPooldata != null)
+                {
+                    _db.FreelancerPool.Remove(freelancerPooldata);
+                    _db.SaveChanges();
+                }
+
+                var gigId = _db.GigOpenRoles.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.Level == model.FreelancerLevel.Trim()).Select(x => x.ID).FirstOrDefault();
+                if(gigId != 0)
+                {
+                    var freelancerData = _db.OpenGigRolesApplications.Where(x => x.GigOpenRoleId == gigId && x.FreelancerID == model.FreelancerId).FirstOrDefault();
+                    if(freelancerData != null)
+                    {
+                        _db.OpenGigRolesApplications.Remove(freelancerData);
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Delete Succesfully"
+                        });
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Not Found"
                 });
             }
             catch (Exception ex)

@@ -999,5 +999,21 @@ namespace Aephy.WEB.Controllers
                 return "failed to receive data..";
             }
         }
+
+        [HttpPost]
+        public async Task<string> DeleteFreelancerSolution([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                model.FreelancerId = userId;
+                var freelancerData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeleteFreelancerSolution", HttpMethod.Post, model);
+                return freelancerData;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
     }
 }

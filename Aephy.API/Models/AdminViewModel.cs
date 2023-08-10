@@ -249,6 +249,8 @@ namespace Aephy.API.Models
             public string? FreelancerId { get; set; }
 
             public string? ProjectType { get; set; }
+
+            public string? FreelancerLevel { get; set; }
         }
 
         public class UserCvFileModel

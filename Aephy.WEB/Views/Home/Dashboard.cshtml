@@ -227,6 +227,7 @@
                                             <th scope="col" id="hidden_item">Title</th>
                                             <th scope="col">Level</th>
                                             <th scope="col">Industry</th>
+                                            <th scope="col">Delete</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
@@ -1076,8 +1077,9 @@
                         htm += '<td>' + subObj.ServiceName + '</td>';
                         htm += '<td>' + subObj.SolutionName + '</td>';
                         htm += '<td id="hidden_item">' + subObj.Title + '</td>';
-                        htm += '<td>' + subObj.Level + '</td>';
+                        htm += '<td class="cls-level">' + subObj.Level + '</td>';
                         htm += '<td>' + subObj.IndustryName + '</td>';
+                        htm += '<td><a class="btn btn-danger pt-0 pb-1" style="color: white;" onclick=DeleteFreelancerAppliedSolution(this,' + subObj.SolutionId + ',' + subObj.IndustryId + ')>Delete</a></td>';
                         if(subObj.IsDefine){
                             htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
                         }
@@ -1470,5 +1472,43 @@
         if (Cvname != "") {
             window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
         }
+    }
+
+    function DeleteFreelancerAppliedSolution(data, SolutionId, IndustryId){
+       var Freelancerlevel = $(data).closest('tr').find('.cls-level').text();
+          Swal.fire({
+            title: 'Are you sure you want to delete solution?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+          var data = {
+                IndustryId: IndustryId,
+                SolutionId : SolutionId,
+                FreelancerLevel : Freelancerlevel
+            };
+             $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteFreelancerSolution", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                    GetApprovedList()
+                     $("#preloader").hide();
+                },
+                error: function (result) {
+                     $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        });
     }
 </script>

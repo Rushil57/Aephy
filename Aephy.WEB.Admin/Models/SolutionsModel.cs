@@ -106,5 +106,9 @@ namespace Aephy.WEB.Admin.Models
         public int SolutionId { get; set; }
 
         public string? ProjectType { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+        public bool ProjectArchitect { get; set; }
     }
 }

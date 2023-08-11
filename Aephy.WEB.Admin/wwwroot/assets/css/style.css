@@ -1378,3 +1378,14 @@ td.cls-Solution, .cls-service, .cls-industries, .cls-RolesId {
 #AssignFreeLancerTable_wrapper,#FreeLancerTable_wrapper {
     width: 100%;
 }
+
+#dropdown-div .btn-dropdown {
+    padding: 8px 26px;
+    border-color: #6c757d;
+    background-color: #fff;
+    font-weight: 400;
+    color: #515457;
+    border-radius: 10px;
+    margin: 5px;
+    width: 280px;
+}

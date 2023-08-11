@@ -1889,5 +1889,55 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+        
+        [HttpPost]
+        [Route("SaveSolutionAssignedFreelancer")]
+        public async Task<IActionResult> SaveSolutionAssignedFreelancer([FromBody] SolutionDefineRequestViewModel model)
+        {
+            try
+            {
+                var data = _db.FreelancerPool.Where(x => x.FreelancerID == model.FreelancerId && x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                if (data == null)
+                {
+                    var dbModel = new FreelancerPool
+                    {
+                        FreelancerID = model.FreelancerId,
+                        IndustryId = model.IndustryId,
+                        SolutionID = model.SolutionId,
+                        IsProjectArchitect = model.ProjectArchitect
+                    };
+
+                    await _db.FreelancerPool.AddAsync(dbModel);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Asigned Successfully!",
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Already Assigned!",
+                    });
+                }
+
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
     }
 }

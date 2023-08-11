@@ -83,9 +83,9 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="drp-assigned-freelancers" class="form-label">
+                                      @*  <label for="drp-assigned-freelancers" class="form-label">
                                             <a class="text-primary" onclick="OpenFreelancePopup();">Assigned Freelancer</a>
-                                        </label>
+                                        </label>*@
                                         <div class="input-group">
                                             <table class="table" id="AssignFreeLancerTable">
                                                 <thead style="border: 1px solid #e8e8e8;">
@@ -790,13 +790,13 @@
                 $('#AssignFreeLancerTable').DataTable({
                     destroy: true,
                     data: result.Result,
-                    paging: false,
+                    //paging: false,
                     lengthChange: false,
-                    searching: false,
-                    ordering: false,
+                    //searching: false,
+                    //ordering: false,
                     info: false,
                     autoWidth: false,
-                    responsive: false,
+                    //responsive: false,
                     "columns": [
                         { "data": "Id", "visible": false },
                         { "data": "FirstName" },
@@ -806,10 +806,11 @@
                             "data": "Id",
                             "render": function (data, type, row) {
                                 if (row.Lavel == "Project Manager") {
-                                    return "<input type=\"checkBox\" class=\"chkArchitect\" id=\"chk_" + row.Id + "\" value=\"" + row.Id + "\" onclick=\"FillArchitect();\" />";
+                                    //return "<input type=\"checkBox\" class=\"chkArchitect\" id=\"chk_" + row.Id + "\" value=\"" + row.Id + "\" onclick=\"FillArchitect();\" />";
+                                    return '<span class="badge bg-success">true</span>'
                                 }
                                 else {
-                                    return "";
+                                    return '<span class="badge bg-danger">false</span>';
                                 }
                             }
                         },

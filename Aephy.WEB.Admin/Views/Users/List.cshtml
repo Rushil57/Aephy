@@ -50,7 +50,29 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body" style="margin:2rem;">
-                                @*<h5 class="card-title">Solutions List</h5>*@
+                                <input type="hidden" id="Freelancer-id" value="" />
+                                <div id="dropdown-div">
+                                    <select class="dropdown btn-dropdown" name="service" id="drp-services" onchange="GetServicesValues()">
+                                        <option value="All">All Services</option>
+                                    </select>
+
+                                    <select class="dropdown btn-dropdown" name="solution" id="drp-solutions" onchange="GetSolutionsValues()">
+                                        <option value="All">All Solutions</option>
+                                    </select>
+
+                                    <select class="dropdown btn-dropdown" name="service" id="drp-industries">
+                                        <option value="All">All Industries</option>
+                                    </select>
+
+                                    <div class="col-12 pt-3" style="display:none;padding-left: 1%;" id="architect-div">
+                                        <input type="checkbox" id="IsProjectArchitect" name="IsProjectarchitect" value="IsProjectArchitect">
+                                        <label for="IsProjectArchitect">Project Architect</label><br>
+                                    </div>
+
+                                    <div class="p-3">
+                                        <button type="button" class="btn btn-brand" onclick="SaveAssignedFreelancer()">Add</button>
+                                    </div>
+                                </div>
 
                                 <table class="table table-borderless datatable" id="solutionsList">
                                     <thead>
@@ -103,7 +125,7 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="EmailAddress" name="EmailAddress" readonly>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                     <div class="col-12">
                                         <label for="UserRole" class="form-label">User Role</label>
                                         <div class="input-group">
@@ -175,7 +197,7 @@
         $("#UserRole").val("");
     }
 
-    function editUser(){
+    function editUser() {
         var freelancerDetails = {
             Id: $('#Id').val(),
             FreelancerLevel: $('#FreelancerLevel').val()
@@ -219,13 +241,16 @@
                         { "data": "LastName" },
                         { "data": "EmailAddress" },
                         { "data": "UserRole" },
-                        { "data": "FreelancerLevel" },
+                        {
+                            "data": "FreelancerLevel",
+                            className:'cls-level'
+                        },
                         { "data": "SolutionName" },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
                                 if (row.SolutionID != 0) {
-                                    return '<a class="btn btn-primary" onclick=SoutionsList("' + data + '")>View</a>';
+                                    return '<a class="btn btn-primary" onclick=SoutionsList(this,"' + data + '")>View</a>';
                                 }
                                 else {
                                     return '';
@@ -235,7 +260,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                    return '<a class="btn btn-success" onclick=GetUserById("' + data + '")>Edit</a>';
+                                return '<a class="btn btn-success" onclick=GetUserById("' + data + '")>Edit</a>';
                             }
                         },
                         {
@@ -256,7 +281,7 @@
         });
     }
 
-    function SoutionsList(Id) {
+    function SoutionsList(data,Id) {
         var SolutionData = {
             Id: Id,
         };
@@ -269,6 +294,7 @@
             data: JSON.stringify(SolutionData),
             success: function (result) {
                 $('#userPopupModal').modal('show');
+                $("#Freelancer-id").val(Id);
                 $('#solutionsList').DataTable({
                     destroy: true,
                     data: result.Result,
@@ -276,9 +302,18 @@
 
                         { "data": "Id" },
                         { "data": "Title" },
-                        {"data": "IndustryName" }
+                        { "data": "IndustryName" }
                     ]
                 });
+                var freelencerLevel = $(data).parents('tr').find(".cls-level").text();
+                if (freelencerLevel == "Project Manager") {
+                    $("#architect-div").css("display", "block")
+                }
+               
+               BindMainServices();
+               BindMainSolutions(Id);
+               BindMainIndustries(Id)
+
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -308,11 +343,11 @@
                     $("#LastName").val(result.Result.LastName);
                     $("#EmailAddress").val(result.Result.EmailAddress);
                     $("#UserRole").val(result.Result.UserRole);
-                    if(result.Result.UserRole == "Freelancer"){
+                    if (result.Result.UserRole == "Freelancer") {
                         $('#freelancer-level').show();
                         $('#update_btn').show();
                         $('#FreelancerLevel').val(result.Result.FreelancerLevel).trigger('chosen:updated');
-                    }else{
+                    } else {
                         $('#freelancer-level').hide();
                         $('#update_btn').hide();
                     }
@@ -388,5 +423,185 @@
     function closeUserPopupModal() {
         $('#userPopupModal').modal('hide');
         $('#solutionsList').find("tr:gt(0)").remove();
+        $("#Freelancer-id").val("");
+        $("#architect-div").css("display","none")
+    }
+
+    function BindMainServices() {
+        $.ajax({
+            type: "Get",
+            async: false,
+            url: "@Url.Action("GetServicesList", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                 $("#drp-services option:not(:first)").remove()
+                $.each(result.Result, function (data, value) {
+                    $("#drp-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                })
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function BindMainSolutions(freelancerId) {
+        var data = {
+            UserId: freelancerId
+        }
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("GetSolutionList", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#drp-solutions option:not(:first)").remove()
+                $.each(result.Result, function (data, value) {
+                    $("#drp-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                })
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function BindMainIndustries(freelancerId){
+        var data = {
+            UserId: freelancerId
+        }
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("GetIndustryList", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#drp-industries option:not(:first)").remove()
+                $.each(result.Result, function (data, value) {
+                    $("#drp-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                })
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function SaveAssignedFreelancer(){
+        var solutionId = $("#drp-solutions").val();
+        var industryId = $("#drp-industries").val();
+
+        var data ={
+            SolutionId: solutionId,
+            IndustryId: industryId,
+            ServiceId: $("#drp-services").val(),
+            FreelancerId: $("#Freelancer-id").val(),
+            ProjectArchitect: $("#IsProjectArchitect").is(":checked")
+        }
+
+        if($("#drp-solutions").val() == "All" || $("#drp-industries").val() == "All"){
+            alert("Select Proper Details")
+            return
+        }
+        
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("SaveFreelancer", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success", result.Message);
+                $("#drp-services").val("All")
+                $("#drp-solutions").val("All")
+                $("#drp-industries").val("All")
+                $('#IsProjectArchitect').prop('checked', false);
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function GetServicesValues(){
+        var serviceId = $("#drp-services").val();
+        if(serviceId == "All"){
+            serviceId = 0;
+        }
+        var data ={
+            Id: serviceId,
+            UserId: $("#Freelancer-id").val(),
+        }
+
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("GetSolutionBasedonService", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                 //$("#drp-services").val("All")
+                var data = result.Result.SolutionData;
+                $("#drp-solutions option:not(:first)").remove()
+                $("#drp-industries option:not(:first)").remove()
+                $.each(data, function (data, value) {
+                    $("#drp-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                })
+                $.each(result.Result.IndustriesData, function (datas, values) {
+                    $("#drp-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                })
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function GetSolutionsValues(){
+        var solutionId = $("#drp-solutions").val();
+        if(solutionId == "All"){
+            GetServicesValues();
+            return
+        }
+        var data = {
+            Id: solutionId,
+            UserId: $("#Freelancer-id").val(),
+        }
+
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("GetSolutionBasedonSolutionSelected", "Users")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#drp-industries option:not(:first)").remove()
+                $.each(result.Result.IndustriesData, function (datas, values) {
+                    $("#drp-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                })
+
+                //var serviceid = $("#drp-services").val();
+                //if(serviceid == "All"){
+                //    $("#drp-services").val(result.Result.SolutionData[0].solutionServices)
+                //}
+               // $("#drp-services").val(result.Result.SolutionData[0].solutionServices)
+
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
     }
 </script>

@@ -61,5 +61,51 @@ namespace Aephy.WEB.Admin.Controllers
             var updateResponse = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateFreelancerById", HttpMethod.Post, userId);
             return updateResponse;
         }
+
+        [HttpGet]
+        public async Task<string> GetServicesList()
+        {
+            var Servicesdata = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);
+            return Servicesdata;
+        }
+
+        //GetSolutionList
+        [HttpPost]
+        public async Task<string> GetSolutionList([FromBody] UserIdModel model)
+        {
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post,model);
+            return Solutiondata;
+        }
+
+        //GetIndustryList
+        [HttpPost]
+        public async Task<string> GetIndustryList([FromBody] UserIdModel model)
+        {
+            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Client/IndustriesListBasedonUserType", HttpMethod.Post, model);
+            return Industrydata;
+        }
+
+       
+        [HttpPost]
+        public async Task<string> SaveFreelancer([FromBody] SolutionDefineRequestViewModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Admin/SaveSolutionAssignedFreelancer", HttpMethod.Post, model);
+            return data;
+        }
+
+        //GetSolutionBasedonService
+        [HttpPost]
+        public async Task<string> GetSolutionBasedonService([FromBody] DropdownViewModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnServices", HttpMethod.Post, model);
+            return data;
+        }
+
+        [HttpPost]
+        public async Task<string> GetSolutionBasedonSolutionSelected([FromBody] DropdownViewModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnSolutionSelected", HttpMethod.Post, model);
+            return data;
+        }
     }
 }

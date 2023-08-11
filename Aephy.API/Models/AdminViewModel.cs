@@ -177,6 +177,8 @@ namespace Aephy.API.Models
         public class UserIdModel
         {
             public string? Id { get; set; }
+
+            public string? UserId { get; set; }
         }
 
         public class UserViewModel
@@ -271,6 +273,10 @@ namespace Aephy.API.Models
             public int SolutionId { get; set; }
 
             public string? ProjectType { get; set; }
+
+            public string? FreelancerId { get; set; }
+
+            public bool ProjectArchitect { get; set; }
         }
     }
 }

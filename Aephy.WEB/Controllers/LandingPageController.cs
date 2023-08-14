@@ -201,10 +201,10 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
-        [HttpGet]
-        public async Task<string> getSolutioncheckOut()
+        [HttpPost]
+        public async Task<string> getSolutioncheckOut([FromBody] MileStoneDetailsViewModel model)
         {
-            var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Admin/checkOut", HttpMethod.Get);
+            var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Admin/checkOut", HttpMethod.Post, model);
             return checkOutResponse;
         }
 

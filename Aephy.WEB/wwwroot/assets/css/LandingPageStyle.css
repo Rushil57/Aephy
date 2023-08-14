@@ -615,7 +615,7 @@ h6 {
 
 .logo img {
     max-height: 75px;
-    width:fit-content;
+    /*width:fit-content;*/
     margin-right: 6px;
 }
 

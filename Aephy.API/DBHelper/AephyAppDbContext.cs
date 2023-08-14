@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using System.Reflection.Metadata;
 
 namespace Aephy.API.DBHelper
 {
@@ -34,8 +36,10 @@ namespace Aephy.API.DBHelper
         public DbSet<SolutionDefine> SolutionDefine { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
-        {
+		{
             base.OnModelCreating(builder);
+			builder.Entity<GigOpenRoles>().ToTable(tb => tb.HasTrigger("SomeTrigger"));
+            builder.Entity<OpenGigRolesApplications>().ToTable(tb => tb.HasTrigger("SomeTrigger"));
         }
     }
 }

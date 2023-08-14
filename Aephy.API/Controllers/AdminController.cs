@@ -1837,24 +1837,66 @@ namespace Aephy.API.Controllers
         }
 
         //Application Section
-        [HttpGet]
+        [HttpPost]
         [Route("checkOut")]
-        public async Task<IActionResult> checkOut()
+        public async Task<IActionResult> checkOut([FromBody] MileStoneDetailsViewModel model)
         {
             try
             {
                 StripeConfiguration.ApiKey = "sk_test_51NcndQSEtmOn47Zj9wmGZXP6MxXu66bdakmxiFLTqmI3lUliPyEBKsW1WLfGuPe7jVcy4XTYIDgDZOV5szLT8S7X00SjdYZtWp";
+
+                // For showing solutions data dynamically into the checkout page
+                /*var usermail = string.Empty;
+                var sessionLineItems = new SessionLineItemOptions();
+                var solutionName = string.Empty;
+                var solutionDescription = string.Empty;
+                var solutionsList = _db.Solutions.ToList();
+                var industruCheck = _db.SolutionIndustry.Where(i => i.IndustryId == model.IndustryId && i.SolutionId == model.SolutionId).FirstOrDefault();
+                if (industruCheck != null)
+                {
+                    var SolutionData = solutionsList.Where(s => s.Id == model.SolutionId).FirstOrDefault();
+                    if (SolutionData != null)
+                    {
+                        solutionName = SolutionData.Title;
+                        solutionDescription = SolutionData.Description;
+                        sessionLineItems = new SessionLineItemOptions
+                        {
+                            PriceData = new SessionLineItemPriceDataOptions
+                            {
+                                UnitAmount = Convert.ToInt64(200 * 100),
+                                Currency = "usd",
+                                ProductData = new SessionLineItemPriceDataProductDataOptions
+                                {
+                                    Name = "AI Roadmap Development",
+                                    Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
+                                }
+                            },
+                            Quantity = 1,
+                        };
+                    }
+                }
+
+                var userDetails = _db.Users.Where(user => user.Id == model.FreelancerId).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    usermail = userDetails.Email;
+                }*/
+
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = "https://example.com/success",
                     CancelUrl = "https://example.com/success",
+                    PaymentMethodTypes = new List<string>
+                    {
+                        "card"
+                    },
                     LineItems = new List<SessionLineItemOptions>
                     {
                         new SessionLineItemOptions
                         {
                             PriceData = new SessionLineItemPriceDataOptions
                             {
-                                UnitAmount = (long)(100),
+                                UnitAmount = Convert.ToInt64(200 * 100),
                                 Currency = "usd",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
@@ -1866,17 +1908,20 @@ namespace Aephy.API.Controllers
                         },
                     },
                     Mode = "payment",
+                    //Add Privacy policy to checkout page : https://dashboard.stripe.com/settings/public
+                    //ConsentCollection = new SessionConsentCollectionOptions { TermsOfService = "required" }
                 };
                 var service = new SessionService();
                 Session session = service.Create(options);
 
-                Response.Headers.Add("Location", session.Url);
-
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
-                    Message = "Payment Success..",
-                    Result = session.Url
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = new
+                    {
+                        checkoutLink = session.Url
+                    }
                 });
             }
             catch (Exception ex)
@@ -1890,7 +1935,6 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
         [HttpPost]
         [Route("SaveSolutionAssignedFreelancer")]
         public async Task<IActionResult> SaveSolutionAssignedFreelancer([FromBody] SolutionDefineRequestViewModel model)

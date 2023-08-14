@@ -993,21 +993,25 @@
     }
 
     function buySolutionCheckout(){
-        /*
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data),
-        */
+        var checkweb = $("input[name='projSizeweb']:checked").val();
+        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
+        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid,
+            ProjectType : checkweb,
+        }
        $("#preloader").show();
         $.ajax({
-            type: "GET",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
             url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
+            data: JSON.stringify(data),
             success: function (result) {
-                var checkout_link = result.Result;
-                if(checkout_link != null){
-                    window.location.href = checkout_link;
+                if(result.Message == "Success"){
+                    window.location.href = result.Result.checkoutLink;
                 }
-                showToaster("success", "Success", result.Message);
                 $("#preloader").hide();
             },
             error: function (result) {

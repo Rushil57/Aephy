@@ -188,12 +188,39 @@
 	</div>
 </div>
 
-
+<script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
 <script src="~/assets/js/opengigroles.js"></script>
 <script>
 
-	$(document).ready(function(){
+	"use strict";
+	//var connection = new signalR.HubConnectionBuilder().withUrl("/dashboardHub").build();
+
+	$(function(){
+	//	connection.start().then(function () {
+	//		alert('Connected to dashboardHub');
+			InvokeOpenRoles();
+	//	}).catch(function (err) {
+	//		return console.error(err.toString());
+	//	});
+	});
+
+	// Product
+	function InvokeOpenRoles() {
 		GetRolesList();
+		/*connection.invoke("SendProducts").catch(function (err) {
+			return console.error(err.toString());
+		});*/
+	}
+
+//	connection.on("ChnagedOpenRoles", function (statusBool) {
+		/*BindProductsToGrid(products);*/
+//		if (statusBool) {
+//			GetRolesList();
+//		}
+//	});
+
+	$(document).ready(function(){
+		//GetRolesList();
 		BindGigServices();
 		BindGigSolutions();
 		BindGigIndustries();

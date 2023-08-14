@@ -2,19 +2,19 @@ using Aephy.WEB.Controllers;
 using Aephy.WEB.DashboardHubs;
 using Aephy.WEB.Provider;
 using Aephy.WEB.Repository;
-using Aephy.WEB.SubscribeTableDependencies;
+//using Aephy.WEB.SubscribeTableDependencies;
 using Azure.Identity;
 using Azure.Storage.Blobs;
-using ProductsUI.MiddlewareExtensions;
-using ProductsUI.SubscribeTableDependencies;
+//using ProductsUI.MiddlewareExtensions;
+//using ProductsUI.SubscribeTableDependencies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<DashboardHub>();
-builder.Services.AddSingleton<SubscribeProductTableDependencies>();
-builder.Services.AddSingleton<SubscribeApprovedListTableDependency>();
+//builder.Services.AddSingleton<SubscribeProductTableDependencies>();
+//builder.Services.AddSingleton<SubscribeApprovedListTableDependency>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -55,7 +55,7 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.MapHub<DashboardHub>("/dashboardHub");
+//app.MapHub<DashboardHub>("/dashboardHub");
 app.UseRouting();
 
 app.UseAuthorization();
@@ -65,7 +65,7 @@ app.MapControllerRoute(
     pattern: "{controller=LandingPage}/{action=Index}/{id?}");
 /*app.MapRazorPages();*/
 
-app.UseSqlTableDependency<SubscribeProductTableDependencies>(localConnection);
-app.UseSqlTableDependency<SubscribeApprovedListTableDependency>(localConnection);
+//app.UseSqlTableDependency<SubscribeProductTableDependencies>(localConnection);
+//app.UseSqlTableDependency<SubscribeApprovedListTableDependency>(localConnection);
 
 app.Run();

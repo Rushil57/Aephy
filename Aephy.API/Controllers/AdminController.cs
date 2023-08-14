@@ -1721,21 +1721,22 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    OpenGigRolesApplications openGigRoles = _db.OpenGigRolesApplications.Where(x => x.ID == ApplucationModel.ID).FirstOrDefault();
+                    OpenGigRolesApplications? openGigRoles = await _db.OpenGigRolesApplications.Where(x => x.ID == ApplucationModel.ID).FirstOrDefaultAsync();
                     if (openGigRoles != null)
                     {
-                        GigOpenRoles gigopenrole = _db.GigOpenRoles.Where(g => g.ID == openGigRoles.GigOpenRoleId).FirstOrDefault();
+                        GigOpenRoles gigopenrole = await _db.GigOpenRoles.Where(g => g.ID == openGigRoles.GigOpenRoleId).FirstOrDefaultAsync();
                         if (gigopenrole != null)
                         {
-                            FreelancerPool freelanerPool = _db.FreelancerPool.Where(f => f.FreelancerID == openGigRoles.FreelancerID && f.SolutionID == gigopenrole.SolutionId).FirstOrDefault();
+                            FreelancerPool freelanerPool = await _db.FreelancerPool.Where(f => f.FreelancerID == openGigRoles.FreelancerID 
+                            && f.SolutionID == gigopenrole.SolutionId && f.IndustryId == gigopenrole.IndustryId).FirstOrDefaultAsync();
                             if (freelanerPool != null)
                             {
                                 _db.FreelancerPool.Remove(freelanerPool);
-                                _db.SaveChanges();
+                                await _db.SaveChangesAsync();
                             }
                         }
                         _db.OpenGigRolesApplications.Remove(openGigRoles);
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Delete Succesfully !" });
                 }
@@ -1744,7 +1745,7 @@ namespace Aephy.API.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
                 }
             }
-            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong." });
 
         }
 

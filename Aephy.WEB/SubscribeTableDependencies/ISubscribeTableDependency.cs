@@ -1,7 +1,7 @@
-﻿namespace ProductsUI.SubscribeTableDependencies
-{
-        public interface ISubscribeTableDependency
-        {
-            void SubscribeTableDependency(string connectionString);
-        }
-}
+﻿//namespace ProductsUI.SubscribeTableDependencies
+//{
+//        public interface ISubscribeTableDependency
+//        {
+//            void SubscribeTableDependency(string connectionString);
+//        }
+//}

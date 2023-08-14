@@ -17,8 +17,8 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Industry Name</th>
-                                <th scope="col">Freelancer Active</th>
-                                <th scope="col">Client Active</th>
+                                @*<th scope="col">Freelancer Active</th>
+                                <th scope="col">Client Active</th>*@
                                 <th scope="col"></th>
                                 @*<th scope="col"></th>*@
                             </tr>
@@ -62,14 +62,14 @@
                                         </div>
                                         </div>
                                         </div>*@
-                                        <div class="col-12">
+                                        @*<div class="col-12">
                                             <input class="form-check-input" type="checkbox" id="freelancerActive" name="Freelanceractive">&nbsp;&nbsp;
                                             <label for="freelancerActive" class="form-label">Is Active For Freelancer</label>
                                         </div>
                                         <div class="col-12">
                                             <input class="form-check-input" type="checkbox" id="clientActive" name="Clientactive">&nbsp;&nbsp;
                                             <label for="clientActive" class="form-label">Is Active For Client</label>
-                                        </div>
+                                        </div>*@
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-brand">Submit</button>
                                             <button type="reset" class="btn btn-secondary" onclick="ResetIndustryForm();">Reset</button>
@@ -118,8 +118,10 @@
             Id: $('#IndustryId').val(),
             IndustryName: $("#IndustryName").val(),
             Active: $("#Active").is(':checked'),
-            IsActiveFreelancer: $("#freelancerActive").is(':checked'),
-            IsActiveClient: $("#clientActive").is(':checked'),
+            //IsActiveFreelancer: $("#freelancerActive").is(':checked'),
+            //IsActiveClient: $("#clientActive").is(':checked'),
+            IsActiveFreelancer: true,
+            IsActiveClient: true,
         };
         $.ajax({
             type: "POST",
@@ -146,8 +148,8 @@
         $("#addIndusriesModal").modal('hide')
         $("#IndustryName").val("");
         $("#Active").prop('checked', false);
-        $("#freelancerActive").prop('checked', false),
-            $("#clientActive").prop('checked', false)
+        //$("#freelancerActive").prop('checked', false),
+        //    $("#clientActive").prop('checked', false)
     }
 
     function OpenAddIndustriesModalPopup() {
@@ -171,28 +173,6 @@
                             }
                         },
                         { "data": "IndustryName" },
-                        {
-                            "data": "IsActiveFreelancer",
-                            "render": function (data, type, row) {
-                                if (data == true) {
-                                    return '<span class="badge bg-success">' + data + '</span>'
-                                }
-                                else {
-                                    return '<span class="badge bg-danger">' + data + '</span>'
-                                }
-                            }
-                        },
-                        {
-                            "data": "IsActiveClient",
-                            "render": function (data, type, row) {
-                                if (data == true) {
-                                    return '<span class="badge bg-success">' + data + '</span>'
-                                }
-                                else {
-                                    return '<span class="badge bg-danger">' + data + '</span>'
-                                }
-                            }
-                        },
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
@@ -233,12 +213,12 @@
                     if (data.Active) {
                         $("#Active").prop('checked', true);
                     }
-                    if (data.IsActiveFreelancer) {
-                        $("#freelancerActive").prop('checked', true);
-                    }
-                    if (data.IsActiveClient) {
-                        $("#clientActive").prop('checked', true);
-                    }
+                    //if (data.IsActiveFreelancer) {
+                    //    $("#freelancerActive").prop('checked', true);
+                    //}
+                    //if (data.IsActiveClient) {
+                    //   $("#clientActive").prop('checked', true);
+                    //}
                 }
             },
             error: function (result) {

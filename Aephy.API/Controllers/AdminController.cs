@@ -1714,6 +1714,42 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
+        [Route("DeleteUserApplication")]
+        public async Task<IActionResult> DeleteUserApplication([FromBody] AdminViewModel.GigOpenRolesModel ApplucationModel)
+        {
+            if (ApplucationModel.ID != 0)
+            {
+                try
+                {
+                    OpenGigRolesApplications openGigRoles = _db.OpenGigRolesApplications.Where(x => x.ID == ApplucationModel.ID).FirstOrDefault();
+                    if (openGigRoles != null)
+                    {
+                        GigOpenRoles gigopenrole = _db.GigOpenRoles.Where(g => g.ID == openGigRoles.GigOpenRoleId).FirstOrDefault();
+                        if (gigopenrole != null)
+                        {
+                            FreelancerPool freelanerPool = _db.FreelancerPool.Where(f => f.FreelancerID == openGigRoles.FreelancerID && f.SolutionID == gigopenrole.SolutionId).FirstOrDefault();
+                            if (freelanerPool != null)
+                            {
+                                _db.FreelancerPool.Remove(freelanerPool);
+                                _db.SaveChanges();
+                            }
+                        }
+                        _db.OpenGigRolesApplications.Remove(openGigRoles);
+                        _db.SaveChanges();
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Delete Succesfully !" });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+                }
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+
+        }
+
+
+        [HttpPost]
         [Route("ApproveOrRejectFreelancer")]
         public async Task<IActionResult> ApproveOrRejectFreelancer([FromBody] AdminViewModel.GigOpenRolesModel solutionsModel)
         {

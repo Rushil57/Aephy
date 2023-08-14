@@ -168,6 +168,13 @@ namespace Aephy.WEB.Admin.Controllers
             return applicationdata;
         }
 
+        [HttpPost]
+        public async Task<string> DeleteApplicationById([FromBody] GigOpenRolesModel solutionsModel)
+        {
+            var Response = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteUserApplication", HttpMethod.Post,solutionsModel);
+            return Response;
+        }
+
         private string GenerateSasToken(string imageUrl)
         {
             // Get the blob container name and blob name from the image URL

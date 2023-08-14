@@ -320,7 +320,15 @@ namespace Aephy.WEB.Admin.Controllers
                     solutions.ImagePath = ImagePath;
                     solutions.ImageUrlWithSas = ImageUrlWithSas;
                     solutions.HasImageFile = true;
-                    solutions.Id = (int)(Id);
+                    if(Id is string)
+                    {
+                        solutions.FreelancerId = (string)Id;
+                    }
+                    else
+                    {
+                        solutions.Id = (int)(Id);
+                    }
+                    
 
                     return solutions;
                 }
@@ -522,6 +530,56 @@ namespace Aephy.WEB.Admin.Controllers
         {
             var aprroveList = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionDefineData", HttpMethod.Post, model);
             return aprroveList;
+        }
+
+        [HttpGet]
+        public async Task<string> GetFreelancersName()
+        {
+            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancersNameList", HttpMethod.Get);
+            return freelancerList;
+        }
+
+        [HttpPost]
+        public async Task<string> SaveTopProfessionalData(IFormFile httpPostedFileBase, string TopProfessionalData)
+        {
+            var result = JsonConvert.DeserializeObject<SolutionTopProfessionalViewModel>(TopProfessionalData);
+            var Data = await _apiRepository.MakeApiCallAsync("api/Admin/AddTopProfessionalData", HttpMethod.Post, result);
+            if(httpPostedFileBase != null)
+            {
+                var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
+                 await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
+            }
+            return Data;
+        }
+
+        [HttpPost]
+        public async Task<string> GetTopProfessionalList([FromBody] SolutionIndustryViewModel model)
+        {
+            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetProfessionalList", HttpMethod.Post,model);
+            return freelancerList;
+        }
+
+        [HttpPost]
+        public async Task<string> DeleteTopProfessional([FromBody] SolutionIdModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var data = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteTopProfessionalData", HttpMethod.Post, model);
+                    return data;
+                }
+                else
+                {
+                    return "failed to receive data..";
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+
         }
     }
 }

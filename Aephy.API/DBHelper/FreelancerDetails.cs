@@ -23,5 +23,9 @@ namespace Aephy.API.DBHelper
         public string? CVPath { get; set; }
         public string? BlobStorageBaseUrl { get; set; }
         public string? CVUrlWithSas { get; set; }
+
+        public string? ImagePath { get; set; }
+        public string? ImageBlobStorageBaseUrl { get; set; }
+        public string? ImageUrlWithSas { get; set; }
     }
 }

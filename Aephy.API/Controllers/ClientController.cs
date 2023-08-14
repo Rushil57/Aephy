@@ -384,7 +384,23 @@ namespace Aephy.API.Controllers
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                     var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
+                    var topProfessionalData = await _db.SolutionTopProfessionals.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                    List<SolutionTopProfessionalModel> professionalData = new List<SolutionTopProfessionalModel>();
+                    if(topProfessionalData.Count > 0)
+                    {
+                        foreach(var topdata in topProfessionalData)
+                        {
+                            SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
+                            solutionTop.Description = topdata.Description;
+                            solutionTop.Title = topdata.TopProfessionalTitle;
+                            var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
 
+                            solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
+                            solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
+                            solutionTop.Rate = topdata.Rate;
+                            professionalData.Add(solutionTop);
+                        }
+                    }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -393,7 +409,8 @@ namespace Aephy.API.Controllers
                         {
                             SolutionDefine = solutionDefine,
                             MileStone = milestoneData,
-                            PointsData = pointsData
+                            PointsData = pointsData,
+                            TopProfessional = professionalData
                         }
                     });
                 }

@@ -951,7 +951,33 @@ namespace Aephy.WEB.Controllers
             if (model != null)
             {
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
-                return solutionData;
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.TopProfessional)
+                        {
+                            if(service.ImagePath != null)
+                            {
+                                string imagepath = service.ImagePath;
+                                string sasToken = GenerateImageSasToken(imagepath);
+                                string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                                service.ImageUrlWithSas = imageUrlWithSas;
+                            }
+                           
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
             }
             else
             {

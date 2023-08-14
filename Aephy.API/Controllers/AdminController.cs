@@ -1836,7 +1836,60 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //Application Section
+
+        //[HttpGet]
+        //[Route("checkOut")]
+        //public async Task<IActionResult> checkOut()
+        //{
+        //    try
+        //    {
+        //        StripeConfiguration.ApiKey = "sk_test_51NcndQSEtmOn47Zj9wmGZXP6MxXu66bdakmxiFLTqmI3lUliPyEBKsW1WLfGuPe7jVcy4XTYIDgDZOV5szLT8S7X00SjdYZtWp";
+        //        var options = new SessionCreateOptions
+        //        {
+        //            SuccessUrl = "https://example.com/success",
+        //            CancelUrl = "https://example.com/success",
+        //            LineItems = new List<SessionLineItemOptions>
+        //            {
+        //                new SessionLineItemOptions
+        //                {
+        //                    PriceData = new SessionLineItemPriceDataOptions
+        //                    {
+        //                        UnitAmount = (long)(100),
+        //                        Currency = "usd",
+        //                        ProductData = new SessionLineItemPriceDataProductDataOptions
+        //                        {
+        //                            Name = "AI Roadmap Development",
+        //                            Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
+        //                        }
+        //                    },
+        //                    Quantity = 1,
+        //                },
+        //            },
+        //            Mode = "payment",
+        //        };
+        //        var service = new SessionService();
+        //        Session session = service.Create(options);
+
+        //        Response.Headers.Add("Location", session.Url);
+
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status403Forbidden,
+        //            Message = "Payment Success..",
+        //            Result = session.Url
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status403Forbidden,
+        //            Message = ex.Message + ex.InnerException
+
+        //        });
+        //    }
+        //}
+
         [HttpPost]
         [Route("checkOut")]
         public async Task<IActionResult> checkOut([FromBody] MileStoneDetailsViewModel model)
@@ -1970,9 +2023,9 @@ namespace Aephy.API.Controllers
                     });
                 }
 
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1981,6 +2034,188 @@ namespace Aephy.API.Controllers
             {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Something went Wrong!",
+            });
+        }
+
+
+
+        [HttpGet]
+        [Route("GetFreelancersNameList")]
+        public async Task<IActionResult> GetFreelancersNameList()
+        {
+            try
+            {
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType == "Freelancer").ToListAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("AddTopProfessionalData")]
+        public async Task<IActionResult> AddTopProfessionalData([FromBody] SolutionTopProfessionals model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    var dbModel = new SolutionTopProfessionals
+                    {
+                        FreelancerId = model.FreelancerId,
+                        IndustryId = model.IndustryId,
+                        SolutionId = model.SolutionId,
+                        TopProfessionalTitle = model.TopProfessionalTitle,
+                        Description = model.Description,
+                        Rate = model.Rate,
+                    };
+
+                    await _db.SolutionTopProfessionals.AddAsync(dbModel);
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Save Successfully!",
+                    });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+
+        [HttpPost]
+        [Route("GetProfessionalList")]
+        public async Task<IActionResult> GetProfessionalList(MileStoneDetailsViewModel model)
+        {
+            try
+            {
+                var list = await _db.SolutionTopProfessionals.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+
+        [HttpPost]
+        [Route("DeleteTopProfessionalData")]
+        public async Task<IActionResult> DeleteTopProfessionalData([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var data = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (data != null)
+                    {
+                        _db.SolutionTopProfessionals.Remove(data);
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Delete Successfully!",
+                        });
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Not Found!",
+                    });
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+        //UpdateUserProfileImage
+        [HttpPost]
+        [Route("UpdateUserProfileImage")]
+        public async Task<IActionResult> UpdateUserProfileImage([FromBody] SolutionImage solutionImage)
+        {
+            try
+            {
+                var UpdateImage = _db.FreelancerDetails.Where(x => x.UserId == solutionImage.FreelancerId).FirstOrDefault();
+                if (UpdateImage != null)
+                {
+
+                    UpdateImage.ImageBlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
+                    UpdateImage.ImagePath = solutionImage.ImagePath;
+                    UpdateImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
+
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Save Sucessfully !"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
             });
         }
     }

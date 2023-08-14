@@ -417,117 +417,13 @@
                                 Top Professionals
                             </h3>
                             <div id="projectReviewCarousel" class="carousel slide" data-interval="false">
-                                <div class="carousel-inner" role="listbox">
-                                    <div class="carousel-item active">
-                                        <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="100">
-                                            <div class="box">
-                                                <div class="title">
-                                                    Michael – Project Manager Anomaly Detection
-                                                </div>
-                                                <div class="detailReview">
-                                                    Michael is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
-                                                </div>
-                                            </div>
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>MR</div>
-                                                </div>
-                                                <div class="info">
-                                                    <div class="name">Michael Rose</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <label> 4.9 / 5 </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="200">
-                                            <div class="box">
-                                                <div class="title">
-                                                    Anna – Expert AI Roadmap Development
-                                                </div>
-                                                <div class="detailReview">
-                                                    Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
-                                                </div>
-                                            </div>
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>AL</div>
-                                                </div>
-                                                <div class="info">
-                                                    <div class="name">   Anna Lakhani</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <label>4.8/5</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="200">
-                                            <div class="box">
-                                                <div class="title">
-                                Amir – Expert Data Strategy Development
-                                                </div>
-                                                <div class="detailReview">
-                                Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
-                                                </div>
-                                            </div>
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>AK</div>
-                                                </div>
-                                                <div class="info">
-                                <div class="name">Amir Khan</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                    <label>4.7 / 5</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="200">
-                                            <div class="box">
-                                                <div class="title">
-                                Zahir – Expert Computer Vision
-                                                </div>
-                                                <div class="detailReview">
-                                Zahir is an expert in computer vision with a strong focus on marketing analytics. He has helped numerous clients achieve better audience segmentation and content personalization, resulting in significant improvements in customer engagement.
-                                                </div>
-                                            </div>
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>ZM</div>
-                                                </div>
-                                                <div class="info">
-                                <div class="name">Zahir Modi</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                    <label>4.9 / 5</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                <div class="carousel-inner" role="listbox" id="top-professional-div">
+                                
                                 </div>
-                                <a class="carousel-control-prev bg-transparent w-aut" href="#projectReviewCarousel" role="button" data-bs-slide="prev">
+                                <a class="carousel-control-prev bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 </a>
-                                <a class="carousel-control-next bg-transparent w-aut" href="#projectReviewCarousel" role="button" data-bs-slide="next">
+                                <a class="carousel-control-next bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -992,6 +888,31 @@
         });
     }
 
+    //function buySolutionCheckout(){
+    //    /*
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        data: JSON.stringify(data),
+    //    */
+    //   $("#preloader").show();
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
+    //        success: function (result) {
+    //            var checkout_link = result.Result;
+    //            if(checkout_link != null){
+    //                window.location.href = checkout_link;
+    //            }
+    //            showToaster("success", "Success", result.Message);
+    //            $("#preloader").hide();
+    //        },
+    //        error: function (result) {
+    //            $("#preloader").hide();
+    //            showToaster("error", "Error !", "Something went wrong !!");
+    //        }
+    //    });
+    //}
+
     function buySolutionCheckout(){
         var checkweb = $("input[name='projSizeweb']:checked").val();
         var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
@@ -1143,6 +1064,63 @@
                     $(".projectPoints-div").html("");
                 }
 
+                if(data.TopProfessional != ""){
+                     var topProfessional = "";
+                     $.each(data.TopProfessional, function (datas, values) {
+                         var description = values.Description.length > 250 ? values.Description.substring(0, 250) + "..." : values.Description;
+                         var name = values.FreelancerId.split(" ")
+                         var firstname = name[0].charAt(0);
+                         var lastname = name[1].charAt(0);
+                            topProfessional += '<div class="carousel-item top-carousel">' +
+                                                    '<div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="100">' +
+                                                        '<div class="box">' +
+                                                            '<div class="title"> '+values.FreelancerId.split(" ")[0]+' – '+values.Title+' </div>' +
+                                                            '<div class="detailReview" title="'+values.Description+'"> '+description+'</div>' +
+                                                        '</div>' +
+                                                        '<div class="content">';
+                                                            if(values.ImageUrlWithSas != null){
+                                                                topProfessional += '<div><div><img src=' + values.ImageUrlWithSas + ' alt ="Image" style="height:60px;width:60px;border-radius:50%"></div></div>';
+                                                            }
+                                                            else{
+                                                                topProfessional += '<div class="image"><div>' + firstname +''+ lastname +'</div></div>';
+                                                            }
+                                                            //'<div class="image"><div>' + firstname +''+ lastname +'</div></div>' +
+                                                            topProfessional += '<div class="info">' +
+                                                                '<div class="name">'+values.FreelancerId+'</div>' +
+                                                                '<div class="stars">' +
+                                                                    '<i class="bi bi-star-fill"></i>' +
+                                                                    '<i class="bi bi-star-fill"></i>' +
+                                                                    '<i class="bi bi-star-fill"></i>' +
+                                                                    '<label> '+values.Rate+' / 5 </label>' +
+                                                                '</div>' +
+                                                            '</div>' +
+                                                    '</div>' +
+                                             '</div></div>';
+                     });
+                     $('#top-professional-div').html(topProfessional);
+                    $('.top-carousel').first().addClass('active');
+                    $('.top-indicators > li').first().addClass('active');
+                    var items3 = document.querySelectorAll('.top-carousel')
+
+                    items3.forEach((el) => {
+                        const minPerSlide = 4
+                        let next = el.nextElementSibling
+                        for (var i = 1; i < minPerSlide; i++) {
+                            if (!next) {
+                                next = items3[0]
+                            }
+                            let cloneChild = next.cloneNode(true)
+                            el.appendChild(cloneChild.children[0])
+                            next = next.nextElementSibling
+                        }
+                    })
+                    $(".cls-temp").remove();
+                }
+                else{
+                    $(".cls-temp").remove();
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
+
+                }
                 var newContent = "";
                 if(projecttype == "medium"){
                     newContent = "1 Project Manager + 1 Expert + 1 Associate";

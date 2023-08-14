@@ -91,6 +91,8 @@ namespace Aephy.API.Models
 
             public string? ImageUrlWithSas { get; set; }
             public bool HasImageFile { get; set; }
+
+            public string? FreelancerId { get; set; }
         }
 
         public class EditSolutionImage
@@ -277,6 +279,26 @@ namespace Aephy.API.Models
             public string? FreelancerId { get; set; }
 
             public bool ProjectArchitect { get; set; }
+        }
+
+        public class SolutionTopProfessionalModel
+        {
+            public int IndustryId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public string? FreelancerId { get; set; }
+
+            public string? Title { get; set; }
+
+            public string? Description { get; set; }
+
+            public string? Rate { get; set; }
+
+            public string? ImagePath { get; set; }
+
+            public string? ImageUrlWithSas { get; set; }
+
         }
     }
 }

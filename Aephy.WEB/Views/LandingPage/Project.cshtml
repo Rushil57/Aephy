@@ -908,8 +908,9 @@
 
     function GetProjectDetails(){
          $("#preloader").show();
-        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
-        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var Industryid = @ViewData["Industry"]; 
+        var Serviceid = @ViewData["Service"];
+        var Solutionid = @ViewData["Solution"];
      
         var data = {
             IndustryId : Industryid,
@@ -938,8 +939,9 @@
     }
     function buySolutionCheckout(){
         var checkweb = $("input[name='projSizeweb']:checked").val();
-        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
-        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var Industryid = @ViewData["Industry"]; 
+        var Serviceid = @ViewData["Service"];
+        var Solutionid = @ViewData["Solution"];
         var data = {
             IndustryId : Industryid,
             SolutionId : Solutionid,
@@ -974,8 +976,9 @@
         else{
              projecttype = data.value;
         }
-        var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
-        var Solutionid = parseInt(sessionStorage.getItem("SolutionId"));
+        var Industryid = @ViewData["Industry"]; 
+        var Serviceid = @ViewData["Service"];
+        var Solutionid = @ViewData["Solution"];
        
         var data = {
             IndustryId : Industryid,

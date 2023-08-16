@@ -2255,5 +2255,47 @@ namespace Aephy.API.Controllers
                 Message = "Something Went Wrong"
             });
         }
+
+        [HttpPost]
+        [Route("RemoveUserFromInviteList")]
+        public async Task<IActionResult> RemoveUserFromInviteList([FromBody] UserIdModel model)
+        {
+            try
+            {
+                if (model.Id != null)
+                {
+                    var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (userDetails != null && userDetails.IsInvited != false)
+                    {
+                        userDetails.IsInvited = false;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Removed Successfully !"
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Something Went Wrong"
+                        });
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Something Went Wrong"
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
     }
 }

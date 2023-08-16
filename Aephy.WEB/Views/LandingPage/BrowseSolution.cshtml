@@ -211,6 +211,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
+                $(".cls-solution option:not(:first)").remove();
                 $.each(result.Result, function (data, value) {
                     $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
                 })
@@ -233,7 +234,7 @@
         }
         sessionStorage.setItem("IndustryId", IndustryId)
         sessionStorage.setItem("SolutionId", SolutionId)
-        window.location.href = '/LandingPage/Project'
+        window.location.href = '/LandingPage/Project?Service=' + ServiceId + '&Solution=' + SolutionId +'&Industry='+IndustryId;
     }
 
     function BindPopularSolutionsList() {
@@ -516,15 +517,14 @@
         });
     }
 
-    function BindSolutionsList(){
+    function BindSolutionsList() {
         var ServiceId = $("#select-services").val()
-        if(ServiceId != "All"){
+        if (ServiceId != "All") {
             GetTopServicesValues(false)
-            return
         }
-        else{
-            BindTopPopularSolutionsList()
-            return
+        else {
+            BindTopPopularSolutionsList();
+            BindBrowseSolution();
         }
     }
 

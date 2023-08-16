@@ -19,6 +19,7 @@
                                 <th scope="col">EmailAddress</th>
                                 <th scope="col">UserRole</th>
                                 <th scope="col">Level</th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -110,6 +111,7 @@
     });
 
     function GetinvitedUserList() {
+        $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetInvitedUsers", "InviteUser")",
@@ -126,11 +128,19 @@
                         { "data": "EmailAddress" },
                         { "data": "UserRole" },
                         { "data": "FreelancerLevel" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                //return '<a class="btn btn-danger" onclick=RemovefromInviteList("' + data + '")>Delete</a>';
+                                return '<a class="btn btn-danger">Delete</a>';
+                            }
+                        },
                     ]
                 });
-
+                $("#preloader").hide();
             },
             error: function (result) {
+                $("#preloader").hide();
                 showToaster("error", "Error !", "Failure");
             }
         });
@@ -153,6 +163,7 @@
             LastName: $("#LastName").val(),
             EmailAddress: $("#EmailAddress").val(),
         };
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("AddInviteForm", "InviteUser")",
@@ -169,10 +180,50 @@
                 else{
                     showToaster("error", "Error !", result.message);
                 }
+                $("#preloader").hide();
             },
             error: function (result) {
+                $("#preloader").hide();
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
     }
+
+    function RemovefromInviteList(ID){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (t) {
+                if (!t.isConfirmed) return;
+
+                var Data = {
+                    Id: ID,
+                };
+            $("#preloader").show();
+                $.ajax({
+                    type: "POST",
+                url: "@Url.Action("RemoveUserIsInvited", "InviteUser")",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(Data),
+                    success: function (result) {
+                        //alert(result.Message)
+                        showToaster("success", "Success", result.Message);
+                        GetinvitedUserList();
+                    $("#preloader").hide();
+                    },
+                    error: function (result) {
+                    $("#preloader").hide();
+                        //alert("Error occured..");
+                        showToaster("error", "Error !", "Something went wrong !!");
+                    }
+                });
+            });
+    }
+
 </script>

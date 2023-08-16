@@ -53,11 +53,18 @@ public class InviteUserController : Controller
             return Json(new { Message = "Invitation sending failed. null data found.", Status = false });
         }
     }
-
     [HttpGet]
     public async Task<string> GetInvitedUsers()
     {
         var userList = await _apiRepository.MakeApiCallAsync("api/Admin/InvitedUserList", HttpMethod.Get);
         return userList;
     }
+
+    [HttpPost]
+    public async Task<string> RemoveUserIsInvited([FromBody] UserIdModel userId)
+    {
+        var userList = await _apiRepository.MakeApiCallAsync("api/Admin/RemoveUserFromInviteList", HttpMethod.Post, userId);
+        return userList;
+    }
+
 }

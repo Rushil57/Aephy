@@ -87,10 +87,23 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
+/*        [HttpGet]
         public ActionResult Project()
         {
             return View();
         }
+*/
+        [HttpGet]
+        public ActionResult Project(int? Service, int? Solution, int? Industry)
+        {
+            ViewData["Solution"] = Solution;
+            ViewData["Industry"] = Industry;
+            ViewData["Service"] = Service;
+
+            return View();
+        }
+
+
 
         public ActionResult FAQ()
         {

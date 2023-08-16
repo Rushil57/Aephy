@@ -1368,7 +1368,8 @@ textarea.form-control {
     padding-bottom: 1%;
 }
 
-.cls-milestone-popup {
+
+/*.cls-milestone-popup {
     display: block;
     font-size: 16px;
     position: relative;
@@ -1385,25 +1386,42 @@ textarea.form-control {
         padding: 10px 0;
         text-decoration: revert;
         text-align: center;
-    }
+    }*/
 
 .view_action_Link {
-    display: block;
-    position: relative;
-    color: #d38b4e;
-    padding: 5px 5px 15px 5px;
-    text-decoration: revert;
+    margin: 5px 5px 15px 5px;
+    padding: 5px;
     text-align: center;
 }
 
-    .view_action_Link:hover {
-        display: block;
+    .view_action_Link div {
         position: relative;
-        padding: 5px 5px 15px 5px;
-        color: rgb(211, 139, 78, 0.7);
-        text-decoration: revert;
+        transition: 0.5s;
+        background-color: rgba(211, 139, 78,0.5);
+        text-decoration: auto;
         text-align: center;
     }
+
+        .view_action_Link div img {
+            margin: 0;
+        }
+
+        .view_action_Link div a {
+            margin: 2px 5px;
+        }
+
+        .view_action_Link div:hover {
+            position: relative;
+            background-color: rgba(211, 139, 78,0.7);
+            text-decoration: auto;
+            text-align: center;
+        }
+
+@media(max-width:992px) {
+    .view_action_Link {
+        justify-content: center !important;
+    }
+}
 
 .cls-resume-dwld {
     color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
@@ -1421,6 +1439,21 @@ textarea.form-control {
 .swal2-title {
     font-size: 1.375em !important;
 }
+
+.progressContainer {
+    position: relative;
+    height: fit-content;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0 10px;
+    color: var(--font - title);
+}
+
+    .progressContainer .title {
+        font-size: 16px;
+        color: #d38b4e;
+        padding-bottom: 10px;
+    }
 
 #name-initial {
     position: relative;

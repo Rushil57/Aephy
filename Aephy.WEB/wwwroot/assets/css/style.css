@@ -1421,3 +1421,21 @@ textarea.form-control {
 .swal2-title {
     font-size: 1.375em !important;
 }
+
+#name-initial {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    font-size: 15px;
+    color: black;
+    background-color: #8080805e;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
+    margin-right: 5px;
+}

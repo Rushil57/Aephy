@@ -383,3 +383,20 @@ h6 {
         width: 120px;
     }
 }
+
+.cls-more-less {
+    font-size: 18px;
+    float: right;
+    text-decoration: underline;
+    color: var(--brand);
+    cursor: pointer;
+}
+
+.more-less-icon {
+    color: var(--brand) !important;
+}
+
+    #browse-viewmoreIcon.bi-triangle-fill::before {
+        transform: rotate(180deg) !important;
+    }
+

@@ -105,6 +105,7 @@ namespace Aephy.WEB.Controllers
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
+                    HttpContext.Session.SetString("ShortName", FirstName[0] + "" + LastName[0]);
 
                     if (Level != "none")
                     {
@@ -1035,6 +1036,87 @@ namespace Aephy.WEB.Controllers
                 model.FreelancerId = userId;
                 var freelancerData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeleteFreelancerSolution", HttpMethod.Post, model);
                 return freelancerData;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        //BindTopThreePopularSolutionsList
+        [HttpGet]
+        public async Task<string> BindTopThreePopularSolutionsList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetTopThreePopularSolutionsList", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(solutionList);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result.SolutionData)
+                    {
+                        string imagepath = service.ImagePath;
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                        service.ImageUrlWithSas = imageUrlWithSas;
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+        }
+
+        //GetTopThreeSolutionBasedonServices
+        [HttpPost]
+        public async Task<string> GetTopThreeSolutionBasedonServices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+                }
+                model.UserId = userId;
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetTopThreePopularSolutionBasedOnServices", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.SolutionData)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+
             }
             else
             {

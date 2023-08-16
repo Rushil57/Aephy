@@ -154,7 +154,7 @@
 									</div>
 									<div class="col-12">
 										<label for="CVPath" class="form-label">Upload CV</label>
-										<div class="col-12 d-flex">
+										<div class="col-12">
 											<div class="input-group">
 												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
 											</div>
@@ -175,7 +175,7 @@
 									</div>
 									<div class="text-center">
 										<button type="submit" class="btn btn-brand">Submit</button>
-										<button class="btn btn-secondary" onclick="clearApplyForm();">Reset</button>
+										<button class="btn btn-secondary" onclick="clearApplyForm();" type="button">Reset</button>
 									</div>
 								</form><!-- Vertical Form -->
 
@@ -443,7 +443,8 @@
 			dataType: "json",
 			data:{ID:Id},
 			success: function (result) {
-				$("#RoleDescription").val(result.Result.Description);
+				var data = result.Result.OpenRoles;
+				$("#RoleDescription").val(data.Description);
 			},
 			error:function (result){
 				//alert(result.Message)

@@ -1618,3 +1618,8 @@ progress::-webkit-progress-value {
         height: 100% !important;
     }
 }
+
+.ClientIntro{
+    text-align: center;
+    padding-top: 5%;
+}

@@ -238,59 +238,6 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-            //else
-            //{
-            //    try
-            //    {
-            //        List<Solutions> solutionList = _db.Solutions.Take(3).ToList();
-            //        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
-            //        List<string> industrylist = new List<string>();
-
-            //        if (solutionList.Count > 0)
-            //        {
-            //            foreach (var list in solutionList)
-            //            {
-            //                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
-            //                var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-
-            //                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == list.Id).Select(x => x.IndustryId).ToList();
-            //                foreach (var industryId in industryIdlist)
-            //                {
-            //                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-            //                    industrylist.Add(industryname);
-            //                }
-            //                SolutionsModel dataStore = new SolutionsModel();
-            //                dataStore.Services = Servicename;
-            //                dataStore.Industries = string.Join(",", industrylist);
-            //                dataStore.Id = list.Id;
-            //                dataStore.Description = list.Description;
-            //                dataStore.ImagePath = list.ImagePath;
-            //                dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
-            //                dataStore.Title = list.Title;
-            //                dataStore.SubTitle = list.SubTitle;
-            //                solutionsModel.Add(dataStore);
-            //                industrylist.Clear();
-            //            }
-            //        }
-            //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            //        {
-            //            StatusCode = StatusCodes.Status200OK,
-            //            Message = "Success",
-            //            Result = solutionsModel
-            //        });
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            //        {
-            //            StatusCode = StatusCodes.Status403Forbidden,
-            //            Message = ex.Message + ex.InnerException
-
-            //        });
-            //    }
-            //}
-
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
@@ -482,7 +429,7 @@ namespace Aephy.API.Controllers
 
         }
 
-       
+
         [HttpPost]
         [Route("GetSolutionListBasedonType")]
         public async Task<IActionResult> GetSolutionListBasedonType([FromBody] GetUserProfileRequestModel model)
@@ -497,7 +444,7 @@ namespace Aephy.API.Controllers
                 if (model.UserId != "" && CheckType != "Client")
                 {
                     industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForFreelancer == true).ToListAsync();
-                }   
+                }
                 else
                 {
                     industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.IsActiveForClient == true).ToListAsync();
@@ -531,7 +478,7 @@ namespace Aephy.API.Controllers
 
         }
 
-       
+
         [HttpPost]
         [Route("IndustriesListBasedonUserType")]
         public async Task<IActionResult> IndustriesListBasedonUserType([FromBody] GetUserProfileRequestModel model)
@@ -578,6 +525,241 @@ namespace Aephy.API.Controllers
                 });
             }
 
+        }
+
+        [HttpPost]
+        [Route("GetTopThreePopularSolutionsList")]
+        public async Task<IActionResult> GetTopThreePopularSolutionsList(GetUserProfileRequestModel model)
+        {
+            try
+            {
+                var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                List<Solutions> solutionList = _db.Solutions.ToList();
+                //List<Solutions> solutionList = listDetails.Take(3).ToList();
+                List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                List<string> industrylist = new List<string>();
+                List<int> industryIdlist = new List<int>();
+
+                if (solutionList.Count > 0)
+                {
+                    foreach (var list in solutionList)
+                    {
+                        var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
+                        var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+
+                        if (model.UserId != "" && CheckType != "Client")
+                        {
+                            industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
+                        }
+                        else
+                        {
+                            industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToListAsync();
+                        }
+
+                        if (industryIdlist.Count > 0)
+                        {
+                            foreach (var industryId in industryIdlist)
+                            {
+                                var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                industrylist.Add(industryname);
+                            }
+                            SolutionsModel dataStore = new SolutionsModel();
+                            dataStore.Services = Servicename;
+                            dataStore.solutionServices = serviceId;
+                            dataStore.Industries = string.Join(",", industrylist);
+                            dataStore.Id = list.Id;
+                            dataStore.Description = list.Description;
+                            dataStore.ImagePath = list.ImagePath;
+                            dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                            dataStore.Title = list.Title;
+                            dataStore.SubTitle = list.SubTitle;
+                            solutionsModel.Add(dataStore);
+                            industrylist.Clear();
+                        }
+
+                    }
+                }
+
+                List<SolutionsModel> mainlist = solutionsModel.Take(3).ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = new
+                    {
+                        SolutionData = mainlist,
+                        TotalCount = solutionList.Count()
+                    }
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
+            }
+        }
+
+        //GetTopThreePopularSolutionBasedOnServices
+        [HttpPost]
+        [Route("GetTopThreePopularSolutionBasedOnServices")]
+        public async Task<IActionResult> GetTopThreePopularSolutionBasedOnServices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                try
+                {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                    List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                    List<Industries> industrylistDetails = new List<Industries>();
+                    List<string> industrylist = new List<string>();
+                    List<int> industryList = new List<int>();
+                    var serviceData = await _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToListAsync();
+
+                    if (serviceData.Count > 0)
+                    {
+                        foreach (var data in serviceData)
+                        {
+                            var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
+                            if (model.UserId != "" && CheckType != "Client")
+                            {
+                                industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                            }
+                            else
+                            {
+                                industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            }
+                            //var industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            if (industryList.Count > 0)
+                            {
+                                foreach (var industryId in industryList)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industrylistDetails.Add(industry);
+                                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    industrylist.Add(industryname);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.solutionServices = model.Id;
+                                dataStore.Industries = string.Join(",", industrylist);
+                                //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
+                                dataStore.Id = solutiondata.Id;
+                                dataStore.Description = solutiondata.Description;
+                                dataStore.ImagePath = solutiondata.ImagePath;
+                                dataStore.ImageUrlWithSas = solutiondata.ImageUrlWithSas;
+                                dataStore.Title = solutiondata.Title;
+                                solutionsModel.Add(dataStore);
+                                industrylist.Clear();
+                            }
+
+                        }
+                    }
+
+                    var mainlist = solutionsModel.Take(3).ToList();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            SolutionData = mainlist,
+                            SolutionBindData = solutionsModel,
+                            IndustriesData = industrylistDetails.Distinct(),
+                            TotalCount = solutionsModel.Count()
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            else
+            {
+                try
+                {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                    List<Solutions> solutionList = _db.Solutions.ToList();
+                    List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                    List<Industries> industrylistDetails = new List<Industries>();
+                    List<string> industrylist = new List<string>();
+                    List<int> industryIdlist = new List<int>();
+
+                    if (solutionList.Count > 0)
+                    {
+                        foreach (var list in solutionList)
+                        {
+                            var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
+                            var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+
+                            if (model.UserId != "" && CheckType != "Client")
+                            {
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                            }
+                            else
+                            {
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            }
+                            //var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            if (industryIdlist.Count > 0)
+                            {
+                                foreach (var industryId in industryIdlist)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industrylistDetails.Add(industry);
+                                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    industrylist.Add(industryname);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.Services = Servicename;
+                                dataStore.solutionServices = serviceId;
+                                dataStore.Industries = string.Join(",", industrylist);
+                                dataStore.Id = list.Id;
+                                dataStore.Description = list.Description;
+                                dataStore.ImagePath = list.ImagePath;
+                                dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                                dataStore.Title = list.Title;
+                                dataStore.SubTitle = list.SubTitle;
+                                solutionsModel.Add(dataStore);
+                                industrylist.Clear();
+                            }
+
+                        }
+                    }
+                    var mainlist = solutionsModel.Take(3).ToList();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            SolutionData = mainlist,
+                            SolutionBindData = solutionsModel,
+                            IndustriesData = industrylistDetails.Distinct(),
+                            TotalCount = solutionsModel.Count()
+                        }
+                    });
+
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+
+                    });
+                }
+            }
         }
     }
 }

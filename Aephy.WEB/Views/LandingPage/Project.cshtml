@@ -30,6 +30,7 @@
                                     <div class="row m-lg-2 pt-4">
                                         <h5 class="section-detail-size">
                                             Select size and approximate price
+                                            &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
                                         </h5>
                                     </div>
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
@@ -509,7 +510,8 @@
                         </div>
                         <div class="row m-lg-2 pt-4">
                             <h5 class="section-detail-size">
-                                Select size and approximate price
+                                Select size and approximate price 
+                                &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
                             </h5>
                         </div>
                         <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
@@ -535,14 +537,6 @@
                                 </label>
                             </div>
                         </div>
-                        @*<div class="row me-lg-2 me-4 detailRow">
-                            <div class="col key section-detail-size">Duration</div>
-                            <div class="col val text-end section-detail-size">-</div>
-                        </div>
-                        <div class="row me-lg-2 me-4 detailRow">
-                            <div class="col key section-detail-size">Team Size</div>
-                            <div class="col val text-end section-detail-size">2</div>
-                        </div>*@
                         <div class="projectDetails-div">
                               <div class="row me-lg-2 me-4 detailRow">
                                  <div class="col key section-detail-size">Duration</div>
@@ -767,18 +761,18 @@
                 </div>
                 <div class="modal-body p-0" style="background-color: #f5f5f5;">
                     <div class="container-fluid">
-                        <div style="border-radius:10px;">
+                        <div style="border-radius:10px;" id="customisedDetailsForm">
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
                                     <h3 data-aos="fade-up">
-                                        Let’s start
+                                        Let’s start 
                                     </h3>
                                     <p data-aos="fade-up" data-aos-delay="100">
                                         Select the appropriate
                                         options; Get a step closer to
                                         transform your business.
                                     </p>
-                                </div>
+                                </div> 
 
                                 <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
                                     <form action="#">
@@ -810,10 +804,59 @@
                                 </div>
                             </div>
                         </div>
+
+                         <div style="border-radius:10px;display:none;" id="customisedProjectWorkingForm">
+                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
+                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
+                                    <h3 data-aos="fade-up">
+                                        Let’s start
+                                    </h3>
+                                    <p data-aos="fade-up" data-aos-delay="100">
+                                        Select the appropriate
+                                        options; Get a step closer to
+                                        transform your business.
+                                    </p>
+                                </div>
+
+                                <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
+                                    <form action="#" style="padding-top: 3%;">
+                                            <div class="col d-flex flex-column">
+                                                <label data-aos="fade-up">Working Days</label>
+                                                <div class="row pt-2">
+                                                    <div class="col">
+                                                        <label>Start Date : </label>
+                                                        <input type="date" class="form-control" id="start-date">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>End Date : </label>
+                                                        <input type="date" class="form-control" id="end-date">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col d-flex flex-column pt-4">
+                                                <label data-aos="fade-up">Working Hours</label>
+
+                                                <div class="row pt-2">
+                                                    <div class="col">
+                                                        <label>Start Hour : </label>
+                                                        <input type="time" class="form-control" id="start-hour">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>End Hour : </label>
+                                                        <input type="time" class="form-control" id="end-hour">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
                         
 
                         <div class="col d-flex justify-content-end">
-                            <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="CloseCustomisePopUp()">Confirm</a>
+                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
+                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPostButton" onclick="GetWorkingOurForm(this)">Next</a>
                         </div>
                     </div>
                 </div>
@@ -835,6 +878,7 @@
 
             $('#guidelineModal').modal('hide');
         });
+        $(".info-popover").popover();
         GetProjectDetails()
     });
     function MilestoneViewMore(){
@@ -850,12 +894,17 @@
     }
 
     function OpenCustomisePopUp(){
-       $('#CustomiseProjectPopUp').modal('show');
+      $('#CustomiseProjectPopUp').modal('show');
+      $("#customisedDetailsForm").css("display", "block")
+      $("#customisedProjectWorkingForm").css("display", "none")
+      $("#BrowseSolutionPostButton").text("Next")
+      $("#BrowseSolutionPreviousButton").css("display", "none")
     }
 
     function CloseCustomisePopUp(){
         $('#CustomiseProjectPopUp').modal('hide');
     }
+
 
     function GetProjectDetails(){
          $("#preloader").show();
@@ -887,32 +936,6 @@
             }
         });
     }
-
-    //function buySolutionCheckout(){
-    //    /*
-    //        contentType: "application/json; charset=utf-8",
-    //        dataType: "json",
-    //        data: JSON.stringify(data),
-    //    */
-    //   $("#preloader").show();
-    //    $.ajax({
-    //        type: "GET",
-    //        url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
-    //        success: function (result) {
-    //            var checkout_link = result.Result;
-    //            if(checkout_link != null){
-    //                window.location.href = checkout_link;
-    //            }
-    //            showToaster("success", "Success", result.Message);
-    //            $("#preloader").hide();
-    //        },
-    //        error: function (result) {
-    //            $("#preloader").hide();
-    //            showToaster("error", "Error !", "Something went wrong !!");
-    //        }
-    //    });
-    //}
-
     function buySolutionCheckout(){
         var checkweb = $("input[name='projSizeweb']:checked").val();
         var Industryid = parseInt(sessionStorage.getItem("IndustryId"));
@@ -1142,6 +1165,25 @@
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
+    }
+
+    function GetWorkingOurForm(data){
+         if (data.text == "Confirm") {
+           $("#CustomiseProjectPopUp").modal('hide')
+         }
+         if (data.text == "Next") {
+           $("#customisedDetailsForm").css("display", "none")
+           $("#customisedProjectWorkingForm").css("display", "block")
+           $("#BrowseSolutionPostButton").text("Confirm")
+           $("#BrowseSolutionPreviousButton").css("display", "block")
+         }
+         if (data.text == "Previous") {
+           $("#customisedDetailsForm").css("display", "block")
+           $("#customisedProjectWorkingForm").css("display", "none")
+           $("#BrowseSolutionPostButton").text("Next")
+           $("#BrowseSolutionPreviousButton").css("display", "none")
+         }
+
     }
 
 </script>

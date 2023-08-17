@@ -328,7 +328,7 @@ namespace Aephy.WEB.Admin.Controllers
                     {
                         solutions.Id = (int)(Id);
                     }
-                    
+
 
                     return solutions;
                 }
@@ -547,7 +547,7 @@ namespace Aephy.WEB.Admin.Controllers
             if(httpPostedFileBase != null)
             {
                 var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
-                 await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
+                await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
             }
             return Data;
         }
@@ -555,7 +555,7 @@ namespace Aephy.WEB.Admin.Controllers
         [HttpPost]
         public async Task<string> GetTopProfessionalList([FromBody] SolutionIndustryViewModel model)
         {
-            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetProfessionalList", HttpMethod.Post,model);
+            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetProfessionalList", HttpMethod.Post, model);
             return freelancerList;
         }
 
@@ -580,6 +580,109 @@ namespace Aephy.WEB.Admin.Controllers
             }
             return "";
 
+        }
+
+        [HttpPost]
+        public async Task<string> AddSuccessfullProjectResult([FromBody] SolutionSuccessfullProjectResultViewModel model)
+        {
+            var list = await _apiRepository.MakeApiCallAsync("api/Admin/SaveSuccessfullProjectResult", HttpMethod.Post, model);
+            return list;
+        }
+
+        [HttpPost]
+        public async Task<string> AddSuccessfullProject([FromBody] SolutionSuccessfullProjectViewModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Admin/SaveSuccessfullProject", HttpMethod.Post, model);
+            return data;
+        }
+
+        [HttpPost]
+        public async Task<string> GetSuccessfullProjectList([FromBody] SolutionIndustryViewModel model)
+        {
+            var list = await _apiRepository.MakeApiCallAsync("api/Admin/GetSuccessfullProjectList", HttpMethod.Post, model);
+            return list;
+        }
+
+        [HttpPost]
+        public async Task<string> GetProjectResultList([FromBody] SolutionIndustryViewModel model)
+        {
+            var list = await _apiRepository.MakeApiCallAsync("api/Admin/GetProjectResultList", HttpMethod.Post, model);
+            return list;
+        }
+
+        [HttpPost]
+        public async Task<string> DeleteProjectResult([FromBody] SolutionIdModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var data = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteProjectResultData", HttpMethod.Post, model);
+                    return data;
+                }
+                else
+                {
+                    return "failed to receive data..";
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+
+        }
+
+        [HttpPost]
+        public async Task<string> DeleteSuccessfullProject([FromBody] SolutionIdModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var data = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteSuccessfullProjectData", HttpMethod.Post, model);
+                    return data;
+                }
+                else
+                {
+                    return "failed to receive data..";
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+
+        }
+
+
+        [HttpPost]
+        public async Task<string> GetSuccessfullProjectDetailsById([FromBody] SolutionIdModel model)
+        {
+            if (model != null)
+            {
+                var data = await _apiRepository.MakeApiCallAsync("api/Admin/GetSuccessfullProjectDetailsById", HttpMethod.Post, model);
+                return data;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        [HttpPost]
+        public async Task<string> GetProjectResultById([FromBody] SolutionIdModel model)
+        {
+            if (model != null)
+            {
+                var data = await _apiRepository.MakeApiCallAsync("api/Admin/GetProjectDetailsById", HttpMethod.Post, model);
+                return data;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
         }
     }
 }

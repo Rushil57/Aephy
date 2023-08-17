@@ -83,9 +83,6 @@
                                     </div>
 
                                     <div class="col-12">
-                                      @*  <label for="drp-assigned-freelancers" class="form-label">
-                                            <a class="text-primary" onclick="OpenFreelancePopup();">Assigned Freelancer</a>
-                                        </label>*@
                                         <div class="input-group">
                                             <table class="table" id="AssignFreeLancerTable">
                                                 <thead style="border: 1px solid #e8e8e8;">
@@ -138,6 +135,27 @@
                                             </table>
                                        
                                     </div>
+
+                                      <div class="col-12 pt-3">
+                                        <label for="successfullProject" class="form-label">
+                                            <a class="text-primary" onclick="OpenSuccessfullPopup();">Add Successfull Projects</a>
+                                        </label>
+                                       
+                                        <table class="table" id="SuccessfullProjectTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Title</th>
+                                                        <th>Description</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                       
+                                    </div>
+
 
                                     <div class="col-12">
                                         <label for="IsActiveForFreelancer" class="form-label">Is Active For Freelancer</label>
@@ -362,6 +380,102 @@
     </div>
 </div>
 
+<div class="modal" id="SuccessfullProject" tabindex="-1" aria-labelledby="SuccessfullProjectModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Successfull Project</h4>
+                <a class="close" onclick="ResetSuccessfullProjectForm();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="hidden" id="SuccessfullProjectId" value="0"/>
+                                <form class="row g-3 mt-3" name="SuccessfullProjectForm">
+                                    <div class="col-12">
+                                        <label for="SuccessfullProjectTitle" class="form-label">Title</label>
+                                        <input type="text" id="SuccessfullProjectTitle" class="form-control" name="SuccessfullprojectTitle" />
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <textarea type="text" id="SuccessfullProjectDescription" class="form-control" name="SuccessfullprojectDescription"></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-primary" onclick="OpenResultPopUp()" id="result-btn" disabled>Add Result</button>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <table class="table" id="ResultTable">
+                                                <thead style="border: 1px solid #e8e8e8;">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Key</th>
+                                                        <th>value</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" id="AddSuccessfullProject" class="btn btn-brand">Save</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="ResetSuccessfullProjectForm();">Close</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="SuccessfullProjectResult" tabindex="-1" aria-labelledby="SuccessfullProjectResultModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Project Result</h4>
+                <a class="close" onclick="ResetResultForm();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="hidden" id="ProjectResultId" value="0"/>
+                                <form class="row g-3 mt-3" name="ResultForm">
+                                    <div class="col-12">
+                                        <label for="ResultKey" class="form-label">Key</label>
+                                        <input type="text" id="ResultKey" class="form-control" name="Resultkey" placeholder="Key"/>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="ResultValue" class="form-label">Value</label>
+                                        <textarea type="text" id="ResultValue" class="form-control" name="Resultvalue"></textarea>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Save</button>
+                                        <button type="reset" class="btn btn-secondary" onclick="ResetResultForm();">Reset</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <script>
@@ -388,15 +502,7 @@
                 SaveDescribeSolutionData()
             }
         });
-        GetSolutionList()
-        $(".cls-subtitle").css("display", "none")
-
-        $("#ProjectType").change(function () {
-            GetSolutionDefineDetails()
-        });
-
-        //TopProfessionalForm
-         $("form[name='TopProfessionalForm']").validate({
+        $("form[name='TopProfessionalForm']").validate({
             rules: {
                drpfreelancer: { required: true },
                 FreelancerTitle : { required: true },
@@ -418,6 +524,40 @@
             submitHandler: function (form) {
                 SaveTopProfessionalData()
             }
+        });
+
+        $("form[name='ResultForm']").validate({
+            rules: {
+               Resultkey: { required: true },
+                Resultvalue : { required: true }
+            },
+            messages: {
+               Resultkey: { required: "Please enter valid key" },
+                Resultvalue : { required: "Please enter valid value" }
+            },
+            submitHandler: function (form) {
+                SaveProjectResult()
+            }
+        });
+
+        $("form[name='SuccessfullProjectForm']").validate({
+            rules: {
+                SuccessfullprojectTitle: { required: true },
+                SuccessfullprojectDescription: { required: true }
+            },
+            messages: {
+                SuccessfullprojectTitle: { required: "Please enter proper title" },
+                SuccessfullprojectDescription: { required: "Please enter proper description" }
+            },
+            submitHandler: function (form) {
+                SaveSuccessfullProject()
+            }
+        });
+
+         GetSolutionList()
+        $(".cls-subtitle").css("display", "none")
+        $("#ProjectType").change(function () {
+            GetSolutionDefineDetails()
         });
 
     });
@@ -597,6 +737,7 @@
                 }
                 //--- FreeLancer pool entry bind end --//
                 GetTopProfessionalList()
+                GetProjectList()
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -1198,7 +1339,6 @@
 
     function DeleteTopProfessional(Id){
         Swal.fire({
-            //title: 'Are you sure?',
             text: "Are you sure want to delete top professional?",
             icon: 'warning',
             showCancelButton: true,
@@ -1250,5 +1390,317 @@
 
             reader.readAsDataURL(value.files[0]);
         }
+    }
+
+    function OpenSuccessfullPopup(){
+        $("#SuccessfullProject").modal('show');
+        $("#result-btn").prop('disabled', true);
+        GetProjectResultList();
+    }
+
+    function OpenResultPopUp(){
+         if ($("#ResultTable  tbody tr").length >= 2) {
+            showToaster("warning", "Warning !", "you have reached a limit for adding project result");
+        } else {
+            $("#SuccessfullProjectResult").modal('show')
+        }
+    }
+
+    function SaveProjectResult(){
+        var data = {
+            Id : parseInt($("#ProjectResultId").val()),
+            SolutionSuccessfullProjectId: parseInt($("#SuccessfullProjectId").val()),
+            ResultKey: $("#ResultKey").val(),
+            ResultValue: $("#ResultValue").val()
+       }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddSuccessfullProjectResult", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success", result.Message);
+                ResetResultForm();
+                GetProjectResultList();
+
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function SaveSuccessfullProject(){
+        var data = {
+            Id : $("#SuccessfullProjectId").val(),
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
+            Title: $("#SuccessfullProjectTitle").val(),
+            Description: $("#SuccessfullProjectDescription").val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddSuccessfullProject", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if(result.Message == "Data Save Successfully!"){
+                    showToaster("success", "Success", result.Message);
+                    $("#SuccessfullProjectId").val(result.Result);
+                    $("#result-btn").prop('disabled', false);
+
+                }else{
+                    showToaster("success", "Success !", result.Message);
+                }
+                GetProjectList();
+
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function ResetSuccessfullProjectForm(){
+       $("#SuccessfullProjectTitle").val("");
+       $("#SuccessfullProjectDescription").val("");
+       $("#SuccessfullProject").modal('hide');
+       $("#SuccessfullProjectId").val(0);
+    }
+
+    function GetProjectList(){
+         var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
+        }
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSuccessfullProjectList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+             data: JSON.stringify(data),
+            success: function (result) {
+                $('#SuccessfullProjectTable').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick="GetSuccessfullProjectDetails(' + data + ');">'+data+'</a>'
+                            }
+                        },
+                        { "data": "Title" },
+                        {
+                            "data": "Description",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + description + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="text-danger" onclick="DeleteSuccessfullProject(' + data + ');">Delete</a>'
+                            }
+                        }
+
+                    ]
+                });
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function ResetResultForm(){
+        $("#ResultKey").val("");
+        $("#ResultValue").val("");
+        $("#SuccessfullProjectResult").modal('hide');
+        $("#ProjectResultId").val(0);
+    }
+
+    function GetProjectResultList(){
+         var data = {
+            Id: parseInt($("#SuccessfullProjectId").val())
+        }
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetProjectResultList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+             data: JSON.stringify(data),
+            success: function (result) {
+                $('#ResultTable').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                         {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick="GetProjectResultDetails(' + data + ');">'+data+'</a>'
+                            }
+                        },
+                        { "data": "ResultKey" },
+                        { "data": "ResultValue" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="text-danger" onclick="DeleteProjectResult(' + data + ');">Delete</a>'
+                            }
+                        }
+
+                    ]
+                });
+            },
+            error: function (err) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function DeleteProjectResult(Id){
+          Swal.fire({
+            text: "Are you sure want to delete project Result?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+            var data = {
+                Id: Id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteProjectResult", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {  
+                    showToaster("success", "Success", result.Message);
+                    GetProjectResultList();
+
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+
+        });
+    }
+
+    function DeleteSuccessfullProject(Id){
+        Swal.fire({
+            text: "Are you sure want to delete project?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+            var data = {
+                Id: Id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteSuccessfullProject", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {  
+                    showToaster("success", "Success", result.Message);
+                    GetProjectList();
+
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+
+        });
+    }
+
+    function GetProjectResultDetails(Id){
+        var data = {
+                Id: Id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProjectResultById", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Message == "Success"){
+                        if (result != null) {
+                            var data = result.Result;
+                            $("#SuccessfullProjectResult").modal('show')
+                            $("#ResultKey").val(data.ResultKey);
+                            $("#ResultValue").val(data.ResultValue);
+                            $("#ProjectResultId").val(data.Id);
+                        }
+                    }
+                    else{
+                        showToaster("error", "Error !", result.Message);
+                    }
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+    }
+
+    function GetSuccessfullProjectDetails(Id){
+        var data = {
+                Id: Id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSuccessfullProjectDetailsById", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Message == "Success"){
+                        if (result != null) {
+                            var data = result.Result;
+                            $("#SuccessfullProject").modal('show')
+                            $("#SuccessfullProjectTitle").val(data.Title);
+                            $("#SuccessfullProjectDescription").val(data.Description);
+                            $("#SuccessfullProjectId").val(data.Id);
+                            $("#result-btn").prop('disabled', false);
+                            GetProjectResultList();
+                        }
+                    }
+                    else{
+                        showToaster("error", "Error !", result.Message);
+                    }
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
     }
 </script>

@@ -129,4 +129,28 @@ namespace Aephy.WEB.Admin.Models
         public string? Rate { get; set; }
 
     }
+
+    public class SolutionSuccessfullProjectViewModel
+    {
+        public int Id { get; set; }
+        public int IndustryId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Description { get; set; }
+
+    }
+
+    public class SolutionSuccessfullProjectResultViewModel
+    {
+        public int Id { get; set; }
+        public int SolutionSuccessfullProjectId { get; set; }
+
+        public string? ResultKey { get; set; }
+
+        public string? ResultValue { get; set; }
+
+    }
 }

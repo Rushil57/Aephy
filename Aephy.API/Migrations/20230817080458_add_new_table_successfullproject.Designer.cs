@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230817080458_add_new_table_successfullproject")]
+    partial class add_new_table_successfullproject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -574,28 +577,6 @@ namespace Aephy.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SolutionSuccessfullProject");
-                });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.SolutionSuccessfullProjectResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ResultKey")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResultValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SolutionSuccessfullProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SolutionSuccessfullProjectResult");
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.SolutionTopProfessionals", b =>

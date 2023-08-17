@@ -2217,7 +2217,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        //UpdateUserProfileImage
+      
         [HttpPost]
         [Route("UpdateUserProfileImage")]
         public async Task<IActionResult> UpdateUserProfileImage([FromBody] SolutionImage solutionImage)
@@ -2296,6 +2296,340 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
+        }
+
+       
+        [HttpPost]
+        [Route("SaveSuccessfullProjectResult")]
+        public async Task<IActionResult> SaveSuccessfullProjectResult([FromBody] SolutionSuccessfullProjectResult model)
+        {
+            if(model.Id == 0)
+            {
+                var dbModel = new SolutionSuccessfullProjectResult
+                {
+                   SolutionSuccessfullProjectId = model.SolutionSuccessfullProjectId,
+                    ResultKey= model.ResultKey,
+                    ResultValue= model.ResultValue
+                };
+
+                await _db.SolutionSuccessfullProjectResult.AddAsync(dbModel);
+                _db.SaveChanges();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Save Successfully!"
+                });
+            }
+            else
+            {
+                var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
+                if(resultData != null)
+                {
+                    resultData.ResultKey = model.ResultKey;
+                    resultData.ResultValue = model.ResultValue;
+                    _db.SaveChanges();
+                }
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
+        [HttpPost]
+        [Route("SaveSuccessfullProject")]
+        public async Task<IActionResult> SaveSuccessfullProject([FromBody] SolutionSuccessfullProject model)
+        {
+            try
+            {
+                if(model.Id == 0)
+                {
+                    var dbModel = new SolutionSuccessfullProject
+                    {
+                        IndustryId = model.IndustryId,
+                        SolutionId = model.SolutionId,
+                        Title = model.Title,
+                        Description = model.Description
+                    };
+
+                    await _db.SolutionSuccessfullProject.AddAsync(dbModel);
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Save Successfully!",
+                        Result = dbModel.Id
+                    });
+                }
+                else
+                {
+                    var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if(projectData != null)
+                    {
+                        projectData.Title = model.Title;
+                        projectData.Description = model.Description;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Update Successfully!"
+                        });
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
+        [HttpPost]
+        [Route("GetSuccessfullProjectList")]
+        public async Task<IActionResult> GetSuccessfullProjectList(MileStoneDetailsViewModel model)
+        {
+            try
+            {
+                var list = await _db.SolutionSuccessfullProject.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        
+        [HttpPost]
+        [Route("GetProjectResultList")]
+        public async Task<IActionResult> GetProjectResultList(MileStoneIdViewModel model)
+        {
+            try
+            {
+                //var list = await _db.SolutionSuccessfullProject.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                //List<SolutionSuccessfullProjectResult> ResultList = new List<SolutionSuccessfullProjectResult>();
+                //if(list.Count > 0){
+                //    foreach(var data in list)
+                //    {
+                //        var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == data.Id).ToList();
+                //        if(resultData.Count > 0)
+                //        {
+                //            foreach(var result in resultData)
+                //            {
+                //                ResultList.Add(result);
+                //            }
+                //        }
+                //    }
+                //}
+                var resultList = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = resultList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+       
+        [HttpPost]
+        [Route("DeleteProjectResultData")]
+        public async Task<IActionResult> DeleteProjectResultData([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var data = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (data != null)
+                    {
+                        _db.SolutionSuccessfullProjectResult.Remove(data);
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Delete Successfully!",
+                        });
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Not Found!",
+                    });
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+        [HttpPost]
+        [Route("DeleteSuccessfullProjectData")]
+        public async Task<IActionResult> DeleteSuccessfullProjectData([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var data = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToList();
+                    if (data.Count > 0)
+                    {
+                        _db.SolutionSuccessfullProjectResult.RemoveRange(data);
+                        _db.SaveChanges();
+                    }
+                    var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if(projectData != null)
+                    {
+                        _db.SolutionSuccessfullProject.Remove(projectData);
+                        _db.SaveChanges();
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Delete Successfully!",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+        [HttpPost]
+        [Route("GetSuccessfullProjectDetailsById")]
+        public async Task<IActionResult> GetSuccessfullProjectDetailsById([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (projectData != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success",
+                            Result = projectData,
+                        });
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data not found!",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+        //GetProjectDetailsById
+        [HttpPost]
+        [Route("GetProjectDetailsById")]
+        public async Task<IActionResult> GetProjectDetailsById([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (resultData != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success",
+                            Result = resultData,
+                        });
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data not found!",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
         }
     }
 }

@@ -873,6 +873,11 @@ h6 {
     border-color: var(--brand);
 }
 
+.AlwaysEvolving .social-links a img {
+    height:18px;
+    width:18px;
+}
+
 .AlwaysEvolving .fitImage img {
     height: 100%;
     width: 100%;

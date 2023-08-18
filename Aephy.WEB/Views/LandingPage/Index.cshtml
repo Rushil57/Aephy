@@ -558,7 +558,7 @@
                             '<div class="child col-10 mx-2 cls-result">' +
                             '<div class="title border-bottom">Results</div>' +
                             '<div class="content">';
-                        if (values.projectResultList.length > 0) {
+                        if (values.projectResultList != "") {
                             $.each(values.projectResultList, function (resultData, resultValue) {
                                 successfullProject += '<div class="info">' +
                                     '<div class="name">' + resultValue.ResultValue + '</div>' +

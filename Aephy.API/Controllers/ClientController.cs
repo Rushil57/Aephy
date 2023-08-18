@@ -349,7 +349,7 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    var successfullprojectData = await _db.SolutionSuccessfullProject.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).ToListAsync();
+                    var successfullprojectData = await _db.SolutionSuccessfullProject.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).Where(x => x.IsActive == true).ToListAsync();
                     List<SuccessfullProjectModel> successfullProjectList = new List<SuccessfullProjectModel>();
                     if(successfullprojectData.Count > 0)
                     {
@@ -787,7 +787,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var successfullprojectData = await _db.SolutionSuccessfullProject.Take(3).ToListAsync();
+                var successfullprojectData = await _db.SolutionSuccessfullProject.Where(x => x.IsActive == true).Take(3).ToListAsync();
                 List<SuccessfullProjectModel> successfullProjectList = new List<SuccessfullProjectModel>();
                 if (successfullprojectData.Count > 0)
                 {

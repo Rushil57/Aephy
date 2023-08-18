@@ -763,6 +763,10 @@ h6 {
     .cls-main {
         min-width: 350px !important;
     }
+
+    .reviews .box {
+        height: 260px !important;
+    }
 }
 
     #successfullProjects .box .content {

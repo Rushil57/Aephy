@@ -1389,3 +1389,7 @@ td.cls-Solution, .cls-service, .cls-industries, .cls-RolesId {
     margin: 5px;
     width: 280px;
 }
+
+#SuccessfullProjectDescription{
+    resize: none;
+}

@@ -16,6 +16,8 @@ namespace Aephy.API.DBHelper
 
         public string? Description { get; set; }
 
+        public bool IsActive { get; set; }
+
     }
 
     public class SolutionSuccessfullProjectResult

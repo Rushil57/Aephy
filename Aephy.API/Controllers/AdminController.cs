@@ -2355,7 +2355,8 @@ namespace Aephy.API.Controllers
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
                         Title = model.Title,
-                        Description = model.Description
+                        Description = model.Description,
+                        IsActive = model.IsActive
                     };
 
                     await _db.SolutionSuccessfullProject.AddAsync(dbModel);
@@ -2374,6 +2375,7 @@ namespace Aephy.API.Controllers
                     {
                         projectData.Title = model.Title;
                         projectData.Description = model.Description;
+                        projectData.IsActive = model.IsActive;
                         _db.SaveChanges();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel

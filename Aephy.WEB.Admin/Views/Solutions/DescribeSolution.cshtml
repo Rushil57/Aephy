@@ -393,7 +393,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <input type="hidden" id="SuccessfullProjectId" value="0"/>
-                                <form class="row g-3 mt-3" name="SuccessfullProjectForm">
+                                <form class="row g-3 mt-3" name="SuccessfullProjectForm" id="ProjectFormId">
                                     <div class="col-12">
                                         <label for="SuccessfullProjectTitle" class="form-label">Title</label>
                                         <input type="text" id="SuccessfullProjectTitle" class="form-control" name="SuccessfullprojectTitle" />
@@ -401,7 +401,16 @@
 
                                     <div class="col-12">
                                         <label for="Description" class="form-label">Description</label>
-                                        <textarea type="text" id="SuccessfullProjectDescription" class="form-control" name="SuccessfullprojectDescription"></textarea>
+                                        <textarea type="text" id="SuccessfullProjectDescription" class="form-control" name="SuccessfullprojectDescription" rows="4" cols="50"></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="IsActiveProject" class="form-label">Active Project</label>
+                                        <input type="checkbox" id="IsActiveProject" class="form-check-input"/>
+                                    </div>
+
+                                     <div class="text-center">
+                                        <button type="submit" id="AddSuccessfullProject" class="btn btn-brand">Save</button>
                                     </div>
 
                                     <div class="col-12">
@@ -422,8 +431,8 @@
                                                 </tbody>
                                             </table>
                                     </div>
-                                    <div class="text-center">
-                                        <button type="submit" id="AddSuccessfullProject" class="btn btn-brand">Save</button>
+                                   
+                                     <div class="text-center">
                                         <button type="reset" class="btn btn-secondary" onclick="ResetSuccessfullProjectForm();">Close</button>
                                     </div>
                                 </form>
@@ -450,7 +459,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <input type="hidden" id="ProjectResultId" value="0"/>
-                                <form class="row g-3 mt-3" name="ResultForm">
+                                <form class="row g-3 mt-3" name="ResultForm" id="resultFormId">
                                     <div class="col-12">
                                         <label for="ResultKey" class="form-label">Key</label>
                                         <input type="text" id="ResultKey" class="form-control" name="Resultkey" placeholder="Key"/>
@@ -458,7 +467,8 @@
 
                                     <div class="col-12">
                                         <label for="ResultValue" class="form-label">Value</label>
-                                        <textarea type="text" id="ResultValue" class="form-control" name="Resultvalue"></textarea>
+                                        <input type="text" id="ResultValue" class="form-control" name="Resultvalue" placeholder="Value"/>
+                                        @*<textarea type="text" id="ResultValue" class="form-control" name="Resultvalue"></textarea>*@
                                     </div>
 
                                     <div class="text-center">
@@ -488,6 +498,7 @@
     let finalIdsData = [];
     let architectData = [];
 
+  
     $(function () {
         $("form[name='addSolutiondescribeForm']").validate({
             rules: {
@@ -526,7 +537,7 @@
             }
         });
 
-        $("form[name='ResultForm']").validate({
+       $("form[name='ResultForm']").validate({
             rules: {
                Resultkey: { required: true },
                 Resultvalue : { required: true }
@@ -540,7 +551,7 @@
             }
         });
 
-        $("form[name='SuccessfullProjectForm']").validate({
+       $("form[name='SuccessfullProjectForm']").validate({
             rules: {
                 SuccessfullprojectTitle: { required: true },
                 SuccessfullprojectDescription: { required: true }
@@ -1394,6 +1405,7 @@
 
     function OpenSuccessfullPopup(){
         $("#SuccessfullProject").modal('show');
+        $("#IsActiveProject").prop('checked', true);
         $("#result-btn").prop('disabled', true);
         GetProjectResultList();
     }
@@ -1439,7 +1451,9 @@
             SolutionId: parseInt($("#SolutionId").val()),
             IndustryId: parseInt($("#IndustryId").val()),
             Title: $("#SuccessfullProjectTitle").val(),
-            Description: $("#SuccessfullProjectDescription").val()
+            Description: $("#SuccessfullProjectDescription").val(),
+            IsActive : $("#IsActiveProject").is(':checked')
+
         }
          $("#preloader").show();
         $.ajax({
@@ -1453,11 +1467,11 @@
                     showToaster("success", "Success", result.Message);
                     $("#SuccessfullProjectId").val(result.Result);
                     $("#result-btn").prop('disabled', false);
-                    $("#preloader").hide();
 
                 }else{
                     showToaster("success", "Success !", result.Message);
                 }
+                $("#preloader").hide();
                 GetProjectList();
 
             },
@@ -1472,6 +1486,8 @@
        $("#SuccessfullProjectDescription").val("");
        $("#SuccessfullProject").modal('hide');
        $("#SuccessfullProjectId").val(0);
+       $("#IsActiveProject").prop('checked', false);
+       $("#ProjectFormId").data('validator').resetForm();
     }
 
     function GetProjectList(){
@@ -1532,6 +1548,7 @@
         $("#ResultValue").val("");
         $("#SuccessfullProjectResult").modal('hide');
         $("#ProjectResultId").val(0);
+        $("#resultFormId").data('validator').resetForm();
     }
 
     function GetProjectResultList(){
@@ -1692,6 +1709,9 @@
                             $("#SuccessfullProjectTitle").val(data.Title);
                             $("#SuccessfullProjectDescription").val(data.Description);
                             $("#SuccessfullProjectId").val(data.Id);
+                            if(data.IsActive){
+                                $("#IsActiveProject").prop('checked', true);
+                            }
                             $("#result-btn").prop('disabled', false);
                             GetProjectResultList();
                         }

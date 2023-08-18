@@ -282,7 +282,19 @@
     }
 
     function SoutionsList(data,Id) {
-        var SolutionData = {
+        $('#userPopupModal').modal('show');
+        var freelencerLevel = $(data).parents('tr').find(".cls-level").text();
+        if (freelencerLevel == "Project Manager") {
+            $("#architect-div").css("display", "block")
+        }
+        BindMainServices();
+        BindMainSolutions();
+        BindMainIndustries();
+        GetFreelancerDetailsById(Id)
+    }
+
+    function GetFreelancerDetailsById(Id){
+        var data = {
             Id: Id,
         };
         $("#preloader").show();
@@ -291,9 +303,8 @@
             url: "@Url.Action("getFreelancerSolutionsById", "Users")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(SolutionData),
+            data: JSON.stringify(data),
             success: function (result) {
-                $('#userPopupModal').modal('show');
                 $("#Freelancer-id").val(Id);
                 $('#solutionsList').DataTable({
                     destroy: true,
@@ -305,15 +316,6 @@
                         { "data": "IndustryName" }
                     ]
                 });
-                var freelencerLevel = $(data).parents('tr').find(".cls-level").text();
-                if (freelencerLevel == "Project Manager") {
-                    $("#architect-div").css("display", "block")
-                }
-               
-               BindMainServices();
-               BindMainSolutions(Id);
-               BindMainIndustries(Id)
-
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -322,7 +324,6 @@
             }
         });
     }
-
 
     function GetUserById(userId) {
         var UserData = {
@@ -362,29 +363,6 @@
     }
 
     function DeleteUser(Id) {
-        //if (confirm('Are you sure want to delete Record?')) {
-        //    var ServiceData = {
-        //        Id: Id,
-        //    };
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "@Url.Action("UpdateUserIsDelete", "Users")",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify(ServiceData),
-        //        success: function (result) {
-        //            //alert(result.Message)
-        //            showToaster("success", "Success", result.Message);
-        //            GetUserList()
-
-        //        },
-        //        error: function (result) {
-        //            //alert("Error occured..");
-        //            showToaster("error", "Error !", "Something went wrong !!");
-        //        }
-        //    });
-        //}
-
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -435,7 +413,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                 $("#drp-services option:not(:first)").remove()
+                $("#drp-services option:not(:first)").remove()
                 $.each(result.Result, function (data, value) {
                     $("#drp-services").append($("<option     />").val(value.Id).text(value.ServicesName));
                 })
@@ -446,17 +424,13 @@
         });
     }
 
-    function BindMainSolutions(freelancerId) {
-        var data = {
-            UserId: freelancerId
-        }
+    function BindMainSolutions() {
         $.ajax({
-            type: "POST",
+            type: "GET",
             async: false,
             url: "@Url.Action("GetSolutionList", "Users")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(data),
             success: function (result) {
                 $("#drp-solutions option:not(:first)").remove()
                 $.each(result.Result, function (data, value) {
@@ -470,17 +444,14 @@
         });
     }
 
-    function BindMainIndustries(freelancerId){
-        var data = {
-            UserId: freelancerId
-        }
+    function BindMainIndustries() {
+
         $.ajax({
-            type: "POST",
+            type: "GET",
             async: false,
             url: "@Url.Action("GetIndustryList", "Users")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(data),
             success: function (result) {
                 $("#drp-industries option:not(:first)").remove()
                 $.each(result.Result, function (data, value) {
@@ -494,23 +465,24 @@
         });
     }
 
-    function SaveAssignedFreelancer(){
+    function SaveAssignedFreelancer() {
         var solutionId = $("#drp-solutions").val();
         var industryId = $("#drp-industries").val();
+        var freelancerid = $("#Freelancer-id").val();
 
         var data ={
             SolutionId: solutionId,
             IndustryId: industryId,
             ServiceId: $("#drp-services").val(),
-            FreelancerId: $("#Freelancer-id").val(),
+            FreelancerId: freelancerid,
             ProjectArchitect: $("#IsProjectArchitect").is(":checked")
         }
 
-        if($("#drp-solutions").val() == "All" || $("#drp-industries").val() == "All"){
+        if($("#drp-solutions").val() == "All" || $("#drp-industries").val() == "All") {
             alert("Select Proper Details")
             return
         }
-        
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             async: false,
@@ -520,10 +492,10 @@
             data: JSON.stringify(data),
             success: function (result) {
                 showToaster("success", "Success", result.Message);
-                $("#drp-services").val("All")
-                $("#drp-solutions").val("All")
-                $("#drp-industries").val("All")
                 $('#IsProjectArchitect').prop('checked', false);
+                GetServicesValues();
+                GetFreelancerDetailsById(freelancerid)
+                $("#preloader").hide();
 
             },
             error: function (result) {
@@ -532,25 +504,27 @@
         });
     }
 
-    function GetServicesValues(){
+    function GetServicesValues() {
         var serviceId = $("#drp-services").val();
         if(serviceId == "All"){
-            serviceId = 0;
+            //serviceId = 0;
+            BindMainSolutions();
+            BindMainIndustries();
+            return
         }
         var data ={
             Id: serviceId,
-            UserId: $("#Freelancer-id").val(),
         }
 
         $.ajax({
             type: "POST",
             async: false,
-            url: "@Url.Action("GetSolutionBasedonService", "Users")",
+            url: "@Url.Action("GetSolutionBasedonServiceSelected", "Users")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                 //$("#drp-services").val("All")
+                //$("#drp-services").val("All")
                 var data = result.Result.SolutionData;
                 $("#drp-solutions option:not(:first)").remove()
                 $("#drp-industries option:not(:first)").remove()
@@ -568,15 +542,14 @@
         });
     }
 
-    function GetSolutionsValues(){
+    function GetSolutionsValues() {
         var solutionId = $("#drp-solutions").val();
-        if(solutionId == "All"){
+        if(solutionId == "All") {
             GetServicesValues();
             return
         }
         var data = {
             Id: solutionId,
-            UserId: $("#Freelancer-id").val(),
         }
 
         $.ajax({
@@ -588,16 +561,9 @@
             data: JSON.stringify(data),
             success: function (result) {
                 $("#drp-industries option:not(:first)").remove()
-                $.each(result.Result.IndustriesData, function (datas, values) {
+                $.each(result.Result, function (datas, values) {
                     $("#drp-industries").append($("<option     />").val(values.Id).text(values.IndustryName));
                 })
-
-                //var serviceid = $("#drp-services").val();
-                //if(serviceid == "All"){
-                //    $("#drp-services").val(result.Result.SolutionData[0].solutionServices)
-                //}
-               // $("#drp-services").val(result.Result.SolutionData[0].solutionServices)
-
             },
             error: function (result) {
                 alert("failure");

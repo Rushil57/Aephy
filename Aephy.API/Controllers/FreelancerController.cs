@@ -237,7 +237,7 @@ namespace Aephy.API.Controllers
                 List<dynamic> list = new List<dynamic>();
                 if (finalList.Count > 0)
                 {
-                   
+
                     if (finalList.Count > 0)
                     {
                         foreach (var item in finalList)
@@ -484,6 +484,21 @@ namespace Aephy.API.Controllers
                         Message = "Data Saved Succesfully!."
                     });
                 }
+                else
+                {
+                    var pointsData = _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (pointsData != null)
+                    {
+                        pointsData.PointValue = model.PointValue;
+                        pointsData.PointKey = model.PointKey;
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Updated Succesfully!."
+                        });
+                    }
+                }
             }
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
         }
@@ -621,7 +636,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-       
+
         [HttpPost]
         [Route("DeleteFreelancerSolution")]
         public async Task<IActionResult> DeleteFreelancerSolution([FromBody] MileStoneDetailsViewModel model)
@@ -666,6 +681,145 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException
                 });
             }
+        }
+
+        [HttpPost]
+        [Route("GetPointsDataById")]
+        public async Task<IActionResult> GetPointsDataById([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                var data = await _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                if (data != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Result = data
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "No data found"
+                    });
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+
+        }
+
+        [HttpPost]
+        [Route("GetSolutionBasedOnServices")]
+        public async Task<IActionResult> GetSolutionBasedOnServices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                try
+                {
+                    var serviceData = await _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToListAsync();
+                    List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                    List<Industries> industryDetailList = new List<Industries>();
+                    if (serviceData.Count > 0)
+                    {
+                        foreach (var data in serviceData)
+                        {
+                            var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
+                            var industryList = _db.SolutionIndustry.Where(x => x.SolutionId == data).Select(x => x.IndustryId).ToList();
+                            if (industryList.Count > 0)
+                            {
+                                foreach (var industryId in industryList)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industryDetailList.Add(industry);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.solutionServices = model.Id;
+                                dataStore.Id = solutiondata.Id;
+                                dataStore.Title = solutiondata.Title;
+                                solutionsModel.Add(dataStore);
+                            }
+
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            SolutionData = solutionsModel,
+                            IndustriesData = industryDetailList.Distinct()
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Foundd"
+            });
+        }
+
+
+        [HttpPost]
+        [Route("GetPopularSolutionBasedOnSolution")]
+        public async Task<IActionResult> GetPopularSolutionBasedOnSolution([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                try
+                {
+                    var solutionData = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
+                    List<Industries> industryDetailList = new List<Industries>();
+
+                    var industryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutionData.Id).Select(x => x.IndustryId).ToList();
+                    if (industryList.Count > 0)
+                    {
+                        foreach (var industryId in industryList)
+                        {
+                            var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                            industryDetailList.Add(industry);
+                        }
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = industryDetailList.Distinct()
+                        
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
         }
     }
 }

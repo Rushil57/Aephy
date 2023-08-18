@@ -651,32 +651,7 @@ namespace Aephy.WEB.Controllers
             GetUserProfileRequestModel model = new GetUserProfileRequestModel();
             model.UserId = userId;
             var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post,model);
-            //if (Solutiondata != null)
-            //{
-            //    dynamic data = JsonConvert.DeserializeObject(Solutiondata);
-            //    try
-            //    {
-            //        if (data.Result != null)
-            //        {
-            //            foreach (var service in data.Result)
-            //            {
-            //                string imagepath = service.ImagePath;
-            //                string sasToken = GenerateImageSasToken(imagepath);
-            //                string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
-            //                service.ImageUrlWithSas = imageUrlWithSas;
-
-            //            }
-
-            //        }
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //    }
-            //    string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
-            //    return jsonString;
-            //}
+           
             return Solutiondata;
 
         }
@@ -1043,7 +1018,7 @@ namespace Aephy.WEB.Controllers
             }
         }
 
-        //BindTopThreePopularSolutionsList
+       
         [HttpGet]
         public async Task<string> BindTopThreePopularSolutionsList()
         {
@@ -1080,7 +1055,7 @@ namespace Aephy.WEB.Controllers
             return jsonString;
         }
 
-        //GetTopThreeSolutionBasedonServices
+       
         [HttpPost]
         public async Task<string> GetTopThreeSolutionBasedonServices([FromBody] MileStoneIdViewModel model)
         {
@@ -1122,6 +1097,15 @@ namespace Aephy.WEB.Controllers
             {
                 return "failed to receive data..";
             }
+        }
+
+        //GetPointsDataById
+        [HttpPost]
+        public async Task<string> GetPointsDataById([FromBody] MileStoneIdViewModel model)
+        {
+            var pointsdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsDataById", HttpMethod.Post, model);
+            return pointsdata;
+
         }
     }
 }

@@ -69,19 +69,18 @@ namespace Aephy.WEB.Admin.Controllers
             return Servicesdata;
         }
 
-        //GetSolutionList
-        [HttpPost]
-        public async Task<string> GetSolutionList([FromBody] UserIdModel model)
+        
+        [HttpGet]
+        public async Task<string> GetSolutionList()
         {
-            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post,model);
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionList", HttpMethod.Get);
             return Solutiondata;
         }
 
-        //GetIndustryList
-        [HttpPost]
-        public async Task<string> GetIndustryList([FromBody] UserIdModel model)
+        [HttpGet]
+        public async Task<string> GetIndustryList()
         {
-            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Client/IndustriesListBasedonUserType", HttpMethod.Post, model);
+            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Admin/IndustriesList", HttpMethod.Post);
             return Industrydata;
         }
 
@@ -93,18 +92,18 @@ namespace Aephy.WEB.Admin.Controllers
             return data;
         }
 
-        //GetSolutionBasedonService
+        
         [HttpPost]
-        public async Task<string> GetSolutionBasedonService([FromBody] DropdownViewModel model)
+        public async Task<string> GetSolutionBasedonServiceSelected([FromBody] DropdownViewModel model)
         {
-            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnServices", HttpMethod.Post, model);
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetSolutionBasedOnServices", HttpMethod.Post, model);
             return data;
         }
 
         [HttpPost]
         public async Task<string> GetSolutionBasedonSolutionSelected([FromBody] DropdownViewModel model)
         {
-            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionBasedOnSolutionSelected", HttpMethod.Post, model);
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPopularSolutionBasedOnSolution", HttpMethod.Post, model);
             return data;
         }
     }

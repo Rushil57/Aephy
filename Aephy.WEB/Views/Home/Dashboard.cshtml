@@ -501,7 +501,7 @@
                                 </div>
 
                                 <div class="form-group pt-3">
-                                    <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()">Add Milestone</button>
+                                    <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()">Add Milestones</button>
                                     <button type="button" class="btn btn-primary" onclick="OpenPointsPopup()">Add Highlights</button>
                                 </div>
 
@@ -602,7 +602,7 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-brand">Submit</button>
-                                        <button class="btn btn-secondary" onclick="ResetMileStoneForm();">Reset</button>
+                                        <button  type="button" class="btn btn-secondary" onclick="ResetMileStoneForm();">Reset</button>
                                     </div>
                                 </form>
 
@@ -646,7 +646,7 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-brand">Submit</button>
-                                        <button class="btn btn-secondary" onclick="ResetPointsForm();">Reset</button>
+                                        <button type="button" class="btn btn-secondary" onclick="ResetPointsForm();">Reset</button>
                                     </div>
                                 </form>
 
@@ -1383,7 +1383,6 @@ function InvokeApprovedList() {
     function SavePointsData() {
         var PointsData = {
             Id: $("#PointsId").val(),
-            //Point: $("#pointsDetails-id").val(),
             PointKey :$("#pointsKey-id").val(),
             PointValue :$("#pointsValue-id").val(),
             SolutionId: $("#SolutionId").val(),
@@ -1447,7 +1446,7 @@ function InvokeApprovedList() {
                              subObj.PointValue = ""
                          }
                     htm += '<tr>';
-                    htm += '<td>' + subObj.Id + '</td>';
+                    htm += '<td class=cls-milestone onclick=GetPointsDataById(' + subObj.Id + ')>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.PointKey + '</td>';
                     htm += '<td>' + subObj.PointValue + '</td>';
                     htm += '<td><a class="btn btn-danger btn-sm" onclick=DeletePointsById(' + subObj.Id + ')>Delete</a></td>';
@@ -1606,6 +1605,31 @@ function InvokeApprovedList() {
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
+        });
+    }
+
+    function GetPointsDataById(id){
+       var data = {
+            Id: id,
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetPointsDataById", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result != null) {
+                    $("#PointsPopModal").modal('show')
+                    var data = result.Result;
+                    $("#PointsId").val(data.Id);
+                    $("#pointsKey-id").val(data.PointKey);
+                    $("#pointsValue-id").val(data.PointValue);
+                }
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
         });
     }
 </script>

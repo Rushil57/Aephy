@@ -81,7 +81,7 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-        public ActionResult BrowseSolution()
+        public ActionResult BrowseSolutions()
         {
 
             return View();

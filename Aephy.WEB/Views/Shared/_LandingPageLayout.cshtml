@@ -69,7 +69,7 @@
 
                                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <li class="dropdown-item">
-                                                    <a href="~/LandingPage/BrowseSolution" class="nav-link">Browse Solutions</a>
+                                                    <a href="~/LandingPage/BrowseSolutions" class="nav-link">Browse Solutions</a>
                                                 </li>
 
                                                 <li class="dropdown-item">
@@ -133,25 +133,25 @@
                                     <hr class="header-bar" />
                                     <ul class="navbar-nav" id="extra-service-ul">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Strategy and Consulting">AI Strategy and Consulting</a>
+                                            <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Strategy and Consulting">AI Strategy and Consulting</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Engineering">
+                                            <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Engineering">
                                                 AI Engineering
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Data Science and Analytics">
+                                            <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Data Science and Analytics">
                                                AI Data Science and Analytics
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Operations">
+                                            <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Operations">
                                                 AI Operations
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/LandingPage/BrowseSolution">
+                                            <a class="nav-link" href="/LandingPage/BrowseSolutions">
                                                 More
                                             </a>
                                         </li>
@@ -167,17 +167,17 @@
             <div class="row-lg-auto row-sm-12 row-md-12" id="extra-service-row">
                 <div class="nav-scroller bg-white">
                     <nav class="nav">
-                        <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Strategy and Consulting">AI Strategy and Consulting</a>
-                        <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Engineering">
+                        <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Strategy and Consulting">AI Strategy and Consulting</a>
+                        <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Engineering">
                             AI Engineering
                         </a>
-                        <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Data Science and Analytics">
+                        <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Data Science and Analytics">
                             AI Data Science and Analytics
                         </a>
-                        <a class="nav-link" href="/LandingPage/BrowseSolution?service=AI Operations">
+                        <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Operations">
                             AI Operations
                         </a>
-                        <a class="nav-link" href="/LandingPage/BrowseSolution">
+                        <a class="nav-link" href="/LandingPage/BrowseSolutions">
                             More
                         </a>
                     </nav>
@@ -1038,9 +1038,9 @@
 
                     <div class="container-fluid">
                         <div id="ServicesForm" style="border-radius:10px;display:block;">
-                            <div class="d-flex justify-content-end" style="padding:2%;">
-                                <a href="~/LandingPage/BrowseSolution" class="cls-availableSolution" id="availableSolution" style="color:rgb(211 139 78);">See Available Solutions</a>
-                            </div>
+                            @*<div class="d-flex justify-content-end" style="padding:2%;">
+                                <a href="~/LandingPage/BrowseSolutions" class="cls-availableSolution" id="availableSolution" style="color:rgb(211 139 78);">See Available Solutions</a>
+                            </div>*@
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 first-col" style="text-align: center;border-right: 1px solid #000;">
                                     <h3 data-aos="fade-up" style=" margin: auto;width: 50%;padding: 10px;">
@@ -1056,21 +1056,21 @@
                                 <div class="col-lg-6  order-3 order-lg-3">
                                     <form action="#">
                                         <div class="col d-flex flex-column">
-                                            <label data-aos="fade-up">Select Service</label>
+                                            <div class="requestmodal-div">Select Service</div>
                                             <select class="dropdown form-select" name="service" id="drp-popServices" onchange="ServicesValue()">
                                                 <option value="All">All Services</option>
                                             </select>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Select Solution</label>
+                                            <div class="requestmodal-div">Select Solution &nbsp;<a data-toggle="popover" class="solution-popover" data-bs-content="View Available Solutions: Go to 'Homepage > Get Started > Browse Solutions'."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a></div>
                                             <select class="dropdown form-select" name="level" id="drp-popSolutions" onchange="SolutionValues()">
                                                 <option value="All">All Solutions</option>
                                             </select>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Select Industry</label>
+                                            <div class="requestmodal-div">Select Industry</div>
                                             <select class="dropdown form-select" name="solution" id="drp-popIndustries">
                                                 <option value="All">All Industries</option>
                                             </select>
@@ -1313,6 +1313,8 @@
         }
 
         $(function () {
+             $(".solution-popover").popover();
+
             $("form[name='GigOpeningApplyForm']").validate({
                 rules: {
                     Description: { required: true },

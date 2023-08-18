@@ -300,5 +300,16 @@ namespace Aephy.API.Models
             public string? ImageUrlWithSas { get; set; }
 
         }
+
+        public class SuccessfullProjectModel
+        {
+            public int Id { get; set; }
+
+            public string? Title { get; set; }
+
+            public string? Description { get; set; }
+
+            public List<SolutionSuccessfullProjectResult> projectResultList { get; set; } 
+        }
     }
 }

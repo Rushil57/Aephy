@@ -348,6 +348,25 @@ namespace Aephy.API.Controllers
                             professionalData.Add(solutionTop);
                         }
                     }
+
+                    var successfullprojectData = await _db.SolutionSuccessfullProject.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).ToListAsync();
+                    List<SuccessfullProjectModel> successfullProjectList = new List<SuccessfullProjectModel>();
+                    if(successfullprojectData.Count > 0)
+                    {
+                        foreach(var projectData in successfullprojectData)
+                        {
+                            var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == projectData.Id).ToList();
+                            SuccessfullProjectModel succesfulldata = new SuccessfullProjectModel();
+                            if (resultData.Count > 0)
+                            {
+                                succesfulldata.projectResultList = resultData;
+                            }
+                            succesfulldata.Title = projectData.Title;
+                            succesfulldata.Description = projectData.Description;
+                            successfullProjectList.Add(succesfulldata);
+
+                        }
+                    }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -357,7 +376,8 @@ namespace Aephy.API.Controllers
                             SolutionDefine = solutionDefine,
                             MileStone = milestoneData,
                             PointsData = pointsData,
-                            TopProfessional = professionalData
+                            TopProfessional = professionalData,
+                            SuccessfullProjects = successfullProjectList
                         }
                     });
                 }
@@ -604,7 +624,6 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //GetTopThreePopularSolutionBasedOnServices
         [HttpPost]
         [Route("GetTopThreePopularSolutionBasedOnServices")]
         public async Task<IActionResult> GetTopThreePopularSolutionBasedOnServices([FromBody] MileStoneIdViewModel model)
@@ -759,6 +778,50 @@ namespace Aephy.API.Controllers
 
                     });
                 }
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSuccessfullProjectList")]
+        public async Task<IActionResult> GetSuccessfullProjectList()
+        {
+            try
+            {
+                var successfullprojectData = await _db.SolutionSuccessfullProject.Take(3).ToListAsync();
+                List<SuccessfullProjectModel> successfullProjectList = new List<SuccessfullProjectModel>();
+                if (successfullprojectData.Count > 0)
+                {
+                    foreach (var projectData in successfullprojectData)
+                    {
+                        var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == projectData.Id).ToList();
+                        SuccessfullProjectModel succesfulldata = new SuccessfullProjectModel();
+                        if (resultData.Count > 0)
+                        {
+                            succesfulldata.projectResultList = resultData;
+                        }
+                        succesfulldata.Title = projectData.Title;
+                        succesfulldata.Description = projectData.Description;
+                        successfullProjectList.Add(succesfulldata);
+
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = successfullProjectList
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
             }
         }
     }

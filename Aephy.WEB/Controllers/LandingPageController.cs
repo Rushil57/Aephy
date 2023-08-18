@@ -440,5 +440,14 @@ namespace Aephy.WEB.Controllers
 
 
         }
+
+        //GetSuccessfullProjectList
+        [HttpGet]
+        public async Task<string> GetSuccessfullProjectList()
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetSuccessfullProjectList", HttpMethod.Get);
+            return data;
+
+        }
     }
 }

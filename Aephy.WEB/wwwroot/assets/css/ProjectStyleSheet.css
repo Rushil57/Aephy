@@ -1623,3 +1623,7 @@ progress::-webkit-progress-value {
     text-align: center;
     padding-top: 5%;
 }
+
+.carousel-item-next, .carousel-item-prev, .carousel-item.active{
+    display: flex !important
+}

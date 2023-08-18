@@ -305,101 +305,9 @@
 
             </div>
 
-            <div class="row">
+            <div class="row" id="successfull-project-section">
 
-                <div class="col-lg-4 col-md-6 px-0" data-aos="fade-up" data-aos-delay="100">
-                    <div class="box">
-                        <div class="icon-msg">
-                            <i class="bi-chat-right-quote"></i>
-                        </div>
-                        <div class="description section-detail-size">
-                            “ Ephylink has been a game-changer for my business. I was able to find a project that not only met but exceeded my expectations. I am extremely happy with the outcome. I would definitely use this platform again in the future.”
-                        </div>
-                        <div class="child col-10 mx-2">
-                            <div class="title border-bottom">
-                                Results
-                            </div>
-                            <div class="content">
-                                <div class="info">
-                                    <div class="name">50% <i class="bi-arrow-up"></i></div>
-                                    <div class="sub">
-                                        <div class="sub-title">Website Traffic</div>
-                                    </div>
-                                </div>
-                                <div class="right-info">
-                                    <div class="name">20% <i class="bi-arrow-up"></i></div>
-                                    <div class="sub">
-                                        <div class="sub-title">Sales</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore" data-aos="fade-up" data-aos-delay="200">
-                    <div class="box" style="background-color:#a6a6a6;">
-                        <div class="icon-msg">
-                            <i class="bi-chat-right-quote"></i>
-                        </div>
-                        <div class="description section-detail-size">
-                            "Thanks to Ephylink, we were able to complete our project within budget and ahead of schedule. We saved over $10,000 and finished 2 weeks earlier than anticipated. The freelancers we hired were a perfect fit for our needs and the platform made it easy to find them."
-                        </div>
-                        <div class="middle-child col-10 mx-2">
-                            <div class="title border-bottom">
-                                Results
-                            </div>
-                            <div class="content">
-                                <div class="info">
-                                    <div class="name">
-                                        <i class="bi bi-currency-dollar"></i>10,000
-                                    </div>
-                                    <div class="sub">
-                                        <div class="sub-title">Saved</div>
-                                    </div>
-                                </div>
-                                <div class="right-info">
-                                    <div class="name">
-                                        2 Weeks
-                                    </div>
-                                    <div class="sub">
-                                        <div class="sub-title">Faster</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
-
-                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore" data-aos="fade-up" data-aos-delay="300">
-                    <div class="box">
-                        <div class="icon-msg">
-                            <i class="bi-chat-right-quote"></i>
-                        </div>
-                        <div class="description section-detail-size">
-                            We had been struggling to find the right AI solution for our company until we stumbled upon this platform. The project provided by the freelancers was exceptional.
-                        </div>
-                        <div class="child col-10 mx-2">
-                            <div class="title border-bottom">
-                                Results
-                            </div>
-                            <div class="content">
-                                <div class="info">
-                                    <div class="name">30% <i class="bi-arrow-up"></i></div>
-                                    <div class="sub">
-                                        <div class="sub-title">Efficiency</div>
-                                    </div>
-                                </div>
-                                <div class="right-info">
-                                    <div class="name">20% <i class="bi-arrow-down"></i></div>
-                                    <div class="sub">
-                                        <div class="sub-title">Errors</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- End Card Item -->
+             
             </div>
             <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View More <i class="bi bi-triangle-fill"></i></a>
             <a class="cls-trusted-lessbtn" href="#shortreviews" onclick="TrustedViewLess()" id="TrustedViewLess">View Less <i class="bi bi-triangle-fill"></i></a>
@@ -543,7 +451,8 @@
 <script>
 
     $(function () {
-        GetPopularSolution()
+        GetPopularSolution();
+        GetSuccessfullProjects();
     })
 
     function GetPopularSolution() {
@@ -606,7 +515,6 @@
         });
 
     }
-
     function TrustedViewMore() {
         $(".cls-trusted-btn").css("display", "none");
         $(".cls-trusted-viewmore").css("display", "block");
@@ -626,6 +534,53 @@
         $(".cls-professional-btn").css("display", "block");
         $(".cls-professional-viewmore").css("display", "none");
         $(".cls-professional-lessbtn").css("display", "none");
+    }
+
+    function GetSuccessfullProjects(){
+       $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSuccessfullProjectList", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                
+                var data = result.Result;
+                var successfullProject = "";
+                $.each(data, function (datas, values) {
+                    successfullProject += '<div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">' +
+                        '<div class="box cls-main-content" >' +
+                            '<div class="icon-msg" >' +
+                                '<i class="bi-chat-right-quote" > </i>' +
+                                    '</div>' +
+                                    '<div class="description section-detail-size">' +values.Description + '</div>' +
+                                    '<div class="child col-10 mx-2 cls-result">' +
+                                    '<div class="title border-bottom">Results</div>' +
+                                    '<div class="content">';
+                                    if (values.projectResultList.length > 0) {
+                                        $.each(values.projectResultList, function (resultData, resultValue) {
+                                            successfullProject += '<div class="info">' +
+                                                '<div class="name">' + resultValue.ResultValue + '</div>' +
+                                                '<div class="sub">' +
+                                                '<div class="sub-title">' + resultValue.ResultKey + '</div>' +
+                                                '</div>' +
+                                                '</div>';
+                                        });
+                                        }
+                            successfullProject += '</div></div></div></div></div>';
+                });
+                $('#successfull-project-section').html(successfullProject);
+                $('.cls-result .content .info:nth-child(2)').addClass('right-info');
+                $("#successfull-project-section .cls-main-div:nth-child(even) .cls-main-content").css("background-color", "#808080ad");
+                $("#successfull-project-section .cls-main-div:nth-child(even) .cls-main-content .cls-result").css("background-color", 'rgb(128 128 128 / 0%)');
+                $('.cls-trusted-viewmore').first().removeClass('cls-trusted-viewmore');
+
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
     }
 </script>
 

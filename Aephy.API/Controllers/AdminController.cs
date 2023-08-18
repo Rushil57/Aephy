@@ -2317,7 +2317,7 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "Save Successfully!"
+                    Message = "Data Save Successfully!"
                 });
             }
             else
@@ -2328,6 +2328,11 @@ namespace Aephy.API.Controllers
                     resultData.ResultKey = model.ResultKey;
                     resultData.ResultValue = model.ResultValue;
                     _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Updated Successfully!"
+                    });
                 }
             }
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel

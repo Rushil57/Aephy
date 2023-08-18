@@ -182,80 +182,16 @@
                                         Successful Projects
                                     </h3>
                                     <div id="SuccessfulProjectsCarousel" class="carousel slide" data-interval="false">
-                                        <div class="carousel-inner" role="listbox">
-                                            <div class="carousel-item active">
-                                                <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                                    <div class="box cls-Successful-Projects">
-                                                        <div class="icon-msg">
-                                                            <h3 class="Project-title-size">
-                                                                Customer experience
-                                                            </h3>
-                                                        </div>
-                                                        <div class="description">
-                                                            Our team developed an AI strategy and roadmap for a retail bank that included implementing chatbots and voice assistants to automate customer service processes, improve response times, and reduce costs. Additionally, we identified opportunities to use machine learning algorithms to personalize marketing campaigns and product recommendations.
-                                                        </div>
-                                                        <div class="child col-10 mx-lg-2">
-                                                            <div class="title border-bottom">
-                                                                Results
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="info">
-                                                                    <div class="name">Improved</div>
-                                                                    <div class="sub">
-                                                                        <div class="sub-title">Customer Satisfaction</div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="right-info">
-                                                                    <div class="name">10% <i class="bi-arrow-up"></i></div>
-                                                                    <div class="sub">
-                                                                        <div class="sub-title">Revenue</div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="carousel-item">
-                                                <div class="col-md-6">
-                                                    <div class="box cls-Successful-Projects" style="background-color:#a6a6a6">
-                                                        <div class="icon-msg">
-                                                            <h3 class="Project-title-size">
-                                                                Portfolio Management
-                                                            </h3>
-                                                        </div>
-                                                        <div class="description">
-                                                            An AI roadmap that included implementing natural language processing (NLP) and deep learning algorithms to analyze market data, identify trends and patterns, and provide investment recommendations. We also implemented a risk management system that used machine learning to monitor portfolio risk in real-time and provide alerts when necessary.
-                                                        </div>
-                                                        <div class="child col-10 mx-lg-2" style="background-color:#a6a6a6">
-                                                            <div class="title border-bottom">
-                                                                Results
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="info">
-                                                                    <div class="name">15%</div>
-                                                                    <div class="sub">
-                                                                        <div class="sub-title">Investment Return</div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="right-info">
-                                                                    <div class="name">20% <i class="bi-arrow-down"></i></div>
-                                                                    <div class="sub">
-                                                                        <div class="sub-title">Risk Exposure</div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <a class="carousel-control-prev bg-transparent w-aut" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="prev">
+
+                                        <div class="carousel-inner" role="listbox" id="successfull-project-section">
+
+                                        </div>
+                                            <a class="carousel-control-prev bg-transparent w-aut project-indicators" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                             </a>
-                                            <a class="carousel-control-next bg-transparent w-aut" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="next">
+                                            <a class="carousel-control-next bg-transparent w-aut project-indicators" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -993,6 +929,7 @@
             data: JSON.stringify(data),
             success: function (result) {
                 var data = result.Result
+                
                 if(data.SolutionDefine != null){
                     $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
                     $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
@@ -1059,14 +996,14 @@
                        $('#progress-div li:first').addClass('progress__item--active');
                     $('#milestone-Popup-div li:first').addClass('progress__item--active');
                     $(".cls-milestone-popup").css("display","block")
-                    $(".cls-temp").remove()
+                    $(".cls-mileStone").remove()
                 }
                  else{
                     $('#progress-div').empty()
-                   $(".cls-temp").remove()
-                   $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#progress-div");
-                    $(".cls-temp").css("fontSize", "16px");
-                    $(".cls-temp").css("padding-left", "14px");
+                   $(".cls-mileStone").remove()
+                   $( "<p class='cls-mileStone'>No Data Available</p>" ).insertAfter("#progress-div");
+                    $(".cls-mileStone").css("fontSize", "16px");
+                    $(".cls-mileStone").css("padding-left", "14px");
                     $(".cls-milestone-popup").css("display","none")
                 }
                 if(data.PointsData != ""){
@@ -1147,6 +1084,15 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
 
                 }
+                if(data.SuccessfullProjects != ""){
+                    BindSuccessfullProject(data.SuccessfullProjects);
+                    $(".cls-temp").remove();
+                }else{
+                    $(".cls-temp").remove();
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
+                }
+
+
                 var newContent = "";
                 if(projecttype == "medium"){
                     newContent = "1 Project Manager + 1 Expert + 1 Associate";
@@ -1188,5 +1134,76 @@
          }
 
     }
+
+    function BindSuccessfullProject(data){
+          var successfullProject = "";
+          $.each(data, function (datas, values) {
+
+              var description = values.Description.length > 430 ? values.Description.substring(0, 430) + "..." : values.Description;
+
+            successfullProject += '<div class="carousel-item project-carousel">' +
+              '<div class="col-lg-6 col-md-6 d-flex justify-content-center cls-main">' +
+                 '<div class="box cls-Successful-Projects">' +
+                   '<div class="icon-msg">' +
+                     '<h3 class="Project-title-size">'+ values.Title +'</h3>' +
+                    '</div>' +
+                    '<div class="description" title="'+values.Description  +'">'+ description +'</div>' +
+                    '<div class="child col-10 mx-lg-2 cls-result">' +
+                        '<div class="title border-bottom">' +
+                            'Results' +
+                         '</div>' +
+                     '<div class="content">';
+                        if(values.projectResultList != null){
+                              $.each(values.projectResultList, function (resultData, resultValue) {
+                                successfullProject += '<div class="info">' +
+                                                       '<div class="name">'+resultValue.ResultValue+'</div>' +
+                                                            '<div class="sub">' +
+                                                                '<div class="sub-title">'+resultValue.ResultKey+'</div>' +
+                                                            '</div>' +
+                                                     '</div>';
+                              });   
+                        }
+                        successfullProject += '</div></div></div></div></div>';
+                     });
+                     $('#successfull-project-section').html(successfullProject);
+                     $('.cls-Successful-Projects .cls-result .content .info:nth-child(2)').addClass('right-info');
+                    $('.project-carousel').first().addClass('active');
+                    $('.project-indicators > li').first().addClass('active');
+
+                    $(".cls-main:nth-child(even) .cls-Successful-Projects").css("background-color","#808080ad")
+                    $(".cls-main:nth-child(even) .cls-Successful-Projects .cls-result").css("background-color", 'rgb(128 128 128 / 0%)')
+
+                    //if($.trim($(".cls-result .content").html())==''){
+                    //     $(".cls-result").css("display","none");
+                    //}else{
+                    //    $(".cls-result").css("display","block");
+                    //}
+
+                    if(data.length >= 3){
+                        $(".project-indicators").css("display","block");
+                        $(".project-indicators").css("margin-top","36%");
+                    }else{
+                        $(".project-indicators").css("display","none");
+                        $(".project-indicators").css("margin-top","0%")
+                    }
+                  
+                      var item = document.querySelectorAll('.project-carousel')
+                         item.forEach((el) => {
+                                const minPerSlide = 4
+                                let next = el.nextElementSibling
+                                  if(data.length != 1){
+                                       for (var i = 1; i < minPerSlide; i++) {
+                                        if (!next) {
+                                            next = item[0]
+                                        }
+                                        let cloneChild = next.cloneNode(true)
+                                        el.appendChild(cloneChild.children[0])
+                                        next = next.nextElementSibling
+                                  }  
+                                }
+                                
+                            })
+                  
+                }
 
 </script>

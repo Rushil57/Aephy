@@ -740,6 +740,7 @@ h6 {
 #successfullProjects .box {
     background: var(--brand);
     min-height: 550px;
+    width: 100%;
     margin: 10px !important;
     padding: 20px !important;
     position: relative;
@@ -757,6 +758,10 @@ h6 {
     }
     #successfullProjects .successfull-projects-next-prev {
         height: 650px !important;
+    }
+
+    .cls-main {
+        min-width: 350px !important;
     }
 }
 
@@ -904,7 +909,7 @@ h6 {
 
 #successfullProjects .box .icon-msg h3 {
     flex-shrink: 0;
-    font-size: 18px;
+    font-size: 21px;
     font-weight: 800;
     color: #fff;
     padding: 10px 10px 20px 10px;

@@ -1413,7 +1413,7 @@
             ResultKey: $("#ResultKey").val(),
             ResultValue: $("#ResultValue").val()
        }
-
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("AddSuccessfullProjectResult", "Solutions")",
@@ -1424,6 +1424,7 @@
                 showToaster("success", "Success", result.Message);
                 ResetResultForm();
                 GetProjectResultList();
+                 $("#preloader").hide();
 
             },
             error: function (result) {
@@ -1440,7 +1441,7 @@
             Title: $("#SuccessfullProjectTitle").val(),
             Description: $("#SuccessfullProjectDescription").val()
         }
-
+         $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("AddSuccessfullProject", "Solutions")",
@@ -1452,6 +1453,7 @@
                     showToaster("success", "Success", result.Message);
                     $("#SuccessfullProjectId").val(result.Result);
                     $("#result-btn").prop('disabled', false);
+                    $("#preloader").hide();
 
                 }else{
                     showToaster("success", "Success !", result.Message);
@@ -1586,7 +1588,7 @@
             var data = {
                 Id: Id,
             };
-
+             $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteProjectResult", "Solutions")",
@@ -1596,7 +1598,7 @@
                 success: function (result) {  
                     showToaster("success", "Success", result.Message);
                     GetProjectResultList();
-
+                    $("#preloader").hide();
                 },
                 error: function (result) {
                     showToaster("error", "Error !", "Something went wrong !!");
@@ -1620,7 +1622,7 @@
             var data = {
                 Id: Id,
             };
-
+             $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteSuccessfullProject", "Solutions")",
@@ -1630,7 +1632,7 @@
                 success: function (result) {  
                     showToaster("success", "Success", result.Message);
                     GetProjectList();
-
+                     $("#preloader").hide();
                 },
                 error: function (result) {
                     showToaster("error", "Error !", "Something went wrong !!");

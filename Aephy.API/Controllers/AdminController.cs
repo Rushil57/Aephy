@@ -2638,5 +2638,86 @@ namespace Aephy.API.Controllers
                 Message = "Something went Wrong!",
             });
         }
+
+        [HttpPost]
+        [Route("SaveLevelData")]
+        public async Task<IActionResult> SaveLevelData([FromBody] List<LevelRange> levelList)
+        {
+            try
+            {
+                if(levelList.Count > 0)
+                {
+                    foreach(var level in levelList)
+                    {
+                        if (level.ID == 0)
+                        {
+                            var dbModel = new LevelRange
+                            {
+                                Level = level.Level,
+                                minLevel = level.minLevel,
+                                maxLevel = level.maxLevel
+                            };
+
+                            await _db.LevelRanges.AddAsync(dbModel);
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            var LevelData = _db.LevelRanges.Where(x => x.ID == level.ID).FirstOrDefault();
+                            if (LevelData != null)
+                            {
+                                LevelData.Level = level.Level;
+                                LevelData.minLevel = level.minLevel;
+                                LevelData.maxLevel = level.maxLevel;
+                                _db.SaveChanges();
+                            }
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Saved Successfully!"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
+        [HttpGet]
+        [Route("GetSavedLevelsList")]
+        public async Task<IActionResult> GetSavedLevelsList()
+        {
+            try
+            {
+                var list = await _db.LevelRanges.ToListAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
     }
 }

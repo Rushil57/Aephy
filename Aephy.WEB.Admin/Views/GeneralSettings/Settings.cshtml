@@ -1,0 +1,238 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "- Settings";
+}
+
+<style>
+    .GigLevels-card .title {
+        margin:20px 0;
+    }
+
+        .GigLevels-card .title h5 {
+        font-weight:700;
+    }
+</style>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Settings</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Settings</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+            <!-- Left side columns -->
+            <div class="col-lg-8">
+                <div class="row">
+                    <!-- Recent Sales -->
+                    <div class="col-12">
+                        <div class="card GigLevels-card overflow-auto">
+
+                            <div class="card-body">
+                                <div class="row mb-3 title d-flex justify-content-center">
+                                    <h5 for="minLevel" class="col-md-4 col-lg-3 col-form-label">Level</h5>
+                                    <div class="col-4">
+                                        <h5 for="minLevel" class="col-4 col-form-label">Min</h5>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 for="maxLevel" class="col-4 col-form-label">Max</h5>
+                                    </div>
+                                </div>
+                                <form name="SaveLevelsForm" id="FormSaveLevels">
+                                    <div class="row mb-3 d-flex justify-content-center">
+                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Associate</label>
+                                        <input name="LevelID" type="text" class="form-control d-none" value="0">
+                                        <div class="col-4">
+                                            <input name="minLevel" type="text" class="form-control">
+                                        </div>
+                                        <div class="col-4">
+                                            <input name="maxLevel" type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3 d-flex justify-content-center">
+                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Expert</label>
+                                        <input name="LevelID" type="text" class="form-control d-none" value="0">
+                                        <div class="col-4">
+                                            <input name="minLevel" type="text" class="form-control">
+                                        </div>
+                                        <div class="col-4">
+                                            <input name="maxLevel" type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3 d-flex justify-content-center">
+                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Project Manager</label>
+                                        <input name="LevelID" type="text" class="form-control d-none" value="0">
+                                        <div class="col-4">
+                                            <input name="minLevel" type="text" class="form-control">
+                                        </div>
+                                        <div class="col-4">
+                                            <input name="maxLevel" type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3 d-flex justify-content-center">
+                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Project Manager / Project Architect</label>
+                                        <input name="LevelID" type="text" class="form-control d-none" value="0">
+                                        <div class="col-4">
+                                            <input name="minLevel" type="text" class="form-control">
+                                        </div>
+                                        <div class="col-4">
+                                            <input name="maxLevel" type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary px-4">Save</button>
+                                    </div>
+                                </form><!-- End Change Password Form -->
+                            </div>
+
+                        </div>
+                    </div><!-- End Recent Sales -->
+                </div>
+            </div><!-- End Left side columns -->
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        bindLevelsRangeData();
+    });
+
+    $(function () {
+        $("form[name='SaveLevelsForm']").validate({
+            rules: {
+                minLevel: { required: true },
+                maxLevel: { required: true }
+            },
+            messages: {
+                minLevel: { required: "Please enter minimum range", },
+                maxLevel: { required: "Please enter maximum range", },
+            },
+            submitHandler: function (form) {
+                SaveLevelsData()
+            }
+        });
+    });
+
+    function SaveLevelsData(){
+
+        var ArrayLevelID = new Array();
+        var ArrayminLevel = new Array();
+        var ArraymaxLevel = new Array();
+        var ArrayLevel = ["Associate", "Expert", "Project Manager", "Project Manager / Project Architect"];
+        var ids = '';
+
+        $("input:text[name=LevelID]").each(function () {
+            ArrayLevelID.push($(this).val());
+        });
+
+        $("input:text[name=minLevel]").each(function () {
+            ArrayminLevel.push($(this).val());
+        });
+
+        $("input:text[name=maxLevel]").each(function () {
+            ArraymaxLevel.push($(this).val());
+        });
+
+        var listSize = ArrayLevelID.length;
+        if (listSize > 0){
+            var index = 0;
+            var dataList = [];
+            var flag = 0;
+            for(index = 0; index < listSize; index++){
+                var minval = parseFloat(ArrayminLevel[index]);
+                var maxval = parseFloat(ArraymaxLevel[index]);
+                if (minval > maxval) {
+                    showToaster("error", "Error !", "Min level must be less than max level..!!");
+                    flag++;
+                    break;
+                }
+                dataList.push({
+                    ID:ArrayLevelID[index],
+                    Level: ArrayLevel[index],
+                    minLevel:ArrayminLevel[index],
+                    maxLevel:ArraymaxLevel[index]
+                });
+            }
+            if(flag < 1){
+                var formData = new FormData();
+                formData.append("FormData", JSON.stringify(dataList));
+
+                $('#preloader').show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SaveLevelData", "GeneralSettings")",
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (result) {
+                        $('#preloader').hide();
+                        var test = result.split(",")[1].split(":")[1]
+                        showToaster("success", "Success", test.replace(/\"/g, ""));
+                        bindLevelsRangeData();
+                    },
+                    error: function (result) {
+                        $('#preloader').hide();
+                        showToaster("error", "Error !", "Failure");
+                        bindLevelsRangeData();
+                    }
+                });
+            }
+        }
+    }
+
+    function bindLevelsRangeData(){
+        $('#preloader').show();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("getSavedLevelsdata", "GeneralSettings")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var size = result.Result.length;
+                var res = 0;
+                var htm = '';
+                if(size > 0){
+                    for(res = 0; res < size; res++){
+                        var item = result.Result[res];
+                        htm += '<div class="row mb-3 d-flex justify-content-center">';
+                        htm += '<label class= "col-md-4 col-lg-3 col-form-label">' + item.Level + '</label>';
+                        htm += '<input name = "LevelID" type = "text" class="form-control d-none" value = "'+item.ID+'" id = "architect_LevelID">';
+                        htm += '<div class="col-4">';
+                        htm += '<input name="minLevel" type = "text" class="form-control" value="'+item.minLevel+'" id = "architect_minLevel">';
+                        htm += '</div>';
+                        htm += '<div class="col-4">';
+                        htm += '<input name="maxLevel" type = "text" class="form-control" value="'+item.maxLevel+'" id = "architect_maxLevel">';
+                        htm += '</div>';
+                        htm += '</div>';
+                    }
+                    htm += '<div class="text-end">';
+                    htm += '<button type="submit" class="btn btn-primary px-4"> Save </button>';
+                    htm += '</div>';
+                    $('#FormSaveLevels').html('');
+                    //$('#FormSaveLevels').find('div').remove();
+                    $('#FormSaveLevels').append(htm);
+                }
+                $('#preloader').hide();
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+</script>

@@ -22,7 +22,7 @@
                             A complete solution to revolutionize your business potential.
                         </p>
                         <div class="d-flex infoBtn mt-5">
-                            <a class="btn btn-white" href="~/LandingPage/BrowseSolution">Browse Solutions</a>
+                            <a class="btn btn-white" href="~/LandingPage/BrowseSolutions">Browse Solutions</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                                 <img src="../assets/img/services/ai_strategy_consulting.jpg" alt="" class="img-fluid" data-aos="zoom-out">
                             </div>
                             <h3>
-                                <a href="#Ai-strategy-consulting" class="stretched-link section-title-size">
+                                <a data-hr="Ai-strategy-consulting" class="stretched-link section-title-size cls-redirect">
                                     Strategy & Consulting
                                 </a>
                             </h3>
@@ -67,7 +67,7 @@
                                 <img src="~/assets/img/services/services-ai-engineering.jpg" alt="" class="img-fluid" data-aos="zoom-out">
                             </div>
                             <h3>
-                                <a href="#Ai-engineering" class="stretched-link section-title-size">
+                                <a data-hr="Ai-engineering" class="stretched-link section-title-size cls-redirect">
                                     AI Engineering
                                 </a>
                             </h3>
@@ -88,7 +88,7 @@
                                 <img src="../assets/img/services/data_science_analytics.jpg" alt="" class="img-fluid" data-aos="zoom-out">
                             </div>
                             <h3>
-                                <a href="#DataScience-analytics" class="stretched-link section-title-size">
+                                <a data-hr="DataScience-analytics" class="stretched-link section-title-size cls-redirect">
                                     Data Science & Analytics
                                 </a>
                             </h3>
@@ -109,7 +109,7 @@
                                 <img src="../assets/img/services/services-ai-operations.jpg" alt="" class="img-fluid" data-aos="zoom-out">
                             </div>
                             <h3>
-                                <a href="#Ai-operations" class="stretched-link section-title-size">
+                                <a data-hr="Ai-operations" class="stretched-link section-title-size cls-redirect">
                                     AI Operations
                                 </a>
                             </h3>
@@ -130,7 +130,7 @@
                                 <img src="../assets/img/services/services_others.jpg" alt="" class="img-fluid" data-aos="zoom-out">
                             </div>
                             <h3>
-                                <a href="#other-Services" class="stretched-link section-title-size">
+                                <a data-hr="other-Services" class="stretched-link section-title-size cls-redirect">
                                     Other Services
                                 </a>
                             </h3>
@@ -318,9 +318,17 @@
                     <h4 class="py-2 service-title-size">
                         Ready to Get Started
                     </h4>
-                    <a class="btn btn-brand py-2" href="~/LandingPage/BrowseSolution?type=service">Select Service</a>
+                    <a class="btn btn-brand py-2" href="~/LandingPage/BrowseSolutions?type=service">Select Service</a>
                 </div>
             </div>
         </div>
     </section><!-- End why Us Section -->
 </main>
+<script type="text/javascript">
+    $('.cls-redirect').click(function (event) {
+        var divId = $(this).attr('data-hr');
+        $('html, body').animate({
+            scrollTop: $("#" + divId).offset().top - 110
+        }, 200);
+    });
+</script>

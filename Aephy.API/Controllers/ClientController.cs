@@ -608,7 +608,7 @@ namespace Aephy.API.Controllers
                     Result = new
                     {
                         SolutionData = mainlist,
-                        TotalCount = solutionList.Count()
+                        TotalCount = solutionsModel.Count()
                     }
                 });
 

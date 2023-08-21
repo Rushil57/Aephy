@@ -2,6 +2,7 @@
     ViewData["Title"] = "User profile";
     ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
     ViewData["Fullname"] = Context.Session.GetString("FullName");
+    ViewData["ProfileImage"] = Context.Session.GetString("UserProfileImage");
 }
 
 <main id="main" class="main">
@@ -151,16 +152,18 @@
 
                             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                                 <form name="UpdateForm">
-                                   @* <div class="row mb-3">
+                                    <div class="row mb-3">
                                         <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <img src="~/assets/img/profile-img.png" alt="Profile">
+                                            <img src="" alt="Profile" id="profile-image">
+                                            <div class="profile-pic" style="border-radius:0%;" id="profile-intial">@Context.Session.GetString("ShortName")</div>
                                             <div class="pt-2">
-                                                <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                                                <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                                <input type="file" id="Freelancer-profile" class="form-control" onchange="ShowUserImage(this)">
+                                                @*<a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>*@
+                                                @*<a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>*@
                                             </div>
                                         </div>
-                                    </div>*@
+                                    </div>
 
                                     <input type="hidden" class="UserId" value="">
                                     <div class="row mb-3">
@@ -380,8 +383,17 @@
                     $(".description").val(data.Description)
                     $(".drp-freelancer-level").val(data.FreelancerLevel)
                     $("#CVPath-id").val(data.CVPath)
-                    if(data.CVPath != ""){
+                    if(data.CVPath != null){
                         addNameToFile(data.CVPath.split("/")[4])
+                    }
+                    if (data.ImageUrlWithSas != null){
+                        $("#profile-intial").css("display","none")
+                        $("#profile-image").attr("src", data.ImageUrlWithSas);
+
+                    }else{
+                        $("#Freelancer-profile").val("");
+                        $("#profile-image").css("display", "none")
+                         $("#profile-intial").css("display","flex")
                     }
                 }
 
@@ -446,6 +458,9 @@
         var fileUpload = $("#CVPath").get(0);
         var files = fileUpload.files;
 
+        var profile = $("#Freelancer-profile").get(0);
+        var profileFiles = profile.files;
+
         var FreelancerDetail = {
             HourlyRate: $("#HourlyRate").val(),
             Education: $("#Education").val(),
@@ -471,6 +486,9 @@
         var formData = new FormData();
         for (var i = 0; i < files.length; i++) {
             formData.append("httpPostedFileBase", files[i]);
+        }
+        for (var i = 0; i < profileFiles.length; i++) {
+            formData.append("httpPostedFileBaseProfile", profileFiles[i]);
         }
         formData.append("Userdata", JSON.stringify(Userdata));
 
@@ -539,6 +557,19 @@
         var Cvname = $("#CVPath-id").val()
         if (Cvname != "") {
             window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
+        }
+    }
+
+    function ShowUserImage(value) {
+        $("#profile-intial").css("display", "none")
+        $("#profile-image").css("display", "block")
+        if (value.files && value.files[0]) {
+            var reader = new FileReader();
+            reader.onload = (function (e) {
+                $("#profile-image").attr("src", e.target.result);
+            });
+
+            reader.readAsDataURL(value.files[0]);
         }
     }
 </script>

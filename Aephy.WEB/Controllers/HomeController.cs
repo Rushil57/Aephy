@@ -18,7 +18,9 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 using Aephy.API.DBHelper;
 using Azure.Storage.Blobs.Models;
-
+using System.Text.RegularExpressions;
+using Stripe;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.WEB.Controllers
 {
@@ -94,6 +96,7 @@ namespace Aephy.WEB.Controllers
                 var LastName = string.Empty;
                 var Role = string.Empty;
                 var Level = string.Empty;
+                var imageUrlWithSas = string.Empty;
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj["StatusCode"] == 200)
                 {
@@ -112,6 +115,15 @@ namespace Aephy.WEB.Controllers
                         HttpContext.Session.SetString("LoggedUserLevel", Level);
                     }
                     HttpContext.Session.SetString("LoggedUser", UserId);
+
+                    string imagepath = jsonObj.Result.ImagePath;
+                    if (imagepath != null)
+                    {
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        imageUrlWithSas = $"{jsonObj.Result.ImagePath}?{sasToken}";
+                    }
+
+                    HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
                 }
 
                 return test;
@@ -166,7 +178,7 @@ namespace Aephy.WEB.Controllers
 
 
         [HttpPost]
-        public async Task<string> EditUserData(IFormFile httpPostedFileBase, string Userdata)
+        public async Task<string> EditUserData(IFormFile httpPostedFileBaseProfile, IFormFile httpPostedFileBase, string Userdata)
         {
             var registerModel = JsonConvert.DeserializeObject<RegisterNewUser>(Userdata);
 
@@ -185,6 +197,12 @@ namespace Aephy.WEB.Controllers
                             var ok = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateUserCV", HttpMethod.Post, d);
                         }
 
+                        if (httpPostedFileBaseProfile != null)
+                        {
+                            var userProfileDetails = await SaveImageFile(httpPostedFileBaseProfile, registerModel.Id);
+                            await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, userProfileDetails);
+                        }
+
                     }
                     return userData;
                 }
@@ -198,6 +216,77 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        public async Task<ImageClass> SaveImageFile(IFormFile imageFile, object Id)
+        {
+            ImageClass solutions = new ImageClass();
+            try
+            {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    string BlobStorageBaseUrl = string.Empty;
+                    string ImagePath = string.Empty;
+                    string ImageUrlWithSas = string.Empty;
+
+                    var newfileName = Regex.Replace(imageFile.FileName, @"[^a-zA-Z]", "");
+                    string fileName = Guid.NewGuid().ToString() + "_" + newfileName;
+
+                    // Get the Azure Blob Storage connection string from configuration
+                    var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(ImageContainerName);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream = imageFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+
+                    ImagePath = blobClient.Uri.ToString();
+
+
+                    string sasToken = GenerateImageSasToken(ImagePath);
+
+
+                    string imageUrlWithSas = ImagePath + sasToken;
+
+
+
+                    BlobStorageBaseUrl = containerClient.Uri.ToString();
+
+
+                    ImageUrlWithSas = imageUrlWithSas;
+
+                    solutions.BlobStorageBaseUrl = BlobStorageBaseUrl;
+                    solutions.ImagePath = ImagePath;
+                    solutions.ImageUrlWithSas = ImageUrlWithSas;
+                    if (Id is string)
+                    {
+                        solutions.FreelancerId = (string)Id;
+                    }
+                    else
+                    {
+                        solutions.Id = (int)(Id);
+                    }
+
+
+                    return solutions;
+                }
+                else
+                {
+                    ModelState.AddModelError("ImageFile", "Please select an image file.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return solutions;
+
+
+        }
+
         [HttpPost]
         public async Task<string> GetUserData()
         {
@@ -209,7 +298,27 @@ namespace Aephy.WEB.Controllers
                 {
                     model.UserId = userId;
                     var userData = await _apiRepository.MakeApiCallAsync("api/User/GetUserProfile", HttpMethod.Post, model);
-                    return userData;
+                    dynamic data = JsonConvert.DeserializeObject(userData);
+                    try
+                    {
+                        if (data.Result != null)
+                        {
+                            string imagepath = data.Result.ImagePath;
+                            if(imagepath != null)
+                            {
+                                string sasToken = GenerateImageSasToken(imagepath);
+                                string imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
+                                data.Result.ImageUrlWithSas = imageUrlWithSas;
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message + ex.InnerException;
+                    }
+                    string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                    return jsonString;
                 }
             }
             catch (Exception ex)
@@ -284,7 +393,7 @@ namespace Aephy.WEB.Controllers
                 var currentDateTime = DateTime.Now;
                 result.CreatedDateTime = currentDateTime;
                 var openGigRolesData = await _apiRepository.MakeApiCallAsync("api/Freelancer/OpenGigRolesApply", HttpMethod.Post, result);
-                
+
                 dynamic data = JsonConvert.DeserializeObject(openGigRolesData);
                 if (result.AlreadyExistCv)
                 {
@@ -321,7 +430,7 @@ namespace Aephy.WEB.Controllers
                         }
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -626,12 +735,12 @@ namespace Aephy.WEB.Controllers
             }
             GetUserProfileRequestModel model = new GetUserProfileRequestModel();
             model.UserId = userId;
-            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Client/IndustriesListBasedonUserType", HttpMethod.Post,model);
+            var Industrydata = await _apiRepository.MakeApiCallAsync("api/Client/IndustriesListBasedonUserType", HttpMethod.Post, model);
             return Industrydata;
 
         }
 
-            
+
         [HttpGet]
         public async Task<string> GetServicesList()
         {
@@ -650,8 +759,8 @@ namespace Aephy.WEB.Controllers
             }
             GetUserProfileRequestModel model = new GetUserProfileRequestModel();
             model.UserId = userId;
-            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post,model);
-           
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionListBasedonType", HttpMethod.Post, model);
+
             return Solutiondata;
 
         }
@@ -784,13 +893,13 @@ namespace Aephy.WEB.Controllers
         public async Task<string> BindPopularSolutionsList()
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
-            if(userId == null)
+            if (userId == null)
             {
                 userId = "";
             }
             GetUserProfileRequestModel model = new GetUserProfileRequestModel();
             model.UserId = userId;
-            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionList", HttpMethod.Post,model);
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularSolutionList", HttpMethod.Post, model);
             dynamic data = JsonConvert.DeserializeObject(solutionList);
             try
             {
@@ -934,14 +1043,14 @@ namespace Aephy.WEB.Controllers
                     {
                         foreach (var service in data.Result.TopProfessional)
                         {
-                            if(service.ImagePath != null)
+                            if (service.ImagePath != null)
                             {
                                 string imagepath = service.ImagePath;
                                 string sasToken = GenerateImageSasToken(imagepath);
                                 string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
                                 service.ImageUrlWithSas = imageUrlWithSas;
                             }
-                           
+
 
                         }
 
@@ -1018,7 +1127,7 @@ namespace Aephy.WEB.Controllers
             }
         }
 
-       
+
         [HttpGet]
         public async Task<string> BindTopThreePopularSolutionsList()
         {
@@ -1055,7 +1164,7 @@ namespace Aephy.WEB.Controllers
             return jsonString;
         }
 
-       
+
         [HttpPost]
         public async Task<string> GetTopThreeSolutionBasedonServices([FromBody] MileStoneIdViewModel model)
         {

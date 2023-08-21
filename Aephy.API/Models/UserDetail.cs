@@ -11,6 +11,10 @@
     public class UserIdsModel
     {
         public string[]? Ids { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
     }
     public class UserWiseLavelDetail
     {
@@ -21,5 +25,7 @@
         public string? LastName { get; set; }
 
         public string? Lavel { get; set; }
+
+        public bool IsProjectArchitect { get; set; }
     }
 }

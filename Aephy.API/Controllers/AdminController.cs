@@ -1586,7 +1586,9 @@ namespace Aephy.API.Controllers
                                     {
                                         sln?.Id,
                                         sln?.Title,
-                                        ind?.IndustryName
+                                        ind?.IndustryName,
+                                        FreelancerPoolId = mdl?.ID,
+                                        mdl.IsProjectArchitect
                                     }
                                 );
                             });
@@ -1609,7 +1611,7 @@ namespace Aephy.API.Controllers
 
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
 
@@ -1873,60 +1875,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-
-        //[HttpGet]
-        //[Route("checkOut")]
-        //public async Task<IActionResult> checkOut()
-        //{
-        //    try
-        //    {
-        //        StripeConfiguration.ApiKey = "sk_test_51NcndQSEtmOn47Zj9wmGZXP6MxXu66bdakmxiFLTqmI3lUliPyEBKsW1WLfGuPe7jVcy4XTYIDgDZOV5szLT8S7X00SjdYZtWp";
-        //        var options = new SessionCreateOptions
-        //        {
-        //            SuccessUrl = "https://example.com/success",
-        //            CancelUrl = "https://example.com/success",
-        //            LineItems = new List<SessionLineItemOptions>
-        //            {
-        //                new SessionLineItemOptions
-        //                {
-        //                    PriceData = new SessionLineItemPriceDataOptions
-        //                    {
-        //                        UnitAmount = (long)(100),
-        //                        Currency = "usd",
-        //                        ProductData = new SessionLineItemPriceDataProductDataOptions
-        //                        {
-        //                            Name = "AI Roadmap Development",
-        //                            Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
-        //                        }
-        //                    },
-        //                    Quantity = 1,
-        //                },
-        //            },
-        //            Mode = "payment",
-        //        };
-        //        var service = new SessionService();
-        //        Session session = service.Create(options);
-
-        //        Response.Headers.Add("Location", session.Url);
-
-        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-        //        {
-        //            StatusCode = StatusCodes.Status403Forbidden,
-        //            Message = "Payment Success..",
-        //            Result = session.Url
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-        //        {
-        //            StatusCode = StatusCodes.Status403Forbidden,
-        //            Message = ex.Message + ex.InnerException
-
-        //        });
-        //    }
-        //}
-
+      
         [HttpPost]
         [Route("checkOut")]
         public async Task<IActionResult> checkOut([FromBody] MileStoneDetailsViewModel model)
@@ -2031,6 +1980,20 @@ namespace Aephy.API.Controllers
         {
             try
             {
+                if (model.ProjectArchitect)
+                {
+                    var checkprojectArchitect = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId && x.IsProjectArchitect == true).FirstOrDefault();
+                    if (checkprojectArchitect != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Project Architect already assign with same solution and industry !",
+                        });
+                    }
+                }
+               
+
                 var data = _db.FreelancerPool.Where(x => x.FreelancerID == model.FreelancerId && x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
                 if (data == null)
                 {
@@ -2048,7 +2011,7 @@ namespace Aephy.API.Controllers
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Asigned Successfully!",
+                        Message = "Assigned Successfully!",
                     });
                 }
                 else
@@ -2763,6 +2726,51 @@ namespace Aephy.API.Controllers
                             });
                         }
                        
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data not found!",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
+
+        
+        [HttpPost]
+        [Route("RemoveFreelancerPoolData")]
+        public async Task<IActionResult> RemoveFreelancerPoolData([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var freelancerpoolData = await _db.FreelancerPool.Where(x => x.ID == model.Id).FirstOrDefaultAsync();
+                    if (freelancerpoolData != null)
+                    {
+                        _db.FreelancerPool.Remove(freelancerpoolData);
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Delete Data Succesfully!"
+                        });
+
                     }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel

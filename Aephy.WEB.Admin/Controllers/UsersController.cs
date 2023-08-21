@@ -106,5 +106,12 @@ namespace Aephy.WEB.Admin.Controllers
             var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPopularSolutionBasedOnSolution", HttpMethod.Post, model);
             return data;
         }
+             
+        [HttpPost]
+        public async Task<string> RemoveFreelancerPoolData([FromBody] SolutionIdModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Admin/RemoveFreelancerPoolData", HttpMethod.Post, model);
+            return data;
+        }
     }
 }

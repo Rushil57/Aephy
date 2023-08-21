@@ -1040,6 +1040,8 @@
 
         var userIdsModel = {
             Ids: finalIdsData,
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
         };
 
         $.ajax({
@@ -1069,10 +1071,9 @@
                         { "data": "LastName" },
                         { "data": "Lavel" },
                         {
-                            "data": "Id",
+                            "data": "IsProjectArchitect",
                             "render": function (data, type, row) {
-                                if (row.Lavel == "Project Manager") {
-                                    //return "<input type=\"checkBox\" class=\"chkArchitect\" id=\"chk_" + row.Id + "\" value=\"" + row.Id + "\" onclick=\"FillArchitect();\" />";
+                                if (data) {
                                     return '<span class="badge bg-success">true</span>'
                                 }
                                 else {

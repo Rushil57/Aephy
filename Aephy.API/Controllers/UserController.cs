@@ -81,6 +81,8 @@ namespace Aephy.API.Controllers
                                 FreelancerAddress = freelancerDetails.Address,
                                 FreelancerLevel = freelancerDetails.FreelancerLevel,
                                 CVPath = freelancerDetails.CVPath,
+                                ImagePath = freelancerDetails.ImagePath,
+                                ImageUrlWithSas = freelancerDetails.ImageUrlWithSas
                             }
                         });
                     }
@@ -376,17 +378,36 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var dbUsers = await _db.Users.Where(x => userIdsModel.Ids.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
+                List<UserWiseLavelDetail> userlevelDetails = new List<UserWiseLavelDetail>();
+                foreach(var id in userIdsModel.Ids)
                 {
-                    Id = x.Id,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    Lavel = _db.FreelancerDetails.Where(y=>y.UserId == x.Id).Select(y => y.FreelancerLevel).FirstOrDefault()
-                }).ToListAsync();
+                    UserWiseLavelDetail data = new UserWiseLavelDetail();
+                    var userData = _db.Users.Where(x => x.Id == id).FirstOrDefault();
+                    if (userData != null)
+                    {
+                        data.Id = userData.Id;
+                        data.FirstName = userData.FirstName;
+                        data.LastName = userData.LastName;
+                        data.Lavel = _db.FreelancerDetails.Where(x => x.UserId == id).Select(x => x.FreelancerLevel).FirstOrDefault();
+                        data.IsProjectArchitect = _db.FreelancerPool.Where(x => x.FreelancerID == id && x.SolutionID == userIdsModel.SolutionId && x.IndustryId == userIdsModel.IndustryId).Select(x => x.IsProjectArchitect).FirstOrDefault();
+                        userlevelDetails.Add(data);
+                    }
+                }
+                //var dbUsers = await _db.Users.Where(x => userIdsModel.Ids.Contains(x.Id)).Select(x=> new UserWiseLavelDetail
+                //{
+                //    Id = x.Id,
+                //    FirstName = x.FirstName,
+                //    LastName = x.LastName,
+                //    Lavel = _db.FreelancerDetails.Where(y=>y.UserId == x.Id).Select(y => y.FreelancerLevel).FirstOrDefault()
+                //}).ToListAsync();
 
-                if (dbUsers != null)
+                if (userlevelDetails.Count > 0)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Found.", Result = dbUsers });
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { 
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Found.", 
+                        Result = userlevelDetails
+                    });
                 }
                 else
                 {

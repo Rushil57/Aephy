@@ -80,6 +80,8 @@
                                             <th scope="col">Solution Id</th>
                                             <th scope="col">Solution Name</th>
                                             <th scope="col">Industry Name</th>
+                                            <th scope="col">Project Architect</th>
+                                            <th scope="col"></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -249,12 +251,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                if (row.SolutionID != 0) {
-                                    return '<a class="btn btn-primary" onclick=SoutionsList(this,"' + data + '")>View</a>';
-                                }
-                                else {
-                                    return '';
-                                }
+                               return '<a class="btn btn-primary" onclick=SoutionsList(this,"' + data + '")>View</a>';
                             }
                         },
                         {
@@ -310,10 +307,25 @@
                     destroy: true,
                     data: result.Result,
                     "columns": [
-
                         { "data": "Id" },
                         { "data": "Title" },
-                        { "data": "IndustryName" }
+                        { "data": "IndustryName" },
+                        { 
+                            "data": "IsProjectArchitect",
+                            "render": function (data, type, row) {
+                                if(data){
+                                    return '<span class="badge bg-success">true</span>';
+                                }else{
+                                    return '<span class="badge bg-danger">false</span>';
+                                }
+                            }
+                        },
+                        {
+                            "data": "FreelancerPoolId",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-danger" onclick=DeleteFreelancerPoolData(' + data + ')>Delete</a>';
+                            }
+                        }
                     ]
                 });
                 $("#preloader").hide();
@@ -491,7 +503,12 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                showToaster("success", "Success", result.Message);
+                if(result.Message == "Assigned Successfully!"){
+                    showToaster("success", "Success", result.Message);
+                }else{
+                    showToaster("warning", "Warning!", result.Message);
+                }
+                
                 $('#IsProjectArchitect').prop('checked', false);
                 GetServicesValues();
                 GetFreelancerDetailsById(freelancerid)
@@ -507,7 +524,6 @@
     function GetServicesValues() {
         var serviceId = $("#drp-services").val();
         if(serviceId == "All"){
-            //serviceId = 0;
             BindMainSolutions();
             BindMainIndustries();
             return
@@ -568,6 +584,41 @@
             error: function (result) {
                 alert("failure");
             }
+        });
+    }
+
+    function DeleteFreelancerPoolData(id){
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+            var data = {
+                Id: id,
+            };
+            var freelancerId = $("#Freelancer-id").val();
+            $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RemoveFreelancerPoolData", "Users")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                    GetFreelancerDetailsById(freelancerId)
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
         });
     }
 </script>

@@ -27,6 +27,10 @@
     public class UserIdsModel
     {
         public string[]? Ids { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
     }
 
     public class DropdownViewModel

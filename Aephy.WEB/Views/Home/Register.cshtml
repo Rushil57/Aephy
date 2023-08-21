@@ -899,7 +899,8 @@ While using our Site, we may ask you to provide us with certain personally ident
             TermsCondition: $('#acceptTerms').is(':checked'),
             UserType: $("#userType").val(),
             FreelancerLevel: $("#drp-freelancer-level").val(),
-            IsInvited: $("#hidIsInvite").val()
+            IsInvited: $("#hidIsInvite").val(),
+            IsInvitedRemoved:false
         }
         $("#preloader").show();
         $.ajax({

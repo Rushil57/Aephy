@@ -21,6 +21,8 @@
         public string? FreelancerLevel { get; set; }
         public IFormFile? ProfileImage { get; set; }
         public string IsInvited { get; set; }
+        public bool IsInvitedRemoved { get; set; }
+
     }
 
     public class FreelancerDetail

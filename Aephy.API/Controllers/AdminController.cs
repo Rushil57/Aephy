@@ -825,7 +825,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin" && x.IsInvited == true).ToListAsync();
+                var list = await _userManager.Users.Where(x => x.IsDeleted == false && x.UserType != "Admin" && x.IsInvited == true && x.IsInvitedRemoved == false).ToListAsync();
                 List<UserViewModel> users = new List<UserViewModel>();
                 if (list.Count > 0)
                 {
@@ -2245,9 +2245,9 @@ namespace Aephy.API.Controllers
                 if (model.Id != null)
                 {
                     var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if (userDetails != null && userDetails.IsInvited != false)
+                    if (userDetails != null && userDetails.IsInvited != false && userDetails.IsInvitedRemoved == false)
                     {
-                        userDetails.IsInvited = false;
+                        userDetails.IsInvitedRemoved = true;
                         _db.SaveChanges();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel

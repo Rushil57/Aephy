@@ -20,5 +20,7 @@ namespace Aephy.API.DBHelper
         public bool IsDeleted { get; set; }
 
         public bool IsInvited { get; set; }
+
+        public bool IsInvitedRemoved { get; set; }
     }
 }

@@ -684,6 +684,72 @@ namespace Aephy.WEB.Admin.Controllers
                 return "failed to receive data..";
             }
         }
+
+        [HttpPost]
+        public async Task<string> RemoveMileStoneData([FromBody] SolutionIdModel model)
+        {
+            if (model.Id != 0)
+            {
+                var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeleteMileStoneById", HttpMethod.Post, model);
+                return data;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        
+        [HttpPost]
+        public async Task<string> RemoveHighlightData([FromBody] SolutionIdModel model)
+        {
+            if (model.Id != 0)
+            {
+                var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeletePointsById", HttpMethod.Post, model);
+                return data;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+       
+        [HttpPost]
+        public async Task<string> GetTopProfessionalDetails([FromBody] SolutionIdModel model)
+        {
+            if (model != null)
+            {
+                var professionadata = await _apiRepository.MakeApiCallAsync("api/Admin/GetTopProfessionalDetailsById", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(professionadata);
+                try
+                {
+                    if (data["Message"] == "Success".Trim())
+                    {
+                        string imagepath = data.Result.FreelancerData.ImagePath;
+                        if(imagepath != null)
+                        {
+                            string sasToken = GenerateSasToken(imagepath);
+                            var imageUrlWithSas = $"{data.Result.FreelancerData.ImagePath}?{sasToken}";
+                            data.Result.FreelancerData.ImageUrlWithSas = imageUrlWithSas;
+                        }
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string convertjsonTostring = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return convertjsonTostring;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
     }
 }
 

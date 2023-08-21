@@ -120,40 +120,41 @@
                                         <label for="drp-assigned-freelancers" class="form-label">
                                             <a class="text-primary" onclick="OpenTopProfessionalsPopup();">Add Top Professionals</a>
                                         </label>
-                                       
-                                            <table class="table" id="TopProfessionalTable">
-                                                <thead style="border: 1px solid #e8e8e8;">
-                                                    <tr>
-                                                        <th>Title</th>
-                                                        <th>Description</th>
-                                                        <th>Rate</th>
-                                                        <th>Delete</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="AssignFreeLancerbody">
-                                                </tbody>
-                                            </table>
-                                       
+
+                                        <table class="table" id="TopProfessionalTable">
+                                            <thead style="border: 1px solid #e8e8e8;">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Rate</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="AssignFreeLancerbody">
+                                            </tbody>
+                                        </table>
+
                                     </div>
 
-                                      <div class="col-12 pt-3">
+                                    <div class="col-12 pt-3">
                                         <label for="successfullProject" class="form-label">
                                             <a class="text-primary" onclick="OpenSuccessfullPopup();">Add Successfull Projects</a>
                                         </label>
-                                       
+
                                         <table class="table" id="SuccessfullProjectTable">
-                                                <thead style="border: 1px solid #e8e8e8;">
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Title</th>
-                                                        <th>Description</th>
-                                                        <th>Delete</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                       
+                                            <thead style="border: 1px solid #e8e8e8;">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+
                                     </div>
 
 
@@ -219,6 +220,7 @@
                                                         <th>Description</th>
                                                         <th>Title</th>
                                                         <th>Days</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="MileStonebody">
@@ -302,7 +304,7 @@
                                                 <tbody class="FreeLancerbody">
                                                 </tbody>
                                             </table>
-                                    </div>
+                                        </div>
                                     </div>
 
                                     <div class="text-center">
@@ -333,14 +335,13 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <!-- Vertical Form -->
+                              <input type="hidden" id="TopProfessionalId" value="0" />
                                 <form class="row g-3 mt-3" name="TopProfessionalForm">
                                     <div class="col-12">
                                         <label for="FreeLancer" class="form-label">Select Freelancer</label>
-                                        
-                                            <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer">
-                                               <option value="">Select Freelancer</option>
-                                            </select>
+                                        <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer">
+                                            <option value="">Select Freelancer</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-12">
@@ -356,13 +357,18 @@
 
                                     <div class="col-12">
                                         <label for="projectRate" class="form-label">Rate</label>
-                                        <input type="text" id="projectRate" class="form-control" name="projectrate"/>
+                                        <input type="text" id="projectRate" class="form-control" name="projectrate" />
                                     </div>
 
-                                     <div class="col-12">
+                                    <div class="col-12">
                                         <label for="freelancerprofile" class="form-label">Profile Upload</label>
-                                        <input type="file" id="freelancerProfile" class="form-control" onchange="ChangeUserUploadImage(this)"/>
+                                        <input type="file" id="freelancerProfile" class="form-control" onchange="ChangeUserUploadImage(this)" />
                                         <div id="UserImagepreview"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="IsActiveTopProffesional" class="form-label">Active Top Professional</label>
+                                        <input type="checkbox" id="IsActiveTopProffesional" class="form-check-input" />
                                     </div>
 
                                     <div class="text-center">
@@ -392,7 +398,7 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <input type="hidden" id="SuccessfullProjectId" value="0"/>
+                                <input type="hidden" id="SuccessfullProjectId" value="0" />
                                 <form class="row g-3 mt-3" name="SuccessfullProjectForm" id="ProjectFormId">
                                     <div class="col-12">
                                         <label for="SuccessfullProjectTitle" class="form-label">Title</label>
@@ -406,10 +412,10 @@
 
                                     <div class="col-12">
                                         <label for="IsActiveProject" class="form-label">Active Project</label>
-                                        <input type="checkbox" id="IsActiveProject" class="form-check-input"/>
+                                        <input type="checkbox" id="IsActiveProject" class="form-check-input" />
                                     </div>
 
-                                     <div class="text-center">
+                                    <div class="text-center">
                                         <button type="submit" id="AddSuccessfullProject" class="btn btn-brand">Save</button>
                                     </div>
 
@@ -419,20 +425,20 @@
 
                                     <div class="col-12">
                                         <table class="table" id="ResultTable">
-                                                <thead style="border: 1px solid #e8e8e8;">
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Key</th>
-                                                        <th>value</th>
-                                                        <th>Delete</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
+                                            <thead style="border: 1px solid #e8e8e8;">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Key</th>
+                                                    <th>value</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                   
-                                     <div class="text-center">
+
+                                    <div class="text-center">
                                         <button type="reset" class="btn btn-secondary" onclick="ResetSuccessfullProjectForm();">Close</button>
                                     </div>
                                 </form>
@@ -458,16 +464,16 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <input type="hidden" id="ProjectResultId" value="0"/>
+                                <input type="hidden" id="ProjectResultId" value="0" />
                                 <form class="row g-3 mt-3" name="ResultForm" id="resultFormId">
                                     <div class="col-12">
                                         <label for="ResultKey" class="form-label">Key</label>
-                                        <input type="text" id="ResultKey" class="form-control" name="Resultkey" placeholder="Key"/>
+                                        <input type="text" id="ResultKey" class="form-control" name="Resultkey" placeholder="Key" />
                                     </div>
 
                                     <div class="col-12">
                                         <label for="ResultValue" class="form-label">Value</label>
-                                        <input type="text" id="ResultValue" class="form-control" name="Resultvalue" placeholder="Value"/>
+                                        <input type="text" id="ResultValue" class="form-control" name="Resultvalue" placeholder="Value" />
                                         @*<textarea type="text" id="ResultValue" class="form-control" name="Resultvalue"></textarea>*@
                                     </div>
 
@@ -498,7 +504,7 @@
     let finalIdsData = [];
     let architectData = [];
 
-  
+
     $(function () {
         $("form[name='addSolutiondescribeForm']").validate({
             rules: {
@@ -515,21 +521,21 @@
         });
         $("form[name='TopProfessionalForm']").validate({
             rules: {
-               drpfreelancer: { required: true },
-                FreelancerTitle : { required: true },
-                topDescription : { required: true },
-                projectrate : { 
+                drpfreelancer: { required: true },
+                FreelancerTitle: { required: true },
+                topDescription: { required: true },
+                projectrate: {
                     required: true,
                     number: true
                 },
             },
             messages: {
-               drpfreelancer: { required: "Please select valid option" },
-                FreelancerTitle : { required: "Please enter title" },
-                topDescription : { required: "Please enter description" },
-                projectrate : { 
+                drpfreelancer: { required: "Please select valid option" },
+                FreelancerTitle: { required: "Please enter title" },
+                topDescription: { required: "Please enter description" },
+                projectrate: {
                     required: "Please enter rate",
-                    number : "Enter valid rate"
+                    number: "Enter valid rate"
                 },
             },
             submitHandler: function (form) {
@@ -537,21 +543,21 @@
             }
         });
 
-       $("form[name='ResultForm']").validate({
+        $("form[name='ResultForm']").validate({
             rules: {
-               Resultkey: { required: true },
-                Resultvalue : { required: true }
+                Resultkey: { required: true },
+                Resultvalue: { required: true }
             },
             messages: {
-               Resultkey: { required: "Please enter valid key" },
-                Resultvalue : { required: "Please enter valid value" }
+                Resultkey: { required: "Please enter valid key" },
+                Resultvalue: { required: "Please enter valid value" }
             },
             submitHandler: function (form) {
                 SaveProjectResult()
             }
         });
 
-       $("form[name='SuccessfullProjectForm']").validate({
+        $("form[name='SuccessfullProjectForm']").validate({
             rules: {
                 SuccessfullprojectTitle: { required: true },
                 SuccessfullprojectDescription: { required: true }
@@ -565,7 +571,7 @@
             }
         });
 
-         GetSolutionList()
+        GetSolutionList()
         $(".cls-subtitle").css("display", "none")
         $("#ProjectType").change(function () {
             GetSolutionDefineDetails()
@@ -693,6 +699,7 @@
                         htm += '<td>' + subObj.Description + '</td>';
                         htm += '<td>' + subObj.Title + '</td>';
                         htm += '<td>' + subObj.Days + '</td>';
+                        htm += '<td><a class="text-danger" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
                         htm += '</tr>';
                     }
                 }
@@ -714,6 +721,7 @@
                         pointsTable += '<td>' + subObj.Id + '</td>';
                         pointsTable += '<td>' + subObj.PointKey + '</td>';
                         pointsTable += '<td>' + subObj.PointValue + '</td>';
+                        pointsTable += '<td><a class="text-danger" onclick=DeleteHighlightById(' + subObj.Id + ')>Delete</a></td>';
                         pointsTable += '</tr>';
                     }
                 }
@@ -827,9 +835,9 @@
             span.innerHTML =
                 ['<img class="SolutionImage" src="', IndustryValue.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
                     .join('');
-                    if(document.getElementById('solutionDetailsImagepreview_' + value.IndustryName) != null){
-                        document.getElementById('solutionDetailsImagepreview_' + value.IndustryName).insertBefore(span, null);
-                    }
+            if (document.getElementById('solutionDetailsImagepreview_' + value.IndustryName) != null) {
+                document.getElementById('solutionDetailsImagepreview_' + value.IndustryName).insertBefore(span, null);
+            }
         }
     }
 
@@ -845,10 +853,10 @@
                     ['<img class="SolutionImage" src="', e.target.result, '" title="', escape(e.name), '" style="height:200px;width:200px;"/>']
                         .join('');
 
-                        if(document.getElementById('solutionDetailsImagepreview_' + name) != null){
-                            document.getElementById('solutionDetailsImagepreview_' + name).insertBefore(span, null);
-                        }
-                
+                if (document.getElementById('solutionDetailsImagepreview_' + name) != null) {
+                    document.getElementById('solutionDetailsImagepreview_' + name).insertBefore(span, null);
+                }
+
             });
 
             reader.readAsDataURL(value.files[0]);
@@ -1158,7 +1166,7 @@
                         $("#projectOutline").val(data.SolutionDefine.ProjectOutline);
                         $("#industry-ProjectDuration").val(data.SolutionDefine.Duration)
                     }
-                    else{
+                    else {
                         $("#projectDetails").val("");
                         $("#projectOutline").val("");
                         $("#industry-ProjectDuration").val("")
@@ -1173,6 +1181,7 @@
                             htm += '<td>' + subObj.Description + '</td>';
                             htm += '<td>' + subObj.Title + '</td>';
                             htm += '<td>' + subObj.Days + '</td>';
+                            htm += '<td><a class="text-danger" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
                             htm += '</tr>';
                         }
                     }
@@ -1194,6 +1203,7 @@
                             pointsTable += '<td>' + subObj.Id + '</td>';
                             pointsTable += '<td>' + subObj.PointKey + '</td>';
                             pointsTable += '<td>' + subObj.PointValue + '</td>';
+                            pointsTable += '<td><a class="text-danger" onclick=DeleteHighlightById(' + subObj.Id + ')>Delete</a></td>';
                             pointsTable += '</tr>';
                         }
                     }
@@ -1224,13 +1234,14 @@
         });
     }
 
-    function OpenTopProfessionalsPopup(){
-        $("#TopProfessional").modal('show')
+    function OpenTopProfessionalsPopup() {
+        $("#TopProfessional").modal('show');
+        $("#IsActiveTopProffesional").prop('checked', true);
         FreelancerList()
     }
 
-    function FreelancerList(){
-         $.ajax({
+    function FreelancerList() {
+        $.ajax({
             type: "Get",
             url: "@Url.Action("GetFreelancersName", "Solutions")",
             contentType: "application/json; charset=utf-8",
@@ -1248,18 +1259,19 @@
         });
     }
 
-    function SaveTopProfessionalData(){
-         var fileUpload = $("#freelancerProfile").get(0);
-         var files = fileUpload.files;
+    function SaveTopProfessionalData() {
+        var fileUpload = $("#freelancerProfile").get(0);
+        var files = fileUpload.files;
 
-       var data = {
+        var data = {
+            Id : parseInt($("#TopProfessionalId").val()),
             SolutionId: parseInt($("#SolutionId").val()),
             IndustryId: parseInt($("#IndustryId").val()),
-            FreelancerId : $("#drp-FreeLancer").val(),
+            FreelancerId: $("#drp-FreeLancer").val(),
             TopProfessionalTitle: $("#FreelancerTitle").val(),
-            Description : $("#TopDescription").val(),
-            Rate : $("#projectRate").val()
-       }
+            Description: $("#TopDescription").val(),
+            Rate: $("#projectRate").val()
+        }
 
         var formData = new FormData();
         for (var i = 0; i < files.length; i++) {
@@ -1277,9 +1289,9 @@
             success: function (result) {
                 $("#preloader").hide();
                 showToaster("success", "Success", result.Message);
-                 ResetProfessionalForm()
-                 GetTopProfessionalList()
-               
+                ResetProfessionalForm()
+                GetTopProfessionalList()
+
             },
             error: function (err) {
                 $("#preloader").hide();
@@ -1289,33 +1301,39 @@
     }
 
 
-    function ResetProfessionalForm(){
-       $("#drp-FreeLancer").val("");
-       $("#FreelancerTitle").val("");
-       $("#TopDescription").val("");
-       $("#projectRate").val("");
-       $("#freelancerProfile").val("");
-       $(".UserImage").attr('src',"");
+    function ResetProfessionalForm() {
+        $("#drp-FreeLancer").val("");
+        $("#FreelancerTitle").val("");
+        $("#TopDescription").val("");
+        $("#projectRate").val("");
+        $("#freelancerProfile").val("");
+        $(".UserImage").attr('src', "");
         $("#UserImagepreview").hide();
-       $("#TopProfessional").modal('hide');
-
+        $("#TopProfessional").modal('hide');
+        $("#TopProfessionalId").val(0);
     }
-    function GetTopProfessionalList(){
+    function GetTopProfessionalList() {
         var data = {
             SolutionId: parseInt($("#SolutionId").val()),
             IndustryId: parseInt($("#IndustryId").val()),
         }
-         $.ajax({
+        $.ajax({
             type: "POST",
             url: "@Url.Action("GetTopProfessionalList", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-             data: JSON.stringify(data),
+            data: JSON.stringify(data),
             success: function (result) {
                 $('#TopProfessionalTable').DataTable({
                     destroy: true,
                     data: result.Result,
                     "columns": [
+                        {
+                            "data": "Id",
+                            "render": function (data, type, row) {
+                                return '<a class="cls-service" onclick="GetTopProfessionalDetails(' + data + ');">' + data + '</a>'
+                            }
+                        },
                         { "data": "TopProfessionalTitle" },
                         {
                             "data": "Description",
@@ -1330,7 +1348,7 @@
 
                             }
                         },
-                        {"data": "Rate"},
+                        { "data": "Rate" },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
@@ -1348,7 +1366,7 @@
         });
     }
 
-    function DeleteTopProfessional(Id){
+    function DeleteTopProfessional(Id) {
         Swal.fire({
             text: "Are you sure want to delete top professional?",
             icon: 'warning',
@@ -1382,7 +1400,7 @@
         });
     }
 
-     function ChangeUserUploadImage(value) {
+    function ChangeUserUploadImage(value) {
         if (value.files && value.files[0]) {
             var reader = new FileReader();
             reader.onload = (function (e) {
@@ -1393,38 +1411,38 @@
                     ['<img class="UserImage" src="', e.target.result, '" title="', escape(e.name), '" style="height:200px;width:200px;"/>']
                         .join('');
 
-                        if(document.getElementById('UserImagepreview') != null){
-                            document.getElementById('UserImagepreview').insertBefore(span, null);
-                        }
-                
+                if (document.getElementById('UserImagepreview') != null) {
+                    document.getElementById('UserImagepreview').insertBefore(span, null);
+                }
+
             });
 
             reader.readAsDataURL(value.files[0]);
         }
     }
 
-    function OpenSuccessfullPopup(){
+    function OpenSuccessfullPopup() {
         $("#SuccessfullProject").modal('show');
         $("#IsActiveProject").prop('checked', true);
         $("#result-btn").prop('disabled', true);
         GetProjectResultList();
     }
 
-    function OpenResultPopUp(){
-         if ($("#ResultTable  tbody tr").length >= 2) {
+    function OpenResultPopUp() {
+        if ($("#ResultTable  tbody tr").length >= 2) {
             showToaster("warning", "Warning !", "you have reached a limit for adding project result");
         } else {
             $("#SuccessfullProjectResult").modal('show')
         }
     }
 
-    function SaveProjectResult(){
+    function SaveProjectResult() {
         var data = {
-            Id : parseInt($("#ProjectResultId").val()),
+            Id: parseInt($("#ProjectResultId").val()),
             SolutionSuccessfullProjectId: parseInt($("#SuccessfullProjectId").val()),
             ResultKey: $("#ResultKey").val(),
             ResultValue: $("#ResultValue").val()
-       }
+        }
         $("#preloader").show();
         $.ajax({
             type: "POST",
@@ -1436,7 +1454,7 @@
                 showToaster("success", "Success", result.Message);
                 ResetResultForm();
                 GetProjectResultList();
-                 $("#preloader").hide();
+                $("#preloader").hide();
 
             },
             error: function (result) {
@@ -1445,17 +1463,17 @@
         });
     }
 
-    function SaveSuccessfullProject(){
+    function SaveSuccessfullProject() {
         var data = {
-            Id : $("#SuccessfullProjectId").val(),
+            Id: $("#SuccessfullProjectId").val(),
             SolutionId: parseInt($("#SolutionId").val()),
             IndustryId: parseInt($("#IndustryId").val()),
             Title: $("#SuccessfullProjectTitle").val(),
             Description: $("#SuccessfullProjectDescription").val(),
-            IsActive : $("#IsActiveProject").is(':checked')
+            IsActive: $("#IsActiveProject").is(':checked')
 
         }
-         $("#preloader").show();
+        $("#preloader").show();
         $.ajax({
             type: "POST",
             url: "@Url.Action("AddSuccessfullProject", "Solutions")",
@@ -1463,12 +1481,12 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                if(result.Message == "Data Save Successfully!"){
+                if (result.Message == "Data Save Successfully!") {
                     showToaster("success", "Success", result.Message);
                     $("#SuccessfullProjectId").val(result.Result);
                     $("#result-btn").prop('disabled', false);
 
-                }else{
+                } else {
                     showToaster("success", "Success !", result.Message);
                 }
                 $("#preloader").hide();
@@ -1481,26 +1499,26 @@
         });
     }
 
-    function ResetSuccessfullProjectForm(){
-       $("#SuccessfullProjectTitle").val("");
-       $("#SuccessfullProjectDescription").val("");
-       $("#SuccessfullProject").modal('hide');
-       $("#SuccessfullProjectId").val(0);
-       $("#IsActiveProject").prop('checked', false);
-       $("#ProjectFormId").data('validator').resetForm();
+    function ResetSuccessfullProjectForm() {
+        $("#SuccessfullProjectTitle").val("");
+        $("#SuccessfullProjectDescription").val("");
+        $("#SuccessfullProject").modal('hide');
+        $("#SuccessfullProjectId").val(0);
+        $("#IsActiveProject").prop('checked', false);
+        $("#ProjectFormId").data('validator').resetForm();
     }
 
-    function GetProjectList(){
-         var data = {
+    function GetProjectList() {
+        var data = {
             SolutionId: parseInt($("#SolutionId").val()),
             IndustryId: parseInt($("#IndustryId").val()),
         }
-         $.ajax({
+        $.ajax({
             type: "POST",
             url: "@Url.Action("GetSuccessfullProjectList", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-             data: JSON.stringify(data),
+            data: JSON.stringify(data),
             success: function (result) {
                 $('#SuccessfullProjectTable').DataTable({
                     destroy: true,
@@ -1509,7 +1527,7 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return '<a class="cls-service" onclick="GetSuccessfullProjectDetails(' + data + ');">'+data+'</a>'
+                                return '<a class="cls-service" onclick="GetSuccessfullProjectDetails(' + data + ');">' + data + '</a>'
                             }
                         },
                         { "data": "Title" },
@@ -1543,7 +1561,7 @@
         });
     }
 
-    function ResetResultForm(){
+    function ResetResultForm() {
         $("#ResultKey").val("");
         $("#ResultValue").val("");
         $("#SuccessfullProjectResult").modal('hide');
@@ -1551,25 +1569,25 @@
         $("#resultFormId").data('validator').resetForm();
     }
 
-    function GetProjectResultList(){
-         var data = {
+    function GetProjectResultList() {
+        var data = {
             Id: parseInt($("#SuccessfullProjectId").val())
         }
-         $.ajax({
+        $.ajax({
             type: "POST",
             url: "@Url.Action("GetProjectResultList", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-             data: JSON.stringify(data),
+            data: JSON.stringify(data),
             success: function (result) {
                 $('#ResultTable').DataTable({
                     destroy: true,
                     data: result.Result,
                     "columns": [
-                         {
+                        {
                             "data": "Id",
                             "render": function (data, type, row) {
-                                return '<a class="cls-service" onclick="GetProjectResultDetails(' + data + ');">'+data+'</a>'
+                                return '<a class="cls-service" onclick="GetProjectResultDetails(' + data + ');">' + data + '</a>'
                             }
                         },
                         { "data": "ResultKey" },
@@ -1591,8 +1609,8 @@
         });
     }
 
-    function DeleteProjectResult(Id){
-          Swal.fire({
+    function DeleteProjectResult(Id) {
+        Swal.fire({
             text: "Are you sure want to delete project Result?",
             icon: 'warning',
             showCancelButton: true,
@@ -1605,14 +1623,14 @@
             var data = {
                 Id: Id,
             };
-             $("#preloader").show();
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteProjectResult", "Solutions")",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(data),
-                success: function (result) {  
+                success: function (result) {
                     showToaster("success", "Success", result.Message);
                     GetProjectResultList();
                     $("#preloader").hide();
@@ -1625,7 +1643,7 @@
         });
     }
 
-    function DeleteSuccessfullProject(Id){
+    function DeleteSuccessfullProject(Id) {
         Swal.fire({
             text: "Are you sure want to delete project?",
             icon: 'warning',
@@ -1639,17 +1657,17 @@
             var data = {
                 Id: Id,
             };
-             $("#preloader").show();
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteSuccessfullProject", "Solutions")",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(data),
-                success: function (result) {  
+                success: function (result) {
                     showToaster("success", "Success", result.Message);
                     GetProjectList();
-                     $("#preloader").hide();
+                    $("#preloader").hide();
                 },
                 error: function (result) {
                     showToaster("error", "Error !", "Something went wrong !!");
@@ -1659,70 +1677,186 @@
         });
     }
 
-    function GetProjectResultDetails(Id){
+    function GetProjectResultDetails(Id) {
         var data = {
-                Id: Id,
-            };
+            Id: Id,
+        };
 
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetProjectResultById", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Message == "Success") {
+                    if (result != null) {
+                        var data = result.Result;
+                        $("#SuccessfullProjectResult").modal('show')
+                        $("#ResultKey").val(data.ResultKey);
+                        $("#ResultValue").val(data.ResultValue);
+                        $("#ProjectResultId").val(data.Id);
+                    }
+                }
+                else {
+                    showToaster("error", "Error !", result.Message);
+                }
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function GetSuccessfullProjectDetails(Id) {
+        var data = {
+            Id: Id,
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSuccessfullProjectDetailsById", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Message == "Success") {
+                    if (result != null) {
+                        var data = result.Result;
+                        $("#SuccessfullProject").modal('show')
+                        $("#SuccessfullProjectTitle").val(data.Title);
+                        $("#SuccessfullProjectDescription").val(data.Description);
+                        $("#SuccessfullProjectId").val(data.Id);
+                        if (data.IsActive) {
+                            $("#IsActiveProject").prop('checked', true);
+                        }
+                        $("#result-btn").prop('disabled', false);
+                        GetProjectResultList();
+                    }
+                }
+                else {
+                    showToaster("error", "Error !", result.Message);
+                }
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function DeleteMileStoneById(id) {
+        Swal.fire({
+            text: "Are you sure want to delete milestone?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+            var Data = {
+                Id: id,
+            };
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("GetProjectResultById", "Solutions")",
+                url: "@Url.Action("RemoveMileStoneData", "Solutions")",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify(data),
+                data: JSON.stringify(Data),
                 success: function (result) {
-                    if (result.Message == "Success"){
-                        if (result != null) {
-                            var data = result.Result;
-                            $("#SuccessfullProjectResult").modal('show')
-                            $("#ResultKey").val(data.ResultKey);
-                            $("#ResultValue").val(data.ResultValue);
-                            $("#ProjectResultId").val(data.Id);
-                        }
-                    }
-                    else{
-                        showToaster("error", "Error !", result.Message);
-                    }
+                    showToaster("success", "Success", result.Message);
+                    $("#preloader").hide();
                 },
                 error: function (result) {
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
+
+        });
     }
 
-    function GetSuccessfullProjectDetails(Id){
-        var data = {
-                Id: Id,
-            };
+    function DeleteHighlightById(id) {
+        Swal.fire({
+            text: "Are you sure want to delete highlight?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
 
+            var Data = {
+                Id: id,
+            };
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("GetSuccessfullProjectDetailsById", "Solutions")",
+                url: "@Url.Action("RemoveHighlightData", "Solutions")",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify(data),
+                data: JSON.stringify(Data),
                 success: function (result) {
-                    if (result.Message == "Success"){
-                        if (result != null) {
-                            var data = result.Result;
-                            $("#SuccessfullProject").modal('show')
-                            $("#SuccessfullProjectTitle").val(data.Title);
-                            $("#SuccessfullProjectDescription").val(data.Description);
-                            $("#SuccessfullProjectId").val(data.Id);
-                            if(data.IsActive){
-                                $("#IsActiveProject").prop('checked', true);
-                            }
-                            $("#result-btn").prop('disabled', false);
-                            GetProjectResultList();
-                        }
-                    }
-                    else{
-                        showToaster("error", "Error !", result.Message);
-                    }
+                    showToaster("success", "Success", result.Message);
+                    $("#preloader").hide();
                 },
                 error: function (result) {
                     showToaster("error", "Error !", "Something went wrong !!");
                 }
             });
+        });
     }
+
+    function GetTopProfessionalDetails(id) {
+         var data = {
+            Id: id,
+        };
+         $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetTopProfessionalDetails", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Message == "Success") {
+                    if (result != null) {
+                        var data = result.Result;
+                        $("#TopProfessional").modal('show')
+                        FreelancerList();
+                        $("#TopProfessionalId").val(data.TopProfessionalData.Id);
+                        $("#FreelancerTitle").val(data.TopProfessionalData.TopProfessionalTitle);
+                        $("#TopDescription").val(data.TopProfessionalData.Description);
+                        $("#projectRate").val(data.TopProfessionalData.Rate);
+                        setTimeout(function () {
+                            $("#drp-FreeLancer").val(data.TopProfessionalData.FreelancerId)
+                        }, 2000);
+                        if(data.FreelancerData.ImageUrlWithSas != null){
+                             $("#UserImagepreview").find("span").first().remove();
+                                $('#UserImagepreview').show();
+                                var span = document.createElement('span');
+                                span.innerHTML =
+                                    ['<img class="UserImage" src="', data.FreelancerData.ImageUrlWithSas, '" style="height:200px;width:200px;"/>']
+                                        .join('');
+
+                                if (document.getElementById('UserImagepreview') != null) {
+                                    document.getElementById('UserImagepreview').insertBefore(span, null);
+                                }
+                        }
+
+                         $("#preloader").hide();
+                    }
+                }
+                else {
+                    showToaster("error", "Error !", result.Message);
+                }
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
 </script>

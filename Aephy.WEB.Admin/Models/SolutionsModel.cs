@@ -116,6 +116,7 @@ namespace Aephy.WEB.Admin.Models
 
     public class SolutionTopProfessionalViewModel
     {
+        public int Id { get; set; } 
         public int IndustryId { get; set; }
 
         public int SolutionId { get; set; }

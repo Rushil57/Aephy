@@ -2123,8 +2123,25 @@ namespace Aephy.API.Controllers
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Save Successfully!",
+                        Message = "Data Save Successfully!",
                     });
+                }
+                else
+                {
+                    var topProfessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if(topProfessionalData != null)
+                    {
+                        topProfessionalData.TopProfessionalTitle = model.TopProfessionalTitle;
+                        topProfessionalData.Rate = model.Rate;
+                        topProfessionalData.Description = model.Description;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Updated Successfully!",
+                        });
+                    }
                 }
 
 
@@ -2596,7 +2613,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        //GetProjectDetailsById
+        
         [HttpPost]
         [Route("GetProjectDetailsById")]
         public async Task<IActionResult> GetProjectDetailsById([FromBody] MileStoneIdViewModel model)
@@ -2719,5 +2736,56 @@ namespace Aephy.API.Controllers
             }
         }
 
+      
+        [HttpPost]
+        [Route("GetTopProfessionalDetailsById")]
+        public async Task<IActionResult> GetTopProfessionalDetailsById([FromBody] MileStoneIdViewModel model)
+        {
+            try
+            {
+                if (model.Id != 0)
+                {
+                    var topprofessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (topprofessionalData != null)
+                    {
+                        var freelancerdata = _db.FreelancerDetails.Where(x => x.UserId == topprofessionalData.FreelancerId).FirstOrDefault();
+                        if(freelancerdata != null)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Success",
+                                Result = new
+                                {
+                                    TopProfessionalData = topprofessionalData,
+                                    FreelancerData = freelancerdata
+                                }
+                            });
+                        }
+                       
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data not found!",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something went Wrong!",
+            });
+        }
     }
 }

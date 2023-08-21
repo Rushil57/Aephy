@@ -709,6 +709,16 @@ h6 {
     line-height: 0;
 }
 
+.shortreviews .box .icon-msg h3 {
+  flex-shrink: 0;
+    font-size: 21px;
+    font-weight: 800;
+    color: #fff;
+    padding: 10px 10px 10px 10px;
+    line-height: 1;
+    display: unset;
+}
+
 .shortreviews .box .description {
     font-size: 17px;
     font-weight: 600;

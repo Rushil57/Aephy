@@ -13,6 +13,11 @@
         .GigLevels-card .title h5 {
         font-weight:700;
     }
+
+    .required-error{
+        display:none;
+    }
+
 </style>
 
 <main id="main" class="main">
@@ -38,56 +43,64 @@
 
                             <div class="card-body">
                                 <div class="row mb-3 title d-flex justify-content-center">
-                                    <h5 for="minLevel" class="col-md-4 col-lg-3 col-form-label">Level</h5>
-                                    <div class="col-4">
-                                        <h5 for="minLevel" class="col-4 col-form-label">Min</h5>
+                                    <h5 for="minLevel" class="col-md-4 col-lg-5 col-form-label">Level</h5>
+                                    <div class="col-3">
+                                        <h5 for="minLevel" class="col-form-label">Min</h5>
                                     </div>
-                                    <div class="col-4">
-                                        <h5 for="maxLevel" class="col-4 col-form-label">Max</h5>
+                                    <div class="col-3">
+                                        <h5 for="maxLevel" class="col-form-label">Max</h5>
                                     </div>
                                 </div>
                                 <form name="SaveLevelsForm" id="FormSaveLevels">
                                     <div class="row mb-3 d-flex justify-content-center">
-                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Associate</label>
+                                        <label for="minLevel" class="col-md-4 col-lg-5 col-form-label">Associate</label>
                                         <input name="LevelID" type="text" class="form-control d-none" value="0">
-                                        <div class="col-4">
-                                            <input name="minLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="minLevel" id="minLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
-                                        <div class="col-4">
-                                            <input name="maxLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="maxLevel" id="maxLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3 d-flex justify-content-center">
-                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Expert</label>
+                                        <label for="minLevel" class="col-md-4 col-lg-5 col-form-label">Expert</label>
                                         <input name="LevelID" type="text" class="form-control d-none" value="0">
-                                        <div class="col-4">
-                                            <input name="minLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="minLevel" id="minLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
-                                        <div class="col-4">
-                                            <input name="maxLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="maxLevel" id="maxLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3 d-flex justify-content-center">
-                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Project Manager</label>
+                                        <label for="minLevel" class="col-md-4 col-lg-5 col-form-label">Project Manager</label>
                                         <input name="LevelID" type="text" class="form-control d-none" value="0">
-                                        <div class="col-4">
-                                            <input name="minLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="minLevel" id="minLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
-                                        <div class="col-4">
-                                            <input name="maxLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="maxLevel" id="maxLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3 d-flex justify-content-center">
-                                        <label for="minLevel" class="col-md-4 col-lg-3 col-form-label">Project Manager / Project Architect</label>
+                                        <label for="minLevel" class="col-md-4 col-lg-5 col-form-label">Project Manager / Project Architect</label>
                                         <input name="LevelID" type="text" class="form-control d-none" value="0">
-                                        <div class="col-4">
-                                            <input name="minLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="minLevel" id="minLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
-                                        <div class="col-4">
-                                            <input name="maxLevel" type="text" class="form-control">
+                                        <div class="col-3">
+                                            <input name="maxLevel" id="maxLevel1" type="text" class="form-control">
+                                            <label class="error required-error">This field is required.</label>
                                         </div>
                                     </div>
 
@@ -113,14 +126,6 @@
 
     $(function () {
         $("form[name='SaveLevelsForm']").validate({
-            rules: {
-                minLevel: { required: true },
-                maxLevel: { required: true }
-            },
-            messages: {
-                minLevel: { required: "Please enter minimum range", },
-                maxLevel: { required: "Please enter maximum range", },
-            },
             submitHandler: function (form) {
                 SaveLevelsData()
             }
@@ -134,19 +139,33 @@
         var ArraymaxLevel = new Array();
         var ArrayLevel = ["Associate", "Expert", "Project Manager", "Project Manager / Project Architect"];
         var ids = '';
+        var errorCount = 0;
 
         $("input:text[name=LevelID]").each(function () {
             ArrayLevelID.push($(this).val());
         });
 
         $("input:text[name=minLevel]").each(function () {
-            ArrayminLevel.push($(this).val());
+            if($(this).val() == ''){
+                errorCount++;
+                var errorLabel = $(this).parent().find('.required-error');
+                errorLabel.text('This field is required.');
+                errorLabel.css('display', 'inline-block');
+            }
+            ArrayminLevel.push($(this).val()); 
         });
 
         $("input:text[name=maxLevel]").each(function () {
+            if ($(this).val() == '') {
+                errorCount++;
+                var errorLabel = $(this).parent().find('.required-error');
+                errorLabel.text('This field is required.');
+                errorLabel.css('display', 'inline-block');
+            }
             ArraymaxLevel.push($(this).val());
         });
 
+        if (errorCount == 0) {
         var listSize = ArrayLevelID.length;
         if (listSize > 0){
             var index = 0;
@@ -193,6 +212,7 @@
                 });
             }
         }
+        }
     }
 
     function bindLevelsRangeData(){
@@ -209,14 +229,17 @@
                 if(size > 0){
                     for(res = 0; res < size; res++){
                         var item = result.Result[res];
+                        var level = res+1;
                         htm += '<div class="row mb-3 d-flex justify-content-center">';
-                        htm += '<label class= "col-md-4 col-lg-3 col-form-label">' + item.Level + '</label>';
+                        htm += '<label class= "col-md-4 col-lg-5 col-form-label">' + item.Level + '</label>';
                         htm += '<input name = "LevelID" type = "text" class="form-control d-none" value = "'+item.ID+'" id = "architect_LevelID">';
-                        htm += '<div class="col-4">';
-                        htm += '<input name="minLevel" type = "text" class="form-control" value="'+item.minLevel+'" id = "architect_minLevel">';
+                        htm += '<div class="col-3">';
+                        htm += '<input name="minLevel" id="minLevel'+level+'" type = "text" class="form-control" value="'+item.minLevel+'" id = "architect_minLevel">';
+                        htm += '<label class="error required-error">This field is required.</label>';
                         htm += '</div>';
-                        htm += '<div class="col-4">';
-                        htm += '<input name="maxLevel" type = "text" class="form-control" value="'+item.maxLevel+'" id = "architect_maxLevel">';
+                        htm += '<div class="col-3">';
+                        htm += '<input name="maxLevel"  id="maxLevel' + level + '" type = "text" class="form-control" value="' + item.maxLevel + '" id = "architect_maxLevel">';
+                        htm += '<label class="error required-error">This field is required.</label>';
                         htm += '</div>';
                         htm += '</div>';
                     }

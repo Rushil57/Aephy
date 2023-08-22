@@ -1390,6 +1390,6 @@ td.cls-Solution, .cls-service, .cls-industries, .cls-RolesId {
     width: 280px;
 }
 
-#SuccessfullProjectDescription{
+#SuccessfullProjectDescription, #TopDescription {
     resize: none;
 }

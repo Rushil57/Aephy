@@ -156,7 +156,6 @@
                 <div class="row mx-auto my-auto justify-content-center">
                     <div id="recipeCarousel" class="carousel slide" data-interval="false">
                         <div class="carousel-inner" role="listbox" id="ai-Section">
-
                         </div>
                         <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -174,117 +173,14 @@
     <!-- ======= Client Reviews Section ======= -->
     <section id="reviews" class="reviews pt-0">
         <div class="container" data-aos="fade-up">
-
             <div class="section-header">
-                @*<span>Top professionals in our platform</span>*@
                 <h2 class="label-title-size">Top Professionals In Our Platform</h2>
-
             </div>
 
-            <div class="row">
+            <div class="row" id="review-section">
                 <div class="col-12 col-lg-6" id="leftReview">
-                    <div class="col my-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="box">
-                            <div class="title section-title-size">
-                                Michael – Project Manager Anomaly Detection
-                            </div>
-                            <div class="section-detail-size">
-                                Michael is a highly skilled professional with expertise in anomaly detection for manufacturing. He has excellent communication skills and a track record of identifying and resolving critical issues in production processes. Mike's experience and dedication have helped companies reduce waste and increase efficiency.
-                            </div>
-                        </div>
-                        <div class="content">
-                            <div class="image">
-                                <div>MR</div>
-                            </div>
-                            <div class="info">
-                                <div class="name">Michael Rose</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <label> 4.9 / 5 </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col my-4 cls-professional-viewmore" data-aos="fade-up" data-aos-delay="200">
-                        <div class="box">
-                            <div class="title section-title-size">
-                                Amir – Expert Data Strategy Development
-                            </div>
-                            <div class="section-detail-size">
-                                Amir is a highly skilled data strategist with expertise in market forecasting and consumer behavior analysis. He has a proven track record of delivering profitable strategic investments for clients.
-                            </div>
-                        </div>
-                        <div class="content">
-                            <div class="image">
-                                <div>AK</div>
-                            </div>
-                            <div class="info">
-                                <div class="name">Amir Khan</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <label>4.7 / 5</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="col-12 col-lg-6 cls-professional-viewmore" id="RightReview">
-                    <div class="col my-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="box">
-                            <div class="title section-title-size">
-                                Anna – Expert AI Roadmap Development
-                            </div>
-                            <div class="section-detail-size">
-                                Anna is an expert in AI roadmap development with a proven track record of helping businesses identify and implement AI solutions that align with their strategic goals. She is highly skilled in analyzing data and identifying the most promising use cases to drive business growth.
-                            </div>
-                        </div>
-                        <div class="content">
-                            <div class="image">
-                                <div>AL</div>
-                            </div>
-                            <div class="info">
-                                <div class="name">   Anna Lakhani</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <label>4.8/5</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col my-4" data-aos="fade-up" data-aos-delay="400">
-                        <div class="box">
-                            <div class="title section-title-size">
-                                Zahir – Expert Computer Vision
-                            </div>
-                            <div class="section-detail-size">
-                                Zahir is an expert in computer vision with a strong focus on marketing analytics. He has helped numerous clients achieve better audience segmentation and content personalization, resulting in significant improvements in customer engagement.
-                            </div>
-                        </div>
-                        <div class="content">
-                            <div class="image">
-                                <div>ZM</div>
-                            </div>
-                            <div class="info">
-                                <div class="name">Zahir Modi</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <label>4.9 / 5</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <a class="cls-professional-btn" onclick="ProfessionalViewMore()" id="ProfessionalViewMore">View More <i class="bi bi-triangle-fill"></i></a>
@@ -306,8 +202,6 @@
             </div>
 
             <div class="row" id="successfull-project-section">
-
-             
             </div>
             <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View More <i class="bi bi-triangle-fill"></i></a>
             <a class="cls-trusted-lessbtn" href="#shortreviews" onclick="TrustedViewLess()" id="TrustedViewLess">View Less <i class="bi bi-triangle-fill"></i></a>
@@ -437,7 +331,7 @@
                     </p>
                     <div class="social-links d-flex mt-4">
                         <a href="https://www.linkedin.com/company/aephy/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                        <a href="https://twitter.com/ephylink57412" class="twitter"><img src="~/assets/img/icons-twitterx.png"/></a>
+                        <a href="https://twitter.com/ephylink57412" class="twitter"><img src="~/assets/img/icons-twitterx.png" /></a>
                         <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                     </div>
@@ -451,12 +345,14 @@
 <script>
 
     $(function () {
+         $("#preloader").show();
         GetPopularSolution();
         GetSuccessfullProjects();
+        GetTopProfessionalDetails();
+         $("#preloader").hide();
     })
 
     function GetPopularSolution() {
-         $("#preloader").show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetSolutionList", "LandingPage")",
@@ -481,7 +377,7 @@
                             '<a class="stretched-link">' + title + '</a>' +
                             '</h3>' +
                             '<p class="section-detail-size" >' + description + '</p>' +
-                           
+
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -504,10 +400,7 @@
                             next = next.nextElementSibling
                         }
                     })
-                    //$('#ai-Section').carousel();
                 }
-
-                 $("#preloader").hide();
             },
             error: function (result) {
                 alert("failure");
@@ -536,24 +429,23 @@
         $(".cls-professional-lessbtn").css("display", "none");
     }
 
-    function GetSuccessfullProjects(){
-       $("#preloader").show();
+    function GetSuccessfullProjects() {
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetSuccessfullProjectList", "LandingPage")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                
+
                 var data = result.Result;
-                if(data != ""){
+                if (data != "") {
                     var successfullProject = "";
                     $.each(data, function (datas, values) {
                         successfullProject += '<div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">' +
                             '<div class="box cls-main-content" >' +
                             '<div class="icon-msg d-flex" >' +
                             '<i class="bi-chat-right-quote" > </i>' +
-                            '<h3>' + values.Title + '</h3>'+
+                            '<h3>' + values.Title + '</h3>' +
                             '</div>' +
                             '<div class="description section-detail-size">' + values.Description + '</div>' +
                             '<div class="child col-10 mx-2 cls-result">' +
@@ -577,14 +469,106 @@
                     $("#successfull-project-section .cls-main-div:nth-child(even) .cls-main-content .cls-result").css("background-color", 'rgb(128 128 128 / 0%)');
                     $('.cls-trusted-viewmore').first().removeClass('cls-trusted-viewmore');
                     $(".cls-temp").remove()
-                }else{
+                } else {
                     $(".cls-temp").remove()
-                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#successfull-project-section");
+                    $("<p class='cls-temp'>No Data Available</p>").insertAfter("#successfull-project-section");
                     $(".cls-temp").css("padding-left", "14px");
 
                 }
-                
-                 $("#preloader").hide();
+            },
+            error: function (result) {
+                alert("failure");
+            }
+        });
+    }
+
+    function GetTopProfessionalDetails() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetTopProfessionalDetails", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var data = result.Result;
+                if (data != "") {
+                    var firstlist = data.slice(0, 2);
+                    var secondlist = data.slice(2);
+
+                    if (firstlist != "") {
+                        var leftreviewSection = "";
+                        $.each(firstlist, function (datas, values) {
+                            var description = values.Description.length > 320 ? values.Description.substring(0, 320) + "..." : values.Description;
+                             var name = values.FreelancerId.split(" ");
+                             var firstname = name[0].charAt(0);
+                             var lastname = name[1].charAt(0);
+
+                            leftreviewSection += '<div class="col my-4" data-aos="fade-up" data - aos - delay="100" >' +
+                                '<div class="box" style="min-height:200px";>' +
+                                '<div class="title section-title-size">' + values.FreelancerId.split(" ")[0] + ' – ' + values.Title + '</div>' +
+                                '<div class="section-detail-size" title="' + values.Description + '">' + description + '</div>' +
+                                '</div>' +
+                                '<div class="content" >';
+                                if (values.ImageUrlWithSas != null) {
+                                    leftreviewSection += '<div><div><img src=' + values.ImageUrlWithSas + ' alt ="Image" style="height:60px;width:60px;border-radius:50%"></div></div>';
+                                 }
+                                else {
+                                    leftreviewSection += '<div class="image"><div>' + firstname + '' + lastname + '</div></div>';
+                                }
+                                leftreviewSection += '<div class="info">' +
+                                '<div class="name">' + values.FreelancerId + ' </div>' +
+                                '<div class="stars" >' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<label> ' + values.Rate + '/ 5 </label>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                        });
+                        $('#leftReview').html(leftreviewSection);
+                    }
+
+                    if (secondlist != "") {
+                        var rightreviewSection="";
+                        $.each(secondlist, function (datas, values) {
+                            var description = values.Description.length > 320 ? values.Description.substring(0, 320) + "..." : values.Description;
+                             var name = values.FreelancerId.split(" ");
+                             var firstname = name[0].charAt(0);
+                             var lastname = name[1].charAt(0);
+
+                            rightreviewSection += '<div class="col my-4" data-aos="fade-up" data-aos-delay="100" >' +
+                                '<div class="box" style="min-height:200px";>' +
+                                '<div class="title section-title-size">'+values.FreelancerId.split(" ")[0]+' – '+values.Title+'</div>' +
+                                '<div class="section-detail-size" title="' + values.Description + '">' + description + '</div>' +
+                                '</div>' +
+                                '<div class="content" >';
+                                if (values.ImageUrlWithSas != null) {
+                                    rightreviewSection += '<div><div><img src=' + values.ImageUrlWithSas + ' alt ="Image" style="height:60px;width:60px;border-radius:50%"></div></div>';
+                                 }
+                                else {
+                                    rightreviewSection += '<div class="image"><div>' + firstname + '' + lastname + '</div></div>';
+                                }
+                                
+                                rightreviewSection += '<div class="info">' +
+                                '<div class="name">'+values.FreelancerId+'</div>' +
+                                '<div class="stars" >' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<label> ' + values.Rate + ' / 5 </label>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                        });
+                        $('#RightReview').html(rightreviewSection);
+                    }
+                    $(".cls-review-temp").remove();
+                }else{
+                    $(".cls-review-temp").remove();
+                    $("<p class='cls-review-temp'>No Data Available</p>").insertAfter("#review-section");
+                }
             },
             error: function (result) {
                 alert("failure");

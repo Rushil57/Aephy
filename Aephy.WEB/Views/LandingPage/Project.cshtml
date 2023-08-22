@@ -1030,7 +1030,7 @@
                 if(data.TopProfessional != ""){
                      var topProfessional = "";
                      $.each(data.TopProfessional, function (datas, values) {
-                         var description = values.Description.length > 250 ? values.Description.substring(0, 250) + "..." : values.Description;
+                         var description = values.Description.length > 220 ? values.Description.substring(0, 220) + "..." : values.Description;
                          var name = values.FreelancerId.split(" ")
                          var firstname = name[0].charAt(0);
                          var lastname = name[1].charAt(0);
@@ -1050,7 +1050,7 @@
                                                             //'<div class="image"><div>' + firstname +''+ lastname +'</div></div>' +
                                                             topProfessional += '<div class="info">' +
                                                                 '<div class="name">'+values.FreelancerId+'</div>' +
-                                                                '<div class="stars">' +
+                                                                '<div class="stars">' + 
                                                                     '<i class="bi bi-star-fill"></i>' +
                                                                     '<i class="bi bi-star-fill"></i>' +
                                                                     '<i class="bi bi-star-fill"></i>' +

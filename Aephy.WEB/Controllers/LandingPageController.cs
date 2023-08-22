@@ -87,12 +87,12 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-/*        [HttpGet]
-        public ActionResult Project()
-        {
-            return View();
-        }
-*/
+        /*        [HttpGet]
+                public ActionResult Project()
+                {
+                    return View();
+                }
+        */
         [HttpGet]
         public ActionResult Project(int? Service, int? Solution, int? Industry)
         {
@@ -441,12 +441,38 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        //GetSuccessfullProjectList
         [HttpGet]
         public async Task<string> GetSuccessfullProjectList()
         {
             var data = await _apiRepository.MakeApiCallAsync("api/Client/GetSuccessfullProjectList", HttpMethod.Get);
             return data;
+
+        }
+
+        [HttpGet]
+        public async Task<string> GetTopProfessionalDetails()
+        {
+            var Professionaldata = await _apiRepository.MakeApiCallAsync("api/Client/GetTopProfessionalDetails", HttpMethod.Get);
+            dynamic data = JsonConvert.DeserializeObject(Professionaldata);
+
+            if (data.Result != null)
+            {
+                foreach (var service in data.Result)
+                {
+                    if (service.ImagePath != null)
+                    {
+                        string imagepath = service.ImagePath;
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                        service.ImageUrlWithSas = imageUrlWithSas;
+                    }
+
+
+                }
+
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
 
         }
     }

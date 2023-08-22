@@ -824,5 +824,51 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("GetTopProfessionalDetails")]
+        public async Task<IActionResult> GetTopProfessionalDetails()
+        {
+            try
+            {
+                var topProfessionalData = await _db.SolutionTopProfessionals.Take(4).ToListAsync();
+                List<SolutionTopProfessionalModel> professionalData = new List<SolutionTopProfessionalModel>();
+                if (topProfessionalData.Count > 0)
+                {
+                    foreach (var topdata in topProfessionalData)
+                    {
+                        SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
+                        solutionTop.Description = topdata.Description;
+                        solutionTop.Title = topdata.TopProfessionalTitle;
+                        var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+
+                        solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
+                        solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
+                        solutionTop.Rate = topdata.Rate;
+                        professionalData.Add(solutionTop);
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = professionalData
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+
+                });
+            }
+        }
+
+
+
     }
 }

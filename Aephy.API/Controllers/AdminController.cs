@@ -1729,7 +1729,7 @@ namespace Aephy.API.Controllers
                         GigOpenRoles gigopenrole = await _db.GigOpenRoles.Where(g => g.ID == openGigRoles.GigOpenRoleId).FirstOrDefaultAsync();
                         if (gigopenrole != null)
                         {
-                            FreelancerPool freelanerPool = await _db.FreelancerPool.Where(f => f.FreelancerID == openGigRoles.FreelancerID 
+                            FreelancerPool freelanerPool = await _db.FreelancerPool.Where(f => f.FreelancerID == openGigRoles.FreelancerID
                             && f.SolutionID == gigopenrole.SolutionId && f.IndustryId == gigopenrole.IndustryId).FirstOrDefaultAsync();
                             if (freelanerPool != null)
                             {
@@ -1799,6 +1799,24 @@ namespace Aephy.API.Controllers
                         }
                     }
 
+                }
+
+                var CurrentLoggedName = _db.Users.Where(x => x.Id == solutionsModel.CurrentLoggedInId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                var solutionName = _db.Solutions.Where(x => x.Id == solutionsModel.SolutionId).Select(x => x.Title).FirstOrDefault();
+                var industryName = _db.Industries.Where(x => x.Id == solutionsModel.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                var fullname = CurrentLoggedName.FirstName + " " + CurrentLoggedName.LastName;
+
+                var notificationMessage = fullname + " has " + solutionsModel.ApproveOrReject + " for SolutionName :" + solutionName + " and IndustryName : " + industryName;
+                Notifications notifications = new Notifications();
+                notifications.FromUserId = solutionsModel.CurrentLoggedInId;
+                notifications.ToUserId = solutionsModel.FreelancerId;
+                notifications.NotificationText = notificationMessage;
+                notifications.NotificationTime = DateTime.Now;
+                notifications.IsRead = false;
+
+                if(notifications != null)
+                {
+                    await SaveNotificationData(notifications);
                 }
 
                 var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
@@ -1875,7 +1893,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-      
+
         [HttpPost]
         [Route("checkOut")]
         public async Task<IActionResult> checkOut([FromBody] MileStoneDetailsViewModel model)
@@ -1992,7 +2010,7 @@ namespace Aephy.API.Controllers
                         });
                     }
                 }
-               
+
 
                 var data = _db.FreelancerPool.Where(x => x.FreelancerID == model.FreelancerId && x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
                 if (data == null)
@@ -2092,7 +2110,7 @@ namespace Aephy.API.Controllers
                 else
                 {
                     var topProfessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if(topProfessionalData != null)
+                    if (topProfessionalData != null)
                     {
                         topProfessionalData.TopProfessionalTitle = model.TopProfessionalTitle;
                         topProfessionalData.Rate = model.Rate;
@@ -2197,7 +2215,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-      
+
         [HttpPost]
         [Route("UpdateUserProfileImage")]
         public async Task<IActionResult> UpdateUserProfileImage([FromBody] SolutionImage solutionImage)
@@ -2278,18 +2296,18 @@ namespace Aephy.API.Controllers
             }
         }
 
-       
+
         [HttpPost]
         [Route("SaveSuccessfullProjectResult")]
         public async Task<IActionResult> SaveSuccessfullProjectResult([FromBody] SolutionSuccessfullProjectResult model)
         {
-            if(model.Id == 0)
+            if (model.Id == 0)
             {
                 var dbModel = new SolutionSuccessfullProjectResult
                 {
-                   SolutionSuccessfullProjectId = model.SolutionSuccessfullProjectId,
-                    ResultKey= model.ResultKey,
-                    ResultValue= model.ResultValue
+                    SolutionSuccessfullProjectId = model.SolutionSuccessfullProjectId,
+                    ResultKey = model.ResultKey,
+                    ResultValue = model.ResultValue
                 };
 
                 await _db.SolutionSuccessfullProjectResult.AddAsync(dbModel);
@@ -2303,7 +2321,7 @@ namespace Aephy.API.Controllers
             else
             {
                 var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
-                if(resultData != null)
+                if (resultData != null)
                 {
                     resultData.ResultKey = model.ResultKey;
                     resultData.ResultValue = model.ResultValue;
@@ -2328,7 +2346,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if(model.Id == 0)
+                if (model.Id == 0)
                 {
                     var dbModel = new SolutionSuccessfullProject
                     {
@@ -2351,7 +2369,7 @@ namespace Aephy.API.Controllers
                 else
                 {
                     var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if(projectData != null)
+                    if (projectData != null)
                     {
                         projectData.Title = model.Title;
                         projectData.Description = model.Description;
@@ -2366,7 +2384,7 @@ namespace Aephy.API.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -2405,7 +2423,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Route("GetProjectResultList")]
         public async Task<IActionResult> GetProjectResultList(MileStoneIdViewModel model)
@@ -2445,7 +2463,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-       
+
         [HttpPost]
         [Route("DeleteProjectResultData")]
         public async Task<IActionResult> DeleteProjectResultData([FromBody] MileStoneIdViewModel model)
@@ -2505,7 +2523,7 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
                     }
                     var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
-                    if(projectData != null)
+                    if (projectData != null)
                     {
                         _db.SolutionSuccessfullProject.Remove(projectData);
                         _db.SaveChanges();
@@ -2576,7 +2594,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        
+
         [HttpPost]
         [Route("GetProjectDetailsById")]
         public async Task<IActionResult> GetProjectDetailsById([FromBody] MileStoneIdViewModel model)
@@ -2625,9 +2643,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if(levelList.Count > 0)
+                if (levelList.Count > 0)
                 {
-                    foreach(var level in levelList)
+                    foreach (var level in levelList)
                     {
                         if (level.ID == 0)
                         {
@@ -2699,7 +2717,7 @@ namespace Aephy.API.Controllers
             }
         }
 
-      
+
         [HttpPost]
         [Route("GetTopProfessionalDetailsById")]
         public async Task<IActionResult> GetTopProfessionalDetailsById([FromBody] MileStoneIdViewModel model)
@@ -2712,7 +2730,7 @@ namespace Aephy.API.Controllers
                     if (topprofessionalData != null)
                     {
                         var freelancerdata = _db.FreelancerDetails.Where(x => x.UserId == topprofessionalData.FreelancerId).FirstOrDefault();
-                        if(freelancerdata != null)
+                        if (freelancerdata != null)
                         {
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -2725,7 +2743,7 @@ namespace Aephy.API.Controllers
                                 }
                             });
                         }
-                       
+
                     }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2751,7 +2769,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        
+
         [HttpPost]
         [Route("RemoveFreelancerPoolData")]
         public async Task<IActionResult> RemoveFreelancerPoolData([FromBody] MileStoneIdViewModel model)
@@ -2794,6 +2812,53 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Something went Wrong!",
             });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNotificationData(Notifications model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var dbModel = new Notifications
+                    {
+                        NotificationText = model.NotificationText,
+                        FromUserId = model.FromUserId,
+                        ToUserId = model.ToUserId,
+                        NotificationTime = model.NotificationTime,
+                        IsRead = model.IsRead
+                    };
+
+                    await _db.Notifications.AddAsync(dbModel);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Notification Saved Succesfully!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+         
         }
     }
 }

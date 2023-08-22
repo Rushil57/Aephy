@@ -1493,3 +1493,8 @@ textarea.form-control {
     outline-offset: -8px;
     margin-right: 5px;
 }
+
+#notification-section {
+    max-height: 23.5em;
+    overflow-y: auto;
+}

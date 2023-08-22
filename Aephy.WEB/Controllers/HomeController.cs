@@ -1208,12 +1208,57 @@ namespace Aephy.WEB.Controllers
             }
         }
 
-        //GetPointsDataById
+       
         [HttpPost]
         public async Task<string> GetPointsDataById([FromBody] MileStoneIdViewModel model)
         {
             var pointsdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsDataById", HttpMethod.Post, model);
             return pointsdata;
+
+        }
+
+       
+        [HttpGet]
+        public async Task<string> GetAllUnReadNotification()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if(userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var notificationdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetAllUnReadNotification", HttpMethod.Post, model);
+            return notificationdata;
+
+        }
+
+        [HttpGet]
+        public async Task<string> GetAllNotification()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var notificationdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetAllNotification", HttpMethod.Post, model);
+            return notificationdata;
+
+        }
+
+        [HttpPost]
+        public async Task<string> SetNotificationIsRead([FromBody] MileStoneIdViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            model.UserId = userId;
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SetNotificationIsRead", HttpMethod.Post, model);
+            return data;
 
         }
     }

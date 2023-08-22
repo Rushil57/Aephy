@@ -828,5 +828,146 @@ namespace Aephy.API.Controllers
                 Message = "Data not Found"
             });
         }
+
+       
+        [HttpPost]
+        [Route("GetAllUnReadNotification")]
+        public async Task<IActionResult> GetAllUnReadNotification([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var notificationData = await _db.Notifications.Where(x => x.ToUserId == model.UserId && x.IsRead == false).ToListAsync();
+                    List<Notifications> notifications = new List<Notifications>();
+                    if(notificationData.Count > 0)
+                    {
+                        foreach(var data in notificationData)
+                        {
+                            Notifications dataStore = new Notifications();
+                            var fullname = _db.Users.Where(x => x.Id == data.FromUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            dataStore.NotificationText = data.NotificationText;
+                            dataStore.NotificationTime = data.NotificationTime;
+                            dataStore.Id = data.Id;
+                            notifications.Add(dataStore);
+                        }
+                    }
+
+                    var list = notifications.OrderByDescending(x => x.NotificationTime);
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = list
+
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        
+        [HttpPost]
+        [Route("GetAllNotification")]
+        public async Task<IActionResult> GetAllNotification([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var notificationData = await _db.Notifications.Where(x => x.ToUserId == model.UserId).ToListAsync();
+                    List<Notifications> notifications = new List<Notifications>();
+                    if (notificationData.Count > 0)
+                    {
+                        foreach (var data in notificationData)
+                        {
+                            Notifications dataStore = new Notifications();
+                            var fullname = _db.Users.Where(x => x.Id == data.FromUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            dataStore.NotificationText = data.NotificationText;
+                            dataStore.NotificationTime = data.NotificationTime;
+                            dataStore.Id = data.Id;
+                            notifications.Add(dataStore);
+                        }
+                    }
+
+                    var list = notifications.OrderByDescending(x => x.NotificationTime);
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = list
+
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        [HttpPost]
+        [Route("SetNotificationIsRead")]
+        public async Task<IActionResult> SetNotificationIsRead([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var notificationData = await _db.Notifications.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                    if(notificationData != null)
+                    {
+                        notificationData.IsRead = true;
+                        _db.SaveChanges();
+                    }
+                  
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
     }
 }

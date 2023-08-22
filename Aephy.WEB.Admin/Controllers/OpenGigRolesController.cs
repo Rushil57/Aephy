@@ -248,6 +248,8 @@ namespace Aephy.WEB.Admin.Controllers
         [HttpPost]
         public async Task<string> ApproveOrRejectFreelancer([FromBody] GigOpenRolesModel solutionsModel)
         {
+            var LoggedInUser = HttpContext.Session.GetString("LoggedAdmin");
+            solutionsModel.CurrentLoggedInId = LoggedInUser;
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/ApproveOrRejectFreelancer", HttpMethod.Post, solutionsModel);
 
             #region Send Application Status Email

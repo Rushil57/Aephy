@@ -23,5 +23,7 @@
         public string? ApproveOrReject { get; set; }
 
 		public string? FreelancerId { get; set; }
+
+		public string? CurrentLoggedInId { get; set; }
     }
 }

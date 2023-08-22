@@ -154,6 +154,8 @@ namespace Aephy.API.Models
             public string? FreeLancerLavel { get; set; }
 
             public string? FreelancerId { get; set; }
+
+            public string? CurrentLoggedInId { get; set; }
         }
 
         public class SolutionDescribeModel

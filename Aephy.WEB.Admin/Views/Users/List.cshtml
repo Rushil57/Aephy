@@ -251,7 +251,11 @@
                         {
                             "data": "Id",
                             "render": function (data, type, row) {
-                               return '<a class="btn btn-primary" onclick=SoutionsList(this,"' + data + '")>View</a>';
+                                if(row.UserRole == "Freelancer"){
+                                    return '<a class="btn btn-primary" onclick=SoutionsList(this,"' + data + '")>View</a>';
+                                }else{
+                                    return '<span></span>'
+                                }
                             }
                         },
                         {

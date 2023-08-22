@@ -97,9 +97,16 @@ namespace Aephy.API.Controllers
                         UpdateImage.BlobStorageBaseUrl = OpengigroleCv.BlobStorageBaseUrl;
                         UpdateImage.CVPath = OpengigroleCv.CVPath;
                         UpdateImage.CVUrlWithSas = OpengigroleCv.CVUrlWithSas;
-
                         _db.SaveChanges();
 
+                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == UpdateImage.FreelancerID).FirstOrDefault();
+                        if(freelancerDetails != null)
+                        {
+                            freelancerDetails.BlobStorageBaseUrl = OpengigroleCv.BlobStorageBaseUrl;
+                            freelancerDetails.CVPath = OpengigroleCv.CVPath;
+                            freelancerDetails.CVUrlWithSas = OpengigroleCv.CVUrlWithSas;
+                            _db.SaveChanges();
+                        }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,

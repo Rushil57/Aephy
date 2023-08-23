@@ -166,12 +166,12 @@
                             if (@Context.Session.GetString("UserProfileImage") != "")
                             {
                                 <div id="name-initial" style="border: 0px;outline: 0px;">
-                                    <img src="@Context.Session.GetString("UserProfileImage")" />
+                                    <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
                                 </div>
                             }
                             else
                             {
-                                <div id="name-initial">@Context.Session.GetString("ShortName")</div>
+                                <div id="name-initial" class="profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -244,7 +244,7 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <div id="preloader"></div>
+    <div id="preloader" style="display:none;"></div>
 
     <div class="modal" id="NotificationModal" tabindex="-1" aria-labelledby="NotificationModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -307,7 +307,7 @@
         const preloader = document.querySelector('#preloader');
         if (preloader) {
             window.addEventListener('load', () => {
-                preloader.remove();
+                $('#preloader').css("display", "none");
             });
         }
     });

@@ -310,6 +310,7 @@ namespace Aephy.WEB.Controllers
                                 string sasToken = GenerateImageSasToken(imagepath);
                                 string imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
                                 data.Result.ImageUrlWithSas = imageUrlWithSas;
+                                HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
                             }
                         }
 

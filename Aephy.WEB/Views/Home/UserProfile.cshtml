@@ -19,11 +19,12 @@
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         @{
                             if (ViewData["ProfileImage"] != "")
-                        {
-                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle">
-                        }else{
-                            <div id="name-initial" class="profile-pic">@Context.Session.GetString("ShortName")</div>
-                        }
+                            {
+                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                            }
+                            else{
+                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                            }
                         }
                         
                         
@@ -309,7 +310,7 @@
             </div>
         </div>
     </section>
-    <div id="preloader" style="display:none;"></div>
+    @*<div id="preloader" style="display:none;"></div>*@
 </main><!-- End #main -->
 
 <script type="text/javascript">
@@ -395,10 +396,12 @@
                     if (data.ImageUrlWithSas != null){
                         $("#profile-intial").css("display","none")
                         $("#profile-image").attr("src", data.ImageUrlWithSas);
+                        $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#Freelancer-profile").val("");
 
                     }else{
                         $("#Freelancer-profile").val("");
+                        $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#profile-image").css("display", "none")
                          $("#profile-intial").css("display","flex")
                     }
@@ -508,12 +511,12 @@
                 success: function (result) {
                     var test = result.split(",")[1].split(":")[1]
                     showToaster("success", "Success", test.replace(/\"/g, ""));
-                      $('#preloader').hide();
+                    $('#preloader').hide();
+                    GetUserData()
                 },
                 error: function (result) {
                     $('#preloader').hide();
                     showToaster("error", "Error !", "Failure");
-
                 }
             });        
     }

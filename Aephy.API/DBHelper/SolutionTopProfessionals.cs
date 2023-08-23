@@ -20,5 +20,7 @@ namespace Aephy.API.DBHelper
         public string? Description { get; set; }
 
         public string? Rate { get; set; }
+
+        public bool IsVisibleOnLandingPage { get; set; }
     }
 }

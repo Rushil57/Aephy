@@ -371,6 +371,11 @@
                                         <input type="checkbox" id="IsActiveTopProffesional" class="form-check-input" />
                                     </div>*@
 
+                                    <div class="col-12">
+                                        <input type="checkbox" id="IsVisibleOnLandingPage" class="form-check-input" />
+                                        <label for="IsVisibleOnLandingPage" class="form-label"> Is Visible On Landing Page</label>
+                                    </div>
+
                                     <div class="text-center">
                                         <button type="submit" id="AddTopProfessional" class="btn btn-brand">Save</button>
                                         <button type="reset" class="btn btn-secondary" onclick="ResetProfessionalForm();">Reset</button>
@@ -1238,6 +1243,7 @@
     function OpenTopProfessionalsPopup() {
         $("#TopProfessional").modal('show');
         $("#IsActiveTopProffesional").prop('checked', true);
+        $("#IsVisibleOnLandingPage").prop('checked',true);
         FreelancerList()
     }
 
@@ -1271,7 +1277,8 @@
             FreelancerId: $("#drp-FreeLancer").val(),
             TopProfessionalTitle: $("#FreelancerTitle").val(),
             Description: $("#TopDescription").val(),
-            Rate: $("#projectRate").val()
+            Rate: $("#projectRate").val(),
+            IsVisibleOnLandingPage: $("#IsVisibleOnLandingPage").is(':checked')
         }
 
         var formData = new FormData();
@@ -1289,10 +1296,13 @@
             dataType: 'json',
             success: function (result) {
                 $("#preloader").hide();
-                showToaster("success", "Success", result.Message);
+                if (result.Message == "indexOverflow") {
+                    showToaster("error", "Error !", "Cannot add more Top Professionals for LandigPage!");
+                }else{
+                    showToaster("success", "Success", result.Message);
+                }
                 ResetProfessionalForm()
                 GetTopProfessionalList()
-
             },
             error: function (err) {
                 $("#preloader").hide();
@@ -1831,6 +1841,7 @@
                         $("#FreelancerTitle").val(data.TopProfessionalData.TopProfessionalTitle);
                         $("#TopDescription").val(data.TopProfessionalData.Description);
                         $("#projectRate").val(data.TopProfessionalData.Rate);
+                        $("#IsVisibleOnLandingPage").prop('checked',data.TopProfessionalData.IsVisibleOnLandingPage);
                         setTimeout(function () {
                             $("#drp-FreeLancer").val(data.TopProfessionalData.FreelancerId)
                         }, 2000);

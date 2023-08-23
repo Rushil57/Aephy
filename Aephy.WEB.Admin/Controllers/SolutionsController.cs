@@ -544,11 +544,16 @@ namespace Aephy.WEB.Admin.Controllers
         {
             var result = JsonConvert.DeserializeObject<SolutionTopProfessionalViewModel>(TopProfessionalData);
             var Data = await _apiRepository.MakeApiCallAsync("api/Admin/AddTopProfessionalData", HttpMethod.Post, result);
-            if(httpPostedFileBase != null)
-            {
-                var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
-                await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
-            }
+            dynamic data = JsonConvert.DeserializeObject(Data);
+                if (data["Message"] != "indexOverflow".Trim())
+                {
+                    if (httpPostedFileBase != null)
+                    {
+                        var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
+                        await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
+                    }
+
+                }
             return Data;
         }
 

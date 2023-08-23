@@ -129,6 +129,8 @@ namespace Aephy.WEB.Admin.Models
 
         public string? Rate { get; set; }
 
+        public bool IsVisibleOnLandingPage { get; set; }
+
     }
 
     public class SolutionSuccessfullProjectViewModel

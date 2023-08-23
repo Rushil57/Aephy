@@ -2087,8 +2087,19 @@ namespace Aephy.API.Controllers
         {
             try
             {
+                List<SolutionTopProfessionals> topProfessionalsList = await _db.SolutionTopProfessionals.Where(x => x.IsVisibleOnLandingPage == true).ToListAsync();
+
                 if (model.Id == 0)
                 {
+
+                    if(topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "indexOverflow",
+                        });
+                    }
                     var dbModel = new SolutionTopProfessionals
                     {
                         FreelancerId = model.FreelancerId,
@@ -2097,6 +2108,7 @@ namespace Aephy.API.Controllers
                         TopProfessionalTitle = model.TopProfessionalTitle,
                         Description = model.Description,
                         Rate = model.Rate,
+                        IsVisibleOnLandingPage = model.IsVisibleOnLandingPage,
                     };
 
                     await _db.SolutionTopProfessionals.AddAsync(dbModel);
@@ -2109,12 +2121,21 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
+                    if (topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "indexOverflow",
+                        });
+                    }
                     var topProfessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
                     if (topProfessionalData != null)
                     {
                         topProfessionalData.TopProfessionalTitle = model.TopProfessionalTitle;
                         topProfessionalData.Rate = model.Rate;
                         topProfessionalData.Description = model.Description;
+                        topProfessionalData.IsVisibleOnLandingPage = model.IsVisibleOnLandingPage;
                         _db.SaveChanges();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel

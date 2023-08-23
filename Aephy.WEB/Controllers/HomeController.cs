@@ -21,6 +21,7 @@ using Azure.Storage.Blobs.Models;
 using System.Text.RegularExpressions;
 using Stripe;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Aephy.API.Migrations;
 
 namespace Aephy.WEB.Controllers
 {
@@ -328,6 +329,21 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        [HttpPost]
+        public async Task<string> getSavedLevelsdataByName([FromBody] LevelRangeModel level)
+        {
+            try
+            {
+                var Response = await _apiRepository.MakeApiCallAsync("api/Admin/GetSavedLevelByName", HttpMethod.Post, level);
+                return Response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return "";
+        }
 
         [HttpPost]
         public async Task<string> UpdateUserPassword([FromBody] ChangePasswordModel changePassword)

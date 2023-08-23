@@ -334,7 +334,7 @@
                 role: { required: "Select valid role" },
             },
             submitHandler: function (form) {
-                validateManually();
+                validateFreelancerRate();
             }
         });
 
@@ -380,7 +380,7 @@
                     $(".emailId").val(data.Email)
                     var Fullname = data.FirstName + " " + data.LastName
                     $("#fullName").text(Fullname)
-                    $("#userRole").text(data.Role)
+                    $("#userRole").text(data.Role)                    
                     $(".hourlyRate").val(data.HourlyRate)
                     $(".education").val(data.Education)
                     $(".proffessionalExperience").val(data.ProffessionalExperience)
@@ -462,62 +462,61 @@
             }
         }
 
-        var fileUpload = $("#CVPath").get(0);
-        var files = fileUpload.files;
+            var fileUpload = $("#CVPath").get(0);
+            var files = fileUpload.files;
 
-        var profile = $("#Freelancer-profile").get(0);
-        var profileFiles = profile.files;
+            var profile = $("#Freelancer-profile").get(0);
+            var profileFiles = profile.files;
 
-        var FreelancerDetail = {
-            HourlyRate: $("#HourlyRate").val(),
-            Education: $("#Education").val(),
-            ProffessionalExperience: $("#ProffessionalExperience").val(),
-            FreelancerAddress: $("#Freelancer-Address").val(),
-        }
-
-        var ClientDetail = {
-            Description: $("#Description").val(),
-            ClientAddress: $("#Client-Address").val(),
-        }
-
-        var Userdata = {
-            Id: $(".UserId").val(),
-            FirstName: $("#firstname").val(),
-            LastName: $("#lastName").val(),
-            UserType: $("#userType").val(),
-            Email: $("#emailId").val(),
-            freelancerDetail: FreelancerDetail,
-            clientDetail: ClientDetail
-        }
-
-        var formData = new FormData();
-        for (var i = 0; i < files.length; i++) {
-            formData.append("httpPostedFileBase", files[i]);
-        }
-        for (var i = 0; i < profileFiles.length; i++) {
-            formData.append("httpPostedFileBaseProfile", profileFiles[i]);
-        }
-        formData.append("Userdata", JSON.stringify(Userdata));
-          $('#preloader').show();
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("EditUserData", "Home")",
-            contentType: false,
-            processData: false,
-            data: formData,
-            success: function (result) {
-                var test = result.split(",")[1].split(":")[1]
-                showToaster("success", "Success", test.replace(/\"/g, ""));
-                  $('#preloader').hide();
-            },
-            error: function (result) {
-                $('#preloader').hide();
-                showToaster("error", "Error !", "Failure");
-
+            var FreelancerDetail = {
+                HourlyRate: $("#HourlyRate").val(),
+                Education: $("#Education").val(),
+                ProffessionalExperience: $("#ProffessionalExperience").val(),
+                FreelancerAddress: $("#Freelancer-Address").val(),
             }
-        });
-    }
 
+            var ClientDetail = {
+                Description: $("#Description").val(),
+                ClientAddress: $("#Client-Address").val(),
+            }
+
+            var Userdata = {
+                Id: $(".UserId").val(),
+                FirstName: $("#firstname").val(),
+                LastName: $("#lastName").val(),
+                UserType: $("#userType").val(),
+                Email: $("#emailId").val(),
+                freelancerDetail: FreelancerDetail,
+                clientDetail: ClientDetail
+            }
+
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            for (var i = 0; i < profileFiles.length; i++) {
+                formData.append("httpPostedFileBaseProfile", profileFiles[i]);
+            }
+            formData.append("Userdata", JSON.stringify(Userdata));
+              $('#preloader').show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditUserData", "Home")",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    var test = result.split(",")[1].split(":")[1]
+                    showToaster("success", "Success", test.replace(/\"/g, ""));
+                      $('#preloader').hide();
+                },
+                error: function (result) {
+                    $('#preloader').hide();
+                    showToaster("error", "Error !", "Failure");
+
+                }
+            });        
+    }
 
     function ChangePassword() {
         var passwordData = {
@@ -535,9 +534,41 @@
             success: function (result) {
                 showToaster("success", "Success", result.Message);
                 ResetUpdateForm()
-                $('#preloader').show();
+                $('#preloader').hide();
             },
             error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function validateFreelancerRate() {
+        var range = {
+            ID:0,
+            Level: $('#level').val(),
+        }
+        var hourlyRate = parseFloat($("#HourlyRate").val()).toFixed(2);
+        $('#preloader').show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getSavedLevelsdataByName", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(range),
+            success: function (result) {
+                $('#preloader').hide();
+                if(result.Result.ID != 0){
+                    if (result.Result.minLevel <= hourlyRate && result.Result.maxLevel >= hourlyRate) {
+                        UpdateUserData();
+                    }else{
+                        showToaster("error", "Error !", "Hourly rate must be between $" + parseFloat(result.Result.minLevel).toFixed(2) + " to $" + parseFloat(result.Result.maxLevel).toFixed(2));
+                        return false;
+                    }
+                }
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                return false;
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });

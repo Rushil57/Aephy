@@ -2717,6 +2717,30 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetSavedLevelByName")]
+        public async Task<IActionResult> GetSavedLevelByName([FromBody]LevelRange obj)
+        {
+            try
+            {
+                LevelRange levelRange = await _db.LevelRanges.Where(l=>l.Level == obj.Level).FirstOrDefaultAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = levelRange
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
 
         [HttpPost]
         [Route("GetTopProfessionalDetailsById")]

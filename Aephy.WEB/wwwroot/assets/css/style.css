@@ -508,9 +508,11 @@ h6 {
   color: #012970;
 }
 
-.header-nav .nav-profile img {
-  max-height: 36px;
-}
+    .header-nav .nav-profile img {
+        height: 46px;
+        width: 46px;
+        border: 4px solid grey;
+    }
 
 .header-nav .nav-profile span {
   font-size: 14px;
@@ -1029,7 +1031,8 @@ h6 {
 # Profie Page
 --------------------------------------------------------------*/
 .profile .profile-card img {
-  max-width: 120px;
+  width: 120px;
+  height:120px;
 }
 
 .profile .profile-card h2 {
@@ -1465,8 +1468,8 @@ textarea.form-control {
     color: black;
     background-color: #8080805e;
     border-radius: 50%;
-    height: 45px;
-    width: 45px;
+    height: 46px;
+    width: 46px;
     border: 2px solid #fff;
     outline: 2px solid #fff;
     outline-offset: -8px;

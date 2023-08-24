@@ -244,7 +244,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-12" id="savedProjects">
                         <div class="card">
                             <div class="card-body pb-0">
                                 <h5 class="card-title">Saved Projects</h5>
@@ -1063,7 +1063,12 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             }
         });
         GetApprovedList()
-        GetSavedProjects()
+
+        if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
+            GetSavedProjects()
+        }else{
+            $("#savedProjects").hide()
+        }
     });
 
     // Product

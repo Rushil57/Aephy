@@ -107,7 +107,7 @@
             </div>
         </div>
     </div>
-
+    <div id="preloader" style="display:none;"></div>
 </main>
 
 <script>
@@ -368,8 +368,7 @@
                 '</div></div>';
         })
         $('#solution-Section').html(solutionSection);
-        if ('@Context.Session.GetString("LoggedUser")' == '')
-        {
+        if ('@Context.Session.GetString("LoggedUserRole")' != "Client") {
           $(".card-footer").hide()
             $(".icon-image").css("margin-bottom", "27px")
         }

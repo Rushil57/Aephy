@@ -1337,13 +1337,14 @@ namespace Aephy.WEB.Controllers
 
 
         [HttpPost]
-        public async Task<string> UnSavedProject([FromBody] MileStoneViewModel model)
+        public async Task<string> UnSavedProject([FromBody] MileStoneDetailsViewModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId == null)
             {
                 return "No Data Found";
             }
+            model.UserId = userId;
             var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/UnSavedProject", HttpMethod.Post, model);
             return data;
         }

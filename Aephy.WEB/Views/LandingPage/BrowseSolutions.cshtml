@@ -358,7 +358,7 @@
                 '<div class="card-footer">' +
                 '<div class="like">';
             if (solutiondata[data].IsProjectSaved){
-                solutionSection += '<i class="bi bi-heart-fill solution-saved" style="color: var(--brand);"> </i>';
+                solutionSection += '<i class="bi bi-heart-fill solution-saved" onclick=UnSaveSolutionProject(' + value.Id + ') style="color: var(--brand);"> </i>';
             }else{
                 solutionSection += '<i class="bi bi-heart solution-saved" onclick=SaveSolutionProject(' + value.Id + ')> </i>';
             }
@@ -559,6 +559,29 @@
         $.ajax({
             type: "POST",
             url: "@Url.Action("SaveProject", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success !", result.Message);
+                BindSolutionsList();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function UnSaveSolutionProject(id){
+           var data = {
+            SolutionId: id,
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UnSavedProject", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(data),

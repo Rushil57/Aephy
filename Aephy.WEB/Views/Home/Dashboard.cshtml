@@ -218,7 +218,7 @@
                         </div>
                     </div><!-- End Recent Sales -->
                     
-                    <div class="col-12">
+                    <div class="col-12 only_freelancer">
                         <div class="card top-selling overflow-auto material_scroll">
                             <div class="card-body pb-0" style="height:303px;">
                                 <h5 class="card-title">Approved Positions - Authorized for Project Requests</h5>
@@ -1775,7 +1775,7 @@ function InvokeApprovedList() {
 
     function UnSavedSolutionProject(id){
          var data = {
-            Id: id,
+            SolutionId: id,
         }
         $("#preloader").show();
         $.ajax({

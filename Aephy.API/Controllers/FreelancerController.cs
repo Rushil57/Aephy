@@ -1023,7 +1023,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var saveprojectData = await _db.SavedProjects.Where(x => x.UserId == model.UserId).Take(2).ToListAsync();
+                        var saveprojectData = await _db.SavedProjects.Where(x => x.UserId == model.UserId).Take(2).OrderByDescending(x => x.Id).ToListAsync();
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                         if (saveprojectData.Count > 0)
                         {
@@ -1042,7 +1042,7 @@ namespace Aephy.API.Controllers
                                     }
                                 }
                                 solutionsdataStore.Industries = string.Join(",", industrylist);
-                                solutionsdataStore.Id = data.Id;
+                                solutionsdataStore.Id = solutionData.Id;
                                 solutionsdataStore.Title = solutionData.Title;
                                 solutionsdataStore.Description = solutionData.Description;
                                 solutionsdataStore.ImagePath = solutionData.ImagePath;
@@ -1079,15 +1079,15 @@ namespace Aephy.API.Controllers
        
         [HttpPost]
         [Route("UnSavedProject")]
-        public async Task<IActionResult> UnSavedProject([FromBody] MileStoneIdViewModel model)
+        public async Task<IActionResult> UnSavedProject([FromBody] MileStoneDetailsViewModel model)
         {
             if (model != null)
             {
-                if (model.Id != 0)
+                if (model.UserId != null)
                 {
                     try
                     {
-                        var projectData = await _db.SavedProjects.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                        var projectData = await _db.SavedProjects.Where(x => x.SolutionId == model.SolutionId && x.UserId == x.UserId).FirstOrDefaultAsync();
                         if (projectData != null)
                         {
                             _db.Remove(projectData);

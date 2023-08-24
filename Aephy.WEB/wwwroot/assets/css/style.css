@@ -1567,3 +1567,14 @@ textarea.form-control {
     float: right;
     cursor: pointer;
 }
+
+.card-body .card-img{
+    height:180px;
+    overflow:hidden;
+}
+
+.card-img .img-fluid {
+    object-fit: fill !important;
+    height: 100% !important;
+    width: 100% !important;
+}

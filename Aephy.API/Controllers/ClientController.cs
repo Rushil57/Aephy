@@ -929,7 +929,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var topProfessionalData = await _db.SolutionTopProfessionals.Take(4).ToListAsync();
+                var topProfessionalData = await _db.SolutionTopProfessionals.Where(t=>t.IsVisibleOnLandingPage == true).ToListAsync();
                 List<SolutionTopProfessionalModel> professionalData = new List<SolutionTopProfessionalModel>();
                 if (topProfessionalData.Count > 0)
                 {

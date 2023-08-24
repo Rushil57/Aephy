@@ -276,7 +276,7 @@ h6 {
 .browseSolutions .icon-image {
     position: absolute;
     bottom: 0;
-    padding-bottom: 27px;
+    margin-bottom: 55px;
 }
 
     .browseSolutions .icon-image i {
@@ -308,6 +308,10 @@ h6 {
         padding: 0 10px;
     }
 
+.solution-saved{
+    font-size: 16px !important;
+    cursor : pointer;
+}
 /*--------------------------------------------------------------
 # Ai Section
 --------------------------------------------------------------*/

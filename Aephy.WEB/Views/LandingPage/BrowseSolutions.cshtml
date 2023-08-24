@@ -120,7 +120,7 @@
         // SetServiceValue()
     });
 
-    function checkData(Id,service) {
+    function checkData(Id, service) {
         $("#confirmationModal").modal('show')
 
         const selectService = '#select-services';
@@ -234,7 +234,7 @@
         }
         sessionStorage.setItem("IndustryId", IndustryId)
         sessionStorage.setItem("SolutionId", SolutionId)
-        window.location.href = '/LandingPage/Project?Service=' + ServiceId + '&Solution=' + SolutionId +'&Industry='+IndustryId;
+        window.location.href = '/LandingPage/Project?Service=' + ServiceId + '&Solution=' + SolutionId + '&Industry=' + IndustryId;
     }
 
     function BindPopularSolutionsList() {
@@ -354,12 +354,25 @@
                 }
 
             }
-            solutionSection += '</div></div></div></div>';
-
-
+            solutionSection += '</div></div>' +
+                '<div class="card-footer">' +
+                '<div class="like">';
+            if (solutiondata[data].IsProjectSaved){
+                solutionSection += '<i class="bi bi-heart-fill solution-saved" style="color: var(--brand);"> </i>';
+            }else{
+                solutionSection += '<i class="bi bi-heart solution-saved" onclick=SaveSolutionProject(' + value.Id + ')> </i>';
+            }
+                
+                solutionSection += '</div>' +
+                '</div>' +
+                '</div></div>';
         })
         $('#solution-Section').html(solutionSection);
-
+        if ('@Context.Session.GetString("LoggedUser")' == '')
+        {
+          $(".card-footer").hide()
+            $(".icon-image").css("margin-bottom", "27px")
+        }
     }
 
     function GetSolutionValues(value) {
@@ -427,7 +440,7 @@
         BindSolutionsList()
     });
 
-    function BindTopPopularSolutionsList(){
+    function BindTopPopularSolutionsList() {
         $("#preloader").show();
         $.ajax({
             type: "Get",
@@ -440,9 +453,9 @@
                     var solutiondata = result.Result.SolutionData;
                     BindSolutionSection(solutiondata)
                 }
-                if(result.Result.TotalCount > 3){
+                if (result.Result.TotalCount > 3) {
                     $("#solution-lessinfo").css("display", "none");
-                    $("#solution-moreinfo").css("display","block");
+                    $("#solution-moreinfo").css("display", "block");
                 }
 
                 $("#preloader").hide();
@@ -500,14 +513,14 @@
                 $.each(result.Result.IndustriesData, function (datas, values) {
                     $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
                 })
-                if(result.Result.TotalCount > 3){
+                if (result.Result.TotalCount > 3) {
                     $("#solution-lessinfo").css("display", "none");
                     $("#solution-moreinfo").css("display", "block");
-                }else{
+                } else {
                     $("#solution-lessinfo").css("display", "none");
                     $("#solution-moreinfo").css("display", "none");
                 }
-                
+
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -528,7 +541,7 @@
         }
     }
 
-    function BindAllSolutionsList(){
+    function BindAllSolutionsList() {
         var ServiceId = $("#select-services").val()
         if (ServiceId != "All") {
             GetServicesValues(false)
@@ -536,5 +549,28 @@
         else {
             BindPopularSolutionsList()
         }
+    }
+
+    function SaveSolutionProject(id) {
+        var data = {
+            SolutionId: id,
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveProject", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success !", result.Message);
+                BindSolutionsList();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
     }
 </script>

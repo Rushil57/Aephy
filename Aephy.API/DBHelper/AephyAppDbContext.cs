@@ -41,7 +41,9 @@ namespace Aephy.API.DBHelper
         public DbSet<LevelRange> LevelRanges { get; set; }
 
         public DbSet<Notifications> Notifications { get; set; }
-        
+
+        public DbSet<SavedProjects> SavedProjects { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

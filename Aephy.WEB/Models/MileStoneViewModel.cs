@@ -30,6 +30,8 @@
         public string? ProjectType { get; set; }
 
         public string? FreelancerLevel { get; set; }
+
+        public string? UserId { get; set; }
     }
     public class MileStoneIdViewModel
     {

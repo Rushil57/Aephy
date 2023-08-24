@@ -217,7 +217,7 @@
 
                         </div>
                     </div><!-- End Recent Sales -->
-                    <!-- Top Selling -->
+                    
                     <div class="col-12">
                         <div class="card top-selling overflow-auto material_scroll">
                             <div class="card-body pb-0" style="height:303px;">
@@ -242,7 +242,42 @@
                             </div>
 
                         </div>
-                    </div><!-- End Top Selling -->
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body pb-0">
+                                <h5 class="card-title">Saved Projects</h5>
+                                 <div class="row gy-4 py-4" id="save-projectSection">
+                                        <div class="col-md-6 col-xl-4" style="width:300px;" id="favorites-card"> 
+                                            <div class="card shadow-lg cls-solutioncard">
+                                                <div class="card-body">
+                                                    <div class="card-img justify-content-lg-center">
+                                                        <a href="/LandingPage/BrowseSolutions"><i class="bx bx-plus cls-addsaveproject"></i></a>
+                                                    </div>
+                                                    <hr />
+                                                    <h5 class="cls-purchase">
+                                                            Add to Favorites
+                                                    </h5>
+                                                 
+                                                </div>
+                                                <div class="card-footer">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="view_action_Link d-flex justify-content-center pt-5">
+                                            <span style="background-color:#d38b4e; width:1rem;"></span>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                            <a onclick="OpenSavedProjectModalPop()">View All Saved Projects</a>
+                                        <img src="~/assets/img/dashboard/icons-send.png" />
+                                    </div>
+                                </div>
+                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
             </div><!-- End Left side columns -->
@@ -659,6 +694,42 @@
     </div>
 </div>
 
+<div class="modal" id="SavedProjectModal" tabindex="-1" aria-labelledby="SavedProjectPopModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Saved Project List</h4>
+                <a class="close" onclick="CloseSavedprojectPopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                               <table class="table" id="SavedProjectTable">
+                                        <thead style="border: 1px solid #e8e8e8;">
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>Image</th>
+                                                <th>Services</th>
+                                                <th>Industries</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="SavedProjectbody">
+                                        </tbody>
+                                    </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- GuidelineModal Modal -->
     <div class="modal fade" id="guidelineModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -992,6 +1063,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             }
         });
         GetApprovedList()
+        GetSavedProjects()
     });
 
     // Product
@@ -1631,5 +1703,155 @@ function InvokeApprovedList() {
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
+    }
+
+    function GetSavedProjects(){
+          $("#preloader").show();
+         $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSavedProjectList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                 $(".cls-projectdiv").remove();
+                if(result.Result != 0){
+                    var data = result.Result
+                    BindSavedProject(data);
+                }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function BindSavedProject(projectData){
+          var savedSection = "";
+        $.each(projectData, function (data, value) {
+            var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
+            var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+            var industryList = projectData[data].Industries.split(",")
+            var count = 0;
+
+            savedSection += '<div class="col-md-6 col-xl-4 cls-projectdiv" style="width:300px;">' +
+                ' <div class="card shadow-lg cls-solutioncard">' +
+                '<div class="card-body">' +
+                '<div class="card-img justify-content-lg-center">' +
+                '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
+                '</div>' +
+                '<h3>' +
+                '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
+                '</h3>' +
+                '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
+                '<div class="icon-image">';
+            if (industryList != "") {
+                var industry = industryList.slice(0, 2);
+                $.each(industry, function (industrydata, industryValue) {
+                   savedSection += '<i class="bi bi-shop-window"></i>' +
+                        '<label> ' + industryValue + ' </label>';
+                    count++;
+                })
+            }
+            if (industryList.length != 0) {
+                if (industryList.length > 2) {
+                    var industryLeft = industryList.length - count;
+                    savedSection += '<label class="pl-5"> + ' + industryLeft + ' more </label>'
+                }
+
+            }
+            savedSection += '</div></div>'+ 
+                   '<div class="card-footer">' +
+                      '<div class="like cls-heart-icon">' +
+                        '<i class="bi bi-heart-fill solution-saved" onclick=UnSavedSolutionProject(' + value.Id + ') style="color: var(--brand);"> </i>' +
+                      '</div>' +
+                 '</div>' +
+            '</div></div>';
+
+
+        })
+        $(savedSection).insertBefore("#favorites-card");
+    }
+
+    function UnSavedSolutionProject(id){
+         var data = {
+            Id: id,
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UnSavedProject", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success !", result.Message);
+                GetSavedProjects();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function OpenSavedProjectModalPop(){
+        $("#SavedProjectModal").modal('show');
+        GetAllSavedProject();
+    }
+
+    function GetAllSavedProject(){
+        $("#preloader").show();
+          $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetAllSavedProjectList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                    var data = result.Result;
+                    $('#SavedProjectTable').DataTable({
+                    destroy: true,
+                    data: data,
+                    "columns": [
+                        {
+                            "data": "Title",
+                            "render": function (data, type, row) {
+                                var title = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                return "<span title='" + data + "'>" + title + "</span>";
+                            }
+                        },
+                       
+                        {
+                            "data": "Description",
+                            "render": function (data, type, row) {
+                                var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                return "<span title='" + data + "'>" + description + "</span>";
+                            }
+                        },
+                        {
+                            "data": "ImageUrlWithSas",
+                            "render": function (data, type, row) {
+                                return '<img src="' + data + '" alt="Image" height="70" width="150" />';
+                            }
+                        },
+                        { "data": "Services" },
+                        { "data": "Industries" }
+
+                    ]
+                });
+                $("#preloader").hide();
+               
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function CloseSavedprojectPopUp()
+    {
+        $("#SavedProjectModal").modal('hide');
     }
 </script>

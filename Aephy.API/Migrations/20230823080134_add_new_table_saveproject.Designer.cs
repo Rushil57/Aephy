@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230823080134_add_new_table_saveproject")]
+    partial class add_new_table_saveproject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -379,29 +382,29 @@ namespace Aephy.API.Migrations
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.SavedProjects", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<int>("IndustryId")
-                    .HasColumnType("int");
+                    b.Property<int>("IndustryId")
+                        .HasColumnType("int");
 
-                b.Property<DateTime>("SavedDateTime")
-                    .HasColumnType("datetime2");
+                    b.Property<DateTime>("SavedDateTime")
+                        .HasColumnType("datetime2");
 
-                b.Property<int>("SolutionId")
-                    .HasColumnType("int");
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
 
-                b.Property<string>("UserId")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("SavedProjects");
-            });
+                    b.ToTable("SavedProjects");
+                });
 
             modelBuilder.Entity("Aephy.API.DBHelper.Services", b =>
                 {
@@ -695,9 +698,6 @@ namespace Aephy.API.Migrations
 
                     b.Property<int>("IndustryId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsVisibleOnLandingPage")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Rate")
                         .HasColumnType("nvarchar(max)");

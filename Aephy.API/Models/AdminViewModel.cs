@@ -50,6 +50,8 @@ namespace Aephy.API.Models
 
             public string? ImagePath { get; set; }
 
+            public bool IsProjectSaved { get; set; }
+
             //public IFormFile[] ImageFile { get; set; }
         }
 

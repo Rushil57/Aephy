@@ -1278,5 +1278,115 @@ namespace Aephy.WEB.Controllers
             return data;
 
         }
+
+        //SaveProject
+        [HttpPost]
+        public async Task<string> SaveProject([FromBody] MileStoneDetailsViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            model.UserId = userId;
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveProject", HttpMethod.Post, model);
+            return data;
+
+        }
+
+        [HttpGet]
+        public async Task<string> GetSavedProjectList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetSavedProjectList", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(projectData);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result)
+                    {
+                        string imagepath = service.ImagePath;
+                        if (imagepath != null)
+                        {
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+
+        }
+
+
+        [HttpPost]
+        public async Task<string> UnSavedProject([FromBody] MileStoneViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/UnSavedProject", HttpMethod.Post, model);
+            return data;
+        }
+
+        [HttpGet]
+        public async Task<string> GetAllSavedProjectList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetAllSavedProjectList", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(projectData);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result)
+                    {
+                        string imagepath = service.ImagePath;
+                        if (imagepath != null)
+                        {
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+
+        }
     }
 }

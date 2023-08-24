@@ -809,7 +809,7 @@ namespace Aephy.API.Controllers
                         StatusCode = StatusCodes.Status200OK,
                         Message = "Success",
                         Result = industryDetailList.Distinct()
-                        
+
                     });
                 }
                 catch (Exception ex)
@@ -829,7 +829,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-       
+
         [HttpPost]
         [Route("GetAllUnReadNotification")]
         public async Task<IActionResult> GetAllUnReadNotification([FromBody] MileStoneIdViewModel model)
@@ -880,7 +880,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        
+
         [HttpPost]
         [Route("GetAllNotification")]
         public async Task<IActionResult> GetAllNotification([FromBody] MileStoneIdViewModel model)
@@ -945,7 +945,7 @@ namespace Aephy.API.Controllers
                         notificationData.IsRead = true;
                         _db.SaveChanges();
                     }
-                  
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -960,6 +960,223 @@ namespace Aephy.API.Controllers
                         Message = ex.Message + ex.InnerException
                     });
                 }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+
+        [HttpPost]
+        [Route("SaveProject")]
+        public async Task<IActionResult> SaveProject([FromBody] SavedProjects model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var data = new SavedProjects()
+                    {
+                        SavedDateTime = DateTime.Now,
+                        SolutionId = model.SolutionId,
+                        IndustryId = model.IndustryId,
+                        UserId = model.UserId,
+                    };
+                    _db.SavedProjects.Add(data);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Project Saved Successfully!",
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+
+
+        [HttpPost]
+        [Route("GetSavedProjectList")]
+        public async Task<IActionResult> GetSavedProjectList([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        var saveprojectData = await _db.SavedProjects.Where(x => x.UserId == model.UserId).Take(2).ToListAsync();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        if (saveprojectData.Count > 0)
+                        {
+                            List<string> industrylist = new List<string>();
+                            foreach (var data in saveprojectData)
+                            {
+                                SolutionsModel solutionsdataStore = new SolutionsModel();
+                                var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
+                                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
+                                if (industryIdlist.Count > 0)
+                                {
+                                    foreach (var industryId in industryIdlist)
+                                    {
+                                        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                        industrylist.Add(industryname);
+                                    }
+                                }
+                                solutionsdataStore.Industries = string.Join(",", industrylist);
+                                solutionsdataStore.Id = data.Id;
+                                solutionsdataStore.Title = solutionData.Title;
+                                solutionsdataStore.Description = solutionData.Description;
+                                solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsModel.Add(solutionsdataStore);
+                                industrylist.Clear();
+                            }
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionsModel
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+       
+        [HttpPost]
+        [Route("UnSavedProject")]
+        public async Task<IActionResult> UnSavedProject([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.Id != 0)
+                {
+                    try
+                    {
+                        var projectData = await _db.SavedProjects.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                        if (projectData != null)
+                        {
+                            _db.Remove(projectData);
+                            await _db.SaveChangesAsync();
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Unsaved Project"
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        
+        [HttpPost]
+        [Route("GetAllSavedProjectList")]
+        public async Task<IActionResult> GetAllSavedProjectList([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        var saveprojectData = await _db.SavedProjects.Where(x => x.UserId == model.UserId).ToListAsync();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        if (saveprojectData.Count > 0)
+                        {
+                            List<string> industrylist = new List<string>();
+                            foreach (var data in saveprojectData)
+                            {
+                                SolutionsModel solutionsdataStore = new SolutionsModel();
+                                var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
+                                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
+                                if (industryIdlist.Count > 0)
+                                {
+                                    foreach (var industryId in industryIdlist)
+                                    {
+                                        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                        industrylist.Add(industryname);
+                                    }
+                                }
+
+                                solutionsdataStore.Services = serviceData;
+                                solutionsdataStore.Industries = string.Join(",", industrylist);
+                                solutionsdataStore.Id = data.Id;
+                                solutionsdataStore.Title = solutionData.Title;
+                                solutionsdataStore.Description = solutionData.Description;
+                                solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsModel.Add(solutionsdataStore);
+                                industrylist.Clear();
+                            }
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionsModel
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
             }
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel

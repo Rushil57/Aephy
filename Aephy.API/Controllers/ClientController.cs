@@ -33,6 +33,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     List<int> industryList = new List<int>();
+                    bool IsSavedProject = false;
                     var serviceData = await _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToListAsync();
 
                     if (serviceData.Count > 0)
@@ -40,6 +41,18 @@ namespace Aephy.API.Controllers
                         foreach (var data in serviceData)
                         {
                             var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
+                            if (model.UserId != "")
+                            {
+                                var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == solutiondata.Id && x.UserId == model.UserId).FirstOrDefault();
+                                if (SavedProjectData != null)
+                                {
+                                    IsSavedProject = true;
+                                }
+                                else
+                                {
+                                    IsSavedProject = false;
+                                }
+                            }
                             if (model.UserId != "" && CheckType != "Client")
                             {
                                 industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
@@ -59,6 +72,7 @@ namespace Aephy.API.Controllers
                                     industrylist.Add(industryname);
                                 }
                                 SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.IsProjectSaved = IsSavedProject;
                                 dataStore.solutionServices = model.Id;
                                 dataStore.Industries = string.Join(",", industrylist);
                                 //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
@@ -103,6 +117,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     List<int> industryIdlist = new List<int>();
+                    bool IsSavedProject = false;
 
                     if (solutionList.Count > 0)
                     {
@@ -110,7 +125,18 @@ namespace Aephy.API.Controllers
                         {
                             var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                             var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-
+                            if (model.UserId != "")
+                            {
+                                var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == list.Id && x.UserId == model.UserId).FirstOrDefault();
+                                if (SavedProjectData != null)
+                                {
+                                    IsSavedProject = true;
+                                }
+                                else
+                                {
+                                    IsSavedProject = false;
+                                }
+                            }
                             if (model.UserId != "" && CheckType != "Client")
                             {
                                 industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
@@ -130,6 +156,7 @@ namespace Aephy.API.Controllers
                                     industrylist.Add(industryname);
                                 }
                                 SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.IsProjectSaved = IsSavedProject;
                                 dataStore.Services = Servicename;
                                 dataStore.solutionServices = serviceId;
                                 dataStore.Industries = string.Join(",", industrylist);
@@ -183,9 +210,24 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     List<int> industryList = new List<int>();
+                    bool IsSavedProject = false;
 
                     var solutiondata = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
                     var servicesData = _db.SolutionServices.Where(x => x.SolutionId == model.Id).Select(x => x.ServicesId).FirstOrDefault();
+
+                    if (model.UserId != "")
+                    {
+                        var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == model.Id && x.UserId == model.UserId).FirstOrDefault();
+                        if (SavedProjectData != null)
+                        {
+                            IsSavedProject = true;
+                        }
+                        else
+                        {
+                            IsSavedProject = false;
+                        }
+                    }
+
                     if (model.UserId != "" && CheckType != "Client")
                     {
                         industryList = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutiondata.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
@@ -205,6 +247,7 @@ namespace Aephy.API.Controllers
                             industrylist.Add(industryname);
                         }
                         SolutionsModel dataStore = new SolutionsModel();
+                        dataStore.IsProjectSaved = IsSavedProject;
                         dataStore.Industries = string.Join(",", industrylist);
                         dataStore.solutionServices = servicesData;
                         // dataStore.solutionIndustriesList = industrylistDetails;
@@ -258,14 +301,25 @@ namespace Aephy.API.Controllers
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
                 List<int> industryIdlist = new List<int>();
-
+                bool IsSavedProject = false;
                 if (solutionList.Count > 0)
                 {
                     foreach (var list in solutionList)
                     {
                         var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                         var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-
+                        if (model.UserId != "")
+                        {
+                            var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == list.Id && x.UserId == model.UserId).FirstOrDefault();
+                            if (SavedProjectData != null)
+                            {
+                                IsSavedProject = true;
+                            }
+                            else
+                            {
+                                IsSavedProject = false;
+                            }
+                        }
                         if (model.UserId != "" && CheckType != "Client")
                         {
                             industryIdlist = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToListAsync();
@@ -283,6 +337,7 @@ namespace Aephy.API.Controllers
                                 industrylist.Add(industryname);
                             }
                             SolutionsModel dataStore = new SolutionsModel();
+                            dataStore.IsProjectSaved = IsSavedProject;
                             dataStore.Services = Servicename;
                             dataStore.solutionServices = serviceId;
                             dataStore.Industries = string.Join(",", industrylist);
@@ -559,6 +614,7 @@ namespace Aephy.API.Controllers
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
                 List<int> industryIdlist = new List<int>();
+                bool IsSavedProject = false;
 
                 if (solutionList.Count > 0)
                 {
@@ -566,6 +622,19 @@ namespace Aephy.API.Controllers
                     {
                         var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                         var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                        if(model.UserId != "")
+                        {
+                            var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == list.Id && x.UserId == model.UserId).FirstOrDefault();
+                            if (SavedProjectData != null)
+                            {
+                                IsSavedProject = true;
+                            }
+                            else
+                            {
+                                IsSavedProject = false;
+                            }
+                        }
+                        
 
                         if (model.UserId != "" && CheckType != "Client")
                         {
@@ -584,6 +653,7 @@ namespace Aephy.API.Controllers
                                 industrylist.Add(industryname);
                             }
                             SolutionsModel dataStore = new SolutionsModel();
+                            dataStore.IsProjectSaved = IsSavedProject;
                             dataStore.Services = Servicename;
                             dataStore.solutionServices = serviceId;
                             dataStore.Industries = string.Join(",", industrylist);
@@ -638,12 +708,25 @@ namespace Aephy.API.Controllers
                     List<string> industrylist = new List<string>();
                     List<int> industryList = new List<int>();
                     var serviceData = await _db.SolutionServices.Where(x => x.ServicesId == model.Id).Select(x => x.SolutionId).ToListAsync();
+                    bool IsSavedProject = false;
 
                     if (serviceData.Count > 0)
                     {
                         foreach (var data in serviceData)
                         {
                             var solutiondata = _db.Solutions.Where(x => x.Id == data).FirstOrDefault();
+                            if (model.UserId != "")
+                            {
+                                var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == solutiondata.Id && x.UserId == model.UserId).FirstOrDefault();
+                                if (SavedProjectData != null)
+                                {
+                                    IsSavedProject = true;
+                                }
+                                else
+                                {
+                                    IsSavedProject = false;
+                                }
+                            }
                             if (model.UserId != "" && CheckType != "Client")
                             {
                                 industryList = _db.SolutionIndustryDetails.Where(x => x.SolutionId == data && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
@@ -664,6 +747,7 @@ namespace Aephy.API.Controllers
                                 }
                                 SolutionsModel dataStore = new SolutionsModel();
                                 dataStore.solutionServices = model.Id;
+                                dataStore.IsProjectSaved = IsSavedProject;
                                 dataStore.Industries = string.Join(",", industrylist);
                                 //dataStore.solutionIndustriesList = industrylistDetails.Distinct().ToList();
                                 dataStore.Id = solutiondata.Id;
@@ -712,6 +796,7 @@ namespace Aephy.API.Controllers
                     List<Industries> industrylistDetails = new List<Industries>();
                     List<string> industrylist = new List<string>();
                     List<int> industryIdlist = new List<int>();
+                    bool IsSavedProject = false;
 
                     if (solutionList.Count > 0)
                     {
@@ -719,7 +804,18 @@ namespace Aephy.API.Controllers
                         {
                             var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
                             var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-
+                            if (model.UserId != "")
+                            {
+                                var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == list.Id && x.UserId == model.UserId).FirstOrDefault();
+                                if (SavedProjectData != null)
+                                {
+                                    IsSavedProject = true;
+                                }
+                                else
+                                {
+                                    IsSavedProject = false;
+                                }
+                            }
                             if (model.UserId != "" && CheckType != "Client")
                             {
                                 industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
@@ -739,6 +835,7 @@ namespace Aephy.API.Controllers
                                     industrylist.Add(industryname);
                                 }
                                 SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.IsProjectSaved = IsSavedProject;
                                 dataStore.Services = Servicename;
                                 dataStore.solutionServices = serviceId;
                                 dataStore.Industries = string.Join(",", industrylist);

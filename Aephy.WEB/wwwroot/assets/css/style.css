@@ -260,7 +260,7 @@ h6 {
   border-color: #ebeef4;
   background-color: #fff;
   color: #798eb3;
-  padding: 15px;
+  /*padding: 15px;*/
 }
 
 .card-title {
@@ -277,9 +277,9 @@ h6 {
   font-weight: 400;
 }
 
-.card-body {
+/*.card-body {
   padding: 0 20px 20px 20px;
-}
+}*/
 
 .card-img-overlay {
   background-color: rgba(255, 255, 255, 0.6);
@@ -1497,4 +1497,73 @@ textarea.form-control {
 #notification-section {
     max-height: 23.5em;
     overflow-y: auto;
+}
+
+.cls-saveproject-title {
+    font-weight: 900;
+    font-size: 18px;
+    margin-bottom: 5px;
+    padding: 0 0;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgb(0, 25, 115);
+}
+
+.cls-saveProject-description {
+    padding: 0 0;
+    margin-bottom: 30px;
+    color: var(--color-secondary);
+    font-size: 15px;
+}
+
+.icon-image {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 55px;
+}
+
+    .icon-image i {
+        font-size: 19px !important;
+        font-weight: 800;
+        color: var(--brand);
+        line-height: 0;
+    }
+
+.cls-solutioncard {
+    border: 1px solid rgba(14, 29, 52, 0.15);
+    background: #fff;
+    position: relative;
+    border-radius: 7px;
+    height: 100%;
+    margin: 0 0 40px 0;
+}
+
+.cls-addsaveproject {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 150px;
+    color: var(--brand);
+    cursor: pointer
+}
+
+.cls-purchase {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 20%;
+    font-weight: bold;
+}
+
+.icon-image label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444444;
+    line-height: 0;
+    padding-right: 10px;
+}
+
+.cls-heart-icon {
+    float: right;
+    cursor: pointer;
 }

@@ -22,5 +22,23 @@ namespace Aephy.API.DBHelper
         public bool IsInvited { get; set; }
 
         public bool IsInvitedRemoved { get; set; }
+
+        /// <summary>
+        /// StripeAccountStatus
+        /// </summary>
+        public enum StripeAccountStatuses
+        {
+            NotCreated,
+            Initiated,
+            Incomplete,
+            Complete
+        }
+
+        /// <summary>
+        /// Stripe connect account Id
+        /// </summary>
+        public string? StripeConnectedId { get; set; }
+
+        public StripeAccountStatuses StripeAccountStatus { get; set; }
     }
 }

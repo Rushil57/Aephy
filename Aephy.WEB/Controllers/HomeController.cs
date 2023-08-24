@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using Stripe;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Aephy.API.Migrations;
+using Azure;
 
 namespace Aephy.WEB.Controllers
 {
@@ -98,6 +99,8 @@ namespace Aephy.WEB.Controllers
                 var Role = string.Empty;
                 var Level = string.Empty;
                 var imageUrlWithSas = string.Empty;
+                var UserStripeAccount = string.Empty;
+
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj["StatusCode"] == 200)
                 {
@@ -106,6 +109,11 @@ namespace Aephy.WEB.Controllers
                     Role = jsonObj.Result.Role;
                     Level = jsonObj.Result.Level;
                     UserId = jsonObj.Result.UserId;
+                    UserStripeAccount = jsonObj.Result.StripeStatus;
+                    if(UserStripeAccount == "3")
+                    {
+                        UserStripeAccount = "Completed";
+                    }
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
@@ -125,6 +133,7 @@ namespace Aephy.WEB.Controllers
                     }
 
                     HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
+                    HttpContext.Session.SetString("CompleteUserStripeAccount", UserStripeAccount);
                 }
 
                 return test;
@@ -1389,5 +1398,106 @@ namespace Aephy.WEB.Controllers
             return jsonString;
 
         }
+
+        //RegisterStripeUser
+        [HttpGet]
+        public async Task RegisterStripeUser()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                Response.Redirect("UserProfile");
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var userData = await _apiRepository.MakeApiCallAsync("api/Client/CreateUserStripeAccount", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(userData);
+            try
+            {
+                if (data.Result != null)
+                {
+                    StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+                    if (data.Result.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.Initiated)
+                    {
+                        var accountLinkOptions = new AccountLinkCreateOptions
+                        {
+                            Account = data.Result.StripeConnectedId,
+                            RefreshUrl = "https://localhost:7059/Home/UserProfile",
+                            ReturnUrl = "https://localhost:7059/Home/StripeWelcome",
+                            Type = "account_onboarding"
+                        };
+
+                        var accountLinkService = new AccountLinkService();
+                        var accountLinks = accountLinkService.Create(accountLinkOptions);
+
+                        Response.Redirect(accountLinks.Url);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Response.Redirect("UserProfile");
+            }
+
+        }
+
+        public ActionResult StripeWelcome()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task GetUserStripeDetails()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                Response.Redirect("UserProfile");
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserStripeDetails", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(userData);
+            try
+            {
+                if (data.Result != null)
+                {
+                    if (data.Result.IsCompleted == true)
+                    {
+                        //HttpContext.Session.SetString("StripeStatus", "Created Successfully!");
+                        Response.Redirect("UserProfile");
+                    }
+                    else
+                    {
+                        StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+                        if (data.Result.UserDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.Initiated)
+                        {
+                            var accountLinkOptions = new AccountLinkCreateOptions
+                            {
+                                Account = data.Result.UserDetails.StripeConnectedId,
+                                RefreshUrl = "https://localhost:7059/Home/UserProfile",
+                                ReturnUrl = "https://localhost:7059/Home/StripeWelcome",
+                                Type = "account_onboarding"
+                            };
+
+                            var accountLinkService = new AccountLinkService();
+                            var accountLinks = accountLinkService.Create(accountLinkOptions);
+                            Response.Redirect(accountLinks.Url);
+                        }
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Response.Redirect("UserProfile");
+            }
+
+        }
+
+      
     }
 }

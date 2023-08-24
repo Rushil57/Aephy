@@ -69,6 +69,7 @@ namespace Aephy.API.Controllers
                             //Code for check user are active or not
                             if (user.IsActive)
                             {
+                                var stripStatus = user.StripeAccountStatus;
                                 FreelancerDetails freelancer = new FreelancerDetails();
                                 if (user.UserType == "Freelancer")
                                 {
@@ -87,6 +88,7 @@ namespace Aephy.API.Controllers
                                         Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none",
                                         ImagePath = freelancer.ImagePath,
                                         ImageUrlWithSas = freelancer.ImageUrlWithSas,
+                                        StripeStatus = stripStatus
                                     }
                                 });
                             }

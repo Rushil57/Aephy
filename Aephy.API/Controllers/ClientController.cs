@@ -1,9 +1,11 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System.Collections.Generic;
 using static Aephy.API.Models.AdminViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -15,9 +17,11 @@ namespace Aephy.API.Controllers
     public class ClientController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        public ClientController(AephyAppDbContext dbContext)
+        private readonly IStripeAccountService _stripeAccountService;
+        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService)
         {
             _db = dbContext;
+            _stripeAccountService = stripeAccountService;
         }
 
         [HttpPost]
@@ -966,6 +970,107 @@ namespace Aephy.API.Controllers
         }
 
 
+        //CreateUserStripeAccount
+        [HttpPost]
+        [Route("CreateUserStripeAccount")]
+        public async Task<IActionResult> CreateUserStripeAccount([FromBody] MileStoneIdViewModel model)
+        {
+            var userDetails = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
+            if (userDetails != null)
+            {
+                StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+                // Connected Account creation.
+                if (userDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.NotCreated)
+                {
+                    userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
 
+                    if (!string.IsNullOrEmpty(userDetails.StripeConnectedId))
+                    {
+                        userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
+                        _db.Users.Update(userDetails);
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "User Stripe Account Created",
+                            Result = userDetails
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Something Went Wrong",
+                        });
+                    }
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong",
+            });
+        }
+
+        //GetUserStripeDetails
+        [HttpPost]
+        [Route("GetUserStripeDetails")]
+        public async Task<IActionResult> GetUserStripeDetails([FromBody] MileStoneIdViewModel model)
+        {
+            var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+            if (userDetails != null)
+            {
+
+                StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+
+                // checking Status of the account
+                if (_stripeAccountService.IsComplete(userDetails.StripeConnectedId))
+                {
+                    userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Complete;
+                    _db.Users.Update(userDetails);
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "User Updated Successsfully",
+                        Result = new
+                        {
+                            UserDetails = userDetails,
+                            IsCompleted = true
+                        }
+                    });
+                }
+                // incase account is not complete 
+
+                // check if accidently landed user has not created the account.
+                if (userDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.NotCreated)
+                {
+                    userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
+                    userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
+                    _db.Users.Update(userDetails);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "User Created Successsfully",
+                        Result = new
+                        {
+                            UserDetails = userDetails,
+                            IsCompleted = false
+                        }
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong",
+            });
+        }
     }
 }

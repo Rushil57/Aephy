@@ -1422,8 +1422,8 @@ namespace Aephy.WEB.Controllers
                         var accountLinkOptions = new AccountLinkCreateOptions
                         {
                             Account = data.Result.StripeConnectedId,
-                            RefreshUrl = "https://localhost:7059/Home/UserProfile",
-                            ReturnUrl = "https://localhost:7059/Home/StripeWelcome",
+                            RefreshUrl = _configuration.GetValue<string>("StripeApiUrl:RefreshUrl"),
+                            ReturnUrl = _configuration.GetValue<string>("StripeApiUrl:ReturnUrl"),
                             Type = "account_onboarding"
                         };
 
@@ -1476,8 +1476,8 @@ namespace Aephy.WEB.Controllers
                             var accountLinkOptions = new AccountLinkCreateOptions
                             {
                                 Account = data.Result.UserDetails.StripeConnectedId,
-                                RefreshUrl = "https://localhost:7059/Home/UserProfile",
-                                ReturnUrl = "https://localhost:7059/Home/StripeWelcome",
+                                RefreshUrl = _configuration.GetValue<string>("StripeApiUrl:RefreshUrl"),
+                                ReturnUrl = _configuration.GetValue<string>("StripeApiUrl:ReturnUrl"),
                                 Type = "account_onboarding"
                             };
 

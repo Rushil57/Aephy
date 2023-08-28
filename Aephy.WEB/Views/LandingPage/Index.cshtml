@@ -441,22 +441,27 @@
                 if (data != "") {
                     var successfullProject = "";
                     $.each(data, function (datas, values) {
+                        var description = values.Description.length > 343 ? values.Description.substring(0, 343) + "..." : values.Description;
+
                         successfullProject += '<div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">' +
                             '<div class="box cls-main-content" >' +
                             '<div class="icon-msg d-flex" >' +
                             '<i class="bi-chat-right-quote" > </i>' +
                             '<h3>' + values.Title + '</h3>' +
                             '</div>' +
-                            '<div class="description section-detail-size">' + values.Description + '</div>' +
+                            '<div class="description section-detail-size" title="' + values.Description + '">' + description + '</div>' +
                             '<div class="child col-10 mx-2 cls-result">' +
                             '<div class="title border-bottom">Results</div>' +
                             '<div class="content">';
                         if (values.projectResultList != "") {
                             $.each(values.projectResultList, function (resultData, resultValue) {
-                                successfullProject += '<div class="info">' +
-                                    '<div class="name">' + resultValue.ResultValue + '</div>' +
+                                var resultKeydescription = resultValue.ResultKey.length > 22 ? resultValue.ResultKey.substring(0, 22) + "..." : resultValue.ResultKey;
+                                var resultvalueData = resultValue.ResultValue.length > 22 ? resultValue.ResultValue.substring(0, 22) + "..." : resultValue.ResultValue;
+
+                                successfullProject += '<div class="info" style=width:150px;>' +
+                                    '<div class="name" title="' + resultValue.ResultValue + '">' + resultvalueData + '</div>' +
                                     '<div class="sub">' +
-                                    '<div class="sub-title">' + resultValue.ResultKey + '</div>' +
+                                    '<div class="sub-title" title="'+resultValue.ResultKey+'">' + resultKeydescription + '</div>' +
                                     '</div>' +
                                     '</div>';
                             });
@@ -468,6 +473,7 @@
                     $("#successfull-project-section .cls-main-div:nth-child(even) .cls-main-content").css("background-color", "#808080ad");
                     $("#successfull-project-section .cls-main-div:nth-child(even) .cls-main-content .cls-result").css("background-color", 'rgb(128 128 128 / 0%)');
                     $('.cls-trusted-viewmore').first().removeClass('cls-trusted-viewmore');
+                    $('.cls-result .content .info:nth-child(2)').removeAttr('style');
                     $(".cls-temp").remove()
                 } else {
                     $(".cls-temp").remove()
@@ -565,9 +571,11 @@
                         $('#RightReview').html(rightreviewSection);
                     }
                     $(".cls-review-temp").remove();
+                    $(".cls-professional-btn").show();
                 }else{
                     $(".cls-review-temp").remove();
                     $("<p class='cls-review-temp'>No Data Available</p>").insertAfter("#review-section");
+                    $(".cls-professional-btn").hide();
                 }
             },
             error: function (result) {

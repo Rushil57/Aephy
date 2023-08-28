@@ -643,7 +643,7 @@ h6 {
         flex-wrap: wrap;
         align-items: center;
         justify-content: left;
-        padding-top: 10px;
+       /* padding-top: 10px;*/
     }
 
     .shortreviews .box .name {
@@ -686,6 +686,7 @@ h6 {
     position: absolute;
     background-color: var(--brand);
     bottom: 20px;
+    height: 22%;
 }
 
 .middle-child {

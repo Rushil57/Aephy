@@ -810,3 +810,9 @@ table tr:nth-child(even) {
     padding : 10px;
     width:100%;
 }
+
+.cls-resume-dwld {
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+}

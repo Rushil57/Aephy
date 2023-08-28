@@ -84,7 +84,13 @@ namespace Aephy.API.Controllers
                     applicantsDetails.CVPath = freelancerDetails.CVPath;
                     applicantsDetails.BlobStorageBaseUrl = freelancerDetails.BlobStorageBaseUrl;
                     _db.SaveChanges();
-                }
+
+					return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+					{
+						StatusCode = StatusCodes.Status200OK,
+						Message = "Applied Successfully !"
+					});
+				}
             }
             else
             {

@@ -146,6 +146,7 @@
 								<!-- Vertical Form -->
 								<form class="row g-3 mt-3" name="GigOpeningApplyForm">
 									<input type="hidden" id="gigRole_id" value="0">
+									<input type="hidden" id="UserCvpath" value="">
 									<div class="col-12">
 										<label for="Description" class="form-label">Role Description</label>
 										<div class="input-group">
@@ -154,12 +155,16 @@
 									</div>
 									<div class="col-12">
 										<label for="CVPath" class="form-label">Upload CV</label>
+										<input type="hidden" id="ChangeCvUpload" value="true"/>
 										<div class="col-12">
 											<div class="input-group">
 												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
 											</div>
 										</div>
 									</div>
+									<div class="input-group" style="display:none" id="dwld-resume">
+                                             <a onclick="DownloadCv()" class="cls-resume-dwld">Download resume</a>
+                                        </div>
 									<div class="col-12">
 										<div class="col-12 d-flex">
 											<div class="input-group">
@@ -382,56 +387,55 @@
 		$('#filePreview').css("display", "none");
 	}
 
-	function GigOpenRolesApply(){
+ function GigOpenRolesApply(){
 
-		var filename = $("#CVPath").val();
-		var validFileExtentions = /(\.pdf|\.docx)$/i;
-		if (validFileExtentions.exec(filename)) {
-			$('#preloader').show();
-			var fileUpload = $("#CVPath").get(0);
-			var files = fileUpload.files;
+        var filename = $("#CVPath").val();
+        var validFileExtentions = /(\.pdf|\.docx)$/i;
+        if (validFileExtentions.exec(filename)) {
+            $('#preloader').show();
+            var fileUpload = $("#CVPath").get(0);
+            var files = fileUpload.files;
 
-			var GigOpenRolesData = {
-				FreelancerID: 0,
-				GigOpenRoleId: $("#gigRole_id").val(),
-				IsApproved: false,
-				Description: $("#Description").val(),
-			}
+            var GigOpenRolesData = {
+                FreelancerID: 0,
+                GigOpenRoleId: $("#gigRole_id").val(),
+                IsApproved: false,
+                Description: $("#Description").val(),
+                AlreadyExistCv : $("#ChangeCvUpload").val()
+            }
+            
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
 
-			var formData = new FormData();
-			for (var i = 0; i < files.length; i++) {
-				// fileData.append(files[i].name, files[i]);
-				formData.append("httpPostedFileBase", files[i]);
-			}
-			formData.append("GigOpenRolesData", JSON.stringify(GigOpenRolesData));
-
-			$.ajax({
-				type: "POST",
-				url: "@Url.Action("ApplyForOpenGigRoles", "LandingPage")",
-				contentType: false,
-				processData: false,
-				data: formData,
-				success: function (result) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ApplyForOpenGigRoles", "Home")",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
 					clearForm();
-					$('#preloader').hide();
-					//alert(result)
-					showToaster("success", "Success", result);
-					CloseGigOpeningApplyModal();
-				},
-				error: function (result) {
+                    $('#preloader').hide();
+                    showToaster("success", "Success", result);
+                    CloseGigOpeningApplyModal();
+                },
+                error: function (result) {
 					clearForm();
-					$('#preloader').hide();
-					//alert("failure");
-					showToaster("error", "Error !", "Failure");
-				}
-			});
-		}else{
-			//alert('You can upload only PDF or Document file..')
-			showToaster("error", "Error !", "You can upload only PDF or Document file..");
+                    $('#preloader').hide();
+                    //alert("failure");
+                    showToaster("error", "Error !", "Failure");
+                }
+            });
+        } else {
+            //alert('You can upload only PDF or Document file..')
+            showToaster("error", "Error !", "You can upload only PDF or Document file..");
 			clearForm();
-		}
-	}
-			// code to read selected table row cell data (values).
+        }
+    }
+	// code to read selected table row cell data (values).
 	function GigApply(Id) {
 		if('@ViewData["UserRole"]' == "Freelancer" ){
 		OpenGigOpeningApplyModal();
@@ -443,8 +447,13 @@
 			dataType: "json",
 			data:{ID:Id},
 			success: function (result) {
-				var data = result.Result.OpenRoles;
-				$("#RoleDescription").val(data.Description);
+				var data = result.Result;
+				$("#RoleDescription").val(data.OpenRoles.Description);
+					if (data.FreelancerDetail.CVUrlWithSas != null) {
+						$("#dwld-resume").show()
+						$("#UserCvpath").val(data.FreelancerDetail.CVPath)
+						addNameToFile(data.FreelancerDetail.CVPath.split("/")[4])
+					}
 			},
 			error:function (result){
 				//alert(result.Message)
@@ -454,7 +463,28 @@
 		}
 	}
 
+	  function addNameToFile(url) {
+        getImgURL(url, (imgBlob) => {
+            let file = new File([imgBlob], url, { type: "pdf/application", lastModified: new Date().getTime() }, 'utf-8');
+            let container = new DataTransfer();
+            container.items.add(file);
+            document.querySelector('#CVPath').files = container.files;
+        })
+    }
+
+    function getImgURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            callback(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
+
+
 	function getFileData(myFile) {
+		$("#ChangeCvUpload").val(false);
 		$('#filePreview').css("display", "none");
 		var file = myFile.files[0];
 		if(file){
@@ -465,6 +495,14 @@
 		else{
 			$('#filePreview').css("display", "none");
 			$('#filePreview').val("");
+		}
+	}
+
+
+	function DownloadCv() {
+		var Cvname = $("#UserCvpath").val()
+		if (Cvname != "") {
+			window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
 		}
 	}
 </script>

@@ -1317,12 +1317,12 @@
 
             $("form[name='GigOpeningApplyForm']").validate({
                 rules: {
-                    Description: { required: true },
-                    CVPath: { required: true }
+                    Description: { required: true }
+                    //CVPath: { required: true }
                 },
                 messages: {
-                    Description: { required: "Please enter Description" },
-                    CVPath: { required: "Please Upload your CV" }
+                    Description: { required: "Please enter Description" }
+                    //CVPath: { required: "Please Upload your CV" }
                 },
                 errorPlacement: function (error, element) {
                     if (element.parent('.input-group').length) {

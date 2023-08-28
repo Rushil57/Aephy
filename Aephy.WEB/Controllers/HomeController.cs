@@ -1192,8 +1192,42 @@ namespace Aephy.WEB.Controllers
 			return jsonString;
 		}
 
+        [HttpPost]
+        public async Task<string> changeSolutionsListByPagination([FromBody] MileStoneIdViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.UserId = userId;
+            var solutionList = await _apiRepository.MakeApiCallAsync("api/Client/changeSolutionListByPagination", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(solutionList);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result.SolutionData)
+                    {
+                        string imagepath = service.ImagePath;
+                        string sasToken = GenerateImageSasToken(imagepath);
+                        string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                        service.ImageUrlWithSas = imageUrlWithSas;
 
-		[HttpPost]
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+        }
+
+        [HttpPost]
 		public async Task<string> GetTopThreeSolutionBasedonServices([FromBody] MileStoneIdViewModel model)
 		{
 			if (model != null)

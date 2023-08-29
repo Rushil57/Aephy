@@ -240,6 +240,8 @@ namespace Aephy.API.Models
 
             public int TeamSize { get; set; }
 
+            public string? UserId { get; set; }
+
         }
         public class MileStoneIdViewModel
         {

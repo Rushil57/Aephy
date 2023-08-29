@@ -16,6 +16,7 @@
 
         public string? ProjectType { get; set; }
         public int Days { get; set; }
+        public string? UserId { get; set; }
 
     }
 

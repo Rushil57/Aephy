@@ -1,0 +1,45 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<main id="main" class="main">
+    <div class="text-center">
+        <h1 class="display-4">Thank you</h1>
+        <p id="sucess-msg"></p>
+    </div>
+</main>
+
+<script>
+    $(function () {
+        GetUserSuccessCheckoutDetails()
+    })
+
+    function GetUserSuccessCheckoutDetails() {
+        $("#preloader").show();
+
+         var urlParams = new URLSearchParams(window.location.search);
+        var contractId = urlParams.get('cntId');
+           var data ={
+                Id : contractId
+           }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetUserSuccessCheckoutDetails", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#sucess-msg").html(result.Result.Message)
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+        //window.location = "@Url.Action("GetUserStripeDetails", "Home")";
+    }
+</script>

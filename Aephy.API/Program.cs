@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Aephy.API.Stripe;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,10 +70,12 @@ builder.Services.AddScoped<IStripeAccountService, StripeAccountService>();
 
 var app = builder.Build();
 
+StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI();
     
     app.UseCors(x => x

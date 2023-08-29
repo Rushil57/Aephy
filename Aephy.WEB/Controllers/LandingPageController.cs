@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
 
 namespace Aephy.WEB.Controllers
 {
@@ -214,12 +215,12 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
-        [HttpPost]
-        public async Task<string> getSolutioncheckOut([FromBody] MileStoneDetailsViewModel model)
-        {
-            var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Admin/checkOut", HttpMethod.Post, model);
-            return checkOutResponse;
-        }
+        //[HttpPost]
+        //public async Task<string> getSolutioncheckOut([FromBody] MileStoneDetailsViewModel model)
+        //{
+        //    var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Admin/checkOut", HttpMethod.Post, model);
+        //    return checkOutResponse;
+        //}
 
         private static string GetEndpointSuffixFromConnectionString(string connectionString)
         {
@@ -474,6 +475,82 @@ namespace Aephy.WEB.Controllers
             string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
             return jsonString;
 
+        }
+
+        
+        public async Task<string> CheckOut([FromBody] MileStoneViewModel model)
+        {
+            try
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+                }
+                model.UserId = userId;
+                //var result = JsonConvert.DeserializeObject<MileStoneViewModel>(data);
+                var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Client/CheckOut", HttpMethod.Post, model);
+                return checkOutResponse;
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
+            return "Something went wrong";
+        }
+
+        //GetCheckoutMileStoneData
+        [HttpPost]
+        public async Task<string> GetCheckoutMileStoneData([FromBody] MileStoneDetailsViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if(userId == null)
+            {
+                userId = "";
+            }
+            model.UserId = userId;
+            var milestoneData = await _apiRepository.MakeApiCallAsync("api/Client/GetCheckoutMileStoneData", HttpMethod.Post, model);
+            return milestoneData;
+        }
+
+        public IActionResult CheckoutSuccess()
+        {
+            return View();
+        }
+
+        public IActionResult CheckoutCancel()
+        {
+            return View();
+        }
+
+        //GetUserSuccessCheckoutDetails
+        [HttpPost]
+        public async Task<string> GetUserSuccessCheckoutDetails([FromBody] MileStoneIdViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.UserId = userId;
+            var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserSuccessCheckoutDetails", HttpMethod.Post, model);
+            return userData;
+        }
+
+        //GetUserCancelCheckoutDetails
+        [HttpGet]
+        public async Task<string> GetUserCancelCheckoutDetails()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserCancelCheckoutDetails", HttpMethod.Post, model);
+            return userData;
         }
     }
 }

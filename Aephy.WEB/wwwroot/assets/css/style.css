@@ -1498,7 +1498,8 @@ textarea.form-control {
 }
 
 #notification-section {
-    max-height: 23.5em;
+    /*max-height: 23.5em;*/
+    max-height: 33.5em;
     overflow-y: auto;
 }
 

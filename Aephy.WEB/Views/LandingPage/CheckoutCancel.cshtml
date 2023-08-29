@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<main id="main" class="main">
+    <div class="text-center">
+        <h1 class="display-4">Thank you</h1>
+        <p id="cancel-msg"></p>
+    </div>
+</main>
+
+<script>
+    $(function () {
+        GetUserCancelCheckoutDetails()
+    })
+
+    function GetUserCancelCheckoutDetails() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetUserCancelCheckoutDetails", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#cancel-msg").html(result.Result.Message)
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+        //window.location = "@Url.Action("GetUserStripeDetails", "Home")";
+    }
+</script>

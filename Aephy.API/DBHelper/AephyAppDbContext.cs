@@ -44,6 +44,10 @@ namespace Aephy.API.DBHelper
 
         public DbSet<SavedProjects> SavedProjects { get; set; }
 
+        public DbSet<Contract> Contract { get; set; }
+
+        public DbSet<ContractUser> ContractUser { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

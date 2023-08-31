@@ -121,6 +121,7 @@
         //BindPopularSolutionsList()
         BindTopPopularSolutionsList()
         // SetServiceValue()
+        //$('#preloader').hide();
     });
 
     function checkData(Id, service) {
@@ -169,6 +170,7 @@
 
 
     function BindBrowseSolutionIndustries() {
+        $('#preloader').show();
         $.ajax({
             type: "POST",
             async: false,
@@ -179,15 +181,17 @@
                 $.each(result.Result, function (data, value) {
                     $(".cls-Industries").append($("<option     />").val(value.Id).text(value.IndustryName));
                 })
-
+                $('#preloader').hide();
             },
             error: function (result) {
                 alert("failure");
+                $('#preloader').hide();
             }
         });
     }
 
     function BindBrowseSolutionServices() {
+        $('#preloader').show();
         $.ajax({
             type: "Get",
             async: false,
@@ -197,17 +201,19 @@
             success: function (result) {
                 $.each(result.Result, function (data, value) {
                     $(".cls-Services").append($("<option     />").val(value.Id).text(value.ServicesName));
-                })
+                })     
                 SetServiceValue()
-
+                $('#preloader').hide();
             },
             error: function (result) {
+                $('#preloader').hide();
                 alert("failure");
             }
         });
     }
 
     function BindBrowseSolution() {
+        $('#preloader').show();
         $.ajax({
             type: "Get",
             url: "@Url.Action("GetSolutionList", "Home")",
@@ -218,9 +224,11 @@
                 $.each(result.Result, function (data, value) {
                     $(".cls-solution").append($("<option     />").val(value.Id).text(value.Title));
                 })
-
+                SetSolutionValue()
+                $('#preloader').hide();
             },
             error: function (result) {
+                $('#preloader').hide();
                 alert("failure");
             }
         });
@@ -472,6 +480,18 @@
             $("#select-services option:contains('" + serviceName + "')").attr('selected', 'selected');
             setTimeout(function () {
                 GetTopServicesValues(false,1,false)
+            }, 2000);
+        }
+        $("#preloader").hide();
+    }
+    function SetSolutionValue() {
+        $("#preloader").show();
+        var urlParams = new URLSearchParams(window.location.search);
+        var solutionName = urlParams.get('solution');
+        if (solutionName != undefined) {
+            $("#select-solutions option:contains('" + solutionName + "')").attr('selected', 'selected');
+            setTimeout(function () {
+                GetSolutionValues(false, 1, false)
             }, 2000);
         }
         $("#preloader").hide();

@@ -1281,7 +1281,10 @@
     }
 
     function OpenCheckOutOptionModalPopup(){
-        $("#CheckoutModal").modal('show')
+         if ('@Context.Session.GetString("LoggedUser")' != '') {
+             $("#CheckoutModal").modal('show')     
+        }
+       
     }
 
     function CheckoutMileStoneData(value){

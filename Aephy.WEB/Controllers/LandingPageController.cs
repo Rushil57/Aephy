@@ -539,15 +539,14 @@ namespace Aephy.WEB.Controllers
         }
 
         //GetUserCancelCheckoutDetails
-        [HttpGet]
-        public async Task<string> GetUserCancelCheckoutDetails()
+        [HttpPost]
+        public async Task<string> GetUserCancelCheckoutDetails([FromBody] MileStoneIdViewModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId == null)
             {
                 userId = "";
             }
-            MileStoneIdViewModel model = new MileStoneIdViewModel();
             model.UserId = userId;
             var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserCancelCheckoutDetails", HttpMethod.Post, model);
             return userData;

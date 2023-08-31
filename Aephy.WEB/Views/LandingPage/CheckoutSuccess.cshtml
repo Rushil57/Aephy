@@ -32,7 +32,7 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                $("#sucess-msg").html(result.Result.Message)
+                $("#sucess-msg").html(result.Message)
                 $("#preloader").hide();
             },
             error: function (result) {

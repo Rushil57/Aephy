@@ -18,13 +18,19 @@
 
     function GetUserCancelCheckoutDetails() {
         $("#preloader").show();
+        var urlParams = new URLSearchParams(window.location.search);
+        var contractId = urlParams.get('cntId');
+        var data = {
+            Id: contractId
+        }
+
         $.ajax({
-            type: "Get",
+            type: "POST",
             url: "@Url.Action("GetUserCancelCheckoutDetails", "LandingPage")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                $("#cancel-msg").html(result.Result.Message)
+                $("#cancel-msg").html(result.Message)
                 $("#preloader").hide();
             },
             error: function (result) {

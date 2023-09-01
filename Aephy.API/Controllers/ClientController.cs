@@ -1312,89 +1312,134 @@ namespace Aephy.API.Controllers
                             PaymentIntentId = string.Empty
                         });
                         _db.SaveChanges();
-                    }
-                    //else
-                    //{
-                    //    _db.Contract.Add(new Contract
-                    //    {
-                    //        ContractUsers = new List<ContractUser> {
-                    //            new ContractUser
-                    //            {
-                    //                ApplicationUser = user,
-                    //                Percentage = 80
-                    //            }
-                    //        },
 
-                    //        ClientUserId = model.UserId,
-                    //        SolutionId = model.SolutionId,
-                    //        IndustryId = model.IndustryId,
-                    //        PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                    //        PaymentIntentId = string.Empty
-                    //    });
-                    //    _db.SaveChanges();
-                    //}
+                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
 
-                    
-                }
+                        var domain = _configuration.GetValue<string>("DomainUrl:Domain");
+                        var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
+                        var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
 
-                Contract contract = new Contract();
-                if (model.Id != 0)
-                {
-                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
-                }
-                // var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
-                
-
-                //Preparing url for redirect from stripe based on success or cancel.
-                //var domain = "https://localhost:7059";
-                var domain = _configuration.GetValue<string>("DomainUrl:Domain");
-                var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
-                var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
-
-                if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
-                {
-                    Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
-
-                    if (session == null || string.IsNullOrEmpty(session.Id))
-                    {
-                        //Response.Headers.Add("Location", domain + "/LandingPage/Project");
-                        //return new StatusCodeResult(303);
-                        var emptyStringUrl = domain + "/LandingPage/Project";
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
                         {
-                            StatusCode = StatusCodes.Status200OK,
-                            Result = emptyStringUrl
-                        });
+                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+
+                            if (session == null || string.IsNullOrEmpty(session.Id))
+                            {
+                                //Response.Headers.Add("Location", domain + "/LandingPage/Project");
+                                //return new StatusCodeResult(303);
+                                var emptyStringUrl = domain + "/LandingPage/Project";
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Result = emptyStringUrl
+                                });
+                            }
+
+                            //checkout initiated successful
+                            contract.SessionId = session.Id;
+                            contract.SessionExpiry = session.ExpiresAt;
+                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+                            _db.Update(contract);
+                            _db.SaveChanges();
+
+                            //Response.Headers.Add("Location", session.Url);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = session.Url
+                            });
+                        }
+                        else
+                        {
+                            //Response.Headers.Add("Location", successUrl);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = successUrl
+                            });
+                        }
                     }
-
-                    //checkout initiated successful
-                    contract.SessionId = session.Id;
-                    contract.SessionExpiry = session.ExpiresAt;
-                    contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                    contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
-
-                    _db.Update(contract);
-                    _db.SaveChanges();
-
-                    //Response.Headers.Add("Location", session.Url);
-                    //return new StatusCodeResult(303);
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    else
                     {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "success",
-                        Result = session.Url
-                    });
-                }
-                else
-                {
-                    //Response.Headers.Add("Location", successUrl);
-                    //return new StatusCodeResult(303);
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "success",
-                        Result = successUrl
-                    });
+                        _db.Contract.Add(new Contract
+                        {
+                            ContractUsers = new List<ContractUser> {
+                                new ContractUser
+                                {
+                                    ApplicationUser = user,
+                                    Percentage = 80
+                                }
+                            },
+
+
+                            ClientUserId = model.UserId,
+                            MileStoneId = 8,
+                            SolutionId = model.SolutionId,
+                            IndustryId = model.IndustryId,
+                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                            PaymentIntentId = string.Empty
+                        });
+                        _db.SaveChanges();
+
+                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
+
+                        var domain = _configuration.GetValue<string>("DomainUrl:Domain");
+                        var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
+                        var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
+
+                        if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
+                        {
+                            Session session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
+
+                            if (session == null || string.IsNullOrEmpty(session.Id))
+                            {
+                                //Response.Headers.Add("Location", domain + "/LandingPage/Project");
+                                //return new StatusCodeResult(303);
+                                var emptyStringUrl = domain + "/LandingPage/Project";
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Result = emptyStringUrl
+                                });
+                            }
+
+                            //checkout initiated successful
+                            contract.SessionId = session.Id;
+                            contract.SessionExpiry = session.ExpiresAt;
+                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+                            _db.Update(contract);
+                            _db.SaveChanges();
+
+                            //Response.Headers.Add("Location", session.Url);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = session.Url
+                            });
+                        }
+                        else
+                        {
+                            //Response.Headers.Add("Location", successUrl);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = successUrl
+                            });
+                        }
+                    }
+                    
                 }
             }
             catch(Exception ex)

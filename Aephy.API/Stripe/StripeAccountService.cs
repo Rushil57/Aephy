@@ -111,6 +111,59 @@ namespace Aephy.API.Stripe
             }
         }
 
+        public Session CreateProjectCheckoutSession(string successUrl, string cancelUrl)
+        {
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                    {
+                        "card",
+                    },
+                LineItems = new List<SessionLineItemOptions>
+                    {
+                        new SessionLineItemOptions
+                        {
+                           PriceData = new SessionLineItemPriceDataOptions
+                            {
+                                UnitAmount = Convert.ToInt64(200 * 100), // Amount in cents ($100)
+                                Currency = "usd",
+                                ProductData = new SessionLineItemPriceDataProductDataOptions
+                                {
+                                    Name = "test",
+                                }
+
+                            },
+                            Quantity = 1,
+                        },
+                    },
+                Mode = "payment",
+                SuccessUrl = successUrl,
+                CancelUrl = cancelUrl,
+                // This is meta data which can be used to store any information which will be available on payment success/Cancel.
+                Metadata = new Dictionary<string, string>
+                    {
+                        { "contractId", "contractId" },
+                        { "freelancerId1", "123" },
+                        { "freelancerId2", "123" },
+                        { "Architect", "123" }
+                    },
+                AutomaticTax = new SessionAutomaticTaxOptions
+                {
+                    Enabled = true
+                }
+            };
+
+            try
+            {
+                var service = new SessionService();
+                return service.Create(options);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public Contract.SessionStatuses GetSesssionStatus(Session session)
         {
             switch (session.Status)

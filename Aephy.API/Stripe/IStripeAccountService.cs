@@ -14,5 +14,7 @@ namespace Aephy.API.Stripe
         public Session GetCheckOutSesssion(string sessionId);
         public PaymentIntent GetPaymentIntent(string paymentIntentId);
         public Session CreateCheckoutSession(SolutionMilestone milestone, string successUrl, string cancelUrl);
+
+        public Session CreateProjectCheckoutSession(string successUrl, string cancelUrl);
     }
 }

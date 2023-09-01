@@ -551,5 +551,21 @@ namespace Aephy.WEB.Controllers
             var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserCancelCheckoutDetails", HttpMethod.Post, model);
             return userData;
         }
+
+        //SaveProjectInitiated
+        [HttpPost]
+        public async Task<string> SaveProjectInitiated([FromBody] SolutionFundModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.ClientId = userId;
+            var userData = await _apiRepository.MakeApiCallAsync("api/Client/SaveProjectInitiated", HttpMethod.Post, model);
+            return userData;
+        }
+
+        //GetFundProgress
     }
 }

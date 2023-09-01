@@ -48,6 +48,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<ContractUser> ContractUser { get; set; }
 
+        public DbSet<SolutionFund> SolutionFund { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

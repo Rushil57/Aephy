@@ -56,14 +56,6 @@
                                             </label>
                                         </div>
                                     </div>
-                                   @* <div class="row me-lg-2 me-4 detailRow">
-                                        <div class="col key section-detail-size">Duration</div>
-                                        <div class="col val section-detail-size">-</div>
-                                    </div>
-                                    <div class="row me-lg-2 me-4 detailRow">
-                                        <div class="col key section-detail-size">Team Size</div>
-                                        <div class="col val section-detail-size">2</div>
-                                    </div>*@
                                     <div class="projectDetails-div">
                                         <div class="row me-lg-2 me-4 detailRow">
                                                 <div class="col key section-detail-size">Duration</div>
@@ -80,7 +72,8 @@
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                                        <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="OpenCheckOutOptionModalPopup()">                                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                                        <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">
+                                        <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                                         </div>
                                     </div>
                                 </div>
@@ -433,7 +426,7 @@
             <!--Second Main Column-->
             <div class="col-lg-5 col-12 rightStickyRow">
                 <!-- First Row -->
-                <div class="row mx-lg-4">
+                <div class="row mx-lg-4" id="solutioninfo-popUp">
                     <!-- first column -->
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
@@ -488,8 +481,59 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                            <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="OpenCheckOutOptionModalPopup()">  
+                            <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">  
                             <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <input type="hidden" id="solutionFundId" value="0" />
+                <input type="hidden" id="solutionFundMileStoneId" value="0" />
+                <div class="row mx-lg-4" style="display:none" id="solutionfund-popUp">
+                    <!-- first column -->
+                    <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
+                        <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
+                            <div class="col-lg-6 col-md-6 d-flex justify-content-center">
+                                @*<input type="radio" name="preferOption" label="Select Project" value="select" checked />*@
+                                <label id="project-progress"></label>
+                            </div>
+                        </div>
+                        <div class="row m-lg-2 pt-4">
+                            <h5 class="section-detail-size" style="text-align:center;">
+                               Project Price & Size
+                                &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
+                            </h5>
+                        </div>
+                        <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
+                            
+                            <div class="col-4">
+                                <label class="radio-inline" style="text-align:center;">
+                                    <input class="form-check-input" type="radio"  id="solution-fund-radio-check" />
+                                    <h4 id="projectfund-projecttype"></h4>
+                                    <h5 style="opacity:0.5;" id="projectfund-projectprice"></h5>
+                                </label>
+                            </div>
+                           
+                        </div>
+                        <div class="projectDetails-div">
+                              <div class="row me-lg-2 me-4 detailRow">
+                                 <div class="col key section-detail-size">Duration</div>
+                                 <div class="col val text-end section-detail-size cls-duration"></div>
+                              </div>
+                              <div class="row me-lg-2 me-4 detailRow">
+                                <div class="col key section-detail-size">Team Size &nbsp;<a data-toggle="popover" class="team-popover"><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a></div>
+                                <div class="col val text-end section-detail-size cls-team-size"></div>
+                              </div>
+                        </div>
+                        <div class="projectPoints-div">
+
+                        </div>
+                        <div class="row d-flex justify-content-center align-center">
+                            <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
+                            <input type="button" value="" class="btn btn-brand" style="width: 50%;" id="solutionfund-furtherprogress" onclick="ProjectInitiated()">  
+                            <input type="button" value="" class="btn btn-brand" style="width: 50%;" id="solutionfund-details">  
                             </div>
                         </div>
                     </div>
@@ -497,7 +541,6 @@
             </div>
         </div>
     </div>
-
 </main>
 
 <!-- Milestones Modal -->
@@ -862,7 +905,14 @@
             $('#guidelineModal').modal('hide');
         });
         $(".info-popover").popover();
-        GetProjectDetails()
+        GetProjectDetails();
+
+         if ('@Context.Session.GetString("LoggedUser")' == 'Client') {
+             $("#btn-contract").prop('disabled',false)  
+        }else{
+            $("#btn-contract").prop('disabled',true)
+        }
+        
     });
     function MilestoneViewMore(){
         $(".cls-milestone-showmore").css("display", "none");
@@ -1139,6 +1189,15 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
                 }
 
+                if(data.SolutionFund != null){
+                    var mileStoneData = data.MileStone[0];
+                    $("#solutionFundMileStoneId").val(mileStoneData.Id);
+                    $("#solutionFundId").val(data.SolutionFund.Id);
+                    BindSolutionFundData(data.SolutionFund,mileStoneData)
+                }else{
+                     $("#solutioninfo-popUp").css("display","block")
+                     $("#solutionfund-popUp").css("display","none")
+                }
 
                 var newContent = "";
                 if(projecttype == "medium"){
@@ -1259,7 +1318,7 @@
         var data = {
             IndustryId : Industryid,
             SolutionId : Solutionid,
-            Id :$("#checkout_milestone_id").val(),
+            Id :$("#solutionFundMileStoneId").val(),
         }
        $("#preloader").show();
         $.ajax({
@@ -1333,4 +1392,88 @@
         $(".checkout_radio").prop( "checked", false );
         $("#CheckoutModal").modal('hide');
     }
+
+    function ProjectInitiated(){
+        var Projectprice = 0;
+         var projectType = $("input[name='projSizeweb']:checked").val();
+         if(projectType == 'small'){
+             Projectprice = 100;
+         }
+         if(projectType == 'medium'){
+             Projectprice = 200;
+         }
+         if(projectType == 'large'){
+             Projectprice = 500;
+         }
+
+        var Industryid = @ViewData["Industry"]; 
+        var Solutionid = @ViewData["Solution"];
+
+        var data = {
+            Id : $("#solutionFundId").val(),
+            IndustryId : Industryid,
+            SolutionId : Solutionid,
+            ProjectType : projectType,
+            ProjectPrice : Projectprice.toString(),
+            MileStoneId : $("#solutionFundMileStoneId").val()
+        }
+       $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "@Url.Action("SaveProjectInitiated", "LandingPage")",
+            data: JSON.stringify(data),
+            success: function (result) {
+               if(result.Message == "projectDetails"){
+                   var data = result.Result;
+                   $("#solutionFundId").val(data.ProjectDetails.Id);
+                    $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
+                   BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
+                   if(data.ProjectDetails.ProjectStatus == "COMPLETED"){
+                       CheckoutSolution();
+                   }
+
+               }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+   function BindSolutionFundData(data,milestoneData){
+          $("#solutioninfo-popUp").css("display","none")
+          $("#solutionfund-popUp").css("display","block")
+          $("#solution-fund-radio-check").prop("checked", true);
+          $("#projectfund-projecttype").html(data.ProjectType)
+          $("#projectfund-projectprice").html(data.ProjectPrice)
+         
+           if(data.ProjectStatus == "INITIATED"){
+
+                var status = data.ProjectStatus
+                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+              $("#project-progress").html("Project " + status)
+              $("#solutionfund-furtherprogress").attr('value', milestoneData.Title);
+              $("#solutionfund-details").attr('value', 'Stop Project');
+           }
+
+           if(data.ProjectStatus == "INPROGRESS"){
+               var status = data.ProjectStatus
+                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+              $("#project-progress").html("Project " + milestoneData.Title + " " + status);
+               $("#solutionfund-furtherprogress").attr('value', "Pay " +  milestoneData.Title);
+              $("#solutionfund-details").attr('value', 'Raise a Dispute');
+           }
+
+           if(data.ProjectStatus == "COMPLETED"){
+              $("#project-progress").html("Project Completed");
+              $("#solutionfund-furtherprogress").attr('value', "Purchased");
+              $("#solutionfund-details").attr('value', 'Provide Feedback');
+           }
+   }
 </script>

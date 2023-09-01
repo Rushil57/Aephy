@@ -478,6 +478,13 @@ namespace Aephy.API.Controllers
 
                         }
                     }
+
+                    SolutionFund fundProgress = new SolutionFund();
+                    if (model.UserId != "")
+                    {
+                        fundProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefault();
+                    }
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -488,7 +495,8 @@ namespace Aephy.API.Controllers
                             MileStone = milestoneData,
                             PointsData = pointsData,
                             TopProfessional = professionalData,
-                            SuccessfullProjects = successfullProjectList
+                            SuccessfullProjects = successfullProjectList,
+                            SolutionFund = fundProgress
                         }
                     });
                 }
@@ -1439,10 +1447,10 @@ namespace Aephy.API.Controllers
                             });
                         }
                     }
-                    
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1472,7 +1480,7 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1496,7 +1504,7 @@ namespace Aephy.API.Controllers
             {
                 // Please note that this logic is verification of the encrypted string that is set for specific contract and logged in user is owner of the contract.
                 var contract = _db.Contract.FirstOrDefault(x => x.Id == model.Id && x.ClientUserId == user.Id);
-                
+
 
                 if (contract != null)
                 {
@@ -1518,6 +1526,11 @@ namespace Aephy.API.Controllers
                                 contract.LatestChargeId = paymentIntent.LatestChargeId;
                             }
 
+                            var data = _db.SolutionFund.Where(x => x.MileStoneId == model.Id).FirstOrDefault();
+                            if (data != null)
+                            {
+                                data.IsCheckOutDone = true;
+                            }
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -1588,6 +1601,111 @@ namespace Aephy.API.Controllers
                 Message = "User Not Found",
             });
         }
+
+
+        //SaveProjectInitiated
+        [HttpPost]
+        [Route("SaveProjectInitiated")]
+        public async Task<IActionResult> SaveProjectInitiated([FromBody] SolutionFund model)
+        {
+            if (model != null)
+            {
+                if (model.Id == 0)
+                {
+                    var solutionfund = new SolutionFund()
+                    {
+                        SolutionId = model.SolutionId,
+                        IndustryId = model.IndustryId,
+                        ClientId = model.ClientId,
+                        ProjectType = model.ProjectType,
+                        ProjectPrice = model.ProjectPrice,
+                        ProjectStatus = "INITIATED",
+                    };
+                    _db.SolutionFund.Add(solutionfund);
+                    _db.SaveChanges();
+
+                    var projectDetails = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
+                    if (projectDetails != null)
+                    {
+                        var mileStoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "projectDetails",
+                            Result = new
+                            {
+                                ProjectDetails = projectDetails,
+                                MileStoneData = mileStoneData
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId).FirstOrDefault();
+                    if (data != null)
+                    {
+
+
+                        if (data.ProjectStatus == "INITIATED")
+                        {
+                            data.ProjectStatus = "INPROGRESS";
+                            data.MileStoneId = model.MileStoneId;
+                            _db.SaveChanges();
+
+                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "projectDetails",
+                                Result = new
+                                {
+                                    ProjectDetails = data,
+                                    MileStoneData = mileStoneData
+                                }
+                            });
+                        }
+
+                        if (data.ProjectStatus == "INPROGRESS")
+                        {
+                            data.ProjectStatus = "COMPLETED";
+                            data.IsArchived = true;
+                            _db.SaveChanges();
+
+                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "projectDetails",
+                                Result = new
+                                {
+                                    ProjectDetails = data,
+                                    MileStoneData = mileStoneData
+                                }
+                            });
+                        }
+
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Not Found"
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
+
+
 
     }
 }

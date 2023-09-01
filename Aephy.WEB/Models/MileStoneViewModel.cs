@@ -62,4 +62,29 @@
         public int TeamSize { get; set; }
 
     }
+
+    public class SolutionFundModel 
+    {
+        public int Id { get; set; }
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
+
+        public int MileStoneId { get; set; }
+
+        public string? ClientId { get; set; }
+
+        public string? ProjectType { get; set; }
+
+        public string? ProjectPrice { get; set; }
+
+        public bool IsDispute { get; set; }
+
+        public string? DisputeReason { get; set; }
+        public string? ProjectStatus { get; set; }
+
+        public bool IsArchived { get; set; }
+
+    }
+    
 }

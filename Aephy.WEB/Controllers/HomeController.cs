@@ -1063,7 +1063,14 @@ namespace Aephy.WEB.Controllers
 		{
 			if (model != null)
 			{
-				var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
+                var userId = HttpContext.Session.GetString("LoggedUser");
+				if (userId == null)
+				{
+					userId = "";
+
+                }
+				model.UserId = userId;
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
 				dynamic data = JsonConvert.DeserializeObject(solutionData);
 				try
 				{

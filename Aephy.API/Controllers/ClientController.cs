@@ -23,7 +23,7 @@ namespace Aephy.API.Controllers
         private readonly IStripeAccountService _stripeAccountService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService, UserManager<ApplicationUser> userManager,IConfiguration configuration)
+        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _db = dbContext;
             _configuration = configuration;
@@ -1437,6 +1437,72 @@ namespace Aephy.API.Controllers
                         Result = session.Url
                     });
                 }
+                else if (contract.PaymentStatus == Contract.PaymentStatuses.UnPaid)
+                {
+                    var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+
+                    if (checkoutSession != null)
+                    {
+                        contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
+
+                        if (contract.SessionStatus == Contract.SessionStatuses.Open)
+                        {
+                            //Response.Headers.Add("Location", checkoutSession.Url);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = checkoutSession.Url
+                            });
+                        }
+                        else
+                        {
+                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+
+                            if (session == null || string.IsNullOrEmpty(session.Id))
+                            {
+                                //Response.Headers.Add("Location", domain + "/Checkout");
+                                //return new StatusCodeResult(303);
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "success",
+                                    Result = domain + "/LandingPage/Project"
+                                });
+                            }
+
+                            //checkout initiated successful
+                            contract.SessionId = session.Id;
+                            contract.SessionExpiry = session.ExpiresAt;
+                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+                            _db.Update(contract);
+                            _db.SaveChanges();
+
+                            //Response.Headers.Add("Location", session.Url);
+                            //return new StatusCodeResult(303);
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = session.Url
+                            });
+                        }
+                    }
+                    else
+                    {
+                        //Response.Headers.Add("Location", successUrl);
+                        //return new StatusCodeResult(303);
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = successUrl
+                        });
+                    }
+                }
                 else
                 {
                     //Response.Headers.Add("Location", successUrl);
@@ -1617,22 +1683,23 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id == 0)
                 {
-                    var solutionfund = new SolutionFund()
+                    var mileStoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
+                    //var projectDetails = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
+                    if (mileStoneData != null)
                     {
-                        SolutionId = model.SolutionId,
-                        IndustryId = model.IndustryId,
-                        ClientId = model.ClientId,
-                        ProjectType = model.ProjectType,
-                        ProjectPrice = model.ProjectPrice,
-                        ProjectStatus = "INITIATED",
-                    };
-                    _db.SolutionFund.Add(solutionfund);
-                    _db.SaveChanges();
+                        var solutionfund = new SolutionFund()
+                        {
+                            SolutionId = model.SolutionId,
+                            IndustryId = model.IndustryId,
+                            ClientId = model.ClientId,
+                            ProjectType = model.ProjectType,
+                            ProjectPrice = model.ProjectPrice,
+                            ProjectStatus = "INITIATED",
+                        };
+                        _db.SolutionFund.Add(solutionfund);
+                        _db.SaveChanges();
 
-                    var projectDetails = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
-                    if (projectDetails != null)
-                    {
-                        var mileStoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
+                        var projectDetails = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -1643,6 +1710,15 @@ namespace Aephy.API.Controllers
                                 ProjectDetails = projectDetails,
                                 MileStoneData = mileStoneData
                             }
+                        });
+                    }
+
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "EmptyMilestoneData",
                         });
                     }
                 }

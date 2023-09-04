@@ -495,7 +495,7 @@
                     <!-- first column -->
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
-                            <div class="col-lg-6 col-md-6 d-flex justify-content-center">
+                            <div class="col-lg-6 col-md-6 d-flex justify-content-center" style="width:63% !important">
                                 @*<input type="radio" name="preferOption" label="Select Project" value="select" checked />*@
                                 <label id="project-progress"></label>
                             </div>
@@ -531,9 +531,10 @@
 
                         </div>
                         <div class="row d-flex justify-content-center align-center">
-                            <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                            <input type="button" value="" class="btn btn-brand" style="width: 50%;" id="solutionfund-furtherprogress" onclick="ProjectInitiated()">  
-                            <input type="button" value="" class="btn btn-brand" style="width: 50%;" id="solutionfund-details">  
+                            <div style="text-align: center;font-size: 16px;width: 100%;">
+                                <input type="button" value="" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated()">  
+                                <input type="button" value="" class="btn btn-brand" id="solutionfund-details">  
+                                <input type="button" value="Pay Project" class="btn btn-brand" id="solutionfund-projectPay">  
                             </div>
                         </div>
                     </div>
@@ -1189,24 +1190,27 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
                 }
 
-                if ('@Context.Session.GetString("LoggedUser")' == 'Client'){
+                if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
-                       {
+                   {
+                         $("#solutioninfo-popUp").css("display","none")
+                        $("#solutionfund-popUp").css("display","block")
                         var mileStoneData = data.MileStone[0];
                         $("#solutionFundMileStoneId").val(mileStoneData.Id);
                         $("#solutionFundId").val(data.SolutionFund.Id);
                         BindSolutionFundData(data.SolutionFund,mileStoneData)
+
                   
                     }
-                    else
-                    {
-                     $("#solutioninfo-popUp").css("display","block")
-                     $("#solutionfund-popUp").css("display","none")
+                    //else
+                    //{
+                    // $("#solutioninfo-popUp").css("display","block")
+                    // $("#solutionfund-popUp").css("display","none")
                      
-                    }
+                    //}
                 }else{
                     $("#solutioninfo-popUp").css("display","block")
-
+                    $("#solutionfund-popUp").css("display","none")
                 }
                
 
@@ -1445,6 +1449,9 @@
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
                        BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
                    }
+                   if(result.Message == "EmptyMilestoneData"){
+                       showToaster("error", "Error !", "No MilestoneData Available");
+                   }
                    if(result.Message == "CompleteProcess"){
                         CheckoutSolution();
                    }
@@ -1476,7 +1483,7 @@
                 status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 
               $("#project-progress").html("Project " + status)
-              $("#solutionfund-furtherprogress").attr('value', milestoneData.Title);
+              $("#solutionfund-furtherprogress").attr('value', 'Fund ' + milestoneData.Title);
               $("#solutionfund-details").attr('value', 'Stop Project');
            }
 

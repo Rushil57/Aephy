@@ -1320,134 +1320,133 @@ namespace Aephy.API.Controllers
                             PaymentIntentId = string.Empty
                         });
                         _db.SaveChanges();
-
-                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
-
-                        var domain = _configuration.GetValue<string>("DomainUrl:Domain");
-                        var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
-                        var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
-
-                        if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
-                        {
-                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
-
-                            if (session == null || string.IsNullOrEmpty(session.Id))
-                            {
-                                //Response.Headers.Add("Location", domain + "/LandingPage/Project");
-                                //return new StatusCodeResult(303);
-                                var emptyStringUrl = domain + "/LandingPage/Project";
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Result = emptyStringUrl
-                                });
-                            }
-
-                            //checkout initiated successful
-                            contract.SessionId = session.Id;
-                            contract.SessionExpiry = session.ExpiresAt;
-                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
-
-                            _db.Update(contract);
-                            _db.SaveChanges();
-
-                            //Response.Headers.Add("Location", session.Url);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = session.Url
-                            });
-                        }
-                        else
-                        {
-                            //Response.Headers.Add("Location", successUrl);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = successUrl
-                            });
-                        }
                     }
-                    else
+                    //else
+                    //{
+                    //    _db.Contract.Add(new Contract
+                    //    {
+                    //        ContractUsers = new List<ContractUser> {
+                    //            new ContractUser
+                    //            {
+                    //                ApplicationUser = user,
+                    //                Percentage = 80
+                    //            }
+                    //        },
+
+
+                    //        ClientUserId = model.UserId,
+                    //        MileStoneId = 8,
+                    //        SolutionId = model.SolutionId,
+                    //        IndustryId = model.IndustryId,
+                    //        PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                    //        PaymentIntentId = string.Empty
+                    //    });
+                    //    _db.SaveChanges();
+
+                    //    var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
+
+                    //    var domain = _configuration.GetValue<string>("DomainUrl:Domain");
+                    //    var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
+                    //    var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
+
+                    //    if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
+                    //    {
+                    //        Session session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
+
+                    //        if (session == null || string.IsNullOrEmpty(session.Id))
+                    //        {
+                    //            //Response.Headers.Add("Location", domain + "/LandingPage/Project");
+                    //            //return new StatusCodeResult(303);
+                    //            var emptyStringUrl = domain + "/LandingPage/Project";
+                    //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    //            {
+                    //                StatusCode = StatusCodes.Status200OK,
+                    //                Result = emptyStringUrl
+                    //            });
+                    //        }
+
+                    //        //checkout initiated successful
+                    //        contract.SessionId = session.Id;
+                    //        contract.SessionExpiry = session.ExpiresAt;
+                    //        contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+                    //        contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+                    //        _db.Update(contract);
+                    //        _db.SaveChanges();
+
+                    //        //Response.Headers.Add("Location", session.Url);
+                    //        //return new StatusCodeResult(303);
+                    //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    //        {
+                    //            StatusCode = StatusCodes.Status200OK,
+                    //            Message = "success",
+                    //            Result = session.Url
+                    //        });
+                    //    }
+                    //    else
+                    //    {
+                    //        //Response.Headers.Add("Location", successUrl);
+                    //        //return new StatusCodeResult(303);
+                    //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    //        {
+                    //            StatusCode = StatusCodes.Status200OK,
+                    //            Message = "success",
+                    //            Result = successUrl
+                    //        });
+                    //    }
+                    //}
+                }
+                var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
+
+                var domain = _configuration.GetValue<string>("DomainUrl:Domain");
+                var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
+                var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
+
+                Contract.PaymentStatuses payment = contract.PaymentStatus;
+                if (payment == Contract.PaymentStatuses.ContractCreated)
+                {
+                    Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+
+                    if (session == null || string.IsNullOrEmpty(session.Id))
                     {
-                        _db.Contract.Add(new Contract
+                        //Response.Headers.Add("Location", domain + "/LandingPage/Project");
+                        //return new StatusCodeResult(303);
+                        var emptyStringUrl = domain + "/LandingPage/Project";
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
-                            ContractUsers = new List<ContractUser> {
-                                new ContractUser
-                                {
-                                    ApplicationUser = user,
-                                    Percentage = 80
-                                }
-                            },
-
-
-                            ClientUserId = model.UserId,
-                            MileStoneId = 8,
-                            SolutionId = model.SolutionId,
-                            IndustryId = model.IndustryId,
-                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                            PaymentIntentId = string.Empty
+                            StatusCode = StatusCodes.Status200OK,
+                            Result = emptyStringUrl
                         });
-                        _db.SaveChanges();
-
-                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
-
-                        var domain = _configuration.GetValue<string>("DomainUrl:Domain");
-                        var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
-                        var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
-
-                        if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
-                        {
-                            Session session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
-
-                            if (session == null || string.IsNullOrEmpty(session.Id))
-                            {
-                                //Response.Headers.Add("Location", domain + "/LandingPage/Project");
-                                //return new StatusCodeResult(303);
-                                var emptyStringUrl = domain + "/LandingPage/Project";
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Result = emptyStringUrl
-                                });
-                            }
-
-                            //checkout initiated successful
-                            contract.SessionId = session.Id;
-                            contract.SessionExpiry = session.ExpiresAt;
-                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
-
-                            _db.Update(contract);
-                            _db.SaveChanges();
-
-                            //Response.Headers.Add("Location", session.Url);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = session.Url
-                            });
-                        }
-                        else
-                        {
-                            //Response.Headers.Add("Location", successUrl);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = successUrl
-                            });
-                        }
                     }
 
+                    //checkout initiated successful
+                    contract.SessionId = session.Id;
+                    contract.SessionExpiry = session.ExpiresAt;
+                    contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+                    contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+                    _db.Update(contract);
+                    _db.SaveChanges();
+
+                    //Response.Headers.Add("Location", session.Url);
+                    //return new StatusCodeResult(303);
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = session.Url
+                    });
+                }
+                else
+                {
+                    //Response.Headers.Add("Location", successUrl);
+                    //return new StatusCodeResult(303);
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = successUrl
+                    });
                 }
             }
             catch (Exception ex)
@@ -1524,13 +1523,19 @@ namespace Aephy.API.Controllers
                             if (paymentIntent != null && !string.IsNullOrEmpty(paymentIntent.LatestChargeId))
                             {
                                 contract.LatestChargeId = paymentIntent.LatestChargeId;
+                                contract.PaymentStatus = Contract.PaymentStatuses.Paid;
+                                _db.SaveChanges();
+
+                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
+                                if (data != null)
+                                {
+                                    data.IsCheckOutDone = true;
+                                    data.ProjectStatus = "COMPLETED";
+                                    data.IsArchived = true;
+                                    _db.SaveChanges();
+                                }
                             }
 
-                            var data = _db.SolutionFund.Where(x => x.MileStoneId == model.Id).FirstOrDefault();
-                            if (data != null)
-                            {
-                                data.IsCheckOutDone = true;
-                            }
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -1670,21 +1675,16 @@ namespace Aephy.API.Controllers
 
                         if (data.ProjectStatus == "INPROGRESS")
                         {
-                            data.ProjectStatus = "COMPLETED";
-                            data.IsArchived = true;
-                            _db.SaveChanges();
+                            //data.ProjectStatus = "COMPLETED";
+                            //data.IsArchived = true;
+                            //_db.SaveChanges();
 
-                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+                            //var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "projectDetails",
-                                Result = new
-                                {
-                                    ProjectDetails = data,
-                                    MileStoneData = mileStoneData
-                                }
+                                Message = "CompleteProcess"
                             });
                         }
 

@@ -907,11 +907,11 @@
         $(".info-popover").popover();
         GetProjectDetails();
 
-         if ('@Context.Session.GetString("LoggedUser")' == 'Client') {
-             $("#btn-contract").prop('disabled',false)  
-        }else{
-            $("#btn-contract").prop('disabled',true)
-        }
+        // if ('@Context.Session.GetString("LoggedUser")' == 'Client') {
+        //     $("#btn-contract").prop('disabled',false)  
+        //}else{
+        //    $("#btn-contract").prop('disabled',true)
+        //}
         
     });
     function MilestoneViewMore(){
@@ -1189,15 +1189,26 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
                 }
 
-                if(data.SolutionFund != null){
-                    var mileStoneData = data.MileStone[0];
-                    $("#solutionFundMileStoneId").val(mileStoneData.Id);
-                    $("#solutionFundId").val(data.SolutionFund.Id);
-                    BindSolutionFundData(data.SolutionFund,mileStoneData)
-                }else{
+                if ('@Context.Session.GetString("LoggedUser")' == 'Client'){
+                   if(data.SolutionFund != null)
+                       {
+                        var mileStoneData = data.MileStone[0];
+                        $("#solutionFundMileStoneId").val(mileStoneData.Id);
+                        $("#solutionFundId").val(data.SolutionFund.Id);
+                        BindSolutionFundData(data.SolutionFund,mileStoneData)
+                  
+                    }
+                    else
+                    {
                      $("#solutioninfo-popUp").css("display","block")
                      $("#solutionfund-popUp").css("display","none")
+                     
+                    }
+                }else{
+                    $("#solutioninfo-popUp").css("display","block")
+
                 }
+               
 
                 var newContent = "";
                 if(projecttype == "medium"){
@@ -1319,6 +1330,7 @@
             IndustryId : Industryid,
             SolutionId : Solutionid,
             Id :$("#solutionFundMileStoneId").val(),
+            SolutionFundId : $("#solutionFundId").val()
         }
        $("#preloader").show();
         $.ajax({
@@ -1394,54 +1406,61 @@
     }
 
     function ProjectInitiated(){
-        var Projectprice = 0;
-         var projectType = $("input[name='projSizeweb']:checked").val();
-         if(projectType == 'small'){
-             Projectprice = 100;
-         }
-         if(projectType == 'medium'){
-             Projectprice = 200;
-         }
-         if(projectType == 'large'){
-             Projectprice = 500;
-         }
 
-        var Industryid = @ViewData["Industry"]; 
-        var Solutionid = @ViewData["Solution"];
+        if('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
+              var Projectprice = 0;
+             var projectType = $("input[name='projSizeweb']:checked").val();
+             if(projectType == 'small'){
+                 Projectprice = 100;
+             }
+             if(projectType == 'medium'){
+                 Projectprice = 200;
+             }
+             if(projectType == 'large'){
+                 Projectprice = 500;
+             }
 
-        var data = {
-            Id : $("#solutionFundId").val(),
-            IndustryId : Industryid,
-            SolutionId : Solutionid,
-            ProjectType : projectType,
-            ProjectPrice : Projectprice.toString(),
-            MileStoneId : $("#solutionFundMileStoneId").val()
-        }
-       $("#preloader").show();
-        $.ajax({
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "@Url.Action("SaveProjectInitiated", "LandingPage")",
-            data: JSON.stringify(data),
-            success: function (result) {
-               if(result.Message == "projectDetails"){
-                   var data = result.Result;
-                   $("#solutionFundId").val(data.ProjectDetails.Id);
-                    $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                   BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
-                   if(data.ProjectDetails.ProjectStatus == "COMPLETED"){
-                       CheckoutSolution();
-                   }
+            var Industryid = @ViewData["Industry"]; 
+            var Solutionid = @ViewData["Solution"];
 
-               }
-                $("#preloader").hide();
-            },
-            error: function (result) {
-                $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+            var data = {
+                Id : $("#solutionFundId").val(),
+                IndustryId : Industryid,
+                SolutionId : Solutionid,
+                ProjectType : projectType,
+                ProjectPrice : Projectprice.toString(),
+                MileStoneId : $("#solutionFundMileStoneId").val()
             }
-        });
+           $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "@Url.Action("SaveProjectInitiated", "LandingPage")",
+                data: JSON.stringify(data),
+                success: function (result) {
+                   if(result.Message == "projectDetails"){
+                       var data = result.Result;
+                       $("#solutionFundId").val(data.ProjectDetails.Id);
+                        $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
+                   }
+                   if(result.Message == "CompleteProcess"){
+                        CheckoutSolution();
+                   }
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }
+        else{
+             showToaster("warning", "Warning !", "Login as a client to purchase project !!");
+        }
+
+       
     }
 
    function BindSolutionFundData(data,milestoneData){
@@ -1474,6 +1493,7 @@
               $("#project-progress").html("Project Completed");
               $("#solutionfund-furtherprogress").attr('value', "Purchased");
               $("#solutionfund-details").attr('value', 'Provide Feedback');
+              $("#solutionfund-furtherprogress").css("pointer-events","none")
            }
    }
 </script>

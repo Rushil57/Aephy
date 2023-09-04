@@ -30,11 +30,12 @@ namespace Aephy.API.DBHelper
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public SolutionMilestone MileStone { get; set; }
+        //public SolutionMilestone MileStone { get; set; }
         public List<ContractUser> ContractUsers { get; set; }
         public string? PaymentIntentId { get; set; }
         public ApplicationUser ClientUser { get; set; }
-        public int MileStoneId { get; set; }
+
+        public int MilestoneDataId { get; set; }
 
         public int SolutionId { get; set; }
 

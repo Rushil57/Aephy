@@ -1296,7 +1296,8 @@ namespace Aephy.API.Controllers
             {
                 var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
 
-                var contractData = await _db.Contract.Where(x => x.MileStoneId == model.Id).FirstOrDefaultAsync();
+                //var contractData = await _db.Contract.Where(x => x.MileStoneId == model.Id).FirstOrDefaultAsync();
+                var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id).FirstOrDefaultAsync();
                 var user = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
                 if (contractData == null)
                 {
@@ -1314,89 +1315,39 @@ namespace Aephy.API.Controllers
 
 
                             ClientUserId = model.UserId,
-                            MileStoneId = mileStone.Id,
-                            MileStone = mileStone,
+                            MilestoneDataId = mileStone.Id,
+                            //MileStone = mileStone,
                             PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                             PaymentIntentId = string.Empty
                         });
                         _db.SaveChanges();
                     }
-                    //else
-                    //{
-                    //    _db.Contract.Add(new Contract
-                    //    {
-                    //        ContractUsers = new List<ContractUser> {
-                    //            new ContractUser
-                    //            {
-                    //                ApplicationUser = user,
-                    //                Percentage = 80
-                    //            }
-                    //        },
+                    else
+                    {
+                        _db.Contract.Add(new Contract
+                        {
+                            ContractUsers = new List<ContractUser> {
+                                new ContractUser
+                                {
+                                    ApplicationUser = user,
+                                    Percentage = 80
+                                }
+                            },
 
 
-                    //        ClientUserId = model.UserId,
-                    //        MileStoneId = 8,
-                    //        SolutionId = model.SolutionId,
-                    //        IndustryId = model.IndustryId,
-                    //        PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                    //        PaymentIntentId = string.Empty
-                    //    });
-                    //    _db.SaveChanges();
-
-                    //    var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
-
-                    //    var domain = _configuration.GetValue<string>("DomainUrl:Domain");
-                    //    var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
-                    //    var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
-
-                    //    if (contract.PaymentStatus == Contract.PaymentStatuses.ContractCreated)
-                    //    {
-                    //        Session session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
-
-                    //        if (session == null || string.IsNullOrEmpty(session.Id))
-                    //        {
-                    //            //Response.Headers.Add("Location", domain + "/LandingPage/Project");
-                    //            //return new StatusCodeResult(303);
-                    //            var emptyStringUrl = domain + "/LandingPage/Project";
-                    //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    //            {
-                    //                StatusCode = StatusCodes.Status200OK,
-                    //                Result = emptyStringUrl
-                    //            });
-                    //        }
-
-                    //        //checkout initiated successful
-                    //        contract.SessionId = session.Id;
-                    //        contract.SessionExpiry = session.ExpiresAt;
-                    //        contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                    //        contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
-
-                    //        _db.Update(contract);
-                    //        _db.SaveChanges();
-
-                    //        //Response.Headers.Add("Location", session.Url);
-                    //        //return new StatusCodeResult(303);
-                    //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    //        {
-                    //            StatusCode = StatusCodes.Status200OK,
-                    //            Message = "success",
-                    //            Result = session.Url
-                    //        });
-                    //    }
-                    //    else
-                    //    {
-                    //        //Response.Headers.Add("Location", successUrl);
-                    //        //return new StatusCodeResult(303);
-                    //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    //        {
-                    //            StatusCode = StatusCodes.Status200OK,
-                    //            Message = "success",
-                    //            Result = successUrl
-                    //        });
-                    //    }
-                    //}
+                            ClientUserId = model.UserId,
+                            //MileStoneId = 8,
+                            SolutionId = model.SolutionId,
+                            IndustryId = model.IndustryId,
+                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                            PaymentIntentId = string.Empty
+                        });
+                        _db.SaveChanges();
+                    }
+                      
                 }
-                var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
+                //var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
+                var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id);
 
                 var domain = _configuration.GetValue<string>("DomainUrl:Domain");
                 var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
@@ -1405,7 +1356,15 @@ namespace Aephy.API.Controllers
                 Contract.PaymentStatuses payment = contract.PaymentStatus;
                 if (payment == Contract.PaymentStatuses.ContractCreated)
                 {
-                    Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+                    Session session = new Session();
+                    if(model.Id != 0)
+                    {
+                        session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+                    }
+                    else
+                    {
+                        session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
+                    }
 
                     if (session == null || string.IsNullOrEmpty(session.Id))
                     {
@@ -1592,7 +1551,8 @@ namespace Aephy.API.Controllers
                                 contract.PaymentStatus = Contract.PaymentStatuses.Paid;
                                 _db.SaveChanges();
 
-                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
+                                //var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
+                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MilestoneDataId).FirstOrDefault();
                                 if (data != null)
                                 {
                                     data.IsCheckOutDone = true;

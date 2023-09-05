@@ -1541,6 +1541,63 @@ namespace Aephy.WEB.Controllers
 
 		}
 
+        //GetActiveProjectList
+        [HttpGet]
+        public async Task<string> GetActiveProjectList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetActiveProjectList", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(projectData);
+            try
+            {
+                if (data.Result != null)
+                {
+                    foreach (var service in data.Result)
+                    {
+                        string imagepath = service.ImagePath;
+                        if (imagepath != null)
+                        {
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
 
-	}
+                        }
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
+            string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return jsonString;
+
+        }
+
+        //ApproveFreelancerPayment
+        [HttpPost]
+        public async Task<string> ApproveFreelancerPayment([FromBody] MileStoneIdViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/ApproveFreelancerPayment", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
+
+    }
 }

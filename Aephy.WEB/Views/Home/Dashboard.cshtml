@@ -279,6 +279,30 @@
                         </div>
                     </div>
 
+                     <div class="col-12">
+                        <div class="card top-selling overflow-auto material_scroll">
+                            <div class="card-body pb-0" style="height:303px;">
+                                <h5 class="card-title">Active Projects</h5> 
+                                <table class="table table-borderless" id="activeProjectList">
+                                    <thead>
+                                        <tr>
+                                           @* <th scope="col">Id</th>*@
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Services</th>
+                                            <th scope="col">Industries</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div><!-- End Left side columns -->
             <!-- Right side columns -->
@@ -1065,7 +1089,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         GetApprovedList()
 
         if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
-            GetSavedProjects()
+            GetSavedProjects();
+            GetActiveProjectList();
         }else{
             $("#savedProjects").hide()
         }
@@ -1858,5 +1883,67 @@ function InvokeApprovedList() {
     function CloseSavedprojectPopUp()
     {
         $("#SavedProjectModal").modal('hide');
+    }
+
+    function GetActiveProjectList(){
+        $("#preloader").show();
+          $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetActiveProjectList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                    var data = result.Result
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                for (index = 0; index < data.length; index++) {
+                    subObj = data[index];
+
+                    var description = subObj.Description.length > 35 ? subObj.Description.substring(0, 35) + "..." : subObj.Description
+
+                    htm += '<tr>';
+                    //htm += '<td class=cls-milestone>' + subObj.Id + '</td>';
+                    htm += '<td>' + subObj.Title + '</td>';
+                    htm += '<td><span title="' + subObj.Description + '">' + description + '</span></td>';
+                    htm += '<td> <img src="'+ subObj.ImageUrlWithSas +'" alt="Image"/></td>';
+                    htm += '<td>' + subObj.Services + '</td>';
+                    htm += '<td>' + subObj.Industries + '</td>';
+                    htm += '<td><a class="btn btn-primary btn-sm" onclick=ApproveFreelancerPayment('+subObj.Id+')>Approve</a></td>';
+                    htm += '</tr>';
+                }
+                $("#activeProjectList").find("tr:gt(0)").remove();
+                $("#activeProjectList tbody").append(htm);
+                $("#preloader").hide();
+               
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function ApproveFreelancerPayment(Id){
+          var data = {
+            SolutionFundId: Id,
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ApproveFreelancerPayment", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success !", result.Message);
+                GetSavedProjects();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
     }
 </script>

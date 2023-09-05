@@ -16,5 +16,7 @@ namespace Aephy.API.Stripe
         public Session CreateCheckoutSession(SolutionMilestone milestone, string successUrl, string cancelUrl);
 
         public Session CreateProjectCheckoutSession(string successUrl, string cancelUrl);
+
+        public string CreateTransferonCharge(long amount, string currency, string destination, string sourceTransaction, string transferGroup);
     }
 }

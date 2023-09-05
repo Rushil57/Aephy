@@ -1,5 +1,6 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,11 @@ namespace Aephy.API.Controllers
     public class FreelancerController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        public FreelancerController(AephyAppDbContext dbContext)
+        private readonly IStripeAccountService _stripeAccountService;
+        public FreelancerController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService)
         {
             _db = dbContext;
+            _stripeAccountService = stripeAccountService;
         }
 
         [HttpPost]
@@ -1171,6 +1174,189 @@ namespace Aephy.API.Controllers
                             StatusCode = StatusCodes.Status200OK,
                             Message = "success",
                             Result = solutionsModel
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        //GetActiveProjectList
+        [HttpPost]
+        [Route("GetActiveProjectList")]
+        public async Task<IActionResult> GetActiveProjectList([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.IsCheckOutDone == true).ToListAsync();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        if (projectData.Count > 0)
+                        {
+                            List<string> industrylist = new List<string>();
+                            foreach (var data in projectData)
+                            {
+                                SolutionsModel solutionsdataStore = new SolutionsModel();
+                                var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
+                                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                                //var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
+                                //if (industryIdlist.Count > 0)
+                                //{
+                                //    foreach (var industryId in industryIdlist)
+                                //    {
+                                //        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                //        industrylist.Add(industryname);
+                                //    }
+                                //}
+                                var industryname = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+
+                                solutionsdataStore.Services = serviceData;
+                                //solutionsdataStore.Industries = string.Join(",", industrylist);
+                                solutionsdataStore.Industries = industryname;
+                                solutionsdataStore.Id = data.Id;
+                                solutionsdataStore.Title = solutionData.Title;
+                                solutionsdataStore.Description = solutionData.Description;
+                                solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsModel.Add(solutionsdataStore);
+                                industrylist.Clear();
+                            }
+                        }
+                       
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionsModel
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        //ApproveFreelancerPayment
+        [HttpPost]
+        [Route("ApproveFreelancerPayment")]
+        public async Task<IActionResult> ApproveFreelancerPayment([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault();
+
+                        if (contract != null)
+                        {
+                            var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
+                            var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+
+                            if (checkoutSession != null)
+                            {
+                                contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
+
+                                if (_stripeAccountService.GetPaymentStatus(checkoutSession) == Contract.PaymentStatuses.Paid)
+                                {
+                                    foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
+                                    {
+                                        var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
+
+                                        if (user != null && user.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.Complete)
+                                        {
+                                            var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
+
+                                            var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
+                                            var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "usd", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
+
+                                            if (transferId != null)
+                                            {
+                                                contractUser.StripeTranferId = transferId;
+                                                contractUser.IsTransfered = true;
+                                                _db.ContractUser.Update(contractUser);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // this User(freelabncer or architect) has not completed his Stripe account please 
+                                        }
+                                    }
+
+                                    var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
+
+                                    if (transferredcount == contract.ContractUsers.Count())
+                                    {
+                                        contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
+                                        var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                        });
+                                    }
+                                    else if (transferredcount > 0)
+                                    {
+                                        contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
+                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(stripe)", transferredcount);
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                        });
+                                    }
+
+                                    _db.Contract.Update(contract);
+                                    _db.SaveChanges();
+                                }
+                            }
+
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
                         });
                     }
                     catch (Exception ex)

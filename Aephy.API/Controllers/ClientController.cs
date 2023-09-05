@@ -1298,11 +1298,19 @@ namespace Aephy.API.Controllers
 
                 //var contractData = await _db.Contract.Where(x => x.MileStoneId == model.Id).FirstOrDefaultAsync();
                 var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id).FirstOrDefaultAsync();
-                var user = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
+                //var user = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
+                var user = _db.Users.Where(x => x.Id == "15866f8f-b899-48d5-9e95-b5622ebf1d5a").FirstOrDefault();
                 if (contractData == null)
                 {
                     if (model.Id != 0)
                     {
+                        List<ContractUser> contractUsers = new List<ContractUser>();
+                        contractUsers.Add(new ContractUser() { Id = 1, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "15866f8f-b899-48d5-9e95-b5622ebf1d5a" });
+                        contractUsers.Add(new ContractUser() { Id = 2, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "389ed4b2-baaa-4cd1-a207-ca12c4bc2c15" });
+                        contractUsers.Add(new ContractUser() { Id = 3, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "47b5df04-50f1-4cab-9003-95341af08b54" });
+                        contractUsers.Add(new ContractUser() { Id = 4, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "4875f869-e7cc-468f-a213-7cd815758a87" });
+
+
                         _db.Contract.Add(new Contract
                         {
                             ContractUsers = new List<ContractUser> {
@@ -1313,14 +1321,29 @@ namespace Aephy.API.Controllers
                                 }
                             },
 
-
                             ClientUserId = model.UserId,
                             MilestoneDataId = mileStone.Id,
                             //MileStone = mileStone,
                             PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                             PaymentIntentId = string.Empty
                         });
+
+
+
                         _db.SaveChanges();
+
+
+
+
+                        //var contractDetails = new Contract()
+                        //{
+                        //    ClientUserId = model.UserId,
+                        //    MilestoneDataId = mileStone.Id,
+                        //    PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                        //    PaymentIntentId = string.Empty,
+                        //};
+                        //_db.Contract.Add(contractDetails);
+                        //_db.SaveChanges();
                     }
                     else
                     {
@@ -1344,7 +1367,7 @@ namespace Aephy.API.Controllers
                         });
                         _db.SaveChanges();
                     }
-                      
+
                 }
                 //var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
                 var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id);
@@ -1357,7 +1380,7 @@ namespace Aephy.API.Controllers
                 if (payment == Contract.PaymentStatuses.ContractCreated)
                 {
                     Session session = new Session();
-                    if(model.Id != 0)
+                    if (model.Id != 0)
                     {
                         session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
                     }

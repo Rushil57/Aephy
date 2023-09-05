@@ -218,5 +218,30 @@ namespace Aephy.API.Stripe
                 return null;
             }
         }
+
+        public string CreateTransferonCharge(long amount, string currency, string destination, string sourceTransaction, string transferGroup)
+        {
+            var options = new TransferCreateOptions
+            {
+                Amount = amount,
+                Currency = currency,
+                Destination = destination,
+                SourceTransaction = sourceTransaction,
+                TransferGroup = transferGroup
+            };
+
+            try
+            {
+                var service = new TransferService();
+                var transfer = service.Create(options);
+
+                return transfer.Id;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
     }
 }

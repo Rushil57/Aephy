@@ -252,6 +252,8 @@ namespace Aephy.API.Models
             public string? UserId { get; set; }
 
             public int? pageNumber { get; set; }
+
+            public int SolutionFundId { get; set; }
         }
 
         public class MileStoneDetailsViewModel

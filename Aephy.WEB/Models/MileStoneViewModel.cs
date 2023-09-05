@@ -20,6 +20,8 @@
 
         public int SolutionFundId { get; set; }
 
+        public bool MileStoneCheckout { get; set; }
+
     }
 
     public class MileStoneDetailsViewModel
@@ -88,6 +90,8 @@
         public string? ProjectStatus { get; set; }
 
         public bool IsArchived { get; set; }
+
+        public bool MileStoneCheckout { get; set; }
 
     }
     

@@ -1901,9 +1901,10 @@ function InvokeApprovedList() {
                 var htm = '';
                 for (index = 0; index < data.length; index++) {
                     subObj = data[index];
-
                     var description = subObj.Description.length > 35 ? subObj.Description.substring(0, 35) + "..." : subObj.Description
-
+                    if(subObj.MileStoneTitle == null){
+                        subObj.MileStoneTitle = ""
+                    }
                     htm += '<tr>';
                     //htm += '<td class=cls-milestone>' + subObj.Id + '</td>';
                     htm += '<td>' + subObj.Title + '</td>';

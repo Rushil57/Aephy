@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Aephy.API.DBHelper;
+using static Aephy.API.DBHelper.SolutionFund;
 
 namespace Aephy.API.Models
 {
@@ -247,6 +248,8 @@ namespace Aephy.API.Models
 
             public int SolutionFundId { get; set; }
 
+            public bool MileStoneCheckout { get; set; }
+
         }
         public class MileStoneIdViewModel
         {
@@ -327,6 +330,36 @@ namespace Aephy.API.Models
             public string? Description { get; set; }
 
             public List<SolutionSuccessfullProjectResult> projectResultList { get; set; } 
+        }
+
+        public class solutionFundViewModel
+        {
+            public int Id { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public int IndustryId { get; set; }
+
+            public int MileStoneId { get; set; }
+
+            public string? ClientId { get; set; }
+
+            public string? ProjectType { get; set; }
+
+            public string? ProjectPrice { get; set; }
+
+            public bool IsDispute { get; set; }
+
+            public string? DisputeReason { get; set; }
+            public string? ProjectStatus { get; set; }
+
+            public bool IsArchived { get; set; }
+
+            public SolutionFund.FundTypes  FundType { get; set; }
+
+            public bool IsCheckOutDone { get; set; }
+
+            public bool MileStoneCheckout { get; set; }
         }
     }
 }

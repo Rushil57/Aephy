@@ -1314,19 +1314,39 @@ namespace Aephy.API.Controllers
                 {
                     if (model.Id != 0)
                     {
-
-                        var contractSave = new Contract()
+                        Contract? contractSave;
+                        if (model.MileStoneCheckout)
                         {
-                            ClientUserId = model.UserId,
-                            MilestoneDataId = mileStone.Id,
-                            //MileStone = mileStone,
-                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                            PaymentIntentId = string.Empty,
-                            SolutionFundId = model.SolutionFundId,
+                            contractSave = new Contract()
+                            {
+                                ClientUserId = model.UserId,
+                                MilestoneDataId = mileStone.Id,
+                                //MileStone = mileStone,
+                                PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                                PaymentIntentId = string.Empty,
+                                SolutionFundId = model.SolutionFundId,
 
-                        };
-                        _db.Contract.Add(contractSave);
-                        _db.SaveChanges();
+                            };
+                            _db.Contract.Add(contractSave);
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            contractSave = new Contract()
+                            {
+                                ClientUserId = model.UserId,
+                                SolutionId = model.SolutionId,
+                                IndustryId = model.IndustryId,
+                                //MileStone = mileStone,
+                                PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                                PaymentIntentId = string.Empty,
+                                SolutionFundId = model.SolutionFundId,
+
+                            };
+                            _db.Contract.Add(contractSave);
+                            _db.SaveChanges();
+                        }
+                        
 
                         List<ContractUser> contractUsers = new List<ContractUser>();
                         //
@@ -1353,7 +1373,16 @@ namespace Aephy.API.Controllers
 
                 }
                 //var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
-                var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id);
+                var contract = new Contract();
+                if (model.MileStoneCheckout)
+                {
+                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id);
+                }
+                else
+                {
+                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
+                }
+                
 
                 var domain = _configuration.GetValue<string>("DomainUrl:Domain");
                 var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
@@ -1363,7 +1392,7 @@ namespace Aephy.API.Controllers
                 if (payment == Contract.PaymentStatuses.ContractCreated)
                 {
                     Session session = new Session();
-                    if (model.Id != 0)
+                    if (model.MileStoneCheckout)
                     {
                         session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
                     }
@@ -1571,7 +1600,7 @@ namespace Aephy.API.Controllers
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "Your payment is compeleted successfully and in escrow. Incase of milestone approved successfully it will be transfered to all stakeholders(Freelances, Architects and Platfom)",
+                                Message = "Your payment is compeleted successfully and in escrow. Incase of approved successfully it will be transfered to all stakeholders(Freelances, Architects and Platfom)",
                             });
                         }
                         else if (contract.PaymentStatus == Contract.PaymentStatuses.NoPaymentRequired)
@@ -1643,7 +1672,7 @@ namespace Aephy.API.Controllers
         //SaveProjectInitiated
         [HttpPost]
         [Route("SaveProjectInitiated")]
-        public async Task<IActionResult> SaveProjectInitiated([FromBody] SolutionFund model)
+        public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
             if (model != null)
             {
@@ -1653,6 +1682,15 @@ namespace Aephy.API.Controllers
                     //var projectDetails = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefault();
                     if (mileStoneData != null)
                     {
+                        if (model.MileStoneCheckout)
+                        {
+                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
+                        }
+                        else
+                        {
+                            model.FundType = SolutionFund.FundTypes.ProjectFund;
+                        }
+
                         var solutionfund = new SolutionFund()
                         {
                             SolutionId = model.SolutionId,
@@ -1661,6 +1699,7 @@ namespace Aephy.API.Controllers
                             ProjectType = model.ProjectType,
                             ProjectPrice = model.ProjectPrice,
                             ProjectStatus = "INITIATED",
+                            FundType = model.FundType
                         };
                         _db.SolutionFund.Add(solutionfund);
                         _db.SaveChanges();
@@ -1693,12 +1732,20 @@ namespace Aephy.API.Controllers
                     var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId).FirstOrDefault();
                     if (data != null)
                     {
-
+                        if (model.MileStoneCheckout)
+                        {
+                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
+                        }
+                        else
+                        {
+                            model.FundType = SolutionFund.FundTypes.ProjectFund;
+                        }
 
                         if (data.ProjectStatus == "INITIATED")
                         {
                             data.ProjectStatus = "INPROGRESS";
                             data.MileStoneId = model.MileStoneId;
+                            data.FundType = model.FundType;
                             _db.SaveChanges();
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();

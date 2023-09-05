@@ -532,9 +532,12 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;width: 100%;">
-                                <input type="button" value="" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated()">  
+                              @*  <input type="button" value="" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true)">  
                                 <input type="button" value="" class="btn btn-brand" id="solutionfund-details">  
-                                <input type="button" value="Pay Project" class="btn btn-brand" id="solutionfund-projectPay">  
+                                <input type="button" value="" class="btn btn-brand" id="solutionfund-projectPay" onclick="CheckoutSolution(false)">  *@
+                                <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true)" style="width:42%;font-size:15px;"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;font-size:15px;"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-projectPay" onclick="CheckoutSolution(false)" style="width:50%;font-size:15px;">Pay Project</button>
                             </div>
                         </div>
                     </div>
@@ -1328,7 +1331,13 @@
                   
                 }
 
-    function CheckoutSolution(){
+    function CheckoutSolution(checkoutType){
+
+        var mileStoneCheckOut = false;
+        if(checkoutType){
+            mileStoneCheckOut = checkoutType
+        }
+
         var Industryid = @ViewData["Industry"]; 
         var Solutionid = @ViewData["Solution"];
         var data = {
@@ -1336,6 +1345,7 @@
             SolutionId : Solutionid,
             Id :$("#solutionFundMileStoneId").val(),
             SolutionFundId :$("#solutionFundId").val(),
+            MileStoneCheckout : checkoutType
         }
        $("#preloader").show();
         $.ajax({
@@ -1410,11 +1420,11 @@
         $("#CheckoutModal").modal('hide');
     }
 
-    function ProjectInitiated(){
+    function ProjectInitiated(checkCheckoutType){
 
         if('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
               var Projectprice = 0;
-             var projectType = $("input[name='projSizeweb']:checked").val();
+             var projectType = $("input[name='projSize']:checked").val();
              if(projectType == 'small'){
                  Projectprice = 100;
              }
@@ -1425,6 +1435,10 @@
                  Projectprice = 500;
              }
 
+              var mileStoneCheckout = false;
+                if(checkCheckoutType){
+                    mileStoneCheckout = checkCheckoutType;
+                }
             var Industryid = @ViewData["Industry"]; 
             var Solutionid = @ViewData["Solution"];
 
@@ -1434,7 +1448,8 @@
                 SolutionId : Solutionid,
                 ProjectType : projectType,
                 ProjectPrice : Projectprice.toString(),
-                MileStoneId : $("#solutionFundMileStoneId").val()
+                MileStoneId : $("#solutionFundMileStoneId").val(),
+                MileStoneCheckout : mileStoneCheckout
             }
            $("#preloader").show();
             $.ajax({
@@ -1454,7 +1469,7 @@
                        showToaster("error", "Error !", "No MilestoneData Available");
                    }
                    if(result.Message == "CompleteProcess"){
-                        CheckoutSolution();
+                        CheckoutSolution(true);
                    }
                     $("#preloader").hide();
                 },
@@ -1479,13 +1494,14 @@
           $("#projectfund-projectprice").html(data.ProjectPrice)
          
            if(data.ProjectStatus == "INITIATED"){
-
                 var status = data.ProjectStatus
                 status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 
               $("#project-progress").html("Project " + status)
-              $("#solutionfund-furtherprogress").attr('value', 'Fund ' + milestoneData.Title);
-              $("#solutionfund-details").attr('value', 'Stop Project');
+              //$("#solutionfund-furtherprogress").attr('value', 'Fund ' + milestoneData.Title);
+              //$("#solutionfund-details").attr('value', 'Stop Project');
+              $("#solutionfund-furtherprogress").text('Fund ' + milestoneData.Title);
+              $("#solutionfund-details").text('Stop Project');
            }
 
            if(data.ProjectStatus == "INPROGRESS"){
@@ -1493,16 +1509,30 @@
                 status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 
               $("#project-progress").html("Project " + milestoneData.Title + " " + status);
-               $("#solutionfund-furtherprogress").attr('value', "Pay " +  milestoneData.Title);
-              $("#solutionfund-details").attr('value', 'Raise a Dispute');
+              // $("#solutionfund-furtherprogress").attr('value', "Pay " +  milestoneData.Title);
+              //$("#solutionfund-details").attr('value', 'Raise a Dispute');
+                  $("#solutionfund-furtherprogress").text("Pay " +  milestoneData.Title);
+                    $("#solutionfund-details").text('Raise a Dispute');
+
+              if(data.FundType == 0){
+               $("#solutionfund-projectPay").css("pointer-events","none")
+               $("#solutionfund-furtherprogress").css("pointer-events","auto")
+               }else{
+                   $("#solutionfund-projectPay").css("pointer-events","auto")
+                   $("#solutionfund-furtherprogress").css("pointer-events","none")
+               }
            }
 
            if(data.ProjectStatus == "COMPLETED"){
               $("#project-progress").html("Project Completed");
-              $("#solutionfund-furtherprogress").attr('value', "Purchased");
-              $("#solutionfund-details").attr('value', 'Provide Feedback');
+              //$("#solutionfund-furtherprogress").attr('value', "Purchased");
+              //$("#solutionfund-details").attr('value', 'Provide Feedback');
+              $("#solutionfund-furtherprogress").text("Purchased");
+              $("#solutionfund-details").text('Provide Feedback');
               $("#solutionfund-furtherprogress").css("pointer-events","none")
               $("#solutionfund-projectPay").css("pointer-events","none")
            }
+
+           
    }
 </script>

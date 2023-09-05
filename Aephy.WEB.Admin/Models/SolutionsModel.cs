@@ -27,6 +27,11 @@ namespace Aephy.WEB.Admin.Models
         public string? ImagePath { get; set; }
 
         public bool IsProjectSaved { get; set; }
+
+        public string? MileStoneTitle { get; set; }
+
+        public string? PaymentStatus { get; set; }
+
         // public IFormFile[] ImageFile { get; set; }
     }
 

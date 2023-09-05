@@ -52,6 +52,9 @@ namespace Aephy.API.Models
 
             public bool IsProjectSaved { get; set; }
 
+            public string? PaymentStatus { get; set; }
+            public string? MileStoneTitle { get; set; }
+
             //public IFormFile[] ImageFile { get; set; }
         }
 

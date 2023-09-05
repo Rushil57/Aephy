@@ -844,7 +844,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="CheckoutModal" tabindex="-1" aria-labelledby="CheckoutModal" aria-hidden="true">
+   <div class="modal fade" id="CheckoutModal" tabindex="-1" aria-labelledby="CheckoutModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1195,6 +1195,7 @@
                    {
                          $("#solutioninfo-popUp").css("display","none")
                         $("#solutionfund-popUp").css("display","block")
+                        $("input[name=projSize][value='"+data.SolutionFund.ProjectType+"']").prop("checked",true);
                         var mileStoneData = data.MileStone[0];
                         $("#solutionFundMileStoneId").val(mileStoneData.Id);
                         $("#solutionFundId").val(data.SolutionFund.Id);

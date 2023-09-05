@@ -1309,20 +1309,12 @@ namespace Aephy.API.Controllers
 
                 //var contractData = await _db.Contract.Where(x => x.MileStoneId == model.Id).FirstOrDefaultAsync();
                 var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id).FirstOrDefaultAsync();
-                //var user = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
-                var user = _db.Users.Where(x => x.Id == "15866f8f-b899-48d5-9e95-b5622ebf1d5a").FirstOrDefault();
+
                 if (contractData == null)
                 {
                     if (model.Id != 0)
                     {
-                        //_db.Contract.Add(new Contract
-                        // {
-                        //     ClientUserId = model.UserId,
-                        //     MilestoneDataId = mileStone.Id,
-                        //     //MileStone = mileStone,
-                        //     PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                        //     PaymentIntentId = string.Empty
-                        // });
+
                         var contractSave = new Contract()
                         {
                             ClientUserId = model.UserId,
@@ -1331,47 +1323,32 @@ namespace Aephy.API.Controllers
                             PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                             PaymentIntentId = string.Empty,
                             SolutionFundId = model.SolutionFundId,
-                            
+
                         };
                         _db.Contract.Add(contractSave);
                         _db.SaveChanges();
 
                         List<ContractUser> contractUsers = new List<ContractUser>();
                         //
-                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete 
+                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
                         && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
                         foreach (var item in fl)
                         {
-                            contractUsers.Add(new ContractUser() { Percentage = 10, 
-                                StripeTranferId = string.Empty, IsTransfered = false, 
-                                ApplicationUserId = item.Id, 
-                                ContractId = contractSave.Id });
+                            contractUsers.Add(new ContractUser()
+                            {
+                                Percentage = 10,
+                                StripeTranferId = string.Empty,
+                                IsTransfered = false,
+                                ApplicationUserId = item.Id,
+                                ContractId = contractSave.Id
+                            });
                         }
                         //
                         _db.ContractUser.AddRange(contractUsers);
                         _db.SaveChanges();
-                    }
-                    else
-                    {
-                        _db.Contract.Add(new Contract
-                        {
-                            ContractUsers = new List<ContractUser> {
-                                new ContractUser
-                                {
-                                    ApplicationUser = user,
-                                    Percentage = 80
-                                }
-                            },
 
 
-                            ClientUserId = model.UserId,
-                            //MileStoneId = 8,
-                            SolutionId = model.SolutionId,
-                            IndustryId = model.IndustryId,
-                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                            PaymentIntentId = string.Empty
-                        });
-                        _db.SaveChanges();
+
                     }
 
                 }

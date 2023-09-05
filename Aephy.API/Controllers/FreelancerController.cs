@@ -1217,16 +1217,9 @@ namespace Aephy.API.Controllers
                                 var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
                                 var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
                                 var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-                                //var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
-                                //if (industryIdlist.Count > 0)
-                                //{
-                                //    foreach (var industryId in industryIdlist)
-                                //    {
-                                //        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                //        industrylist.Add(industryname);
-                                //    }
-                                //}
                                 var industryname = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
 
                                 solutionsdataStore.Services = serviceData;
                                 //solutionsdataStore.Industries = string.Join(",", industrylist);
@@ -1235,6 +1228,8 @@ namespace Aephy.API.Controllers
                                 solutionsdataStore.Title = solutionData.Title;
                                 solutionsdataStore.Description = solutionData.Description;
                                 solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsdataStore.MileStoneTitle = milestoneData;
+                                solutionsdataStore.PaymentStatus = contractStatus.ToString();
                                 solutionsModel.Add(solutionsdataStore);
                                 industrylist.Clear();
                             }

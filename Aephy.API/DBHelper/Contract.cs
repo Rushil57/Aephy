@@ -65,5 +65,6 @@ namespace Aephy.API.DBHelper
         public string? StripeTranferId { get; set; }
         public bool IsTransfered { get; set; } = false;
         public string ApplicationUserId { get; set; }
+        public int ContractId { get; set; }
     }
 }

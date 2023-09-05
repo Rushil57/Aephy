@@ -1304,46 +1304,32 @@ namespace Aephy.API.Controllers
                 {
                     if (model.Id != 0)
                     {
-                        List<ContractUser> contractUsers = new List<ContractUser>();
-                        contractUsers.Add(new ContractUser() { Id = 1, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "15866f8f-b899-48d5-9e95-b5622ebf1d5a" });
-                        contractUsers.Add(new ContractUser() { Id = 2, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "389ed4b2-baaa-4cd1-a207-ca12c4bc2c15" });
-                        contractUsers.Add(new ContractUser() { Id = 3, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "47b5df04-50f1-4cab-9003-95341af08b54" });
-                        contractUsers.Add(new ContractUser() { Id = 4, Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "4875f869-e7cc-468f-a213-7cd815758a87" });
-
-
-                        _db.Contract.Add(new Contract
+                        //_db.Contract.Add(new Contract
+                        // {
+                        //     ClientUserId = model.UserId,
+                        //     MilestoneDataId = mileStone.Id,
+                        //     //MileStone = mileStone,
+                        //     PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                        //     PaymentIntentId = string.Empty
+                        // });
+                        var contractSave = new Contract()
                         {
-                            ContractUsers = new List<ContractUser> {
-                                new ContractUser
-                                {
-                                    ApplicationUser = user,
-                                    Percentage = 80
-                                }
-                            },
-
                             ClientUserId = model.UserId,
                             MilestoneDataId = mileStone.Id,
                             //MileStone = mileStone,
                             PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                             PaymentIntentId = string.Empty
-                        });
-
-
-
+                        };
+                        _db.Contract.Add(contractSave);
                         _db.SaveChanges();
 
-
-
-
-                        //var contractDetails = new Contract()
-                        //{
-                        //    ClientUserId = model.UserId,
-                        //    MilestoneDataId = mileStone.Id,
-                        //    PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                        //    PaymentIntentId = string.Empty,
-                        //};
-                        //_db.Contract.Add(contractDetails);
-                        //_db.SaveChanges();
+                        List<ContractUser> contractUsers = new List<ContractUser>();
+                        contractUsers.Add(new ContractUser() {  Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "15866f8f-b899-48d5-9e95-b5622ebf1d5a", ContractId = contractSave.Id });
+                        contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "389ed4b2-baaa-4cd1-a207-ca12c4bc2c15", ContractId = contractSave.Id });
+                        contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "47b5df04-50f1-4cab-9003-95341af08b54", ContractId = contractSave.Id });
+                        contractUsers.Add(new ContractUser() {  Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "4875f869-e7cc-468f-a213-7cd815758a87", ContractId = contractSave.Id });
+                        _db.ContractUser.AddRange(contractUsers);
+                        _db.SaveChanges();
                     }
                     else
                     {

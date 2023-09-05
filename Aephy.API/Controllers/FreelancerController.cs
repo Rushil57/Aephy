@@ -1277,7 +1277,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var contract = _db.Contract.Include("ContractUsers").FirstOrDefault();
+                        var contract = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Include("ContractUsers").FirstOrDefault();
 
                         if (contract != null)
                         {
@@ -1299,13 +1299,15 @@ namespace Aephy.API.Controllers
                                             var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
 
                                             var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                            var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "usd", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
+                                            //var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "usd", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
+                                            var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "eur", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
 
                                             if (transferId != null)
                                             {
                                                 contractUser.StripeTranferId = transferId;
                                                 contractUser.IsTransfered = true;
                                                 _db.ContractUser.Update(contractUser);
+                                                _db.SaveChanges();
                                             }
                                         }
                                         else
@@ -1319,6 +1321,8 @@ namespace Aephy.API.Controllers
                                     if (transferredcount == contract.ContractUsers.Count())
                                     {
                                         contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
+                                        _db.Contract.Update(contract);
+                                        _db.SaveChanges();
                                         var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {
@@ -1329,6 +1333,8 @@ namespace Aephy.API.Controllers
                                     else if (transferredcount > 0)
                                     {
                                         contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
+                                        _db.Contract.Update(contract);
+                                        _db.SaveChanges();
                                         var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {

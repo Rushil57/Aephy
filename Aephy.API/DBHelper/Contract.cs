@@ -49,6 +49,7 @@ namespace Aephy.API.DBHelper
         public SessionStatuses SessionStatus { get; set; }
         public DateTime? SessionExpiry { get; set; }
         public string? LatestChargeId { get; set; }
+        public int SolutionFundId { get; set; }
 
         // Stripe fields above
 

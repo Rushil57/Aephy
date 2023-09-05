@@ -237,7 +237,7 @@ namespace Aephy.API.Stripe
 
                 return transfer.Id;
             }
-            catch
+            catch (Exception ex)
             {
                 return null;
             }

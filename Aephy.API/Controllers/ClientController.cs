@@ -10,6 +10,7 @@ using Stripe.Checkout;
 using Stripe.Identity;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using static Aephy.API.DBHelper.ApplicationUser;
 using static Aephy.API.Models.AdminViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -437,6 +438,15 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
+                    SolutionFund fundProgress = new SolutionFund();
+                    if (model.UserId != "")
+                    {
+                        fundProgress = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefaultAsync();
+                    }
+                    if (fundProgress != null && fundProgress.ProjectType != null)
+                    {
+                        model.ProjectType = fundProgress.ProjectType;
+                    }
 
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
@@ -479,11 +489,12 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    SolutionFund fundProgress = new SolutionFund();
-                    if (model.UserId != "")
-                    {
-                        fundProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefault();
-                    }
+                    //SolutionFund fundProgress = new SolutionFund();
+                    //if (model.UserId != "")
+                    //{
+                    //    fundProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefault();
+                    //}
+
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -1318,16 +1329,25 @@ namespace Aephy.API.Controllers
                             MilestoneDataId = mileStone.Id,
                             //MileStone = mileStone,
                             PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                            PaymentIntentId = string.Empty
+                            PaymentIntentId = string.Empty,
+                            SolutionFundId = model.SolutionFundId,
+                            
                         };
                         _db.Contract.Add(contractSave);
                         _db.SaveChanges();
 
                         List<ContractUser> contractUsers = new List<ContractUser>();
-                        contractUsers.Add(new ContractUser() {  Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "15866f8f-b899-48d5-9e95-b5622ebf1d5a", ContractId = contractSave.Id });
-                        contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "389ed4b2-baaa-4cd1-a207-ca12c4bc2c15", ContractId = contractSave.Id });
-                        contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "47b5df04-50f1-4cab-9003-95341af08b54", ContractId = contractSave.Id });
-                        contractUsers.Add(new ContractUser() {  Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = "4875f869-e7cc-468f-a213-7cd815758a87", ContractId = contractSave.Id });
+                        //
+                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete 
+                        && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+                        foreach (var item in fl)
+                        {
+                            contractUsers.Add(new ContractUser() { Percentage = 10, 
+                                StripeTranferId = string.Empty, IsTransfered = false, 
+                                ApplicationUserId = item.Id, 
+                                ContractId = contractSave.Id });
+                        }
+                        //
                         _db.ContractUser.AddRange(contractUsers);
                         _db.SaveChanges();
                     }

@@ -39,5 +39,20 @@ namespace Aephy.API.DBHelper
 
         public bool IsCheckOutDone { get; set; }
     }
+
+    public class SolutionDispute
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int ContractId { get; set; }
+
+        public string? DisputeReason { get; set; }
+
+        public string? Status { get; set; }
+
+        public DateTime CreatedDateTime { get; set; }
+    }
 }
 

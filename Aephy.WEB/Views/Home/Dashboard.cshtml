@@ -1298,7 +1298,7 @@ function InvokeApprovedList() {
                 var htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
                 $("#ApprovedList").find("tr:gt(0)").remove();
                 $("#ApprovedList tbody").append(htm);
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result);
                 $("#preloader").hide();
             }
         });
@@ -1341,7 +1341,7 @@ function InvokeApprovedList() {
                 ResetMileStoneForm()
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
             }
         });
     }
@@ -1389,7 +1389,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
             }
         });
     }
@@ -1442,7 +1442,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result);
                 $("#preloader").hide();
             }
         });
@@ -1471,7 +1471,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !",result);
             }
         });
     }
@@ -1507,7 +1507,7 @@ function InvokeApprovedList() {
                 ResetPointsForm()
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !",result);
             }
         });
     }
@@ -1561,7 +1561,7 @@ function InvokeApprovedList() {
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !",result);
                 $("#preloader").hide();
             }
         });
@@ -1583,7 +1583,7 @@ function InvokeApprovedList() {
                     GetPointsList()
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result);
                 }
             });
         }
@@ -1605,7 +1605,7 @@ function InvokeApprovedList() {
                     GetMiletoneList()
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result);
                 }
             });
         }
@@ -1661,7 +1661,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result);
                 $("#preloader").hide();
             }
         });
@@ -1706,7 +1706,7 @@ function InvokeApprovedList() {
                 },
                 error: function (result) {
                      $("#preloader").hide();
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result);
                 }
             });
         });
@@ -1732,7 +1732,7 @@ function InvokeApprovedList() {
                 }
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !",result);
             }
         });
     }
@@ -1753,7 +1753,7 @@ function InvokeApprovedList() {
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !",result);
             }
         });
     }
@@ -1823,7 +1823,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
             }
         });
     }
@@ -1876,7 +1876,7 @@ function InvokeApprovedList() {
                
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
                 $("#preloader").hide();
             }
         });
@@ -1926,7 +1926,7 @@ function InvokeApprovedList() {
                
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
                 $("#preloader").hide();
             }
         });
@@ -1950,7 +1950,7 @@ function InvokeApprovedList() {
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result);
             }
         });
     }

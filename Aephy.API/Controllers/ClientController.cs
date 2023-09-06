@@ -1366,9 +1366,6 @@ namespace Aephy.API.Controllers
                         //
                         _db.ContractUser.AddRange(contractUsers);
                         _db.SaveChanges();
-
-
-
                     }
 
                 }
@@ -1753,7 +1750,7 @@ namespace Aephy.API.Controllers
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "projectDetails",
+                                Message = "CompleteProcess",
                                 Result = new
                                 {
                                     ProjectDetails = data,
@@ -1762,20 +1759,20 @@ namespace Aephy.API.Controllers
                             });
                         }
 
-                        if (data.ProjectStatus == "INPROGRESS")
-                        {
-                            //data.ProjectStatus = "COMPLETED";
-                            //data.IsArchived = true;
-                            //_db.SaveChanges();
+                        //if (data.ProjectStatus == "INPROGRESS")
+                        //{
+                        //    //data.ProjectStatus = "COMPLETED";
+                        //    //data.IsArchived = true;
+                        //    //_db.SaveChanges();
 
-                            //var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+                        //    //var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
 
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "CompleteProcess"
-                            });
-                        }
+                        //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        //    {
+                        //        StatusCode = StatusCodes.Status200OK,
+                        //        Message = "CompleteProcess"
+                        //    });
+                        //}
 
                     }
                 }

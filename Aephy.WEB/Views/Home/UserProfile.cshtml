@@ -270,7 +270,7 @@
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
                                         @{
-                                            if (Context.Session.GetString("CompleteUserStripeAccount") != "Completed")
+                                            if (Context.Session.GetString("CompleteUserStripeAccount") != "Completed" && Context.Session.GetString("LoggedUserRole") != "Client")
                                             {
                                                 <input type="button" class="btn btn-primary" value="Click here to Register to stripe" onclick="StripeRegister()" />
                                             }
@@ -369,9 +369,6 @@
         });
         GetUserData()
 
-        var data = "@ViewData["StripeStatus"]";
-        console.log("stripe data is : " + data);
-        
     });
 
     function GetUserData() {

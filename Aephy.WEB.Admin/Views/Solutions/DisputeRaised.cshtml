@@ -1,0 +1,256 @@
+﻿<main id="main" class="main">
+
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">Dispute List</h5>
+
+                    <table class="table table-borderless datatable" id="DisputeList">
+                        <thead>
+                            <tr>
+                                <th scope="col">SolutionName</th>
+                                <th scope="col">IndustryName</th>
+                                <th scope="col">ClientName</th>
+                                <th scope="col">Date</th>
+                                <th scope="col"></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="RefundPopUp" tabindex="-1" aria-labelledby="RefundPopUp" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dispute Details</h4>
+                    <a class="close" onclick="ClosePopUpModel();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <form class="row g-3 mt-3" name="DisputeForm">
+                                        <input type="hidden" id="ContractId" value="0">
+                                        <input type="hidden" id="FreelancerStripeConnectedId" value="0">
+                                        <div class="col-12">
+                                            <label for="FreelancerName" class="form-label">Freelancer Name</label>
+                                            <div class="input-group">
+                                                <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer" onchange="GetFreelancerConnectedId()">
+                                                    <option value="">Select Freelancer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="Amount" class="form-label">Amount to Transfer</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="Amount" name="amount">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="ChargedId" class="form-label">Last Charged Id</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="ChargedId" name="chargedId">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Transfer</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    $(function () {
+
+        $("form[name='DisputeForm']").validate({
+            rules: {
+                drpfreelancer: { required: true },
+                amount : { required: true },
+                chargedId: { required: true },
+            },
+            messages: {
+                drpfreelancer: { required: "Please select freelancer name" },
+                amount: { required: "Please enter amount" },
+                chargedId: { required: "Please enter chargeid" },
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                RefundUserAmount()
+            }
+        });
+
+        GetDisputeList();
+    })
+
+    function GetDisputeList() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetDisputeList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#DisputeList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        { "data": "SolutionName" },
+                        { "data": "IndustryName" },
+                        { "data": "ClientName" },
+                        { "data": "CreatedDate" },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" class="btn btn-primary" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</a>';
+                            }
+                        }
+
+                    ]
+                });
+
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+
+    function OpenRefundPopUp(Id) {
+
+        var data = {
+            Id: Id
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetDisputeData", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#RefundPopUp").modal('show')
+                $("#drp-FreeLancer option:not(:first)").remove()
+                $.each(result.Result, function (data, value) {
+                    $("#drp-FreeLancer").append($("<option     />").val(value.FreelancerId).text(value.FreelancerName));
+                });
+                
+                $("#ContractId").val(result.Result[0].ContractId);
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+
+    }
+
+    function GetFreelancerConnectedId(){
+        var freelancerId = $("#drp-FreeLancer").val();
+        if(freelancerId != ''){
+            var data = {
+                FreelancerId: freelancerId
+            };
+            $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetFreelancerConnectedId", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Message == "Data Available"){
+                        $("#FreelancerStripeConnectedId").val(result.Result);
+                    }else{
+                        showToaster("warning", "Warning !", "Something went wrong !!");
+                    }
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }
+    }
+
+    function ClosePopUpModel(){
+        $("#drp-FreeLancer").val('');
+        $("#Amount").val(0);
+        $("#ChargedId").val("");
+        $("#FreelancerStripeConnectedId").val("");
+        $("#RefundPopUp").modal('hide');
+        $("#ContractId").val(0);
+    }
+
+    function ResetForm(){
+        $("#drp-FreeLancer").val('');
+        $("#Amount").val(0);
+        $("#ChargedId").val("");
+    }
+
+    function RefundUserAmount(){
+        var data = {
+            TransferAmount: $("#Amount").val(),
+            Currency : "eur",
+            StripeConnectedId: $("#FreelancerStripeConnectedId").val(),
+            LatestChargeId: $("#ChargedId").val(),
+            ContractId: $("#ContractId").val(),
+            FreelancerId: $("#drp-FreeLancer").val(),
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RefundUserAmount", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Message == "Refund Succesfully !"){
+                    ResetForm()
+                    showToaster("success", "Success !", result.Message);
+                }else{
+                    showToaster("error", "Error !", result.Message);
+                }
+                
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+</script>

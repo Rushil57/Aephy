@@ -533,7 +533,7 @@
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;width: 100%;">
                                 <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true)" style="width:42%;font-size:15px;"></button>
-                                <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;font-size:15px;"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;font-size:15px;" onclick="CheckEvent()"></button>
                                 <button type="button" class="btn btn-brand" id="solutionfund-projectPay" onclick="CheckoutSolution(false)" style="width:50%;font-size:15px;">Pay Project</button>
                             </div>
                         </div>
@@ -1534,22 +1534,52 @@
               if(data.FundType == 0){
                $("#solutionfund-projectPay").css("pointer-events","none")
                $("#solutionfund-furtherprogress").css("pointer-events","auto")
-               }else{
-                   $("#solutionfund-projectPay").css("pointer-events","auto")
-                   $("#solutionfund-furtherprogress").css("pointer-events","none")
                }
+               //else{
+               //    $("#solutionfund-projectPay").css("pointer-events","auto")
+               //    $("#solutionfund-furtherprogress").css("pointer-events","none")
+               //}
            }
-
-           //if(data.ProjectStatus == "COMPLETED"){
-           //   $("#project-progress").html("Project Completed");
-           //   //$("#solutionfund-furtherprogress").attr('value', "Purchased");
-           //   //$("#solutionfund-details").attr('value', 'Provide Feedback');
-           //   $("#solutionfund-furtherprogress").text("Purchased");
-           //   $("#solutionfund-details").text('Provide Feedback');
-           //   $("#solutionfund-furtherprogress").css("pointer-events","none")
-           //   $("#solutionfund-projectPay").css("pointer-events","none")
-           //}
-
            
+   }
+
+   function CheckEvent(){
+        var event =  $("#solutionfund-details").text();
+        if(event == "Raise a Dispute"){
+                RaiseDispute();
+                 return;
+        }
+   }
+
+   function RaiseDispute(){
+        var Industryid = @ViewData["Industry"]; 
+            var Solutionid = @ViewData["Solution"];
+
+            var data = {
+                IndustryId : Industryid,
+                SolutionId : Solutionid,
+                ProjectType :$("input[name='projSize']:checked").val(),
+            }
+           $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "@Url.Action("RaiseDispute", "LandingPage")",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if(result.Message == "Dispute Raised"){
+                        showToaster("success", "Success", result.Message);
+                    }else{
+                        showToaster("warning", "Warning!", result.Message);
+                    }
+                     
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", result);
+                }
+            });
    }
 </script>

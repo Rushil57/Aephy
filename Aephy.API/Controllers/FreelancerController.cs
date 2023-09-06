@@ -1346,9 +1346,6 @@ namespace Aephy.API.Controllers
                                             Message = message,
                                         });
                                     }
-
-                                    _db.Contract.Update(contract);
-                                    _db.SaveChanges();
                                 }
                             }
 

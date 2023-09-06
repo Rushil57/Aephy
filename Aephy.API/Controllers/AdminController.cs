@@ -24,6 +24,7 @@ using static Aephy.API.Models.AdminViewModel;
 using static Azure.Core.HttpHeader;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Aephy.API.Stripe;
 
 namespace Aephy.API.Controllers
 {
@@ -33,10 +34,12 @@ namespace Aephy.API.Controllers
     {
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager)
+        private readonly IStripeAccountService _stripeAccountService;
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IStripeAccountService stripeAccountService)
         {
             _db = dbContext;
             _userManager = userManager;
+            _stripeAccountService = stripeAccountService;
         }
 
         [HttpPost]
@@ -1814,7 +1817,7 @@ namespace Aephy.API.Controllers
                 notifications.NotificationTime = DateTime.Now;
                 notifications.IsRead = false;
 
-                if(notifications != null)
+                if (notifications != null)
                 {
                     await SaveNotificationData(notifications);
                 }
@@ -2092,7 +2095,7 @@ namespace Aephy.API.Controllers
                 if (model.Id == 0)
                 {
 
-                    if(topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
+                    if (topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2740,11 +2743,11 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("GetSavedLevelByName")]
-        public async Task<IActionResult> GetSavedLevelByName([FromBody]LevelRange obj)
+        public async Task<IActionResult> GetSavedLevelByName([FromBody] LevelRange obj)
         {
             try
             {
-                LevelRange levelRange = await _db.LevelRanges.Where(l=>l.Level == obj.Level).FirstOrDefaultAsync();
+                LevelRange levelRange = await _db.LevelRanges.Where(l => l.Level == obj.Level).FirstOrDefaultAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -2903,7 +2906,224 @@ namespace Aephy.API.Controllers
                 });
             }
 
-         
+
+        }
+
+        [HttpGet]
+        [Route("GetDisputeList")]
+        public async Task<IActionResult> GetDisputeList()
+        {
+            try
+            {
+                var dispute = await _db.SolutionDispute.ToListAsync();
+                List<SolutionDisputeViewModel> disputeList = new List<SolutionDisputeViewModel>();
+                if (dispute.Count > 0)
+                {
+                    foreach (var data in dispute)
+                    {
+                        var solutionFundId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.SolutionFundId).FirstOrDefault();
+                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == solutionFundId).FirstOrDefault();
+                        if (solutionFundData != null)
+                        {
+                            SolutionDisputeViewModel disputeViewModel = new SolutionDisputeViewModel();
+                            disputeViewModel.Id = data.Id;
+                            disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == solutionFundData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                            var fullname = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            disputeViewModel.CreatedDate = data.CreatedDateTime;
+                            disputeList.Add(disputeViewModel);
+                        }
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = disputeList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        //GetDisputeData
+        [HttpPost]
+        [Route("GetDisputeData")]
+        public async Task<IActionResult> GetDisputeData([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                    if (disputeData != null)
+                    {
+                        var contractUserData = _db.ContractUser.Where(x => x.ContractId == disputeData.ContractId).ToList();
+                        List<SolutionDisputeViewModel> freelancerList = new List<SolutionDisputeViewModel>();
+                        if (contractUserData.Count > 0)
+                        {
+                            foreach (var data in contractUserData)
+                            {
+                                SolutionDisputeViewModel solutionDisputeView = new SolutionDisputeViewModel();
+                                var freelancerDetails = _db.Users.Where(x => x.Id == data.ApplicationUserId).FirstOrDefault();
+                                var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                                solutionDisputeView.FreelancerName = fullname;
+                                solutionDisputeView.FreelancerId = freelancerDetails.Id;
+                                solutionDisputeView.ContractId = disputeData.ContractId;
+                                freelancerList.Add(solutionDisputeView);
+                            }
+
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = freelancerList
+                            });
+
+                        }
+
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "No Data Available!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
+        //GetFreelancerConnectedId
+        [HttpPost]
+        [Route("GetFreelancerConnectedId")]
+        public async Task<IActionResult> GetFreelancerConnectedId([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var freelancerDetail = _db.Users.Where(x => x.Id == model.FreelancerId).Select(x => x.StripeConnectedId).FirstOrDefault();
+                    if (freelancerDetail != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Available",
+                            Result = freelancerDetail
+                        });
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Freelancer has no active stripe account"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
+        //RefundUserAmount
+        [HttpPost]
+        [Route("RefundUserAmount")]
+        public async Task<IActionResult> RefundUserAmount([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var transferId = _stripeAccountService.CreateTransferonCharge(long.Parse(model.TransferAmount), model.Currency, model.StripeConnectedId, model.LatestChargeId, model.Id.ToString());
+                    var contract = _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefault();
+                    var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId && x.ApplicationUserId == model.FreelancerId).FirstOrDefault();
+                    if (transferId != null)
+                    {
+
+                        contractUserData.StripeTranferId = transferId;
+                        contractUserData.IsTransfered = true;
+                        contractUserData.IsRefund = true;
+                        contractUserData.Amount = model.TransferAmount;
+                        contractUserData.RefundDateTime = DateTime.Now;
+
+                        _db.ContractUser.Update(contractUserData);
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Refund Succesfully !"
+                        });
+
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Something went wrong while refunding process please try again later !"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
         }
     }
 }

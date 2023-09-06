@@ -329,7 +329,7 @@ namespace Aephy.API.Models
 
             public string? Description { get; set; }
 
-            public List<SolutionSuccessfullProjectResult> projectResultList { get; set; } 
+            public List<SolutionSuccessfullProjectResult> projectResultList { get; set; }
         }
 
         public class solutionFundViewModel
@@ -355,11 +355,41 @@ namespace Aephy.API.Models
 
             public bool IsArchived { get; set; }
 
-            public SolutionFund.FundTypes  FundType { get; set; }
+            public SolutionFund.FundTypes FundType { get; set; }
 
             public bool IsCheckOutDone { get; set; }
 
             public bool MileStoneCheckout { get; set; }
+        }
+
+        public class SolutionDisputeViewModel
+        {
+            public int Id { get; set; }
+            public int ContractId { get; set; }
+
+            public string? ClientName { get; set; }
+
+            public string? SolutionName { get; set; }
+
+            public string? IndustryName { get; set; }
+
+            public string? AdminEmailId { get; set; }
+
+            public DateTime CreatedDate { get; set; }
+
+            public string? FreelancerName { get; set; }
+
+            public string? FreelancerId { get; set; }
+
+            public string? TransferAmount { get; set; }
+
+            public string? Currency { get; set; }
+
+            public string? StripeConnectedId { get; set; }
+
+            public string? LatestChargeId { get; set; }
+
+
         }
     }
 }

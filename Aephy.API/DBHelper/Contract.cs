@@ -67,5 +67,11 @@ namespace Aephy.API.DBHelper
         public bool IsTransfered { get; set; } = false;
         public string ApplicationUserId { get; set; }
         public int ContractId { get; set; }
+
+        public bool IsRefund { get; set; }
+
+        public DateTime RefundDateTime { get; set; }
+
+        public string? Amount { get; set; }
     }
 }

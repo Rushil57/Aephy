@@ -1791,7 +1791,75 @@ namespace Aephy.API.Controllers
             });
         }
 
+       
 
+        [HttpPost]
+        [Route("RaiseDispute")]
+        public async Task<IActionResult> RaiseDispute([FromBody] solutionFundViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var solutionfundId = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
+                    if (solutionfundId.Id != 0)
+                    {
+                        var contractId = await _db.Contract.Where(x => x.SolutionFundId == solutionfundId.Id).Select(x => x.Id).FirstOrDefaultAsync();
+                        if (contractId != 0)
+                        {
+                            var checkDisputeData = _db.SolutionDispute.Where(x => x.ContractId == contractId).FirstOrDefault();
+                            if(checkDisputeData != null)
+                            {
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "Dispute is already Raised !!",
+                                });
+                            }
+                            var data = new SolutionDispute()
+                            {
+                                ContractId = contractId,
+                                Status = "NOT RESOLVED",
+                                CreatedDateTime = DateTime.Now
+                            };
+
+                            _db.SolutionDispute.Add(data);
+                            _db.SaveChanges();
+
+                            SolutionDisputeViewModel solutionDisputeView = new SolutionDisputeViewModel();
+                            solutionDisputeView.ContractId = contractId;
+                            solutionDisputeView.SolutionName = _db.Solutions.Where(x => x.Id == solutionfundId.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            solutionDisputeView.IndustryName = _db.Industries.Where(x => x.Id == solutionfundId.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                            var fullname = _db.Users.Where(x => x.Id == model.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            solutionDisputeView.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            solutionDisputeView.AdminEmailId = _db.Users.Where(x => x.UserType == "Admin").Select(x => x.UserName).FirstOrDefault();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Dispute Raised",
+                                Result = solutionDisputeView
+                            });
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+               
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
 
     }
 }

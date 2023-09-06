@@ -755,6 +755,42 @@ namespace Aephy.WEB.Admin.Controllers
                 return "failed to receive data..";
             }
         }
+
+        public ActionResult DisputeRaised()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<string> GetDisputeList()
+        {
+            var disputeList = await _apiRepository.MakeApiCallAsync("api/Admin/GetDisputeList", HttpMethod.Get);
+            return disputeList;
+        }
+
+        //GetDisputeData
+        [HttpPost]
+        public async Task<string> GetDisputeData([FromBody] SolutionDisputeModel model)
+        {
+            var disputeData = await _apiRepository.MakeApiCallAsync("api/Admin/GetDisputeData", HttpMethod.Post, model);
+            return disputeData;
+        }
+
+        //GetFreelancerConnectedId
+        [HttpPost]
+        public async Task<string> GetFreelancerConnectedId([FromBody] SolutionDisputeModel model)
+        {
+            var disputeData = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancerConnectedId", HttpMethod.Post, model);
+            return disputeData;
+        }
+
+        //RefundUserAmount
+        [HttpPost]
+        public async Task<string> RefundUserAmount([FromBody] SolutionDisputeModel model)
+        {
+            var userdata = await _apiRepository.MakeApiCallAsync("api/Admin/RefundUserAmount", HttpMethod.Post, model);
+            return userdata;
+        }
     }
 }
 

@@ -165,4 +165,21 @@ namespace Aephy.WEB.Admin.Models
         public string? ResultValue { get; set; }
 
     }
+
+    public class SolutionDisputeModel
+    {
+        public int Id { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+        public string? TransferAmount { get; set; }
+
+        public string? Currency { get; set; }
+
+        public string? StripeConnectedId { get; set;}
+
+        public string? LatestChargeId { get; set; }
+
+        public int ContractId { get; set; }
+    }
 }

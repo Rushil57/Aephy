@@ -4,11 +4,11 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
 using Azure.Storage;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
+using Aephy.Helper.Helpers;
 
 namespace Aephy.WEB.Controllers
 {
@@ -19,12 +19,14 @@ namespace Aephy.WEB.Controllers
         private const string ImageContainerName = "profileimages";
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
+        private readonly string _rootPath;
 
-        public LandingPageController(IConfiguration configuration, IApiRepository apiRepository)
+        public LandingPageController(IConfiguration configuration, IApiRepository apiRepository, IWebHostEnvironment hostEnvironment)
         {
             _apiRepository = apiRepository;
             _configuration = configuration;
             _connectionString = configuration.GetConnectionString("AzureBlobStorage");
+            _rootPath = hostEnvironment.WebRootPath;
             _connectionString = "DefaultEndpointsProtocol=https;AccountName=aephystorageaccount;AccountKey=nEy6xh4P4m2d94iDgqq+yNB99bucjGMD1wp2L6sbsNFjHPaUQiCHgc5b4hmBmeRtYsiA/WvudVmV+AStwz3djw==;EndpointSuffix=core.windows.net";
         }
         public IActionResult Index()
@@ -566,6 +568,40 @@ namespace Aephy.WEB.Controllers
             return userData;
         }
 
-        //GetFundProgress
+        //RaiseDispute
+        [HttpPost]
+        public async Task<string> RaiseDispute([FromBody] SolutionFundModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.ClientId = userId;
+            var Data = await _apiRepository.MakeApiCallAsync("api/Client/RaiseDispute", HttpMethod.Post, model);
+            dynamic jsonObj = JsonConvert.DeserializeObject(Data);
+
+            if (jsonObj["Message"] == "Dispute Raised")
+            {
+                string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/DisputeTemplate.html");
+                var result = jsonObj.Result;
+                var receiverEmailId = result.AdminEmailId.Value;
+                var contractId = result.ContractId.Value.ToString();
+                body = body.Replace("{{ contract_Id }}", contractId);
+                body = body.Replace("{{ client_name }}", result.ClientName.Value);
+                body = body.Replace("{{ solution_name }}", result.SolutionName.Value);
+                body = body.Replace("{{ Industry_name }}", result.IndustryName.Value);
+
+                bool send = SendEmailHelper.SendEmail(receiverEmailId, "Dispute Raised", body);
+
+                if (!send)
+                {
+                    return "Dispute email not send.";
+                }
+            }
+           
+
+            return Data;
+        }
     }
 }

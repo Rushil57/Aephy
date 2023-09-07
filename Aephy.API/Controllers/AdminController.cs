@@ -2933,13 +2933,15 @@ namespace Aephy.API.Controllers
                             disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
                             disputeViewModel.CreatedDate = data.CreatedDateTime;
                             var disputeResolved = data.Status;
-                            if(disputeResolved == "RESOLVED"){
+                            if(disputeResolved == "RESOLVED")
+                            {
                                 disputeViewModel.IsDisputeResolved = true;
                             }
                             else
                             {
                                 disputeViewModel.IsDisputeResolved = false;
                             }
+                            disputeViewModel.ContractId = data.ContractId;
                             disputeList.Add(disputeViewModel);
                         }
                     }
@@ -3168,7 +3170,7 @@ namespace Aephy.API.Controllers
                                 Message = "Dispute UnResolved !!",
                             });
                         }
-                       
+
                     }
 
                 }
@@ -3191,5 +3193,161 @@ namespace Aephy.API.Controllers
 
 
         }
+
+        //GetContractFreelancerList
+        [HttpPost]
+        [Route("GetContractFreelancerList")]
+        public async Task<IActionResult> GetContractFreelancerList([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    if (model.ContractId != 0)
+                    {
+                        var contractUserData = await _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToListAsync();
+                        List<SolutionDisputeViewModel> ContractUserList = new List<SolutionDisputeViewModel>();
+                        if (contractUserData.Count > 0)
+                        {
+                            foreach (var data in contractUserData)
+                            {
+                                SolutionDisputeViewModel disputeData = new SolutionDisputeViewModel();
+                                var freelancerDetails = _db.Users.Where(x => x.Id == data.ApplicationUserId).FirstOrDefault();
+                                disputeData.FreelancerName = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                                disputeData.TransferAmount = data.Amount;
+                                disputeData.CreatedDate = data.RefundDateTime;
+                                ContractUserList.Add(disputeData);
+                            }
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = ContractUserList
+                            });
+
+                        }
+                    }
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
+
+        //GetActiveProjectList
+        [HttpGet]
+        [Route("GetActiveProjectList")]
+        public async Task<IActionResult> GetActiveProjectList()
+        {
+            try
+            {
+                var successPaymentList = await _db.Contract.Where(x => x.PaymentStatus == Contract.PaymentStatuses.Paid).ToListAsync();
+                List<SolutionDisputeViewModel> successProjectList = new List<SolutionDisputeViewModel>();
+                if (successPaymentList.Count > 0)
+                {
+                    foreach (var data in successPaymentList)
+                    {
+                        SolutionDisputeViewModel disputeViewModel = new SolutionDisputeViewModel();
+                        disputeViewModel.ContractId = data.Id;
+                        disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                        var fullname = _db.Users.Where(x => x.Id == data.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                        disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
+                        disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
+                        bool PaymentStopped = false;
+                        var IsPaymentStopped = _db.SolutionStopPayment.Where(x => x.ContractId == data.Id).FirstOrDefault();
+                        if(IsPaymentStopped != null)
+                        {
+                            PaymentStopped = true;
+                            disputeViewModel.IsPaymentStop = PaymentStopped;
+                        }
+                        else
+                        {
+                            disputeViewModel.IsPaymentStop = PaymentStopped;
+                        }
+
+
+                        successProjectList.Add(disputeViewModel);
+
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = successProjectList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("StopClientPayment")]
+        public async Task<IActionResult> StopClientPayment([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var paymentData = new SolutionStopPayment()
+                    {
+                        ContractId = model.ContractId,
+                        Reason = model.StopPaymentReason,
+                        StopPaymentDateTime = DateTime.Now,
+                    };
+                    await _db.SolutionStopPayment.AddAsync(paymentData);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Payment Stop Successfully !",
+
+                    });
+
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "No Data Found",
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
     }
 }
+
+
+

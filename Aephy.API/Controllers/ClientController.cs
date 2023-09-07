@@ -1324,6 +1324,8 @@ namespace Aephy.API.Controllers
                                 PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                                 PaymentIntentId = string.Empty,
                                 SolutionFundId = model.SolutionFundId,
+                                SolutionId = model.SolutionId,
+                                IndustryId = model.IndustryId,
 
                             };
                             _db.Contract.Add(contractSave);
@@ -2056,6 +2058,9 @@ namespace Aephy.API.Controllers
                             var fullname = _db.Users.Where(x => x.Id == model.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             solutionDisputeView.ClientName = fullname.FirstName + " " + fullname.LastName;
                             solutionDisputeView.AdminEmailId = _db.Users.Where(x => x.UserType == "Admin").Select(x => x.UserName).FirstOrDefault();
+
+                            solutionfundId.IsDispute = true;
+                            _db.SaveChanges();
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {

@@ -183,5 +183,7 @@ namespace Aephy.WEB.Admin.Models
         public int ContractId { get; set; }
 
         public bool IsDisputeResolved { get; set; }
+
+        public string? StopPaymentReason { get; set; }
     }
 }

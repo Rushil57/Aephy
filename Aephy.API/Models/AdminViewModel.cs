@@ -391,6 +391,11 @@ namespace Aephy.API.Models
 
             public bool IsDisputeResolved { get; set; }
 
+            public string? Milestone { get; set; }
+
+            public string? StopPaymentReason { get; set; }
+
+            public bool IsPaymentStop { get; set; }
 
         }
         public class CustomSolutionsModel

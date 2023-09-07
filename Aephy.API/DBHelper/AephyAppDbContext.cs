@@ -55,6 +55,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<CustomSolutions> CustomSolutions { get; set; }
 
+        public DbSet<SolutionStopPayment> SolutionStopPayment { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

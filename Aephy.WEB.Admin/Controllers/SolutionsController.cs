@@ -545,15 +545,15 @@ namespace Aephy.WEB.Admin.Controllers
             var result = JsonConvert.DeserializeObject<SolutionTopProfessionalViewModel>(TopProfessionalData);
             var Data = await _apiRepository.MakeApiCallAsync("api/Admin/AddTopProfessionalData", HttpMethod.Post, result);
             dynamic data = JsonConvert.DeserializeObject(Data);
-                if (data["Message"] != "indexOverflow".Trim())
+            if (data["Message"] != "indexOverflow".Trim())
+            {
+                if (httpPostedFileBase != null)
                 {
-                    if (httpPostedFileBase != null)
-                    {
-                        var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
-                        await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
-                    }
-
+                    var fileData = await SaveImageFile(httpPostedFileBase, result.FreelancerId);
+                    await _apiRepository.MakeApiCallAsync("api/Admin/UpdateUserProfileImage", HttpMethod.Post, fileData);
                 }
+
+            }
             return Data;
         }
 
@@ -705,7 +705,7 @@ namespace Aephy.WEB.Admin.Controllers
             }
         }
 
-        
+
         [HttpPost]
         public async Task<string> RemoveHighlightData([FromBody] SolutionIdModel model)
         {
@@ -721,7 +721,7 @@ namespace Aephy.WEB.Admin.Controllers
             }
         }
 
-       
+
         [HttpPost]
         public async Task<string> GetTopProfessionalDetails([FromBody] SolutionIdModel model)
         {
@@ -740,7 +740,7 @@ namespace Aephy.WEB.Admin.Controllers
                             var imageUrlWithSas = $"{data.Result.FreelancerData.ImagePath}?{sasToken}";
                             data.Result.FreelancerData.ImageUrlWithSas = imageUrlWithSas;
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -799,6 +799,37 @@ namespace Aephy.WEB.Admin.Controllers
             var Disputedata = await _apiRepository.MakeApiCallAsync("api/Admin/DisputeResolved", HttpMethod.Post, model);
             return Disputedata;
         }
+
+        //GetContractFreelancerList
+        [HttpPost]
+        public async Task<string> GetContractFreelancerList([FromBody] SolutionDisputeModel model)
+        {
+            var Disputedata = await _apiRepository.MakeApiCallAsync("api/Admin/GetContractFreelancerList", HttpMethod.Post, model);
+            return Disputedata;
+        }
+
+        public ActionResult ActiveProjects()
+        {
+            return View();
+        }
+
+        //GetActiveProjectList
+        [HttpGet]
+        public async Task<string> GetActiveProjectList()
+        {
+            var disputeList = await _apiRepository.MakeApiCallAsync("api/Admin/GetActiveProjectList", HttpMethod.Get);
+            return disputeList;
+        }
+
+        //StopClientPayment
+        [HttpPost]
+        public async Task<string> StopClientPayment([FromBody] SolutionDisputeModel model)
+        {
+            var clientPayment = await _apiRepository.MakeApiCallAsync("api/Admin/StopClientPayment", HttpMethod.Post,model);
+            return clientPayment;
+        }
+
+
     }
 }
 

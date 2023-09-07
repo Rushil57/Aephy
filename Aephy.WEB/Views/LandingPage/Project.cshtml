@@ -1536,15 +1536,32 @@
               $("#solutionfund-furtherprogress").text("Pay " +  milestoneData.Title);
               $("#solutionfund-details").text('Raise a Dispute');
 
-              if(data.FundType == 0){
-               $("#solutionfund-projectPay").css("pointer-events","none")
-               $("#solutionfund-furtherprogress").css("pointer-events","auto")
-               }
+               if(data.IsDispute){
+                   // $("#solutionfund-furtherprogress").css("background-color","#ed6d01db");
+                   // $("#solutionfund-projectPay").css("background-color","#ed6d01db");
+                   // $("#solutionfund-projectPay").css("color","black");
+                   // $("#solutionfund-furtherprogress").css("color","black");
+                   //   // $("#solutionfund-projectPay").css("pointer-events","none")
+                     //   $("#solutionfund-furtherprogress").css("pointer-events","none")
+
+                     $("#solutionfund-furtherprogress").addClass('disabled');
+                     $("#solutionfund-projectPay").addClass('disabled');
+                }
+                else{
+                    if(data.FundType == 0)
+                    {
+                       $("#solutionfund-projectPay").css("pointer-events","none")
+                       $("#solutionfund-furtherprogress").css("pointer-events","auto")
+                    }
+                }
+              
                //else{
                //    $("#solutionfund-projectPay").css("pointer-events","auto")
                //    $("#solutionfund-furtherprogress").css("pointer-events","none")
                //}
            }
+
+          
            
    }
 
@@ -1575,6 +1592,9 @@
                 success: function (result) {
                     if(result.Message == "Dispute Raised"){
                         showToaster("success", "Success", result.Message);
+                        $("#solutionfund-furtherprogress").css("background-color","#d38b4ecf");
+                        $("#solutionfund-projectPay").css("background-color","#d38b4ecf");
+                        $("#solutionfund-projectPay").css("cursor","not-allowed");
                     }else{
                         showToaster("warning", "Warning!", result.Message);
                     }

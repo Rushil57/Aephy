@@ -15,7 +15,8 @@
                                 <th scope="col">ClientName</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Action</th>
-                                <th scope="col">Issue Resolved?</th>
+                                <th scope="col">Dispute Resolved?</th>
+                                <th scope="col">View</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,6 +81,41 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal" id="ContractUsersPopup" tabindex="-1" aria-labelledby="ContractUsersPopup" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Contract Users Details</h4>
+                    <a class="close" onclick="CloseContractUsersPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body pt-5">
+
+                                    <table class="table table-borderless datatable" id="ContractUsersList">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Applicants Name</th>
+                                                <th scope="col">Refund Amount</th>
+                                                <th scope="col">Refund DateTime</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
@@ -88,7 +124,7 @@
         $("form[name='DisputeForm']").validate({
             rules: {
                 drpfreelancer: { required: true },
-                amount : { required: true },
+                amount: { required: true },
                 chargedId: { required: true },
             },
             messages: {
@@ -137,25 +173,35 @@
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
-                                 if (full.IsDisputeResolved){
+                                if (full.IsDisputeResolved) {
                                     $("#frelancer-Refund_" + full.Id).attr('disabled', true);
-                                    $("#frelancer-Refund_" + full.Id).css("pointer-events", "none")
-                                    return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</a>';
-                                 }else{
-                                    return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</a>';
-                                 }
-                                
+                                    $("#frelancer-Refund_" + full.Id).css("cursor", "not-allowed");
+                                    $("#frelancer-Refund_" + full.Id).css("pointer-events", "all");
+                                    // return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</a>';
+                                    return '<button class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</button>';
+                                } else {
+                                    // return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</a>';
+                                    return '<button class="btn btn-primary" id="frelancer-Refund_' + data + '" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</button>';
+                                }
+
                             }
                         },
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
-                                if (full.IsDisputeResolved){
+                                if (full.IsDisputeResolved) {
                                     return '<label class="switch"><input type="checkbox" id="DisputeStatus" class="cls-disputeToggle" onchange=DisputeResolved(' + data + ') checked><span class="slider round"></span></label>';
-                                }else{
+                                } else {
                                     return '<label class="switch"><input type="checkbox" id="DisputeStatus_' + data + '" class="cls-disputeToggle" onchange=DisputeResolved(' + data + ')><span class="slider round"></span></label>';
                                 }
-                                
+
+                            }
+                        },
+                        {
+                            "data": "ContractId",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" class="btn btn-primary" onclick=ViewFreelancerDetails(' + data + ');>View</a>';
+
                             }
                         },
 
@@ -201,9 +247,9 @@
 
     }
 
-    function GetFreelancerConnectedId(){
+    function GetFreelancerConnectedId() {
         var freelancerId = $("#drp-FreeLancer").val();
-        if(freelancerId != ''){
+        if (freelancerId != '') {
             var data = {
                 FreelancerId: freelancerId
             };
@@ -215,7 +261,7 @@
                 dataType: "json",
                 data: JSON.stringify(data),
                 success: function (result) {
-                    if (result.Message == "Data Available"){
+                    if (result.Message == "Data Available") {
                         $("#FreelancerStripeConnectedId").val(result.Result);
                     } else {
                         showToaster("warning", "Warning !", "Something went wrong !!");
@@ -230,7 +276,7 @@
         }
     }
 
-    function ClosePopUpModel(){
+    function ClosePopUpModel() {
         $("#drp-FreeLancer").val('');
         $("#Amount").val(0);
         $("#ChargedId").val("");
@@ -239,16 +285,16 @@
         $("#ContractId").val(0);
     }
 
-    function ResetForm(){
+    function ResetForm() {
         $("#drp-FreeLancer").val('');
         $("#Amount").val(0);
         $("#ChargedId").val("");
     }
 
-    function RefundUserAmount(){
+    function RefundUserAmount() {
         var data = {
             TransferAmount: $("#Amount").val(),
-            Currency : "eur",
+            Currency: "eur",
             StripeConnectedId: $("#FreelancerStripeConnectedId").val(),
             LatestChargeId: $("#ChargedId").val(),
             ContractId: $("#ContractId").val(),
@@ -262,7 +308,7 @@
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                if (result.Message == "Refund Succesfully !"){
+                if (result.Message == "Refund Succesfully !") {
                     ResetForm()
                     showToaster("success", "Success !", result.Message);
                 } else {
@@ -284,9 +330,9 @@
         setTimeout(function () {
             var data = {
                 Id: Id,
-                IsDisputeResolved: $("#DisputeStatus_"+Id).is(':checked'),
+                IsDisputeResolved: $("#DisputeStatus_" + Id).is(':checked'),
             };
-           
+
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DisputeResolved", "Solutions")",
@@ -296,7 +342,7 @@
                 success: function (result) {
                     showToaster("success", "Success !", result.Message);
                     GetDisputeList();
-                    
+
 
                     $("#preloader").hide();
                 },
@@ -309,6 +355,52 @@
 
     }
 
+    function ViewFreelancerDetails(Id){
+        var data = {
+            ContractId: Id,
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetContractFreelancerList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#ContractUsersPopup").modal('show')
+                $('#ContractUsersList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        { "data": "FreelancerName" },
+                        { "data": "TransferAmount" },
+                        {
+                            "data": "CreatedDate",
+                            "render": function (data, type, full, meta) {
+                                if (full.CreatedDate != '0001-01-01T00:00:00') {
+                                    var date = moment(data).format('DD-MM-YYYY HH:MM:SS');;
+                                    return '<span>' + date + '</span>';
+                                }else{
+                                    return '<span></span>';
+                                }
+                               
+                            }
+                        }
+                    ]
+                });
+                $("#preloader").hide();
 
 
+               
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function CloseContractUsersPopup(){
+        $("#ContractUsersPopup").modal('hide')
+    }
 </script>

@@ -1364,7 +1364,12 @@
             url: "@Url.Action("CheckOut", "LandingPage")",
             data: JSON.stringify(data),
             success: function (result) {
-                window.location.href = result.Result;
+                if(result.Message != "success"){
+                    showToaster("warning", "Warning !", result.Message);
+                }else{
+                    window.location.href = result.Result;
+                }
+                
                 $("#preloader").hide();
             },
             error: function (result) {

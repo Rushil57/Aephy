@@ -181,5 +181,7 @@ namespace Aephy.WEB.Admin.Models
         public string? LatestChargeId { get; set; }
 
         public int ContractId { get; set; }
+
+        public bool IsDisputeResolved { get; set; }
     }
 }

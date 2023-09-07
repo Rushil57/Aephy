@@ -791,6 +791,14 @@ namespace Aephy.WEB.Admin.Controllers
             var userdata = await _apiRepository.MakeApiCallAsync("api/Admin/RefundUserAmount", HttpMethod.Post, model);
             return userdata;
         }
+
+        //DisputeResolved
+        [HttpPost]
+        public async Task<string> DisputeResolved([FromBody] SolutionDisputeModel model)
+        {
+            var Disputedata = await _apiRepository.MakeApiCallAsync("api/Admin/DisputeResolved", HttpMethod.Post, model);
+            return Disputedata;
+        }
     }
 }
 

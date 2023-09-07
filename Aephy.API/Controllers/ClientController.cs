@@ -1307,8 +1307,6 @@ namespace Aephy.API.Controllers
             try
             {
                 var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
-
-                //var contractData = await _db.Contract.Where(x => x.MileStoneId == model.Id).FirstOrDefaultAsync();
                 var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id).FirstOrDefaultAsync();
 
                 if (contractData == null)
@@ -1330,43 +1328,78 @@ namespace Aephy.API.Controllers
                             };
                             _db.Contract.Add(contractSave);
                             _db.SaveChanges();
+
+                            List<ContractUser> contractUsers = new List<ContractUser>();
+                            var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+                            && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+                            foreach (var item in fl)
+                            {
+                                contractUsers.Add(new ContractUser()
+                                {
+                                    Percentage = 10,
+                                    StripeTranferId = string.Empty,
+                                    IsTransfered = false,
+                                    ApplicationUserId = item.Id,
+                                    ContractId = contractSave.Id
+                                });
+                            }
+                            _db.ContractUser.AddRange(contractUsers);
+                            _db.SaveChanges();
                         }
                         else
                         {
-                            contractSave = new Contract()
+                            var contractDetails = _db.Contract.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId).FirstOrDefault();
+                            if(contractDetails == null)
                             {
-                                ClientUserId = model.UserId,
-                                SolutionId = model.SolutionId,
-                                IndustryId = model.IndustryId,
-                                //MileStone = mileStone,
-                                PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                                PaymentIntentId = string.Empty,
-                                SolutionFundId = model.SolutionFundId,
+                                contractSave = new Contract()
+                                {
+                                    ClientUserId = model.UserId,
+                                    SolutionId = model.SolutionId,
+                                    IndustryId = model.IndustryId,
+                                    //MileStone = mileStone,
+                                    PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                                    PaymentIntentId = string.Empty,
+                                    SolutionFundId = model.SolutionFundId,
 
-                            };
-                            _db.Contract.Add(contractSave);
-                            _db.SaveChanges();
-                        }
-                        
+                                };
+                                _db.Contract.Add(contractSave);
+                                _db.SaveChanges();
 
-                        List<ContractUser> contractUsers = new List<ContractUser>();
-                        //
-                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
-                        && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
-                        foreach (var item in fl)
-                        {
-                            contractUsers.Add(new ContractUser()
+                                List<ContractUser> contractUsers = new List<ContractUser>();
+                                var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+                                && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+                                foreach (var item in fl)
+                                {
+                                    contractUsers.Add(new ContractUser()
+                                    {
+                                        Percentage = 10,
+                                        StripeTranferId = string.Empty,
+                                        IsTransfered = false,
+                                        ApplicationUserId = item.Id,
+                                        ContractId = contractSave.Id
+                                    });
+                                }
+                                _db.ContractUser.AddRange(contractUsers);
+                                _db.SaveChanges();
+                            }
+                            else
                             {
-                                Percentage = 10,
-                                StripeTranferId = string.Empty,
-                                IsTransfered = false,
-                                ApplicationUserId = item.Id,
-                                ContractId = contractSave.Id
-                            });
+                                var solutionFundData = _db.SolutionFund.Where(x => x.Id == contractDetails.SolutionFundId).FirstOrDefault();
+                                if(solutionFundData != null)
+                                {
+                                    if(solutionFundData.ProjectStatus == "COMPLETED")
+                                    {
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = "Payment is already done for this project",
+                                        });
+                                    }
+                                }
+                            }
+                           
                         }
-                        //
-                        _db.ContractUser.AddRange(contractUsers);
-                        _db.SaveChanges();
+                       
                     }
 
                 }

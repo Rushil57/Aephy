@@ -14,8 +14,8 @@
                                 <th scope="col">IndustryName</th>
                                 <th scope="col">ClientName</th>
                                 <th scope="col">Date</th>
-                                <th scope="col"></th>
-
+                                <th scope="col">Action</th>
+                                <th scope="col">Issue Resolved?</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,13 +127,37 @@
                         { "data": "SolutionName" },
                         { "data": "IndustryName" },
                         { "data": "ClientName" },
-                        { "data": "CreatedDate" },
+                        {
+                            "data": "CreatedDate",
+                            "render": function (data, type, full, meta) {
+                                var date = moment(data).format('DD-MM-YYYY HH:MM:SS');;
+                                return '<span>' + date + '</span>';
+                            }
+                        },
                         {
                             "data": "Id",
                             "render": function (data, type, full, meta) {
-                                return '<a href="#" class="btn btn-primary" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</a>';
+                                 if (full.IsDisputeResolved){
+                                    $("#frelancer-Refund_" + full.Id).attr('disabled', true);
+                                    $("#frelancer-Refund_" + full.Id).css("pointer-events", "none")
+                                    return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</a>';
+                                 }else{
+                                    return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</a>';
+                                 }
+                                
                             }
-                        }
+                        },
+                        {
+                            "data": "Id",
+                            "render": function (data, type, full, meta) {
+                                if (full.IsDisputeResolved){
+                                    return '<label class="switch"><input type="checkbox" id="DisputeStatus" class="cls-disputeToggle" onchange=DisputeResolved(' + data + ') checked><span class="slider round"></span></label>';
+                                }else{
+                                    return '<label class="switch"><input type="checkbox" id="DisputeStatus_' + data + '" class="cls-disputeToggle" onchange=DisputeResolved(' + data + ')><span class="slider round"></span></label>';
+                                }
+                                
+                            }
+                        },
 
                     ]
                 });
@@ -165,7 +189,7 @@
                 $.each(result.Result, function (data, value) {
                     $("#drp-FreeLancer").append($("<option     />").val(value.FreelancerId).text(value.FreelancerName));
                 });
-                
+
                 $("#ContractId").val(result.Result[0].ContractId);
                 $("#preloader").hide();
             },
@@ -193,7 +217,7 @@
                 success: function (result) {
                     if (result.Message == "Data Available"){
                         $("#FreelancerStripeConnectedId").val(result.Result);
-                    }else{
+                    } else {
                         showToaster("warning", "Warning !", "Something went wrong !!");
                     }
                     $("#preloader").hide();
@@ -241,10 +265,10 @@
                 if (result.Message == "Refund Succesfully !"){
                     ResetForm()
                     showToaster("success", "Success !", result.Message);
-                }else{
+                } else {
                     showToaster("error", "Error !", result.Message);
                 }
-                
+
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -253,4 +277,38 @@
             }
         });
     }
+
+
+    function DisputeResolved(Id) {
+        $("#preloader").show();
+        setTimeout(function () {
+            var data = {
+                Id: Id,
+                IsDisputeResolved: $("#DisputeStatus_"+Id).is(':checked'),
+            };
+           
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DisputeResolved", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    showToaster("success", "Success !", result.Message);
+                    GetDisputeList();
+                    
+
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }, 2000);
+
+    }
+
+
+
 </script>

@@ -389,6 +389,8 @@ namespace Aephy.API.Models
 
             public string? LatestChargeId { get; set; }
 
+            public bool IsDisputeResolved { get; set; }
+
 
         }
         public class CustomSolutionsModel

@@ -2932,6 +2932,14 @@ namespace Aephy.API.Controllers
                             var fullname = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
                             disputeViewModel.CreatedDate = data.CreatedDateTime;
+                            var disputeResolved = data.Status;
+                            if(disputeResolved == "RESOLVED"){
+                                disputeViewModel.IsDisputeResolved = true;
+                            }
+                            else
+                            {
+                                disputeViewModel.IsDisputeResolved = false;
+                            }
                             disputeList.Add(disputeViewModel);
                         }
                     }
@@ -3028,7 +3036,7 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var freelancerDetail = _db.Users.Where(x => x.Id == model.FreelancerId).Select(x => x.StripeConnectedId).FirstOrDefault();
+                    var freelancerDetail = await _db.Users.Where(x => x.Id == model.FreelancerId).Select(x => x.StripeConnectedId).FirstOrDefaultAsync();
                     if (freelancerDetail != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -3075,8 +3083,8 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var transferId = _stripeAccountService.CreateTransferonCharge(long.Parse(model.TransferAmount), model.Currency, model.StripeConnectedId, model.LatestChargeId, model.Id.ToString());
-                    var contract = _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefault();
+                    var transferId = _stripeAccountService.CreateTransferonCharge(long.Parse(model.TransferAmount), model.Currency, model.StripeConnectedId, model.LatestChargeId, model.ContractId.ToString());
+                    var contract = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
                     var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId && x.ApplicationUserId == model.FreelancerId).FirstOrDefault();
                     if (transferId != null)
                     {
@@ -3104,6 +3112,64 @@ namespace Aephy.API.Controllers
                         StatusCode = StatusCodes.Status200OK,
                         Message = "Something went wrong while refunding process please try again later !"
                     });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
+        //DisputeResolved
+        [HttpPost]
+        [Route("DisputeResolved")]
+        public async Task<IActionResult> DisputeResolved([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                    if(disputeData != null)
+                    {
+                        if(model.IsDisputeResolved)
+                        {
+                            disputeData.Status = "RESOLVED";
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Dispute Resolved !!",
+                            });
+                        }
+                        else
+                        {
+                            disputeData.Status = "NOT RESOLVED";
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Dispute UnResolved !!",
+                            });
+                        }
+                       
+                    }
 
                 }
 

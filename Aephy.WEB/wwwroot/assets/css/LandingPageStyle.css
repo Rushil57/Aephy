@@ -1904,3 +1904,16 @@ padding-top: 5%;
     font-weight: 700;
     color: var(--font-title);
 }
+.search-item{
+    cursor:pointer;
+}
+
+.form-check-input[type=checkbox] {
+    border-radius: 0.25em !important;   
+}
+.form-check-input:checked {
+    background-color:var(--brand);
+}
+.error{
+    color:red;
+}

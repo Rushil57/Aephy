@@ -47,8 +47,25 @@
                             </div>
                             <div class="col-3">
                                 <div class="search-bar">
-                                    <form class="search-form d-flex align-items-center" method="POST" action="#">
-                                        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                    <form class="search-form d-flex align-items-center dropdown" method="POST" action="#">
+                                        <input type="text" name="query" placeholder="Search" title="Enter search keyword" autocomplete="off" data-search>@* data-bs-toggle="dropdown" *@
+                                        <ul class="dropdown-menu dropdown-menu-end w-100">
+                                            <li class="dropdown-item">
+                                                <div data-filter-item data-filter-name="service1" class="search-item">service1</div>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <div data-filter-item data-filter-name="service2" class="search-item">service2</div>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <div data-filter-item data-filter-name="service3" class="search-item">service3</div>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <div data-filter-item data-filter-name="service4" class="search-item">service4</div>
+                                            </li>
+                                            <li class="dropdown-item">
+                                                <div data-filter-item data-filter-name="service5" class="search-item">service5</div>
+                                            </li>
+                                        </ul>
                                         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                                     </form>
                                 </div><!-- End Search Bar -->
@@ -113,18 +130,18 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                </li>
+                                                                                                                                    <li class="nav-item">
+                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                                                                                                    </li>
+                                                                                                                                    <li class="nav-item">
+                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                                                                                                    </li>
                                             }
                                             else
                                             {
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
-                                                </li>
+                                                                                                                                    <li class="nav-item">
+                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
+                                                                                                                                    </li>
                                             }
                                         }
 
@@ -288,7 +305,8 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <div id="preloader"></div>
+    <div id="preloader" class="main-preloader"></div>
+    <div id="preloader" class="local-preloader" style="display:none;"></div>
 
     <!-- Terms Of Services Modal -->
     <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModal" aria-hidden="true">
@@ -1054,12 +1072,13 @@
                                 </div>
 
                                 <div class="col-lg-6  order-3 order-lg-3">
-                                    <form action="#">
+                                    <form name="selectForm">
                                         <div class="col d-flex flex-column">
                                             <div class="requestmodal-div">Select Service</div>
                                             <select class="dropdown form-select" name="service" id="drp-popServices" onchange="ServicesValue()">
                                                 <option value="All">All Services</option>
                                             </select>
+                                            <label class="error required-error" id="service-validate">This field is required.</label>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
@@ -1067,6 +1086,7 @@
                                             <select class="dropdown form-select" name="level" id="drp-popSolutions" onchange="SolutionValues()">
                                                 <option value="All">All Solutions</option>
                                             </select>
+                                            <label class="error required-error" id="solution-validate">This field is required.</label>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
@@ -1074,9 +1094,11 @@
                                             <select class="dropdown form-select" name="solution" id="drp-popIndustries">
                                                 <option value="All">All Industries</option>
                                             </select>
+                                            <label class="error required-error" id="industry-validate">This field is required.</label>
                                         </div>
-
-
+                                        <div class="col d-flex justify-content-end">
+                                        <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -1095,30 +1117,34 @@
                                 </div>
 
                                 <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
-                                    <form action="#">
+                                    <form name="ProjectInfoForm">
                                         <div class="col d-flex flex-column">
                                             <label data-aos="fade-up">What's the project title</label>
-                                            <input type="text" class="form-control" placeholder='Example: Create AI roadmap'>
+                                            <input type="text" name="ProjectTitle" id="ProjectTitle" class="form-control" placeholder='Example: Create AI roadmap'>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Description</label>
-                                            <input type="text" class="form-control" placeholder='Include all the relevant project details'>
+                                            <input type="text" name="ProjectDescription" id="ProjectDescription" class="form-control" placeholder='Include all the relevant project details'>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Attach relevant file</label>
-                                            <input type="file" class="form-control">
+                                            <input type="file" name="projFile" id="projFile" class="form-control">
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Delivery time</label>
-                                            <input type="date" class="form-control" id="delivery-time">
+                                            <input type="date" name="DeliveryTime" class="form-control" id="delivery-time">
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Budget</label>
-                                            <input type="text" class="form-control" placeholder='1,50,000'>
+                                            <input type="text" name="BudgetAmount" id="BudgetAmount" class="form-control" placeholder='1,50,000'>
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            <a class="btn btn-brand my-3 mx-0" id="PreviousButton" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
+                                            <a class="btn btn-brand my-3 mx-0" id="postProjectInfo">Next</a>
                                         </div>
                                     </form>
                                 </div>
@@ -1140,19 +1166,32 @@
                                 <div class="col-lg-6 order-3 order-lg-3" id="workingForm">
                                     <div>
                                         @*<label style="font-weight: bold;font-size: 20px;">Client Working Availbility</label>*@
-                                        <form action="#" style="padding-top: 3%;">
+                                        <form name="workingInfoForm" style="padding-top: 3%;">
                                             <div class="col d-flex flex-column">
                                                 <label data-aos="fade-up">Working Days</label>
                                                 <div class="row pt-2">
                                                     <div class="col">
                                                         <label>Start Date : </label>
-                                                        <input type="date" class="form-control" id="start-date">
+                                                        <input type="date" class="form-control" id="start-date" name="startDate">
                                                     </div>
                                                     <div class="col">
                                                         <label>End Date : </label>
-                                                        <input type="date" class="form-control" id="end-date">
+                                                        <input type="date" class="form-control" id="end-date" name="endDate">
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="input-group">
+                                                            <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
+                                                            <label for="excludeWeekends" class="form-label px-2">Exclude weekends (Saturday / Sunday)</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <label for="holidaysLst" class="form-label">Other holidays</label>
+                                                        <div class="input-group">
+                                                            <textarea class="form-control" id="holidaysLst" name="holidaysLst" style="height:100px;"></textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <label data-aos="fade-up" class="mt-2" id="labelWorkDays"></label>
                                             </div>
 
                                             <div class="col d-flex flex-column pt-4">
@@ -1161,13 +1200,17 @@
                                                 <div class="row pt-2">
                                                     <div class="col">
                                                         <label>Start Hour : </label>
-                                                        <input type="time" class="form-control" id="start-hour">
+                                                        <input type="time" name="startTime" class="form-control" id="start-hour">
                                                     </div>
                                                     <div class="col">
                                                         <label>End Hour : </label>
-                                                        <input type="time" class="form-control" id="end-hour">
+                                                        <input type="time" name="endTime" class="form-control" id="end-hour">
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col d-flex justify-content-end">
+                                                <a class="btn btn-brand my-3 mx-0" id="PreviousButton" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
+                                                <a class="btn btn-brand my-3 mx-0" id="postWorkingInfo">Confirm</a>
                                             </div>
                                         </form>
                                     </div>
@@ -1175,10 +1218,10 @@
                             </div>
                         </div>
 
-                        <div class="col d-flex justify-content-end">
+                        @* <div class="col d-flex justify-content-end">
                             <a class="btn btn-brand my-3 mx-0" id="PreviousButton" style="display:none;" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
                             <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
 
@@ -1187,7 +1230,6 @@
     </div>
 
     <!-- Vendor JS Files -->
-
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
@@ -1205,7 +1247,7 @@
             /**
             * Preloader
             */
-            const preloader = document.querySelector('#preloader');
+            const preloader = document.querySelector('.main-preloader');
             if (preloader) {
                 window.addEventListener('load', () => {
                     preloader.remove();
@@ -1228,17 +1270,236 @@
             }
         })
 
+        $('#postProjectInfo').on('click', function () {
+            var form = $("form[name='ProjectInfoForm']");
+            form.validate({
+                rules: {
+                    ProjectTitle: { required: true },
+                    ProjectDescription: { required: true },
+                    projFile: {required: true},
+                    DeliveryTime: { required: true },
+                    BudgetAmount: { required: true }
+                },
+                messages: {
+                    ProjectTitle: { required: "Please enter title" },
+                    ProjectDescription: { required: "Please enter description" },
+                    projFile: {required: "Please attach your project document"},
+                    DeliveryTime: { required: "Please select date to deliver project" },
+                    BudgetAmount: { required: "Please enter BudgetAmount" }
+                }
+            });
+            if (form.valid() === true) {
+                GetClientForm(this);
+            }
+        });
+
+        $('#postWorkingInfo').on('click', function () {
+            var form = $("form[name='workingInfoForm']");
+            form.validate({
+                rules: {
+                    startDate: { required: true },
+                    endDate: { required: true },
+                    startTime: { required: true },
+                    endTime: { required: true }
+                },
+                messages: {
+                    startDate: { required: "Please select start date" },
+                    endDate: { required: "Please select end date" },
+                    startTime: { required: "Please select starting hours" },
+                    endTime: { required: "Please select ending hours" }
+                }
+            });
+            if (form.valid() === true) {
+                GetClientForm(this);
+            }
+        });
+
         function CloseprivacyPolicyModal() {
             $("#privacyPolicyModal").modal('hide')
         }
         function OpenprivacyPolicyModal() {
             $("#privacyPolicyModal").modal('show')
         }
+        $('[data-search]').on('keyup', function () {
+            var searchVal = $(this).val();
+            var filterItems = $('[data-filter-item]');
+            if (searchVal != '') {
+                filterItems.parent().addClass('d-none');
+                $('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').parent().removeClass('d-none');
+            } else {
+                filterItems.parent().removeClass('d-none');
+            }
+        });
+
+        $('[data-filter-item]').on('click', function () {
+            var text = $(this).data('filterName');
+            $('[data-search]').val(text);
+        });
+
+        $('#start-date').on('change', function () {
+            getBusinessDays();
+        });
+        $('#end-date').on('change', function () {
+            getBusinessDays();
+        });
+
+        $("form[name='addSolutiondescribeForm']").validate({
+            rules: {
+                service: {
+                    required: {
+                        depends: function (element) {
+                            return $("#drp-popServices").val() == "All";
+                        }
+                    }
+                },
+                level: {
+                    required: {
+                        depends: function (element) {
+                            return $("#drp-popSolutions").val() == "All";
+                        }
+                    }
+                },
+                solution: {
+                    required: {
+                        depends: function (element) {
+                            return $("#drp-popIndustries").val() == "All";
+                        }
+                    }
+                }
+            },
+            messages: {
+                    service: {
+                        required: "Please select an option from the list..",
+                    },
+                level: {
+                        required: "Please select an option from the list..",
+                    },
+                solution: {
+                    required: "Please select an option from the list..",
+                },
+            }
+            });
+
+        function getBusinessDays(){
+            var firstDate = $('#start-date').val();
+            var lastDate = $('#end-date').val();
+            var totalBusinessDays = 0;
+            if (firstDate != 'undefined' && lastDate != 'undefined' && firstDate != '' && lastDate != '') {
+                if (firstDate < lastDate) {
+                    var calcUrl = "/LandingPage/BusinessDaysUntil?firstDay=" + firstDate + "&lastDay=" + lastDate;
+                    $.ajax({
+                        type: "GET",
+                        url: calcUrl,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (businessDays) {
+                            totalBusinessDays = businessDays;
+                            if (totalBusinessDays > 0) {
+                                var label = "Total business Days : " + totalBusinessDays;
+                                $('#labelWorkDays').text(label);
+                                $('#labelWorkDays').css('display', 'block');
+                                sessionStorage.setItem("BusinessDays", totalBusinessDays);                                
+                            }else{
+                                sessionStorage.setItem("BusinessDays", 0);
+                            }
+                        },
+                        error: function (result) {
+                            alert("failure");
+                            $('#labelWorkDays').css('display', 'none');
+                            sessionStorage.setItem("BusinessDays", 0);
+                        }
+                    });
+                } else {
+                    alert("'End-Date' must be larger than 'Start-Date'..");
+                    $('#labelWorkDays').css('display', 'none');
+                    sessionStorage.setItem("BusinessDays", 0);
+                }
+            }else{
+                $('#labelWorkDays').text('');
+                //$('#labelWorkDays').css('display', 'none');
+                sessionStorage.setItem("BusinessDays", 0);
+            }
+        }
+
+        function SaveRequestedProposal() {
+            $("#preloader").show();
+            var fileUpload = $("#projFile").get(0);
+            var files = fileUpload.files;
+
+            var Solutiondata = {
+                ID: 0,
+                ServiceId: $('#drp-popServices').val(),
+                SolutionId: $('#drp-popSolutions').val(),
+                IndustryId: $('#drp-popIndustries').val(),
+                SolutionTitle: $('#ProjectTitle').val(),
+                SoultionDescription: $('#ProjectDescription').val(),
+                DeliveryTime: $('#delivery-time').val(),
+                Budget: $('#BudgetAmount').val(),
+                StartDate: $('#start-date').val(),
+                EndDate: $('#end-date').val()
+            }
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            formData.append("SolutionData", JSON.stringify(Solutiondata));
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveRequestedProposal","LandingPage")",
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                data: formData,
+                success: function (result) { 
+                    $("#preloader").hide();
+                    if(result != null && result.StatusCode != 200){
+                        showToaster("error", "Error !", result.Message);
+                    }else{
+                        showToaster("success", "Success !", result.Message);
+                    }
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    if(result.Message != null || result.Message != ""){
+                        showToaster("error", "Error !", result.Message);
+                    }else{
+                        showToaster("error", "Error !", "Something went wrong !!");
+                    }
+                }
+            });
+        }
 
         function GetClientForm(data) {
             var Buttonclickvalue = $('#PostButton').text();
             if (data.text == "Confirm") {
                 $("#confirmation").modal('hide')
+                var businessDaysCount = sessionStorage.getItem("BusinessDays");
+                if(businessDaysCount != null && businessDaysCount > 0){   
+                    $("#preloader").show();
+                    var data = {
+                        Id: 0,
+                        StartDate: $('#start-date').val(),
+                        EndDate: $('#end-date').val(),
+                        SolutionId: $('#drp-popSolutions').val(),
+                        IndustryId: $('#drp-popIndustries').val(),
+                        HolidaysList: $('#holidaysLst').val(),
+                        isExcludeWeekends: $('#excludeWeekends').is(':checked')
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("SaveClientAvailability","LandingPage")",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify(data),
+                        success: function (result) {
+                            //showToaster("success", "Success !", result.Message);
+                        },
+                        error: function (result) {
+                            showToaster("error", "Error !", "Something went wrong !!");
+                        }
+                    });
+                    SaveRequestedProposal();
+                }
             }
             if (data.text == "Previous") {
                 if ($("#ClientForm").is(":visible")) {
@@ -1257,21 +1518,54 @@
                 }
             }
             else {
-                if ($("#ServicesForm").is(":visible")) {
-                    $("#ServicesForm").css("display", "none")
-                    $("#ClientForm").css("display", "block")
-                    $("#WorkingHourForm").css("display", "none")
-                    $("#PreviousButton").css("display", "block")
-                    $("#PostButton").text("Next")
-                    return
+                var serviceValidator = $('#service-validate');
+                var solutionValidator = $('#solution-validate');
+                var industryalidator = $('#industry-validate');
+                if ($("#drp-popServices").val() == "All" || $("#drp-popSolutions").val() == "All" || $("#drp-popIndustries").val() == "All") {
+                    if ($("#drp-popServices").val() == "All") {
+                        serviceValidator.text('This field is required.');
+                        serviceValidator.css('display', 'inline-block');
+                    }else{
+                        serviceValidator.text('');
+                        serviceValidator.css('display', 'none');
+                    }
+                    if ($("#drp-popSolutions").val() == "All") {
+                        solutionValidator.text('This field is required.');
+                        solutionValidator.css('display', 'inline-block');
+                    }else{
+                        solutionValidator.text('');
+                        solutionValidator.css('display', 'none');
+                    }
+
+                    if ($("#drp-popIndustries").val() == "All") {
+                        industryalidator.text('This field is required.');
+                        industryalidator.css('display', 'inline-block');
+                    }else{
+                        industryalidator.text('');
+                        industryalidator.css('display', 'none');
+                    }
+
                 }
-                if ($("#ClientForm").is(":visible")) {
-                    $("#ServicesForm").css("display", "none")
-                    $("#ClientForm").css("display", "none")
-                    $("#WorkingHourForm").css("display", "block")
-                    $("#PreviousButton").css("display", "block")
-                    $("#PostButton").text("Confirm")
-                }
+                    else {
+                    industryalidator.css('display', 'none');
+                    solutionValidator.css('display', 'none');
+                    serviceValidator.css('display', 'none');
+                        if ($("#ServicesForm").is(":visible")) {
+                            $("#ServicesForm").css("display", "none")
+                            $("#ClientForm").css("display", "block")
+                            $("#WorkingHourForm").css("display", "none")
+                            $("#PreviousButton").css("display", "block")
+                            $("#PostButton").text("Next")
+                            return
+                        }
+                        if ($("#ClientForm").is(":visible")) {
+                            $("#ServicesForm").css("display", "none")
+                            $("#ClientForm").css("display", "none")
+                            $("#WorkingHourForm").css("display", "block")
+                            $("#PreviousButton").css("display", "block")
+                            $("#PostButton").text("Confirm")
+                        }
+                    }
             }
 
         }
@@ -1293,15 +1587,21 @@
         }
 
         function OpenPostModalPopup() {
+            $('#service-validate').css('display', 'none');
+            $('#solution-validate').css('display', 'none');
+            $('#industry-validate').css('display', 'none');
             $("#drp-popIndustries").val("All")
             $("#drp-popServices").val("All")
             $("#drp-popSolutions").val("All")
             $("#confirmation").modal('show')
+            $('#labelWorkDays').css('display', 'none');
             $("#start-hour").val("");
             $("#end-hour").val("");
             $("#end-date").val("");
             $("#start-date").val("");
             $("#delivery-time").val("");
+            $('#holidaysLst').val("");
+            $('#excludeWeekends').prop('checked');
             $("#ServicesForm").css("display", "block")
             $("#ClientForm").css("display", "none")
             $("#PreviousButton").css("display", "none")

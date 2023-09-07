@@ -51,6 +51,9 @@ namespace Aephy.API.DBHelper
         public DbSet<SolutionFund> SolutionFund { get; set; }
 
         public DbSet<SolutionDispute> SolutionDispute { get; set; }
+        public DbSet<ClientAvailability> ClientAvailability { get; set; }
+
+        public DbSet<CustomSolutions> CustomSolutions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

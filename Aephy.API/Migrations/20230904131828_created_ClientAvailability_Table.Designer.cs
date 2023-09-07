@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230904131828_created_ClientAvailability_Table")]
+    partial class created_ClientAvailability_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,29 +136,29 @@ namespace Aephy.API.Migrations
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.ClientAvailability", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<DateTime?>("AvailableDate")
-                    .HasColumnType("datetime2");
+                    b.Property<DateTime?>("AvailableDate")
+                        .HasColumnType("datetime2");
 
-                b.Property<string>("ClientId")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ClientId")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<int?>("IndustryId")
-                    .HasColumnType("int");
+                    b.Property<int?>("IndustryId")
+                        .HasColumnType("int");
 
-                b.Property<int?>("SolutionId")
-                    .HasColumnType("int");
+                    b.Property<int?>("SolutionId")
+                        .HasColumnType("int");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("ClientAvailability");
-            });
+                    b.ToTable("ClientAvailability");
+                });
 
             modelBuilder.Entity("Aephy.API.DBHelper.ClientDetails", b =>
                 {
@@ -214,9 +217,6 @@ namespace Aephy.API.Migrations
                     b.Property<int>("SessionStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("SolutionFundId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SolutionId")
                         .HasColumnType("int");
 
@@ -238,27 +238,18 @@ namespace Aephy.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Amount")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ContractId")
+                    b.Property<int?>("ContractId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsRefund")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsTransfered")
                         .HasColumnType("bit");
 
                     b.Property<int>("Percentage")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("RefundDateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("StripeTranferId")
                         .HasColumnType("nvarchar(max)");
@@ -271,59 +262,6 @@ namespace Aephy.API.Migrations
 
                     b.ToTable("ContractUser");
                 });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.CustomSolutions", b =>
-            {
-                b.Property<int>("ID")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                b.Property<string>("BlobStorageBaseUrl")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<decimal>("Budget")
-                    .HasColumnType("decimal(18,2)");
-
-                b.Property<string>("ClientId")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<DateTime>("DeliveryTime")
-                    .HasColumnType("datetime2");
-
-                b.Property<string>("DocumentPath")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<string>("DocumentUrlWithSas")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<DateTime>("EndDate")
-                    .HasColumnType("datetime2");
-
-                b.Property<int>("IndustryId")
-                    .HasColumnType("int");
-
-                b.Property<int>("ServiceId")
-                    .HasColumnType("int");
-
-                b.Property<int>("SolutionId")
-                    .HasColumnType("int");
-
-                b.Property<string>("SolutionTitle")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<string>("SoultionDescription")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<DateTime>("StartDate")
-                    .HasColumnType("datetime2");
-
-                b.HasKey("ID");
-
-                b.ToTable("CustomSolutions");
-            });
 
             modelBuilder.Entity("Aephy.API.DBHelper.FreelancerDetails", b =>
                 {
@@ -640,31 +578,6 @@ namespace Aephy.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SolutionDefine");
-                });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.SolutionDispute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisputeReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SolutionDispute");
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.SolutionFund", b =>
@@ -1150,9 +1063,7 @@ namespace Aephy.API.Migrations
 
                     b.HasOne("Aephy.API.DBHelper.Contract", null)
                         .WithMany("ContractUsers")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ContractId");
 
                     b.Navigation("ApplicationUser");
                 });

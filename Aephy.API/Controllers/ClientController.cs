@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Identity;
@@ -1791,9 +1792,198 @@ namespace Aephy.API.Controllers
             });
         }
 
-       
+        [HttpPost]
+        [Route("saveClientAvailabilityData")]
+        public async Task<IActionResult> saveClientAvailabilityData([FromBody] ClientAvailabilityModel model)
+        {
+            if (model != null)
+            {
+                if (!string.IsNullOrEmpty(model.ClientId))
+                {
+                    var checkUserExistance = _db.CustomSolutions.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    if (checkUserExistance != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Already Exists !!" });
+                    }
+                    DateTime[] holidays = model.Holidays;
+                    DateTime firstDay = Convert.ToDateTime(model.StartDate);
+                    DateTime lastDay = Convert.ToDateTime(model.EndDate);
+                    var list = new List<ClientAvailability>();
+                    int daysCount = 0;
+                    if (model.isExcludeWeekends == true)
+                    {
+                        for (DateTime date = firstDay; date <= lastDay; date = date.AddDays(1))
+                        {
+                            if (firstDay.DayOfWeek != DayOfWeek.Saturday && firstDay.DayOfWeek != DayOfWeek.Sunday && !holidays.Contains(date)) // && !bankHolidays.Contains(date)
+                            {
+                                ClientAvailability obj = new ClientAvailability
+                                {
+                                    ClientId = model.ClientId,
+                                    AvailableDate = firstDay,
+                                    SolutionId = model.SolutionId,
+                                    IndustryId = model.IndustryId
+                                };
+                                list.Add(obj);
+                                daysCount++;
+                            }
+                            firstDay = firstDay.AddDays(1);
+                        }
+                        if (!list.IsNullOrEmpty())
+                        {
+                            await _db.ClientAvailability.AddRangeAsync(list);
+                            await _db.SaveChangesAsync();
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data saved successfully",
+                            Result = daysCount
+                        });
+                    }
+                    else
+                    {
+                        for (DateTime date = firstDay; date <= lastDay; date = date.AddDays(1))
+                        {
+                            if (!holidays.Contains(date)) // && !bankHolidays.Contains(date)
+                            {
+                                ClientAvailability obj = new ClientAvailability
+                                {
+                                    ClientId = model.ClientId,
+                                    AvailableDate = firstDay,
+                                    SolutionId = model.SolutionId,
+                                    IndustryId = model.IndustryId
+                                };
+                                list.Add(obj);
+                                daysCount++;
+                            }
+                            firstDay = firstDay.AddDays(1);
+                        }
+                        if (!list.IsNullOrEmpty())
+                        {
+                            await _db.ClientAvailability.AddRangeAsync(list);
+                            await _db.SaveChangesAsync();
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data saved successfully",
+                            Result = daysCount
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Please signUp as 'Client' !!"
+                    });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
 
         [HttpPost]
+        [Route("SaveRequestedProposal")]
+        public async Task<IActionResult> SaveRequestedProposal([FromBody] CustomSolutionsModel model)
+        {
+            try
+            {
+                if (model.ClientId == null || model.ClientId == "")
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Please signUp as 'Client' !!" });
+                }
+                var checkUserExistance = _db.CustomSolutions.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.ServiceId == model.ServiceId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                if (checkUserExistance != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You already have submitted custom project request !" });
+                }
+                var customSolution_data = new CustomSolutions()
+                {
+                    ClientId = model.ClientId,
+                    ServiceId = model.ServiceId,
+                    SolutionId = model.SolutionId,
+                    IndustryId = model.IndustryId,
+                    SolutionTitle = model.SolutionTitle,
+                    SoultionDescription = model.SoultionDescription,
+                    DeliveryTime = model.DeliveryTime,
+                    Budget = Convert.ToDecimal(model.Budget),
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate
+                };
+
+                await _db.CustomSolutions.AddAsync(customSolution_data);
+                var result = _db.SaveChanges();
+                if (result != 0)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Submitted Successfully",
+                        Result = customSolution_data.ID
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+        }
+        [HttpPost]
+        [Route("UpdateSolutionDocument")]
+        public async Task<IActionResult> UpdateSolutionDocument([FromBody] CustomSolutionDocument model)
+        {
+            if (model.AlreadyExistDocument)
+            {
+                var applicantsDetails = _db.CustomSolutions.Where(x => x.ID == model.ID).FirstOrDefault();
+                if (applicantsDetails != null)
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Your request submitted Successfully !"
+                    });
+            }
+            else
+            {
+                if (model.ID != 0)
+                {
+                    var UpdateDocument = _db.CustomSolutions.Where(x => x.ID == model.ID).FirstOrDefault();
+                    if (UpdateDocument != null)
+                    {
+
+                        UpdateDocument.BlobStorageBaseUrl = model.BlobStorageBaseUrl;
+                        UpdateDocument.DocumentPath = model.DocumentPath;
+                        UpdateDocument.DocumentUrlWithSas = model.DocumentUrlWithSas;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Your request submitted Successfully !"
+                        });
+                    }
+                }
+            }
+            //return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
+
+    [HttpPost]
         [Route("RaiseDispute")]
         public async Task<IActionResult> RaiseDispute([FromBody] solutionFundViewModel model)
         {

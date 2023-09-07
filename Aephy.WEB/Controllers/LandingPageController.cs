@@ -9,6 +9,9 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Aephy.Helper.Helpers;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Joker.Extensions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.WEB.Controllers
 {
@@ -17,6 +20,7 @@ namespace Aephy.WEB.Controllers
         private readonly IApiRepository _apiRepository;
         private const string ContainerName = "cvfiles";
         private const string ImageContainerName = "profileimages";
+        private const string customSolutionContainer = "customsolutionfiles";
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
         private readonly string _rootPath;
@@ -106,7 +110,121 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
+        [HttpGet]
+        public int BusinessDaysUntil(DateTime firstDay, DateTime lastDay, DateTime[]? bankHolidays) //,DateTime[]? bankHolidays
+        {
+            firstDay = firstDay.Date;
+            lastDay = lastDay.Date;
+            int days = 0;
 
+            for (DateTime date = firstDay; date <= lastDay; date = date.AddDays(1))
+            {
+                if (firstDay.DayOfWeek != DayOfWeek.Saturday && firstDay.DayOfWeek != DayOfWeek.Sunday && !bankHolidays.Contains(date)) // && !bankHolidays.Contains(date)
+                {
+                    days++;
+                }
+                firstDay = firstDay.AddDays(1);
+            }
+
+            return days;
+        }
+
+        [HttpPost]
+        public async Task<string> SaveClientAvailability([FromBody] ClientAvailabilityModel model)
+        {
+            string userType = HttpContext.Session.GetString("LoggedUserRole");
+            string clientID = HttpContext.Session.GetString("LoggedUser");
+
+            if (!string.IsNullOrEmpty(userType) && userType == "Client" && !string.IsNullOrEmpty(clientID))
+            {
+                model.ClientId = clientID.ToString();
+            }
+            else
+            {
+                model.ClientId = null;
+            }
+            string holidaysList = model.HolidaysList;
+            DateTime firstDay = model.StartDate != null ? Convert.ToDateTime(model.StartDate) : DateTime.Now;
+            DateTime lastDay = model.EndDate != null ? Convert.ToDateTime(model.EndDate) : DateTime.Now;
+            DateTime[] holidays = new DateTime[0];
+            var response = string.Empty;
+            if (holidaysList != null && holidaysList != "")
+            {
+                var holidaysLst = holidaysList.Split(';');
+                holidays = holidaysLst.Select(x => DateTime.Parse(x)).ToArray();
+            }
+            model.Holidays = holidays;
+            if (firstDay < lastDay)
+            {
+                response = await _apiRepository.MakeApiCallAsync("api/Client/saveClientAvailabilityData", HttpMethod.Post, model);
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public async Task<string> SaveRequestedProposal(IFormFile httpPostedFileBase, string SolutionData)
+        {
+            try
+            {
+                IFormFile CustomSolutionFile = httpPostedFileBase;
+                var result = JsonConvert.DeserializeObject<CustomSolutionsModel>(SolutionData);
+
+
+                string userType = HttpContext.Session.GetString("LoggedUserRole");
+                string clientID = HttpContext.Session.GetString("LoggedUser");
+
+                if (!string.IsNullOrEmpty(userType) && userType == "Client" && !string.IsNullOrEmpty(clientID))
+                {
+                    result.ClientId = clientID;
+                }
+                var response = await _apiRepository.MakeApiCallAsync("api/Client/SaveRequestedProposal", HttpMethod.Post, result);
+
+                dynamic data = JsonConvert.DeserializeObject(response);
+
+                //return response;
+                if (data.Message == "Submitted Successfully")
+                {
+                    if (result.AlreadyExistDocument)
+                    {
+                        int Id = data.Result;
+                        CustomSolutionDocument customSolution = new CustomSolutionDocument();
+                        customSolution.AlreadyExistDocument = true;
+                        customSolution.ID = Id;
+                        //opengigroles.FreelancerId = freelancer;
+                        var ok = await _apiRepository.MakeApiCallAsync("api/Client/UpdateSolutionDocument", HttpMethod.Post, customSolution);
+                        return response;
+                    }
+                    else
+                    {
+                        if (data != null)
+                        {
+
+                            int Id = data.Result;
+                            var d = await UploadSolutionDocument(CustomSolutionFile, Id);
+                            var ok = await _apiRepository.MakeApiCallAsync("api/Client/UpdateSolutionDocument", HttpMethod.Post, d);
+                            dynamic UploadResponse = JsonConvert.DeserializeObject(ok);
+                            if (UploadResponse != null)
+                            {
+                                return ok;
+                            }
+                            else
+                            {
+                                return "Failed to submit your Request !";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return "Failed to submit your Request !";
+        }
 
         public ActionResult FAQ()
         {
@@ -382,6 +500,67 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        public async Task<CustomSolutionDocument> UploadSolutionDocument(IFormFile CustomSolutionFile, object Id)
+        {
+            CustomSolutionDocument solutionDocumentModel = new CustomSolutionDocument();
+            try
+            {
+                if (CustomSolutionFile != null && CustomSolutionFile.Length > 0)
+                {
+                    string BlobStorageBaseUrl = string.Empty;
+                    string DocumentPath = string.Empty;
+                    string DocumentUrlWithSas = string.Empty;
+
+                    string fileName = Guid.NewGuid().ToString() + "_" + CustomSolutionFile.FileName;
+
+                    // Get the Azure Blob Storage connection string from configuration
+                    var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(customSolutionContainer);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream = CustomSolutionFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+
+                    DocumentPath = blobClient.Uri.ToString();
+
+
+                    string sasToken = GenerateSasToken(DocumentPath);
+
+
+                    string cvUrlWithSas = DocumentPath + sasToken;
+
+
+
+                    BlobStorageBaseUrl = containerClient.Uri.ToString();
+
+
+                    DocumentUrlWithSas = cvUrlWithSas;
+
+                    solutionDocumentModel.BlobStorageBaseUrl = BlobStorageBaseUrl;
+                    solutionDocumentModel.DocumentPath = DocumentPath;
+                    solutionDocumentModel.DocumentUrlWithSas = DocumentUrlWithSas;
+                    solutionDocumentModel.ID = (int)(Id);
+
+                    return solutionDocumentModel;
+                }
+                else
+                {
+                    ModelState.AddModelError("DocumentFile", "Please select a document file.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return solutionDocumentModel;
+
+
+        }
         public async Task<OpenGigRolesCV> SaveCVFile(IFormFile CVFile, object Id)
         {
             OpenGigRolesCV opengigroles = new OpenGigRolesCV();

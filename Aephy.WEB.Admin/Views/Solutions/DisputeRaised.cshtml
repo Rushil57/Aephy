@@ -174,9 +174,9 @@
                             "data": "ContractId",
                             "render": function (data, type, full, meta) {
                                 if (full.IsDisputeResolved) {
-                                    $("#frelancer-Refund_" + full.Id).attr('disabled', true);
-                                    $("#frelancer-Refund_" + full.Id).css("cursor", "not-allowed");
-                                    $("#frelancer-Refund_" + full.Id).css("pointer-events", "all");
+                                    $("#frelancer-Refund_" + data).attr('disabled', true);
+                                    $("#frelancer-Refund_" + data).css("cursor", "not-allowed");
+                                    $("#frelancer-Refund_" + data).css("pointer-events", "all");
                                     // return '<a href="#" class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</a>';
                                     return '<button class="btn btn-primary" id="frelancer-Refund_' + data + '">Refund to Freelancer</button>';
                                 } else {

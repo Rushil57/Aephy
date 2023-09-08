@@ -282,6 +282,13 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpGet]
+        public async Task<string> GetCareerOpenRoles()
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/GetEmployeeRolesList", HttpMethod.Get);
+            return RolesList;
+        }
+
+        [HttpGet]
         public async Task<string> GetServices()
         {
             var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/ServiceList", HttpMethod.Get);

@@ -85,61 +85,21 @@
 
             <div class="table-responsive">
                 <table class="table table-striped table-class" id="table-OpenRoles">
-
                     <thead>
                         <tr>
-                            <th>Department</th>
-                            <th>Title</th>
-                            <th>Type</th>
-                            <th>Location</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Description</th>
                         </tr>
 
                     </thead>
-
-                    <tbody>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Part-time</td>
-                            <td>NA</td>
-                        </tr>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Part-time</td>
-                            <td>NA</td>
-                        </tr>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Full-time</td>
-                            <td>NA</td>
-                        </tr>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Part-time</td>
-                            <td>NA</td>
-                        </tr>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Full-time</td>
-                            <td>NA</td>
-                        </tr>
-                        <tr>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>Full-time</td>
-                            <td>NA</td>
-                        </tr>
-                    </tbody>
-
                 </table>
 
 
                 <!-- Start Pagination -->
-                <div class='pagination-container'>
+                @* <div class='pagination-container'>
                     <nav>
                         <ul class="pagination">
 
@@ -152,7 +112,7 @@
                             </li>
                         </ul>
                     </nav>
-                </div>
+                </div> *@
             </div>
         </div> 
         <!--  Developed By Yasser Mas -->
@@ -245,5 +205,99 @@
 </main>
 
 <script src="~/assets/js/opengigroles.js"></script>
+
+<script>
+    $(document).ready(function () {
+        GetRolesList()
+    });
+    function getFilteredRoles() {
+        $("#preloader").show();
+        var filteredData = {
+            service: $('#select-services').val(),
+            solution: $('#select-solutions').val(),
+            level: $('#select-levels').val(),
+            industry: $('#select-industries').val()
+        };
+
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetFilteredRolesList", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: filteredData,
+            success: function (result) {
+                $('#table-OpenRoles').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "className": "cls-RolesId"
+                        },
+                        { "data": "ServiceName" },
+                        { "data": "SolutionName" },
+                        { "data": "Title" },
+                        { "data": "Level" },
+                        { "data": "IndustryName" },
+                        {
+                            "data": "ID",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
+
+                            }
+                        }
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function GetRolesList() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetCareerOpenRoles", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#table-OpenRoles').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "Id",
+                            "className": "cls-RolesId"
+                        },
+                        { "data": "Department" },
+                        { "data": "Title" },
+                        { "data": "Type" },
+                        { "data": "Location" },
+                        { "data": "JobDescription" }
+                        //{
+                          //  "data": "ID",
+                          //  "render": function (data, type, row) {
+                                //return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
+                                //return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
+
+                          //  }
+                       // }
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+</script>
 
 

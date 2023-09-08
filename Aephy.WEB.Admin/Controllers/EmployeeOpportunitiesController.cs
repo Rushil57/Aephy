@@ -71,13 +71,6 @@ namespace Aephy.WEB.Admin.Controllers
             return RolesList;
         }
 
-        [HttpGet]
-        public async Task<string> GetSolutionsList()
-        {
-            var solutionList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionList", HttpMethod.Get);
-            return solutionList;
-        }
-
         [HttpPost]
         public async Task<string> DeleteEmployeeRole([FromBody] EmployeeOpenRole rolesModel)
         {
@@ -99,31 +92,6 @@ namespace Aephy.WEB.Admin.Controllers
             }
             return "";
 
-        }
-
-        [HttpPost]
-        public async Task<string> GetSolutiondataById([FromBody] SolutionIdModel solutionsModel)
-        {
-            var serviceList = await _apiRepository.MakeApiCallAsync("api/Admin/SolutionDataById", HttpMethod.Post, solutionsModel);
-
-            string imageUrlWithSas = string.Empty;
-            dynamic data = JsonConvert.DeserializeObject(serviceList);
-            try
-            {
-                if (data["StatusCode"] == 200)
-                {
-                    string imagepath = data.Result.ImagePath;
-                    string sasToken = "";
-                    imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
-                    data.Result.ImageUrlWithSas = imageUrlWithSas;
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message + ex.InnerException;
-            }
-            string convertjsonTostring = JsonConvert.SerializeObject(data, Formatting.Indented);
-            return convertjsonTostring;
         }
 
         [HttpPost]

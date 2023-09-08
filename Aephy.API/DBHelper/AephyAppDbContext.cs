@@ -57,6 +57,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<SolutionStopPayment> SolutionStopPayment { get; set; }
 
+        public DbSet<EmployeeOpenRole> EmployeeOpenRole { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

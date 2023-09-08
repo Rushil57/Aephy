@@ -130,19 +130,31 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                                                                                                    <li class="nav-item">
-                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                                                                                                    </li>
-                                                                                                                                    <li class="nav-item">
-                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                                                                                                    </li>
+                                                                                                                                            <li class="nav-item">
+                                                                                                                                                <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                                                                                                            </li>
+                                                                                                                                            <li class="nav-item">
+                                                                                                                                                <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                                                                                                            </li>
                                             }
                                             else
                                             {
-                                                                                                                                    <li class="nav-item">
-                                                                                                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard">Dashboard</a>
-                                                                                                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                    </li>
+                    
+                                                    if (@Context.Session.GetString("UserProfileImage") != "")
+                                                    {
+                                                        <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                            <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
+                                                    }
                                             }
+                                            
                                         }
 
                                     </ul>
@@ -1253,7 +1265,7 @@
                     preloader.remove();
                 });
             }
-        });
+        });        
 
         var items = document.querySelectorAll('.carousel .carousel-item')
 
@@ -1269,6 +1281,13 @@
                 next = next.nextElementSibling
             }
         })
+
+        $(function () {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementsByName("DeliveryTime")[0].setAttribute('min', today);
+            document.getElementsByName("startDate")[0].setAttribute('min', today);
+            document.getElementsByName("endDate")[0].setAttribute('min', today);
+        });
 
         $('#postProjectInfo').on('click', function () {
             var form = $("form[name='ProjectInfoForm']");
@@ -1291,6 +1310,19 @@
             if (form.valid() === true) {
                 GetClientForm(this);
             }
+        });
+
+        $('#delivery-time').on('change', function () {
+            var deliveryTime = $(this).val();
+
+            var d = new Date();
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+
+            var currentDate = d.getFullYear() + '-' +
+                (month < 10 ? '0' : '') + month + '-' +
+                (day < 10 ? '0' : '') + day;
         });
 
         $('#postWorkingInfo').on('click', function () {

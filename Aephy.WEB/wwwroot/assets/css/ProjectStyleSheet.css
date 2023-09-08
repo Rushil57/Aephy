@@ -1655,3 +1655,90 @@ progress::-webkit-progress-value {
     border: 2px solid rgba(58,58,58,0.2);*/
     background-color: var(--aephy);
 }
+
+#feedback-form-wrapper #floating-icon > button {
+    position: fixed;
+    background-color: var(--brand);
+    right: 0;
+    top: 230px;
+    border: none;
+    transform: rotate(-90deg) translate(50%, -50%);
+    transform-origin: right;
+}
+
+#feedback-form-wrapper .rating-input-wrapper input[type="radio"] {
+    display: none;
+}
+
+    #feedback-form-wrapper .rating-input-wrapper input[type="radio"] ~ span {
+        cursor: pointer;
+    }
+
+    #feedback-form-wrapper .rating-input-wrapper input[type="radio"]:checked ~ span {
+        background-color: #4261dc;
+        color: #fff;
+    }
+
+#feedback-form-wrapper .rating-labels > label {
+    font-size: 14px;
+    color: #777;
+}
+
+/*#full-stars-example-two {*/
+.rating-group {
+    display: inline-flex;
+}
+
+/* make hover effect work properly in IE */
+.rating__icon {
+    pointer-events: none;
+}
+
+/* hide radio inputs */
+.rating__input {
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* hide 'none' input from screenreaders */
+.rating__input--none {
+    display: none
+}
+
+/* set icon padding and size */
+.rating__label {
+    cursor: pointer;
+    padding: 0 0.1em;
+    font-size: 2rem;
+}
+
+/* set default star color */
+.rating__icon--star {
+    color: orange;
+    font-size: 2rem !important;
+}
+
+/* if any input is checked, make its following siblings grey */
+.rating__input:checked ~ .rating__label .rating__icon--star {
+    color: #ddd;
+}
+
+/* make all stars orange on rating group hover */
+.rating-group:hover .rating__label .rating__icon--star {
+    color: orange;
+}
+
+/* make hovered input's following siblings grey on hover */
+.rating__input:hover ~ .rating__label .rating__icon--star {
+    color: #ddd;
+}
+
+/*}*/
+
+.sub-title {
+    color: rgba(68,68,68,0.5);
+}
+
+.error {
+    color: red;
+}

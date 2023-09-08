@@ -3351,6 +3351,232 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        [Route("GetEmployeeRolesList")]
+        public async Task<IActionResult> GetEmployeeRolesList()
+        {
+            try
+            {
+                //var listDB = _db.GigOpenRoles.Where(x => x.isActive == true).ToList();
+                var RoleslistDB = _db.EmployeeOpenRole.ToList();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = RoleslistDB
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
+        [Route("AddorEditEmployeeRoles")]
+        public async Task<IActionResult> AddorEditEmployeeRoles([FromBody] EmployeeOpenRolesModel model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    try
+                    {
+                        DateTime date = (DateTime)model.CreatedDateTime;
+                        var roles = new EmployeeOpenRole()
+                        {
+                            Department = model.Department,
+                            Title = model.Title,
+                            Type = model.Type,
+                            Location = model.Location,
+                            JobDescription = model.JobDescription,
+                            CreatedDateTime = date
+                        };
+                        _db.EmployeeOpenRole.Add(roles);
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Saved Succesfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        DateTime date = (DateTime)model.CreatedDateTime;
+                        var openRolesdata = _db.EmployeeOpenRole.Where(x => x.Id == model.Id).FirstOrDefault();
+                        if (openRolesdata != null)
+                        {
+                            openRolesdata.Department = model.Department;
+                            openRolesdata.Title = model.Title;
+                            openRolesdata.Type = model.Type;
+                            openRolesdata.Location = model.Location;
+                            openRolesdata.JobDescription = model.JobDescription;
+                            openRolesdata.CreatedDateTime = date;
+                            _db.SaveChanges();
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Saved Succesfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetEmployeeRolesDataById")]
+        public async Task<IActionResult> GetEmployeeRolesDataById([FromBody] EmployeeOpenRolesModel model)
+        {
+            try
+            {
+                EmployeeOpenRole EmployeeopenRoles = _db.EmployeeOpenRole.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (EmployeeopenRoles != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = EmployeeopenRoles
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteEmployeeRolesById")]
+        public async Task<IActionResult> DeleteEmployeeRolesById([FromBody] EmployeeOpenRolesModel rolesData)
+        {
+            try
+            {
+                EmployeeOpenRole openRolesRecord = _db.EmployeeOpenRole.Where(x => x.Id == rolesData.Id).FirstOrDefault();
+                if (openRolesRecord != null)
+                {
+                    _db.EmployeeOpenRole.Remove(openRolesRecord);
+                    var result = _db.SaveChanges();
+                    if (result != 0)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Deleted Successfully"
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+        }
+
+        /*[HttpGet]
+        [Route("FilteredRolesList")]
+        public async Task<IActionResult> FilteredRolesList(int serviceId, int solutionId, string level, int industryId)
+        {
+            try
+            {
+                var listDB = _db.GigOpenRoles.ToList();
+                var listSolution = _db.Solutions.ToList();
+                var listServiceSol = _db.SolutionServices.ToList();
+                var listService = _db.Services.ToList();
+                var listIndustry = _db.Industries.ToList();
+                var listIndustrySol = _db.SolutionIndustry.ToList();
+                List<dynamic> finalList = new List<dynamic>();
+
+                listDB.ForEach(x =>
+                {
+                    var solSer = listServiceSol.Where(t => t.SolutionId == x.SolutionId).FirstOrDefault();
+                    var service = new Services();
+                    if (solSer != null)
+                    {
+                        service = listService.Where(s => s.Id == solSer.ServicesId).FirstOrDefault();
+                    }
+
+                    var solInd = listIndustrySol.Where(t1 => t1.SolutionId == x.SolutionId).FirstOrDefault();
+                    var industry = new Industries();
+                    if (solInd != null)
+                    {
+                        industry = listIndustry.Where(s1 => s1.Id == solInd.IndustryId).FirstOrDefault();
+                    }
+                    var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
+                    dynamic obj = new
+                    {
+                        x.Level,
+                        x.Title,
+                        x.CreatedDateTime,
+                        x.ID,
+                        x.SolutionId,
+                        x.Description,
+                        SolutionName = solutionName,
+                        ServiceName = service?.ServicesName,
+                        IndustryName = industry?.IndustryName,
+                        ServiceId = service?.Id,
+                        IndustryId = industry?.Id,
+
+                    };
+                    finalList.Add(obj);
+                });
+
+                if (serviceId != 0)
+                    finalList = finalList.Where(x => x.ServiceId == serviceId).ToList();
+                if (solutionId != 0)
+                    finalList = finalList.Where(x => x.SolutionId == solutionId).ToList();
+                if (level != "0")
+                    finalList = finalList.Where(x => x.Level == level).ToList();
+                if (industryId != 0)
+                    finalList = finalList.Where(x => x.IndustryId == industryId).ToList();
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Success",
+                    Result = finalList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }*/
     }
 }
 

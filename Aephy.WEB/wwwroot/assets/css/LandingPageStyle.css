@@ -1917,3 +1917,30 @@ padding-top: 5%;
 .error{
     color:red;
 }
+#name-initial {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    font-size: 15px;
+    color: black;
+    background-color: #8080805e;
+    border-radius: 50%;
+    height: 46px;
+    width: 46px;
+    border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
+    margin-right: 5px;
+}
+.name-initial-image img {
+    height: 46px;
+    width: 46px;
+    border: 4px solid grey;
+}
+@media(max-width:992px){
+    .name-initial-image {
+        display:none !important;
+    }
+}

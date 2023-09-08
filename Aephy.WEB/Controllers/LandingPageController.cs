@@ -9,9 +9,6 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Aephy.Helper.Helpers;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Joker.Extensions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.WEB.Controllers
 {

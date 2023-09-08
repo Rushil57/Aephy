@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Aephy.API.DBHelper;
 using static Aephy.API.DBHelper.SolutionFund;
+using Stripe.Terminal;
 
 namespace Aephy.API.Models
 {
@@ -430,6 +431,17 @@ namespace Aephy.API.Models
             public bool AlreadyExistDocument { get; set; }
 
             public string? ClientId { get; set; }
+        }
+
+        public class EmployeeOpenRolesModel
+        {
+            public int Id { get; set; }
+            public string? Department { get; set; }
+            public string? Title { get; set; }
+            public string? Type { get; set; }
+            public string? Location { get; set; }
+            public string? JobDescription { get; set; }
+            public DateTime? CreatedDateTime { get; set; }
         }
     }
 }

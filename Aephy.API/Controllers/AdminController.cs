@@ -2972,10 +2972,10 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                    if (disputeData != null)
-                    {
-                        var contractUserData = _db.ContractUser.Where(x => x.ContractId == disputeData.ContractId).ToList();
+                    //var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                    //if (disputeData != null)
+                    //{
+                        var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToList();
                         List<SolutionDisputeViewModel> freelancerList = new List<SolutionDisputeViewModel>();
                         if (contractUserData.Count > 0)
                         {
@@ -2986,7 +2986,7 @@ namespace Aephy.API.Controllers
                                 var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
                                 solutionDisputeView.FreelancerName = fullname;
                                 solutionDisputeView.FreelancerId = freelancerDetails.Id;
-                                solutionDisputeView.ContractId = disputeData.ContractId;
+                                solutionDisputeView.ContractId = model.ContractId;
                                 freelancerList.Add(solutionDisputeView);
                             }
 
@@ -3000,7 +3000,7 @@ namespace Aephy.API.Controllers
 
                         }
 
-                    }
+                    //}
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -3264,27 +3264,32 @@ namespace Aephy.API.Controllers
                 {
                     foreach (var data in successPaymentList)
                     {
-                        SolutionDisputeViewModel disputeViewModel = new SolutionDisputeViewModel();
-                        disputeViewModel.ContractId = data.Id;
-                        disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
-                        disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                        var fullname = _db.Users.Where(x => x.Id == data.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                        disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
-                        disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
-                        bool PaymentStopped = false;
-                        var IsPaymentStopped = _db.SolutionStopPayment.Where(x => x.ContractId == data.Id).FirstOrDefault();
-                        if(IsPaymentStopped != null)
+                        var disputeData = _db.SolutionDispute.Where(x => x.ContractId == data.Id).FirstOrDefault();
+                        if(disputeData == null)
                         {
-                            PaymentStopped = true;
-                            disputeViewModel.IsPaymentStop = PaymentStopped;
-                        }
-                        else
-                        {
-                            disputeViewModel.IsPaymentStop = PaymentStopped;
-                        }
+                            SolutionDisputeViewModel disputeViewModel = new SolutionDisputeViewModel();
+                            disputeViewModel.ContractId = data.Id;
+                            disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                            var fullname = _db.Users.Where(x => x.Id == data.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
+                            bool PaymentStopped = false;
+                            var IsPaymentStopped = _db.SolutionStopPayment.Where(x => x.ContractId == data.Id).FirstOrDefault();
+                            if (IsPaymentStopped != null)
+                            {
+                                PaymentStopped = true;
+                                disputeViewModel.IsPaymentStop = PaymentStopped;
+                            }
+                            else
+                            {
+                                disputeViewModel.IsPaymentStop = PaymentStopped;
+                            }
 
 
-                        successProjectList.Add(disputeViewModel);
+                            successProjectList.Add(disputeViewModel);
+                        }
+                       
 
                     }
                 }

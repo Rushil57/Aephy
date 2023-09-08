@@ -1544,8 +1544,10 @@
                    //   // $("#solutionfund-projectPay").css("pointer-events","none")
                      //   $("#solutionfund-furtherprogress").css("pointer-events","none")
 
-                     $("#solutionfund-furtherprogress").addClass('disabled');
-                     $("#solutionfund-projectPay").addClass('disabled');
+                    $("#solutionfund-furtherprogress").addClass('disabled');
+                    $("#solutionfund-projectPay").addClass('disabled');
+                    $(".btn.disabled").css("background-color", "var(--brand)");
+                    $(".btn.disabled").css("color","black");
                 }
                 else{
                     if(data.FundType == 0)
@@ -1596,6 +1598,8 @@
                          $("#solutionfund-projectPay").css("cursor","not-allowed");
                             $("#solutionfund-furtherprogress").addClass('disabled');
                             $("#solutionfund-projectPay").addClass('disabled');
+                            $(".btn.disabled").css("background-color", "var(--brand)");
+                             $(".btn.disabled").css("color","black");
                     }else{
                         showToaster("warning", "Warning!", result.Message);
                     }

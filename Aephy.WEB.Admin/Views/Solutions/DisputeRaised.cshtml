@@ -171,7 +171,7 @@
                             }
                         },
                         {
-                            "data": "Id",
+                            "data": "ContractId",
                             "render": function (data, type, full, meta) {
                                 if (full.IsDisputeResolved) {
                                     $("#frelancer-Refund_" + full.Id).attr('disabled', true);
@@ -220,7 +220,7 @@
     function OpenRefundPopUp(Id) {
 
         var data = {
-            Id: Id
+            ContractId: Id
         };
         $("#preloader").show();
         $.ajax({

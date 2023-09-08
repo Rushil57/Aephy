@@ -14,6 +14,8 @@
                                 <th scope="col">Milestone</th>
                                 <th scope="col">ClientName</th>
                                 <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,6 +63,93 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="RefundPopUp" tabindex="-1" aria-labelledby="RefundPopUp" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dispute Details</h4>
+                    <a class="close" onclick="CloseRefundPopUpModel();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <form class="row g-3 mt-3" name="FreelancerForm">
+                                        <input type="hidden" id="ContractId" value="0">
+                                        <input type="hidden" id="FreelancerStripeConnectedId" value="0">
+                                        <div class="col-12">
+                                            <label for="FreelancerName" class="form-label">Freelancer Name</label>
+                                            <div class="input-group">
+                                                <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer" onchange="GetFreelancerConnectedId()">
+                                                    <option value="">Select Freelancer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="Amount" class="form-label">Amount to Transfer</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="Amount" name="amount">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="ChargedId" class="form-label">Last Charged Id</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="ChargedId" name="chargedId">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Transfer</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetFreelancerRefundForm();">Reset</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="ContractUsersPopup" tabindex="-1" aria-labelledby="ContractUsersPopup" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Contract Users Details</h4>
+                    <a class="close" onclick="CloseContractUsersPopup();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body pt-5">
+
+                                    <table class="table table-borderless datatable" id="ContractUsersList">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Applicants Name</th>
+                                                <th scope="col">Refund Amount</th>
+                                                <th scope="col">Refund DateTime</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
@@ -86,6 +175,29 @@
                 StopClientPayment()
             }
         });
+        $("form[name='FreelancerForm']").validate({
+            rules: {
+                drpfreelancer: { required: true },
+                amount: { required: true },
+                chargedId: { required: true },
+            },
+            messages: {
+                drpfreelancer: { required: "Please select freelancer name" },
+                amount: { required: "Please enter amount" },
+                chargedId: { required: "Please enter chargeid" },
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                RefundFreelancerAmount()
+            }
+        });
     })
 
     function GetActiveProjectList() {
@@ -106,17 +218,32 @@
                         { "data": "ClientName" },
                         {
                             "data": "ContractId",
-                            "render": function (data, type, full, meta) { 
+                            "render": function (data, type, full, meta) {
                                 if (full.IsPaymentStop) {
                                     $("#btn-payment_" + full.ContractId).attr('disabled', true);
                                     $("#btn-payment_" + full.ContractId).css("cursor", "not-allowed");
                                     $("#btn-payment_" + full.ContractId).css("pointer-events", "all");
                                     return '<button class="btn btn-primary"  id=btn-payment_' + data + '>Stop Payment</a>';
-                                    
+
                                 } else {
                                     return '<button class="btn btn-primary"  id=btn-payment_' + data + ' onclick=OpenPaymentModalPopUp(' + data + ');>Stop Payment</a>';
                                 }
-                                
+
+
+                            }
+                        },
+                        {
+                            "data": "ContractId",
+                            "render": function (data, type, full, meta) {
+                                return '<button class="btn btn-primary" onclick=OpenRefundPopUp(' + data + ');>Refund to Freelancer</button>';
+
+
+                            }
+                        },
+                        {
+                            "data": "ContractId",
+                            "render": function (data, type, full, meta) {
+                                return '<a href="#" class="btn btn-primary" onclick=ViewFreelancerDetails(' + data + ');>View</a>';
 
                             }
                         },
@@ -157,6 +284,8 @@
                     showToaster("success", "Success !", result.Message);
                     ResetPaymentForm();
                     $("#btn-payment_" + contractid).attr('disabled', true);
+                    $("#btn-payment_" + contractid).css("cursor", "not-allowed");
+                    $("#btn-payment_" + contractid).css("pointer-events", "all");
                 }
 
                 $("#preloader").hide();
@@ -172,5 +301,161 @@
         $("#ContractId").val(0)
         $("#PaymentReason").val("");
         $("#PaymentPopUp").modal('hide');
+    }
+
+    function OpenRefundPopUp(Id) {
+
+        var data = {
+            ContractId: Id
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetDisputeData", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#RefundPopUp").modal('show')
+                $("#drp-FreeLancer option:not(:first)").remove()
+                $.each(result.Result, function (data, value) {
+                    $("#drp-FreeLancer").append($("<option     />").val(value.FreelancerId).text(value.FreelancerName));
+                });
+
+                $("#ContractId").val(result.Result[0].ContractId);
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+
+    }
+
+    function GetFreelancerConnectedId() {
+        var freelancerId = $("#drp-FreeLancer").val();
+        if (freelancerId != '') {
+            var data = {
+                FreelancerId: freelancerId
+            };
+            $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetFreelancerConnectedId", "Solutions")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if (result.Message == "Data Available") {
+                        $("#FreelancerStripeConnectedId").val(result.Result);
+                    } else {
+                        showToaster("warning", "Warning !", "Something went wrong !!");
+                    }
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
+        }
+    }
+
+    function RefundFreelancerAmount() {
+        var data = {
+            TransferAmount: $("#Amount").val(),
+            Currency: "eur",
+            StripeConnectedId: $("#FreelancerStripeConnectedId").val(),
+            LatestChargeId: $("#ChargedId").val(),
+            ContractId: $("#ContractId").val(),
+            FreelancerId: $("#drp-FreeLancer").val(),
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RefundUserAmount", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Message == "Refund Succesfully !") {
+                    ResetFreelancerRefundForm()
+                    showToaster("success", "Success !", result.Message);
+                } else {
+                    showToaster("error", "Error !", result.Message);
+                }
+
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function ResetFreelancerRefundForm(){
+        $("#drp-FreeLancer").val('');
+        $("#Amount").val(0);
+        $("#ChargedId").val("");
+    }
+
+    function CloseRefundPopUpModel(){
+        $("#drp-FreeLancer").val('');
+        $("#Amount").val(0);
+        $("#ChargedId").val("");
+        $("#FreelancerStripeConnectedId").val("");
+        $("#RefundPopUp").modal('hide');
+        $("#ContractId").val(0);
+    }
+
+    function ViewFreelancerDetails(Id) {
+        var data = {
+            ContractId: Id,
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetContractFreelancerList", "Solutions")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#ContractUsersPopup").modal('show')
+                $('#ContractUsersList').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        { "data": "FreelancerName" },
+                        { "data": "TransferAmount" },
+                        {
+                            "data": "CreatedDate",
+                            "render": function (data, type, full, meta) {
+                                if (full.CreatedDate != '0001-01-01T00:00:00') {
+                                    var date = moment(data).format('DD-MM-YYYY HH:MM:SS');;
+                                    return '<span>' + date + '</span>';
+                                } else {
+                                    return '<span></span>';
+                                }
+
+                            }
+                        }
+                    ]
+                });
+                $("#preloader").hide();
+
+
+
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function CloseContractUsersPopup() {
+        $("#ContractUsersPopup").modal('hide')
     }
 </script>

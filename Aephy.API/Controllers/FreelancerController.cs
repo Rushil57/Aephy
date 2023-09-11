@@ -1206,7 +1206,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.IsCheckOutDone == true).ToListAsync();
+                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                         if (projectData.Count > 0)
                         {
@@ -1222,6 +1222,9 @@ namespace Aephy.API.Controllers
                                 var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
 
                                 solutionsdataStore.Services = serviceData;
+                                solutionsdataStore.ServiceId = serviceId;
+                                solutionsdataStore.SolutionId = data.SolutionId;
+                                solutionsdataStore.IndustryId = data.IndustryId;
                                 //solutionsdataStore.Industries = string.Join(",", industrylist);
                                 solutionsdataStore.Industries = industryname;
                                 solutionsdataStore.Id = data.Id;

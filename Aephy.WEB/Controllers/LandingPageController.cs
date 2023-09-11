@@ -793,5 +793,14 @@ namespace Aephy.WEB.Controllers
 
             return Data;
         }
+
+        public ActionResult ActiveProject(int? Service, int? Solution, int? Industry)
+        {
+            ViewData["Solution"] = Solution;
+            ViewData["Industry"] = Industry;
+            ViewData["Service"] = Service;
+            return View();
+        }
+
     }
 }

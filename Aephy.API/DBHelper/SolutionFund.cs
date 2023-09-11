@@ -54,5 +54,16 @@ namespace Aephy.API.DBHelper
 
         public DateTime CreatedDateTime { get; set; }
     }
+
+    public class SolutionTeam
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+        public int SolutionFundId { get; set; }
+    }
 }
 

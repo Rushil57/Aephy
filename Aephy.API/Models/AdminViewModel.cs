@@ -57,6 +57,10 @@ namespace Aephy.API.Models
             public string? PaymentStatus { get; set; }
             public string? MileStoneTitle { get; set; }
 
+            public int SolutionId { get; set; }
+            public int IndustryId { get; set; }
+            public int ServiceId { get; set; }
+
             //public IFormFile[] ImageFile { get; set; }
         }
 
@@ -276,6 +280,8 @@ namespace Aephy.API.Models
             public string? FreelancerLevel { get; set; }
 
             public string? UserId { get; set; }
+
+            public int SolutionFundId { get; set; }
         }
 
         public class UserCvFileModel

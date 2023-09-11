@@ -1106,7 +1106,29 @@ namespace Aephy.WEB.Controllers
 		}
 
 
-		[HttpPost]
+        [HttpPost]
+        public async Task<string> GetActiveProjectDetails([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+
+                }
+                model.UserId = userId;
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetActiveSolutionDetailsInProject", HttpMethod.Post, model);
+				return solutionData;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+
+        [HttpPost]
 		public async Task<string> GetProjectDetails([FromBody] MileStoneDetailsViewModel model)
 		{
 			if (model != null)
@@ -1598,6 +1620,6 @@ namespace Aephy.WEB.Controllers
 
         }
 
-
+		
     }
 }

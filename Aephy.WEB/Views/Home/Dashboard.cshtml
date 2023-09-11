@@ -280,26 +280,13 @@
                     </div>
 
                      <div class="col-12" id="activeProjects">
-                        <div class="card top-selling overflow-auto material_scroll">
-                            <div class="card-body pb-0" style="height:303px;">
+                        <div class="card">
+                            <div class="card-body pb-0">
                                 <h5 class="card-title">Active Projects</h5> 
-                                <table class="table table-borderless" id="activeProjectList">
-                                    <thead>
-                                        <tr>
-                                           @* <th scope="col">Id</th>*@
-                                            <th scope="col">Title</th>
-                                            <th scope="col">Description</th>
-                                            <th scope="col">Image</th>
-                                            <th scope="col">Services</th>
-                                            <th scope="col">Industries</th>
-                                            <th scope="col">Milestone</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-
+                                <div class="row gy-4 py-4" id="activeProjectdiv">
+                                       
+                                       
+                                </div>
                             </div>
 
                         </div>
@@ -1895,33 +1882,36 @@ function InvokeApprovedList() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                    var data = result.Result
-                var index = 0;
-                var subObj = '';
-                var htm = '';
-                for (index = 0; index < data.length; index++) {
-                    subObj = data[index];
-                    var description = subObj.Description.length > 35 ? subObj.Description.substring(0, 35) + "..." : subObj.Description
-                    if(subObj.MileStoneTitle == null){
-                        subObj.MileStoneTitle = ""
-                    }
-                    htm += '<tr>';
-                    //htm += '<td class=cls-milestone>' + subObj.Id + '</td>';
-                    htm += '<td>' + subObj.Title + '</td>';
-                    htm += '<td><span title="' + subObj.Description + '">' + description + '</span></td>';
-                    htm += '<td> <img src="'+ subObj.ImageUrlWithSas +'" alt="Image"/></td>';
-                    htm += '<td>' + subObj.Services + '</td>';
-                    htm += '<td>' + subObj.Industries + '</td>';
-                    htm += '<td>' + subObj.MileStoneTitle + '</td>';
-                    if(subObj.PaymentStatus == "Splitted"){
-                        htm += '<td><span class="badge bg-success">Approved</span></td>';
-                    }else{
-                        htm += '<td><a class="btn btn-primary btn-sm" onclick=ApproveFreelancerPayment('+subObj.Id+')>Approve</a></td>';
-                    }
-                    htm += '</tr>';
-                }
-                $("#activeProjectList").find("tr:gt(0)").remove();
-                $("#activeProjectList tbody").append(htm);
+                    var Activedata = result.Result
+              var activeSection = "";
+                    $.each(Activedata, function (data, value) {
+                        var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
+                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+                        var industryList = Activedata[data].Industries.split(",")
+                        var count = 0;
+
+                        activeSection += '<div class="col-md-6 col-xl-4 cls-activediv" style="width:250px;cursor:pointer" onclick=GetActiveProjectDetails('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+')>' +
+                            ' <div class="card shadow-lg cls-solutioncard">' +
+                            '<div class="card-body">' +
+                            '<div class="card-img justify-content-lg-center">' +
+                            '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
+                            '</div>' +
+                            '<h3>' +
+                            '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
+                            '</h3>' +
+                            '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
+                            '<div class="icon-image">' +
+                            '<i class="bi bi-shop-window"></i>' +
+                                    '<label> ' + value.Industries + ' </label>' +
+                       
+                        '</div></div>'+ 
+                               
+                        '</div></div>';
+
+
+                    })
+                  
+                      $('#activeProjectdiv').html(activeSection);
                 $("#preloader").hide();
                
             },
@@ -1953,5 +1943,11 @@ function InvokeApprovedList() {
                 showToaster("error", "Error !", result);
             }
         });
+    }
+
+    function GetActiveProjectDetails(Id,ServiceId,SolutionId,IndustryId){
+        //alert(Id,ServiceId,SolutionId,IndustryId);
+         sessionStorage.setItem("SolutionFundId", Id)
+        window.location.href = '/LandingPage/ActiveProject?Service=' + ServiceId + '&Solution=' + SolutionId + '&Industry=' + IndustryId;
     }
 </script>

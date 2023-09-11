@@ -1536,6 +1536,12 @@ namespace Aephy.API.Controllers
                     int status = await _db.SaveChangesAsync();
                     if (status > 0)
                     {
+                        var freelancerDetails = _db.FreelancerPool.Where(x => x.FreelancerID == model.Id).FirstOrDefault();
+                        if (freelancerDetails != null)
+                        {
+                            _db.FreelancerPool.Remove(freelancerDetails);
+                            _db.SaveChanges();
+                        }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,

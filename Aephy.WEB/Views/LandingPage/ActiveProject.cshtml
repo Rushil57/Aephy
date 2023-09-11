@@ -1,4 +1,10 @@
 ﻿@{
+    ViewData["Title"] = "Active Project";
+    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+}
+
+
+@{
     ViewData["Title"] = "Project";
     Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
 }
@@ -36,21 +42,21 @@
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked onchange="GetProjectTypeValue(this)"/>
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked/>
                                                 <h4>Small</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="medium" onchange="GetProjectTypeValue(this)"/>
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="medium"/>
                                                 <h4>Medium</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large" onchange="GetProjectTypeValue(this)"/>
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large"/>
                                                 <h4>Large</h4>
                                                 <h5 style="opacity:0.5;">$-</h5>
                                             </label>
@@ -69,11 +75,10 @@
                                       <div class="projectPoints-div">
 
                                         </div>
-                                 
+
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                                        @*<input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">*@
-                                        <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated()" style="width: 50%;">Initiate Contract</button>
+                                        <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">
                                         <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                                         </div>
                                     </div>
@@ -84,7 +89,7 @@
                                 <img src="" id="project-image" class="img-flued" style="width:100%;height:55%;" />
                                 <h3 class="pt-2 label-title-size title-path">Solution</h3>
                                 <p class="section-detail-size cls-project-description">
-                                    
+
                                 </p>
                             </div>
                         </div>
@@ -94,32 +99,15 @@
                             <div class="col-12 content d-flex flex-column">
                                 <h3 class="pt-2 label-title-size title-path">Solution</h3>
                                 <p class="section-detail-size cls-project-description">
-                                    
-                                </p>
 
-                                <!--Description column-->
-                                @*<h4 class="pt-2 label-title-size title-path">Project Architect Guidelines</h4>
-                                <h5 class="creaetdBy"></h5>
-                                <p style="display:block;">
-                                    As we aim to consistently deliver projects of exemplary quality, it is crucial for our Project Architects to align their approaches with specific guidelines. These guidelines are designed to provide a framework that ensures comprehensive project planning, regardless of the project's scale or complexity.<br />
-                                    It's important to remember that the revenue you generate is directly linked to your attention to detail. When clients purchase the projects you architect, accuracy and realistic timelines play a significant role in your income. By adhering to these guidelines, you contribute to our collective success and help us thrive in a competitive landscape. You can access the guidelines by clicking the following link.
                                 </p>
-                                <div class="d-flex align-self-start">
-                                    <a href="" class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                </div>*@
                                 <div class="row m-lg-2 m-4 d-flex justify-content-center align-center align-items-center RButtons">
                                     <div class="section-header">
                                     <hr />
                                     <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Projects</label></h2>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked onchange="GetProjectTypeValue(this)"/>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Medium" value="medium" onchange="GetProjectTypeValue(this)"/>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 d-flex justify-content-center">
-                                        <input type="radio" id="projSize" name="projSize" label="Large" value="large" onchange="GetProjectTypeValue(this)"/>
+                                        <input type="radio" id="projSize" name="projSize" checked/>
                                     </div>
                                 </div>
 
@@ -127,7 +115,7 @@
 
                                 <h4 class="pt-2 label-title-size title-path">Project Outline</h4>
                                 <p style="display:block;" id="project-outline-div">
-                                  
+
                                 </p>
                             </div>
                         </div>
@@ -141,25 +129,17 @@
                             <div class="col-12 content d-flex flex-column">
                                 <h3 class="pt-2 label-title-size title-path">Project Details</h3>
                                 <p class="section-detail-size" id="project-details-div">
-                                    
+
                                 </p>
-                                
-                                @*<div class="d-flex align-self-start">
-                                <a href="" class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                </div>*@
                             </div>
                         </div>
 
-                        <div class="row justify-content-center" style="display: flex;
-  align-items: center;
-  justify-content: center;
-  background:#2E1F47;
-  letter-spacing: 0.6px;">
+                        <div class="row justify-content-center" style="display: flex;align-items: center;justify-content: center;background:#2E1F47;letter-spacing: 0.6px;">
                             <!-- first row -->
                             <div class="progressContainer d-flex flex-column px-0">
                                 <h3 class="pt-2 label-title-size title-path" style="padding:0 0 0 0.5em;">Milestones</h3>
                                 <ul class="progress" id="progress-div">
-                                  
+
                                 </ul>
                                 <div class="d-flex align-self-start" style="padding:1rem 0 0 1em;">
                                     <a href="" class="cls-milestone-popup" id="clsMilestonePopup" data-bs-toggle="modal" data-bs-target="#milestonesModal">View Details</a>
@@ -167,189 +147,15 @@
                             </div>
                         </div>
 
-                         @*FINAL RELEASE*@
-                        <!-- Successfull Projects row-->
-                        <div class="row justify-content-center" id="successfullProjects">
-                            <div class="col-12">
-                                <div class="row">
-                                    <h3 class="pt-2 justify-content-center label-title-size title-path" style="padding:0 0 0 1em;">
-                                        Successful Projects
-                                    </h3>
-                                    <div id="SuccessfulProjectsCarousel" class="carousel slide" data-interval="false">
-
-                                        <div class="carousel-inner" role="listbox" id="successfull-project-section">
-
-                                        </div>
-                                            <a class="carousel-control-prev bg-transparent w-aut project-indicators" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            </a>
-                                            <a class="carousel-control-next bg-transparent w-aut project-indicators" href="#SuccessfulProjectsCarousel" role="button" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                         @* FINAL RELEASE*@
-                        <!--Ratings Scorecard row-->
-                        <div class="row ratingProgress">
-                            <div class="pt-3">
-                                <h3 class="justify-content-start align-items-center label-title-size title-path"><label style="background-color:#fff; padding:0 0 0 0.5em;">Solution Reviews</label></h3>
-                            </div>
-                            <div class="col-12 d-flex px-0">
-                                <div class="row" style="width:100%;">
-                                    <!--col 1-->
-                                    <div class="col-6 left-content">
-                                        <div class="row px-3">
-                                            <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill"></i><label class="lblTotalRatings">4.9</label><label class="lblTotalReviews">109</label><label>reviews</label></div>
-                                        </div>
-                                        <div class="row my-2">
-                                            <div class="col ProgressTable">
-                                                <table style="width:100%;">
-                                                    <thead></thead>
-                                                    <tbody style="color:#d49255">
-                                                        <tr>
-                                                            <td>5 stars</td>
-                                                            <td><progress id="progress" value="101" max="109"></progress></td>
-                                                            <td><label>101</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>4 stars</td>
-                                                            <td><progress id="progress" value="7" max="109"></progress></td>
-                                                            <td><label>7</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3 stars</td>
-                                                            <td><progress id="progress" value="1" max="109"></progress></td>
-                                                            <td><label>1</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>2 stars</td>
-                                                            <td><progress id="progress" value="0" max="109"></progress></td>
-                                                            <td><label>0</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1 stars</td>
-                                                            <td><progress id="progress" value="0" max="109"></progress></td>
-                                                            <td><label>0</label></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--col 2-->
-                                    <div class="col-6 right-content ratingBreakdown px-lg-0 px-4">
-                                        <div class="row mx-lg-0 mx-2 label-title-size title-path"><h4>Rating breakdown</h4></div>
-                                        <div class="row">
-                                            <div class="col-lg-6 col-12">
-                                                <table id="tableRatingBreakdown">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Well-Defined Project Scope</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>4.9</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Adherence to Project Scope</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>4.9</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Quality of Deliverables</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>4.8</label></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                            <div class="col-lg-6 col-12">
-                                                <table id="tableRatingBreakdown">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Meeting Timeliness</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>5.0</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Client Satisfaction</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>5.0</label></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Adherence to Budget</td>
-                                                            <td class="rating"><i class="bi bi-star-fill"></i><label>4.9</label></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @*<div class="row ratingProgress">
-                                <!--col 3-->
-                                <div class="col-12 content clientReviews d-flex flex-column">
-                                    <div class="row pt-5">
-                                        <div class="col-12">
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>SK</div>
-                                                </div>
-                                                <div class="info">
-                                                    <div class="name">Sean K.</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <label>5.00</label>
-                                                        <label class="date">Mar 24,2023</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="box">
-                                                <div class="title">
-                                                    Add excel document into Powerpoint
-                                                </div>
-                                                <div class="detailReview">
-                                                    Did a good job putting an excel into a Powerpoint deck for me
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 cls-clientReview-hide">
-                                            <div class="content">
-                                                <div class="image">
-                                                    <div>EC</div>
-                                                </div>
-                                                <div class="info">
-                                                    <div class="name">Eleonora C.</div>
-                                                    <div class="stars">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <label>5.00</label>
-                                                        <lable class="date">Mar 23,2023</lable>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="box">
-                                                <div class="title">
-                                                    //extra PPT as agreed
-                                                </div>
-                                                <div class="detailReview">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-self-start">
-                                        <a class="cls-ClientReviews-popup btn-show-more" id="btnClientReviewsPopup" data-bs-toggle="modal" data-bs-target="#clsClientReviewsPopup">View More</i></a>
-                                    </div>
-                                </div>
-                            </div>*@
-                        </div>
-                        <!--Row 3 Personalize Project-->
+                      
                         <!-- Reviews row -->
-                        <div class="row justify-content-center reviews px-0 gx-0" id="reviews">
+                        @*<div class="row justify-content-center reviews px-0 gx-0" id="reviews">
                             <h3 class="pt-2 justify-content-center label-title-size title-path">
                                 Top Professionals
                             </h3>
                             <div id="projectReviewCarousel" class="carousel slide" data-interval="false">
                                 <div class="carousel-inner" role="listbox" id="top-professional-div">
-                                
+
                                 </div>
                                 <a class="carousel-control-prev bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -357,6 +163,16 @@
                                 <a class="carousel-control-next bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 </a>
+                            </div>
+                        </div>*@
+                        <div class="row justify-content-center reviews px-0 gx-0" id="reviews">
+                            <h3 class="pt-2 justify-content-center label-title-size title-path">
+                                Solution Team
+                            </h3>
+                            <div id="solutionTeamDiv">
+                               <ul id="TeamList">
+
+                               </ul>
                             </div>
                         </div>
                         <div class="row JoinUs" style="padding:50px 0;">
@@ -426,46 +242,33 @@
 
             <!--Second Main Column-->
             <div class="col-lg-5 col-12 rightStickyRow">
-                <!-- First Row -->
-                <div class="row mx-lg-4" id="solutioninfo-popUp">
+
+                <input type="hidden" id="solutionFundId" value="0" />
+                <input type="hidden" id="solutionFundMileStoneId" value="0" />
+                <div class="row mx-lg-4" id="solutionfund-popUp">
                     <!-- first column -->
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
-                            <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" label="Select Project" value="select" checked />
-                            </div>
-                            <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" label="Customize Project" value="customize" onclick="OpenCustomisePopUp()"/>
+                            <div class="col-lg-6 col-md-6 d-flex justify-content-center" style="width:63% !important">
+                                <label id="project-progress"></label>
                             </div>
                         </div>
                         <div class="row m-lg-2 pt-4">
-                            <h5 class="section-detail-size">
-                                Select size and approximate price 
+                            <h5 class="section-detail-size" style="text-align:center;">
+                               Project Price & Size
                                 &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
                             </h5>
                         </div>
                         <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
+
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projSizeweb" value="small" checked onchange="GetProjectTypeValue(this)"/>
-                                    <h4>Small</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
+                                    <input class="form-check-input" type="radio"  id="solution-fund-radio-check" />
+                                    <h4 id="projectfund-projecttype"></h4>
+                                    <h5 style="opacity:0.5;" id="projectfund-projectprice"></h5>
                                 </label>
                             </div>
-                            <div class="col-4">
-                                <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projSizeweb" value="medium" onchange="GetProjectTypeValue(this)"/>
-                                    <h4>Medium</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
-                                </label>
-                            </div>
-                            <div class="col-4">
-                                <label class="radio-inline" style="text-align:center;">
-                                    <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
-                                    <h4>Large</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
-                                </label>
-                            </div>
+
                         </div>
                         <div class="projectDetails-div">
                               <div class="row me-lg-2 me-4 detailRow">
@@ -481,10 +284,10 @@
 
                         </div>
                         <div class="row d-flex justify-content-center align-center">
-                            <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                            @*<input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">  *@
-                            <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated()" style="width: 50%;">Initiate Contract</button>
-                            <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                            <div style="text-align: center;font-size: 16px;width: 100%;">
+                                <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true)" style="width:42%;font-size:15px;"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;font-size:15px;" onclick="CheckEvent()"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-projectPay" onclick="CheckoutSolution(false)" style="width:50%;font-size:15px;">Pay Project</button>
                             </div>
                         </div>
                     </div>
@@ -517,72 +320,7 @@
             </div>
         </div>
     </div>
-    <!-- Client Reviews Modal -->
-    <div class="modal fade" id="clsClientReviewsPopup" tabindex="-1" aria-labelledby="clsClientReviewsPopup" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Milestones</h4>
-                    <a class="close" data-dismiss="#milestonesModal"><i class="bi bi-x-circle"></i></a>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="row ratingProgress" style="padding:2rem;">
-                        <!--col 3-->
-                        <div class="col-12 content clientReviews d-flex flex-column">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="content">
-                                        <div class="image">
-                                            <div>SK</div>
-                                        </div>
-                                        <div class="info">
-                                            <div class="name">Sean K.</div>
-                                            <div class="stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <label>5.00</label>
-                                                <label class="date">Mar 24,2023</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box">
-                                        <div class="title">
-                                            Add excel document into Powerpoint
-                                        </div>
-                                        <div class="detailReview">
-                                            Did a good job putting an excel into a Powerpoint deck for me
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="content">
-                                        <div class="image">
-                                            <div>EC</div>
-                                        </div>
-                                        <div class="info">
-                                            <div class="name">Eleonora C.</div>
-                                            <div class="stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <label>5.00</label>
-                                                <lable class="date">Mar 23,2023</lable>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box">
-                                        <div class="title">
-                                            @*extra PPT as agreed*@
-                                        </div>
-                                        <div class="detailReview">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  
     <!-- GuidelineModal Modal -->
     <div class="modal fade" id="guidelineModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -671,183 +409,17 @@
                                 <p class="section-detail-size">On the main box, before the "Buy" and "Message" options, the project designer can add up to 3 summary points that are significant and beneficial for the client. These points should capture the essence of the project, its key deliverables, and client benefits.</p>
                             </li>
                         </ol>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    @*Customize Modal*@
-    <div class="modal" id="CustomiseProjectPopUp" tabindex="-1" aria-labelledby="CustomiseProjectPopUp" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Find Project</h4>
-                    <a class="close" data-dismiss="#CustomiseProjectPopUp" onclick="CloseCustomisePopUp()">
-                        <i class="bi bi-x-circle"></i>
-                    </a>
-                </div>
-                <div class="modal-body p-0" style="background-color: #f5f5f5;">
-                    <div class="container-fluid">
-                        <div style="border-radius:10px;" id="customisedDetailsForm">
-                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
-                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
-                                    <h3 data-aos="fade-up">
-                                        Let’s start 
-                                    </h3>
-                                    <p data-aos="fade-up" data-aos-delay="100">
-                                        Select the appropriate
-                                        options; Get a step closer to
-                                        transform your business.
-                                    </p>
-                                </div> 
 
-                                <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
-                                    <form action="#">
-                                        <div class="col d-flex flex-column">
-                                            <label data-aos="fade-up">What's the project title</label>
-                                            <input type="text" class="form-control" placeholder='Example: Create AI roadmap'>
-                                        </div>
-
-                                        <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Description</label>
-                                            <input type="text" class="form-control" placeholder='Include all the relevant project details'>
-                                        </div>
-
-                                        <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Attach relevant file</label>
-                                            <input type="file" class="form-control">
-                                        </div>
-
-                                        <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Delivery time</label>
-                                            <input type="date" class="form-control" id="delivery-time">
-                                        </div>
-
-                                        <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Budget</label>
-                                            <input type="text" class="form-control" placeholder='1,50,000'>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                         <div style="border-radius:10px;display:none;" id="customisedProjectWorkingForm">
-                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
-                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
-                                    <h3 data-aos="fade-up">
-                                        Let’s start
-                                    </h3>
-                                    <p data-aos="fade-up" data-aos-delay="100">
-                                        Select the appropriate
-                                        options; Get a step closer to
-                                        transform your business.
-                                    </p>
-                                </div>
-
-                                <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
-                                    <form action="#" style="padding-top: 3%;">
-                                            <div class="col d-flex flex-column">
-                                                <label data-aos="fade-up">Working Days</label>
-                                                <div class="row pt-2">
-                                                    <div class="col">
-                                                        <label>Start Date : </label>
-                                                        <input type="date" class="form-control" id="start-date">
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>End Date : </label>
-                                                        <input type="date" class="form-control" id="end-date">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col d-flex flex-column pt-4">
-                                                <label data-aos="fade-up">Working Hours</label>
-
-                                                <div class="row pt-2">
-                                                    <div class="col">
-                                                        <label>Start Hour : </label>
-                                                        <input type="time" class="form-control" id="start-hour">
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>End Hour : </label>
-                                                        <input type="time" class="form-control" id="end-hour">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                </div>
-                            </div>
-                        </div>
-                        
-
-                        <div class="col d-flex justify-content-end">
-                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
-                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPostButton" onclick="GetWorkingOurForm(this)">Next</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-   <div class="modal fade" id="CheckoutModal" tabindex="-1" aria-labelledby="CheckoutModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">CheckOutOption</h4>
-                    <a class="close" onclick="CloseCheckoutModal()"><i class="bi bi-x-circle"></i></a>
-                </div>
-                <div class="modal-body p-0">
-                     <div class="row">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <p>Please select valid Checkout Option:</p>
-                                     <div class="form-group">
-                                          <input type="radio" id="milestone_checkout" name="checkout_option" value="MileStone" onchange="CheckoutMileStoneData(this)" class="checkout_radio">
-                                           <label for="milestone">Milestone Checkout</label><br>
-                                             <input type="radio" id="project_checkout" name="checkout_option" value="Project" onchange="CheckoutMileStoneData(this)" class="checkout_radio">
-                                            <label for="project">Project Checkout</label><br>
-                                    </div>
-                                   
-                                    <div id="milestone-section" style="display:none;">
-                                        <input type="hidden" value="0" id="checkout_milestone_id" />
-                                         <div class="form-group pt-3">
-                                                <label for="milestone">Milestone Title</label>
-                                                <input type="text" class="form-control" id="milestone-title" readonly>
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="Description" class="form-label">Milestone Description</label>
-                                            <div class="input-group">
-                                                <textarea type="text" class="form-control" id="milestone-Description" readonly></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="text-center pt-3" style="display:none;" id="milestone-emptySection">
-                                        <p><b>No Milestone Data Available</b></p>
-                                    </div>
-                                     <div class="text-center">
-                                        <button type="button" class="btn btn-brand" onclick="CheckoutSolution()">CheckOut</button>
-                                        <button type="button" class="btn btn-secondary" onclick="CloseCheckoutModal();">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-                </div>
-            </div>
-        </div>
-    </div>
+   
 <script>
     $(document).ready(function () {
-        $("input[name^='projSize']").change(function(){
-        var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
-         $otherRadioButtons.prop('checked', $(this).prop('checked'));
-        });
         $('.close').on('click', function () {
             $('#milestonesModal').modal('hide');
 
@@ -857,13 +429,6 @@
         });
         $(".info-popover").popover();
         GetProjectDetails();
-
-        // if ('@Context.Session.GetString("LoggedUser")' == 'Client') {
-        //     $("#btn-contract").prop('disabled',false)  
-        //}else{
-        //    $("#btn-contract").prop('disabled',true)
-        //}
-        
     });
     function MilestoneViewMore(){
         $(".cls-milestone-showmore").css("display", "none");
@@ -895,7 +460,7 @@
         var Industryid = @ViewData["Industry"]; 
         var Serviceid = @ViewData["Service"];
         var Solutionid = @ViewData["Solution"];
-     
+
         var data = {
             IndustryId : Industryid,
             SolutionId : Solutionid,
@@ -921,74 +486,41 @@
             }
         });
     }
-    function buySolutionCheckout(){
-        var checkweb = $("input[name='projSizeweb']:checked").val();
-        var Industryid = @ViewData["Industry"]; 
-        var Serviceid = @ViewData["Service"];
-        var Solutionid = @ViewData["Solution"];
-        var data = {
-            IndustryId : Industryid,
-            SolutionId : Solutionid,
-            ProjectType : checkweb,
-        }
-       $("#preloader").show();
-        $.ajax({
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
-            data: JSON.stringify(data),
-            success: function (result) {
-                if(result.Message == "Success"){
-                    window.location.href = result.Result.checkoutLink;
-                }
-                $("#preloader").hide();
-            },
-            error: function (result) {
-                $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
-            }
-        });
-    }
 
-    function GetProjectTypeValue(data){
+    function GetProjectTypeValue(){
         $("#preloader").show();
-        var projecttype;
-        if(data == undefined){
-            projecttype = $('input[name=projSize]:checked').val()
-        }
-        else{
-             projecttype = data.value;
-        }
-        var Industryid = @ViewData["Industry"]; 
-        var Serviceid = @ViewData["Service"];
-        var Solutionid = @ViewData["Solution"];
        
+            var solutionfundId =  sessionStorage.getItem("SolutionFundId")
+             var Industryid = @ViewData["Industry"]; 
+             var Serviceid = @ViewData["Service"];
+             var Solutionid = @ViewData["Solution"];
+            
+
         var data = {
             IndustryId : Industryid,
             SolutionId : Solutionid,
-            ProjectType : projecttype,
+            SolutionFundId : solutionfundId
         }
          $.ajax({
             type: "POST",
-            url: "@Url.Action("GetProjectDetailsbasedOnType", "Home")",
+            url: "@Url.Action("GetActiveProjectDetails", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
                 var data = result.Result
-                
+                var projecttype = data.SolutionFund.ProjectType;
                 if(data.SolutionDefine != null){
                     $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
                     $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
-                    
+
                     if(data.SolutionDefine.Duration != null){
                         $(".cls-duration").text(data.SolutionDefine.Duration)
                     }
                     else{
                         $(".cls-duration").text("-")
                     }
-                    
+
                     if(data.SolutionDefine.TeamSize == 0){
                         var teamsize = 0;
                          if(projecttype == "medium"){
@@ -1005,7 +537,7 @@
                     else{
                         $(".cls-team-size").text(data.SolutionDefine.TeamSize)
                     }
-                    
+
                 }
                 else{
                    $("#project-outline-div").text("No Data Available")
@@ -1031,13 +563,13 @@
                                         '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
                                         '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
                                     '</li>'
-                         
+
                         milestonePopupsection +=  '<li class="progress__item">' +
                                 '<p class="progress__title">'+ values.Title+'</p>' +
                                 '<p class="progress__info">'+values.Description+'</p>' +
                                 '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
                             '</li>';
-                      
+
                     })
                     $('#progress-div').html(milestoneSection);
                     $('#milestone-Popup-div').html(milestonePopupsection);
@@ -1075,61 +607,15 @@
                     $(".projectPoints-div").html("");
                 }
 
-                if(data.TopProfessional != ""){
-                     var topProfessional = "";
-                     $.each(data.TopProfessional, function (datas, values) {
-                         var description = values.Description.length > 220 ? values.Description.substring(0, 220) + "..." : values.Description;
-                         var name = values.FreelancerId.split(" ")
-                         var firstname = name[0].charAt(0);
-                         var lastname = name[1].charAt(0);
-                            topProfessional += '<div class="carousel-item top-carousel">' +
-                                                    '<div class="col-md-6 cls-gigopening-m-carousel" style="padding-top:7px !important;" data-aos="fade-up" data-aos-delay="100">' +
-                                                        '<div class="box">' +
-                                                            '<div class="title"> '+values.FreelancerId.split(" ")[0]+' – '+values.Title+' </div>' +
-                                                            '<div class="detailReview" title="'+values.Description+'"> '+description+'</div>' +
-                                                        '</div>' +
-                                                        '<div class="content">';
-                                                            if(values.ImageUrlWithSas != null){
-                                                                topProfessional += '<div><div><img src=' + values.ImageUrlWithSas + ' alt ="Image" style="height:60px;width:60px;border-radius:50%"></div></div>';
-                                                            }
-                                                            else{
-                                                                topProfessional += '<div class="image"><div>' + firstname +''+ lastname +'</div></div>';
-                                                            }
-                                                            //'<div class="image"><div>' + firstname +''+ lastname +'</div></div>' +
-                                                            topProfessional += '<div class="info">' +
-                                                                '<div class="name">'+values.FreelancerId+'</div>' +
-                                                                '<div class="stars">' + 
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<label> '+values.Rate+' / 5 </label>' +
-                                                                '</div>' +
-                                                            '</div>' +
-                                                    '</div>' +
-                                             '</div></div>';
-                     });
-                     $('#top-professional-div').html(topProfessional);
-                    $('.top-carousel').first().addClass('active');
-                    $('.top-indicators > li').first().addClass('active');
-                    var items3 = document.querySelectorAll('.top-carousel')
-
-                    items3.forEach((el) => {
-                        const minPerSlide = 4
-                        let next = el.nextElementSibling
-                        for (var i = 1; i < minPerSlide; i++) {
-                            if (!next) {
-                                next = items3[0]
-                            }
-                            let cloneChild = next.cloneNode(true)
-                            el.appendChild(cloneChild.children[0])
-                            next = next.nextElementSibling
-                        }
-                    })
+                if(data.SolutionTeam != ""){
+                     $.each(data.SolutionTeam, function (teamdata, teamvalue) {
+                        $("#TeamList").append('<li>'+teamvalue.FreelancerId+'</li>');
+                     })
                     $(".cls-temp").remove();
                 }
                 else{
                     $(".cls-temp").remove();
-                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
+                    //$( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
 
                 }
                 if(data.SuccessfullProjects != ""){
@@ -1140,18 +626,38 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
                 }
 
-                  if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
+                if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
                    {
-                       $(".btn-contract").addClass('disabled');
-                       $(".btn-contract").css("background-color", "var(--brand)");
-                       $(".btn-contract").css("color","black");
-                   }  
-                   else{
-                           $(".btn-contract").removeClass('disabled');
-                            $(".btn-contract").css("color","white");
-                       }
+                       projecttype = data.SolutionFund.ProjectType;
+                         $("#solutioninfo-popUp").css("display","none")
+                        $("#solutionfund-popUp").css("display","block")
+                        $("input[name=projSize][value='"+data.SolutionFund.ProjectType+"']").prop("checked",true);
+                        $('input:radio[name=projSize]').val(data.SolutionFund.ProjectType);
+                        $('input:radio[name=projSize]').attr('label',data.SolutionFund.ProjectType);
+                        var teamsize = 0;
+                         if(projecttype == "medium"){
+                             teamsize = 3;
+                        }
+                        if(projecttype == "large"){
+                            teamsize = 5;
+                        }
+                        if(projecttype == "small"){
+                            teamsize = 2;
+                        }
+                        $(".cls-team-size").text(teamsize)
+                        var mileStoneData = data.MileStone[0];
+                        $("#solutionFundMileStoneId").val(mileStoneData.Id);
+                        $("#solutionFundId").val(data.SolutionFund.Id);
+                        BindSolutionFundData(data.SolutionFund,mileStoneData)
+
+
+                    }
+                }else{
+                    $("#solutioninfo-popUp").css("display","block")
+                    $("#solutionfund-popUp").css("display","none")
                 }
+
 
                 var newContent = "";
                 if(projecttype == "medium"){
@@ -1176,24 +682,7 @@
         });
     }
 
-    function GetWorkingOurForm(data){
-         if (data.text == "Confirm") {
-           $("#CustomiseProjectPopUp").modal('hide')
-         }
-         if (data.text == "Next") {
-           $("#customisedDetailsForm").css("display", "none")
-           $("#customisedProjectWorkingForm").css("display", "block")
-           $("#BrowseSolutionPostButton").text("Confirm")
-           $("#BrowseSolutionPreviousButton").css("display", "block")
-         }
-         if (data.text == "Previous") {
-           $("#customisedDetailsForm").css("display", "block")
-           $("#customisedProjectWorkingForm").css("display", "none")
-           $("#BrowseSolutionPostButton").text("Next")
-           $("#BrowseSolutionPreviousButton").css("display", "none")
-         }
-
-    }
+   
 
     function BindSuccessfullProject(data){
           var successfullProject = "";
@@ -1246,7 +735,7 @@
                         $(".project-indicators").css("display","none");
                         $(".project-indicators").css("margin-top","0%")
                     }
-                  
+
                       var item = document.querySelectorAll('.project-carousel')
                          item.forEach((el) => {
                                 const minPerSlide = 4
@@ -1261,56 +750,16 @@
                                         next = next.nextElementSibling
                                   }  
                                 }
-                                
+
                             })
-                  
+
                 }
-
-    function CheckoutSolution(checkoutType){
-
-        var mileStoneCheckOut = false;
-        if(checkoutType){
-            mileStoneCheckOut = checkoutType
-        }
-
-        var Industryid = @ViewData["Industry"]; 
-        var Solutionid = @ViewData["Solution"];
-        var data = {
-            IndustryId : Industryid,
-            SolutionId : Solutionid,
-            Id :$("#solutionFundMileStoneId").val(),
-            SolutionFundId :$("#solutionFundId").val(),
-            MileStoneCheckout : checkoutType
-        }
-       $("#preloader").show();
-        $.ajax({
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "@Url.Action("CheckOut", "LandingPage")",
-            data: JSON.stringify(data),
-            success: function (result) {
-                if(result.Message != "success"){
-                    showToaster("warning", "Warning !", result.Message);
-                }else{
-                    window.location.href = result.Result;
-                }
-                
-                $("#preloader").hide();
-            },
-            error: function (result) {
-                $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
-            }
-        });
-        //window.location = "@Url.Action("CheckOut", "LandingPage")?data=" + JSON.stringify(data)
-    }
 
     function OpenCheckOutOptionModalPopup(){
          if ('@Context.Session.GetString("LoggedUser")' != '') {
              $("#CheckoutModal").modal('show')     
         }
-       
+
     }
 
     function CheckoutMileStoneData(value){
@@ -1375,11 +824,11 @@
                  Projectprice = 500;
              }
 
-             var checkPayment =  $("#solutionfund-furtherprogress").text();
-             if(checkPayment.includes("Pay")){
-                 showToaster("warning", "Warning !", "You have to Approve from Dashboard !!");
-                 return;
-             }
+             //var checkPayment =  $("#solutionfund-furtherprogress").text();
+             //if(checkPayment.includes("Pay")){
+             //    showToaster("warning", "Warning !", "You have to Approve from Dashboard !!");
+             //    return;
+             //}
 
               var mileStoneCheckout = false;
                 if(checkCheckoutType){
@@ -1405,15 +854,23 @@
                 url: "@Url.Action("SaveProjectInitiated", "LandingPage")",
                 data: JSON.stringify(data),
                 success: function (result) {
-                   if(result.Message == "Project Initiated Successfully !"){
-                       showToaster("success", "Success !", result.Message);
-                         $(".btn-contract").addClass('disabled');
-                  
-                        $(".btn-contract").css("background-color", "var(--brand)");
-                        $(".btn-contract").css("color","black");
+                   if(result.Message == "projectDetails"){
+                       var data = result.Result;
+                       $("#solutionFundId").val(data.ProjectDetails.Id);
+                        $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
                    }
                    if(result.Message == "EmptyMilestoneData"){
                        showToaster("error", "Error !", "No MilestoneData Available");
+                   }
+                   if(result.Message == "CompleteProcess"){
+                        CheckoutSolution(true);
+                   }
+                   else{
+                        showToaster("success", "Success !", result.Message);
+                        $("#solutionfund-furtherprogress").addClass('disabled');
+                        $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                        $("#solutionfund-furtherprogress").css("color","black");
                    }
                     $("#preloader").hide();
                 },
@@ -1427,6 +884,153 @@
              showToaster("warning", "Warning !", "Login as a client to purchase project !!");
         }
 
-       
+
+    }
+
+   function BindSolutionFundData(data,milestoneData){
+          $("#solutioninfo-popUp").css("display","none")
+          $("#solutionfund-popUp").css("display","block")
+          $("#solution-fund-radio-check").prop("checked", true);
+
+          var projectType = data.ProjectType;
+          projectType =  projectType.split(' ').map(projectType => projectType.charAt(0).toUpperCase() + projectType.slice(1).toLowerCase()).join(' ');
+
+          $("#projectfund-projecttype").html(projectType)
+          $("#projectfund-projectprice").html(data.ProjectPrice)
+
+           if(data.ProjectStatus == "INITIATED"){
+                var status = data.ProjectStatus
+                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+              $("#project-progress").html("Project " + status)
+              $("#solutionfund-furtherprogress").text('Fund ' + milestoneData.Title);
+              $("#solutionfund-details").text('Stop Project');
+           }
+
+           if(data.ProjectStatus == "COMPLETED"){
+               var status = data.ProjectStatus
+                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+              $("#project-progress").html("Project " + milestoneData.Title + " " + status);
+              $("#solutionfund-furtherprogress").text("Pay " +  milestoneData.Title);
+              $("#solutionfund-details").text('Raise a Dispute');
+
+               if(data.IsDispute){
+                    $("#solutionfund-furtherprogress").addClass('disabled');
+                    $("#solutionfund-projectPay").addClass('disabled');
+                    $(".btn.disabled").css("background-color", "var(--brand)");
+                    $(".btn.disabled").css("color","black");
+                }
+                else{
+                    if(data.FundType == 0)
+                    {
+                       //$("#solutionfund-projectPay").css("pointer-events","none")
+                       //$("#solutionfund-furtherprogress").css("pointer-events","auto")
+                         //$("#solutionfund-furtherprogress").addClass('disabled');
+                        $("#solutionfund-projectPay").addClass('disabled');
+                          $("#solutionfund-projectPay").css("background-color", "var(--brand)");
+                        $("#solutionfund-projectPay").css("color","black");
+                    }
+                    //else{
+                    //    $("#solutionfund-furtherprogress").addClass('disabled');
+                    //      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                    //    $("#solutionfund-furtherprogress").css("color","black");
+                    //}
+                }
+
+               //else{
+               //    $("#solutionfund-projectPay").css("pointer-events","auto")
+               //    $("#solutionfund-furtherprogress").css("pointer-events","none")
+               //}
+           }
+
+
+
+   }
+
+   function CheckEvent(){
+        var event =  $("#solutionfund-details").text();
+        if(event == "Raise a Dispute"){
+                RaiseDispute();
+                 return;
+        }
+   }
+
+   function RaiseDispute(){
+        var Industryid = @ViewData["Industry"]; 
+            var Solutionid = @ViewData["Solution"];
+
+            var data = {
+                IndustryId : Industryid,
+                SolutionId : Solutionid,
+                ProjectType :$("input[name='projSize']:checked").val(),
+            }
+           $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "@Url.Action("RaiseDispute", "LandingPage")",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if(result.Message == "Dispute Raised"){
+                        showToaster("success", "Success", result.Message);
+                        $("#solutionfund-furtherprogress").css("cursor","not-allowed");    
+                         $("#solutionfund-projectPay").css("cursor","not-allowed");
+                            $("#solutionfund-furtherprogress").addClass('disabled');
+                            $("#solutionfund-projectPay").addClass('disabled');
+                            $(".btn.disabled").css("background-color", "var(--brand)");
+                             $(".btn.disabled").css("color","black");
+                    }else{
+                        showToaster("warning", "Warning!", result.Message);
+                    }
+
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", result);
+                }
+            });
+   }
+
+   function CheckoutSolution(checkoutType){
+
+        var mileStoneCheckOut = false;
+        if(checkoutType){
+            mileStoneCheckOut = checkoutType
+        }
+
+        var Industryid = @ViewData["Industry"]; 
+        var Solutionid = @ViewData["Solution"];
+        var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid,
+            Id :$("#solutionFundMileStoneId").val(),
+            SolutionFundId :$("#solutionFundId").val(),
+            MileStoneCheckout : checkoutType
+        }
+       $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "@Url.Action("CheckOut", "LandingPage")",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if(result.Message != "success"){
+                    showToaster("warning", "Warning !", result.Message);
+                }else{
+                    window.location.href = result.Result;
+                }
+                
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+        //window.location = "@Url.Action("CheckOut", "LandingPage")?data=" + JSON.stringify(data)
     }
 </script>

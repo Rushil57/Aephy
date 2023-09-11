@@ -37,6 +37,8 @@
         public string? FreelancerLevel { get; set; }
 
         public string? UserId { get; set; }
+
+        public int SolutionFundId { get; set; }
     }
     public class MileStoneIdViewModel
     {

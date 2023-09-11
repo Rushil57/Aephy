@@ -151,30 +151,39 @@
                         <!-- Reviews row -->
                         @*<div class="row justify-content-center reviews px-0 gx-0" id="reviews">
                             <h3 class="pt-2 justify-content-center label-title-size title-path">
-                                Top Professionals
-                            </h3>
-                            <div id="projectReviewCarousel" class="carousel slide" data-interval="false">
-                                <div class="carousel-inner" role="listbox" id="top-professional-div">
-
-                                </div>
-                                <a class="carousel-control-prev bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                </a>
-                                <a class="carousel-control-next bg-transparent w-aut top-indicators" href="#projectReviewCarousel" role="button" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                </a>
-                            </div>
-                        </div>*@
-                        <div class="row justify-content-center reviews px-0 gx-0" id="reviews">
-                            <h3 class="pt-2 justify-content-center label-title-size title-path">
                                 Solution Team
                             </h3>
                             <div id="solutionTeamDiv">
                                <ul id="TeamList">
 
                                </ul>
+                               <table>
+                                   <td>
+
+                                   </td>
+                               </table>
                             </div>
-                        </div>
+                        </div>*@
+
+                         <div class="col-6">
+                            <div class="card">
+                                <div class="card-body pb-0" style="height:303px;">
+                                    <h5 class="card-title">SolutionTeam List</h5>
+                                    <table class="table table-borderless" id="solutionList">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Teammate Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                         </div>
+                       
                         <div class="row JoinUs" style="padding:50px 0;">
                             <div class="col-12 column-client-guide">
                                 @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
@@ -608,10 +617,22 @@
                 }
 
                 if(data.SolutionTeam != ""){
-                     $.each(data.SolutionTeam, function (teamdata, teamvalue) {
-                        $("#TeamList").append('<li>'+teamvalue.FreelancerId+'</li>');
-                     })
-                    $(".cls-temp").remove();
+                      var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = data.SolutionTeam.length;
+                        if(resultLength > 0){
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = data.SolutionTeam[index];
+
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.FreelancerId + '</td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#solutionList").find("tr:gt(0)").remove();
+                        $("#solutionList tbody").append(htm);
+                         $(".cls-temp").remove();
                 }
                 else{
                     $(".cls-temp").remove();
@@ -629,33 +650,26 @@
                 if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
                    {
-                       projecttype = data.SolutionFund.ProjectType;
-                         $("#solutioninfo-popUp").css("display","none")
-                        $("#solutionfund-popUp").css("display","block")
-                        $("input[name=projSize][value='"+data.SolutionFund.ProjectType+"']").prop("checked",true);
-                        $('input:radio[name=projSize]').val(data.SolutionFund.ProjectType);
-                        $('input:radio[name=projSize]').attr('label',data.SolutionFund.ProjectType);
-                        var teamsize = 0;
-                         if(projecttype == "medium"){
-                             teamsize = 3;
-                        }
-                        if(projecttype == "large"){
-                            teamsize = 5;
-                        }
-                        if(projecttype == "small"){
-                            teamsize = 2;
-                        }
-                        $(".cls-team-size").text(teamsize)
-                        var mileStoneData = data.MileStone[0];
-                        $("#solutionFundMileStoneId").val(mileStoneData.Id);
-                        $("#solutionFundId").val(data.SolutionFund.Id);
-                        BindSolutionFundData(data.SolutionFund,mileStoneData)
-
-
-                    }
-                }else{
-                    $("#solutioninfo-popUp").css("display","block")
-                    $("#solutionfund-popUp").css("display","none")
+                      projecttype = data.SolutionFund.ProjectType;
+                      $("input[name=projSize][value='"+data.SolutionFund.ProjectType+"']").prop("checked",true);
+                      $('input:radio[name=projSize]').val(data.SolutionFund.ProjectType);
+                      $('input:radio[name=projSize]').attr('label',data.SolutionFund.ProjectType);
+                      var teamsize = 0;
+                       if(projecttype == "medium"){
+                          teamsize = 3;
+                       }
+                       if(projecttype == "large"){
+                         teamsize = 5;
+                       }
+                       if(projecttype == "small"){
+                                teamsize = 2;
+                       }
+                       $(".cls-team-size").text(teamsize)
+                      var mileStoneData = data.MileStone[0];
+                      $("#solutionFundMileStoneId").val(mileStoneData.Id);
+                      $("#solutionFundId").val(data.SolutionFund.Id);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData);
+                   }
                 }
 
 
@@ -722,11 +736,7 @@
                     $(".cls-main:nth-child(even) .cls-Successful-Projects").css("background-color","#808080ad")
                     $(".cls-main:nth-child(even) .cls-Successful-Projects .cls-result").css("background-color", 'rgb(128 128 128 / 0%)')
 
-                    //if($.trim($(".cls-result .content").html())==''){
-                    //     $(".cls-result").css("display","none");
-                    //}else{
-                    //    $(".cls-result").css("display","block");
-                    //}
+                  
 
                     if(data.length >= 3){
                         $(".project-indicators").css("display","block");
@@ -823,13 +833,6 @@
              if(projectType == 'large'){
                  Projectprice = 500;
              }
-
-             //var checkPayment =  $("#solutionfund-furtherprogress").text();
-             //if(checkPayment.includes("Pay")){
-             //    showToaster("warning", "Warning !", "You have to Approve from Dashboard !!");
-             //    return;
-             //}
-
               var mileStoneCheckout = false;
                 if(checkCheckoutType){
                     mileStoneCheckout = checkCheckoutType;
@@ -908,10 +911,8 @@
            }
 
            if(data.ProjectStatus == "COMPLETED"){
-               var status = data.ProjectStatus
-                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
-
-              $("#project-progress").html("Project " + milestoneData.Title + " " + status);
+              
+              $("#project-progress").html("Project Completed");
               $("#solutionfund-furtherprogress").text("Pay " +  milestoneData.Title);
               $("#solutionfund-details").text('Raise a Dispute');
 
@@ -920,32 +921,17 @@
                     $("#solutionfund-projectPay").addClass('disabled');
                     $(".btn.disabled").css("background-color", "var(--brand)");
                     $(".btn.disabled").css("color","black");
-                }
+               }
                 else{
                     if(data.FundType == 0)
                     {
-                       //$("#solutionfund-projectPay").css("pointer-events","none")
-                       //$("#solutionfund-furtherprogress").css("pointer-events","auto")
-                         //$("#solutionfund-furtherprogress").addClass('disabled');
                         $("#solutionfund-projectPay").addClass('disabled');
-                          $("#solutionfund-projectPay").css("background-color", "var(--brand)");
+                        $("#solutionfund-projectPay").css("background-color", "var(--brand)");
                         $("#solutionfund-projectPay").css("color","black");
                     }
-                    //else{
-                    //    $("#solutionfund-furtherprogress").addClass('disabled');
-                    //      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                    //    $("#solutionfund-furtherprogress").css("color","black");
-                    //}
                 }
 
-               //else{
-               //    $("#solutionfund-projectPay").css("pointer-events","auto")
-               //    $("#solutionfund-furtherprogress").css("pointer-events","none")
-               //}
            }
-
-
-
    }
 
    function CheckEvent(){

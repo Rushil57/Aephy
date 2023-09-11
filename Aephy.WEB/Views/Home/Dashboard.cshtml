@@ -1882,8 +1882,9 @@ function InvokeApprovedList() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                    var Activedata = result.Result
-              var activeSection = "";
+                if(result.Result != ""){
+                     var Activedata = result.Result
+                    var activeSection = "";
                     $.each(Activedata, function (data, value) {
                         var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
                         var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
@@ -1912,6 +1913,13 @@ function InvokeApprovedList() {
                     })
                   
                       $('#activeProjectdiv').html(activeSection);
+                      $(".cls-temp").remove();
+                }
+                else{
+                    $(".cls-temp").remove();
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#activeProjectdiv");
+                }
+                   
                 $("#preloader").hide();
                
             },

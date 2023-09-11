@@ -442,7 +442,7 @@ namespace Aephy.API.Controllers
                     SolutionFund fundProgress = new SolutionFund();
                     if (model.UserId != "")
                     {
-                        fundProgress = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefaultAsync();
+                        fundProgress = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
                     }
                     if (fundProgress != null && fundProgress.ProjectType != null)
                     {

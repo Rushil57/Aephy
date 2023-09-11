@@ -38,39 +38,25 @@
             <div class="row d-flex">
                 <div class="col-12 d-block my-2">
                     <!-- Show Numbers Of Rows -->
-                    <select class="dropdown btn-dropdown" name="departments" id="select-departments">
-                        <option value="5000">All Departments</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
+                    <select class="dropdown btn-dropdown" name="departments" id="select-departments" onchange="getFilteredRoles();">
+                        <option value="0">All Departments</option>                        
                     </select>
 
                     <!-- Type -->
-                    <select class="dropdown btn-dropdown" name="departments" id="select-departments">
-                        <option value="5000">Type of Employement</option>
-                        <option value="full-time">Full-time</option>
-                        <option value="part-time">Part-time</option>
+                    <select class="dropdown btn-dropdown" name="departments" id="select-Type" onchange="getFilteredRoles();">
+                        <option value="0">Type of Employement</option>
+                        <option value="full time">Full-time</option>
+                        <option value="part time">Part-time</option>
                         
                     </select>
 
                     <!-- Show Numbers Of Rows -->
-                    <select class="dropdown btn-dropdown" name="locations" id="select-locations">
-                        <option value="5000">All Locations</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="70">70</option>
-                        <option value="100">100</option>
+                    <select class="dropdown btn-dropdown" name="locations" id="select-locations" onchange="getFilteredRoles();">
+                        <option value="0">All Locations</option>                       
                     </select>
 
                     <!-- Show Numbers Of Rows -->
-                    <select class="dropdown btn-dropdown" name="state" id="maxRows">
+                    @* <select class="dropdown btn-dropdown" name="state" id="maxRows">
                         <option value="5000">Show ALL Rows</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -79,7 +65,7 @@
                         <option value="50">50</option>
                         <option value="70">70</option>
                         <option value="100">100</option>
-                    </select>
+                    </select> *@
                 </div>
             </div>
 
@@ -209,41 +195,46 @@
 <script>
     $(document).ready(function () {
         GetRolesList()
+        BindDrops()
     });
     function getFilteredRoles() {
         $("#preloader").show();
         var filteredData = {
-            service: $('#select-services').val(),
-            solution: $('#select-solutions').val(),
-            level: $('#select-levels').val(),
-            industry: $('#select-industries').val()
+            Id:0,
+            Department: $('#select-departments').val(),
+            Type: $('#select-Type').val(),
+            Location: $('#select-locations').val()
         };
 
         $.ajax({
-            type: "Get",
-            url: "@Url.Action("GetFilteredRolesList", "LandingPage")",
+            type: "POST",
+            url: "@Url.Action("FilterEmployeeRolesList", "LandingPage")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: filteredData,
+            data: JSON.stringify(filteredData),
             success: function (result) {
                 $('#table-OpenRoles').DataTable({
                     destroy: true,
                     data: result.Result,
                     "columns": [
                         {
-                            "data": "ID",
+                            "data": "Id",
                             "className": "cls-RolesId"
                         },
-                        { "data": "ServiceName" },
-                        { "data": "SolutionName" },
+                        { "data": "Department" },
                         { "data": "Title" },
-                        { "data": "Level" },
-                        { "data": "IndustryName" },
+                        { "data": "Type" },
+                        { "data": "Location" },
                         {
-                            "data": "ID",
+                            "data": "JobDescription",
                             "render": function (data, type, row) {
-                                return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
-
+                                if (data != null) {
+                                    var JobDescription = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + JobDescription + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
                             }
                         }
                     ]
@@ -278,7 +269,18 @@
                         { "data": "Title" },
                         { "data": "Type" },
                         { "data": "Location" },
-                        { "data": "JobDescription" }
+                        {
+                            "data": "JobDescription",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var JobDescription = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + JobDescription + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+                            }
+                        }
                         //{
                           //  "data": "ID",
                           //  "render": function (data, type, row) {
@@ -289,6 +291,44 @@
                        // }
                     ]
                 });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function BindDrops(){
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetCareerOpenRoles", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var seenDept = {}; 
+                var seenLocation = {};
+                $.each(result.Result, function (data, value) {
+                    if (value.Department != "" || value.Department != null){
+                        var txt = value.Department;
+                        if (!seenDept[txt]) {
+                            seenDept[txt] = true;
+                            $("#select-departments").append($("<option     />").val(value.Department).text(value.Department));
+                        }       
+                    }
+                    if (value.Location != "" || value.Location != null) {
+                        var txt = value.Location;
+                        if (!seenLocation[txt]) {
+                            seenLocation[txt] = true;
+                            $("#select-locations").append($("<option     />").val(value.Location).text(value.Location));
+                        }
+                    }
+                })
+                $('#select-departments').trigger('chosen:updated');
+                $('#select-locations').trigger('chosen:updated');
                 $("#preloader").hide();
             },
             error: function (result) {

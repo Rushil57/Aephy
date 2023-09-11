@@ -3504,79 +3504,44 @@ namespace Aephy.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
         }
 
-        /*[HttpGet]
-        [Route("FilteredRolesList")]
-        public async Task<IActionResult> FilteredRolesList(int serviceId, int solutionId, string level, int industryId)
+        [HttpPost]
+        [Route("FilterEmployeeRolesList")]
+        public async Task<IActionResult> FilterEmployeeRolesList([FromBody] EmployeeOpenRolesModel model)
         {
             try
             {
-                var listDB = _db.GigOpenRoles.ToList();
-                var listSolution = _db.Solutions.ToList();
-                var listServiceSol = _db.SolutionServices.ToList();
-                var listService = _db.Services.ToList();
-                var listIndustry = _db.Industries.ToList();
-                var listIndustrySol = _db.SolutionIndustry.ToList();
-                List<dynamic> finalList = new List<dynamic>();
-
-                listDB.ForEach(x =>
+                var EmployeeopenRolesList = _db.EmployeeOpenRole.ToList();
+                if (EmployeeopenRolesList != null)
                 {
-                    var solSer = listServiceSol.Where(t => t.SolutionId == x.SolutionId).FirstOrDefault();
-                    var service = new Services();
-                    if (solSer != null)
+                    if(model.Department != "0" && model.Department != null)
                     {
-                        service = listService.Where(s => s.Id == solSer.ServicesId).FirstOrDefault();
+                        EmployeeopenRolesList = EmployeeopenRolesList.Where(x => x.Department == model.Department).ToList();
                     }
-
-                    var solInd = listIndustrySol.Where(t1 => t1.SolutionId == x.SolutionId).FirstOrDefault();
-                    var industry = new Industries();
-                    if (solInd != null)
+                    if(model.Type != "0" && model.Type != null)
                     {
-                        industry = listIndustry.Where(s1 => s1.Id == solInd.IndustryId).FirstOrDefault();
+                        EmployeeopenRolesList = EmployeeopenRolesList.Where(x => x.Type == model.Type).ToList();
                     }
-                    var solutionName = listSolution.Where(m => m.Id == x.SolutionId).FirstOrDefault()?.Title;
-                    dynamic obj = new
+                    if (model.Location != "0" && model.Location != null)
                     {
-                        x.Level,
-                        x.Title,
-                        x.CreatedDateTime,
-                        x.ID,
-                        x.SolutionId,
-                        x.Description,
-                        SolutionName = solutionName,
-                        ServiceName = service?.ServicesName,
-                        IndustryName = industry?.IndustryName,
-                        ServiceId = service?.Id,
-                        IndustryId = industry?.Id,
-
-                    };
-                    finalList.Add(obj);
-                });
-
-                if (serviceId != 0)
-                    finalList = finalList.Where(x => x.ServiceId == serviceId).ToList();
-                if (solutionId != 0)
-                    finalList = finalList.Where(x => x.SolutionId == solutionId).ToList();
-                if (level != "0")
-                    finalList = finalList.Where(x => x.Level == level).ToList();
-                if (industryId != 0)
-                    finalList = finalList.Where(x => x.IndustryId == industryId).ToList();
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        EmployeeopenRolesList = EmployeeopenRolesList.Where(x => x.Location == model.Location).ToList();
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = EmployeeopenRolesList
+                    });
+                }
+                else
                 {
-                    StatusCode = StatusCodes.Status403Forbidden,
-                    Message = "Success",
-                    Result = finalList
-                });
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "No records found..!!" });
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status403Forbidden,
-                    Message = ex.Message + ex.InnerException
-                });
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
-        }*/
+        }
     }
 }
 

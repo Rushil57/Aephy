@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Aephy.API.DBHelper
+namespace Aephy.WEB.Models
 {
     public class EmployeeOpenRole
     {        

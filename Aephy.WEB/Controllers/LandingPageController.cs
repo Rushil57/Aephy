@@ -288,6 +288,13 @@ namespace Aephy.WEB.Controllers
             return RolesList;
         }
 
+        [HttpPost]
+        public async Task<string> FilterEmployeeRolesList([FromBody]EmployeeOpenRole model)
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilterEmployeeRolesList", HttpMethod.Post,model);
+            return RolesList;
+        }
+
         [HttpGet]
         public async Task<string> GetServices()
         {

@@ -440,9 +440,13 @@ h6 {
     border-color: #7a7a7a !important;
 }
 
-.form-check-input:checked {
-    background-color: var(--brand);
-    border-color: var(--brand);
+    .form-check-input:checked {
+        background-color: var(--brand);
+        border-color: var(--brand);
+    }
+
+#solution-fund-radio-check {
+    background-color: #001973;
 }
 
 .form-check-input:active {
@@ -1653,7 +1657,7 @@ progress::-webkit-progress-value {
     align-items: center;
     /*  margin: 10px;
     border: 2px solid rgba(58,58,58,0.2);*/
-    background-color: var(--aephy);
+    background-color: #001973;
 }
 
 #feedback-form-wrapper #floating-icon > button {

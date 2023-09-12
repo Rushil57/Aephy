@@ -937,7 +937,7 @@
           $("#projectfund-projecttype").html(projectType)
           $("#projectfund-projectprice").html(data.ProjectPrice)
 
-           if(data.ProjectStatus == "INITIATED"){
+           if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
                 var status = data.ProjectStatus
                 status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 

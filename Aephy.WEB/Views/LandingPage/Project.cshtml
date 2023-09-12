@@ -793,55 +793,6 @@
             </div>
         </div>
     </div>
-
-   <div class="modal fade" id="CheckoutModal" tabindex="-1" aria-labelledby="CheckoutModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">CheckOutOption</h4>
-                    <a class="close" onclick="CloseCheckoutModal()"><i class="bi bi-x-circle"></i></a>
-                </div>
-                <div class="modal-body p-0">
-                     <div class="row">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <p>Please select valid Checkout Option:</p>
-                                     <div class="form-group">
-                                          <input type="radio" id="milestone_checkout" name="checkout_option" value="MileStone" onchange="CheckoutMileStoneData(this)" class="checkout_radio">
-                                           <label for="milestone">Milestone Checkout</label><br>
-                                             <input type="radio" id="project_checkout" name="checkout_option" value="Project" onchange="CheckoutMileStoneData(this)" class="checkout_radio">
-                                            <label for="project">Project Checkout</label><br>
-                                    </div>
-                                   
-                                    <div id="milestone-section" style="display:none;">
-                                        <input type="hidden" value="0" id="checkout_milestone_id" />
-                                         <div class="form-group pt-3">
-                                                <label for="milestone">Milestone Title</label>
-                                                <input type="text" class="form-control" id="milestone-title" readonly>
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="Description" class="form-label">Milestone Description</label>
-                                            <div class="input-group">
-                                                <textarea type="text" class="form-control" id="milestone-Description" readonly></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="text-center pt-3" style="display:none;" id="milestone-emptySection">
-                                        <p><b>No Milestone Data Available</b></p>
-                                    </div>
-                                     <div class="text-center">
-                                        <button type="button" class="btn btn-brand" onclick="CheckoutSolution()">CheckOut</button>
-                                        <button type="button" class="btn btn-secondary" onclick="CloseCheckoutModal();">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-                </div>
-            </div>
-        </div>
-    </div>
 <script>
     $(document).ready(function () {
         $("input[name^='projSize']").change(function(){
@@ -857,12 +808,6 @@
         });
         $(".info-popover").popover();
         GetProjectDetails();
-
-        // if ('@Context.Session.GetString("LoggedUser")' == 'Client') {
-        //     $("#btn-contract").prop('disabled',false)  
-        //}else{
-        //    $("#btn-contract").prop('disabled',true)
-        //}
         
     });
     function MilestoneViewMore(){
@@ -1313,46 +1258,6 @@
        
     }
 
-    function CheckoutMileStoneData(value){
-        if(value.value == "MileStone"){
-              var Industryid = @ViewData["Industry"]; 
-                var Solutionid = @ViewData["Solution"];
-                var data = {
-                    IndustryId : Industryid,
-                    SolutionId : Solutionid,
-                }
-               $("#preloader").show();
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    url: "@Url.Action("GetCheckoutMileStoneData", "LandingPage")",
-                    data: JSON.stringify(data),
-                    success: function (result) {
-                        if(result.Message == "success"){
-                            $("#milestone-emptySection").css("display","none")
-                            $("#milestone-section").css("display","block");
-                            $("#checkout_milestone_id").val(result.Result.Id);
-                            $("#milestone-title").val(result.Result.Title);
-                            $("#milestone-Description").val(result.Result.Description);
-                        }else{
-                            $("#milestone-section").css("display","none");
-                            $("#milestone-emptySection").css("display","block")
-                        }
-                        $("#preloader").hide();
-                    },
-                    error: function (result) {
-                        $("#preloader").hide();
-                        showToaster("error", "Error !", "Something went wrong !!");
-                    }
-                });
-                }
-       else{
-            $("#milestone-section").css("display","none");
-            $("#milestone-emptySection").css("display","none");
-       }
-    }
-
     function CloseCheckoutModal(){
         $("#milestone-section").css("display","none");
         $("#milestone-emptySection").css("display","none");
@@ -1406,11 +1311,7 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                    if(result.Message == "Project Initiated Successfully !"){
-                       showToaster("success", "Success !", result.Message);
-                         $(".btn-contract").addClass('disabled');
-                  
-                        $(".btn-contract").css("background-color", "var(--brand)");
-                        $(".btn-contract").css("color","black");
+                      window.location.href = '/Home/Dashboard#activeProjects'
                    }
                    if(result.Message == "EmptyMilestoneData"){
                        showToaster("error", "Error !", "No MilestoneData Available");

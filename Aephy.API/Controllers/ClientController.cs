@@ -1727,7 +1727,7 @@ namespace Aephy.API.Controllers
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "Your payment is compeleted successfully and in escrow. Incase of approved successfully it will be transfered to all stakeholders(Freelances, Architects and Platfom)",
+                                Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.",
                             });
                         }
                         else if (contract.PaymentStatus == Contract.PaymentStatuses.NoPaymentRequired)
@@ -1944,6 +1944,23 @@ namespace Aephy.API.Controllers
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
 
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "CompleteProcess",
+                                Result = new
+                                {
+                                    ProjectDetails = data,
+                                    MileStoneData = mileStoneData
+                                }
+                            });
+                        }
+                        if(data.ProjectStatus == "INPROGRESS")
+                        {
+                            //data.ProjectStatus = "COMPLETED";
+                            //_db.SaveChanges();
+
+                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,

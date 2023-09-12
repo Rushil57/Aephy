@@ -1214,27 +1214,30 @@ namespace Aephy.API.Controllers
                             foreach (var data in projectData)
                             {
                                 SolutionsModel solutionsdataStore = new SolutionsModel();
-                                var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
-                                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
-                                var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-                                var industryname = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                                var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                var FreelancerTransfer = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                if(FreelancerTransfer != Contract.PaymentStatuses.Splitted)
+                                {
+                                    var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
+                                    var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                    var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                                    var industryname = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                    var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
 
-                                solutionsdataStore.Services = serviceData;
-                                solutionsdataStore.ServiceId = serviceId;
-                                solutionsdataStore.SolutionId = data.SolutionId;
-                                solutionsdataStore.IndustryId = data.IndustryId;
-                                //solutionsdataStore.Industries = string.Join(",", industrylist);
-                                solutionsdataStore.Industries = industryname;
-                                solutionsdataStore.Id = data.Id;
-                                solutionsdataStore.Title = solutionData.Title;
-                                solutionsdataStore.Description = solutionData.Description;
-                                solutionsdataStore.ImagePath = solutionData.ImagePath;
-                                solutionsdataStore.MileStoneTitle = milestoneData;
-                                solutionsdataStore.PaymentStatus = contractStatus.ToString();
-                                solutionsModel.Add(solutionsdataStore);
-                                industrylist.Clear();
+                                    solutionsdataStore.Services = serviceData;
+                                    solutionsdataStore.ServiceId = serviceId;
+                                    solutionsdataStore.SolutionId = data.SolutionId;
+                                    solutionsdataStore.IndustryId = data.IndustryId;
+                                    solutionsdataStore.Industries = industryname;
+                                    solutionsdataStore.Id = data.Id;
+                                    solutionsdataStore.Title = solutionData.Title;
+                                    solutionsdataStore.Description = solutionData.Description;
+                                    solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                    solutionsdataStore.MileStoneTitle = milestoneData;
+                                    solutionsdataStore.PaymentStatus = contractStatus.ToString();
+                                    solutionsModel.Add(solutionsdataStore);
+                                    industrylist.Clear();
+                                }
                             }
                         }
                        

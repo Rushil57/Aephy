@@ -1746,3 +1746,20 @@ progress::-webkit-progress-value {
 .error {
     color: red;
 }
+
+#solutionfund-popUp {
+    height: 100%;
+    width: 80%;
+}
+
+.checkout-popover {
+    text-decoration: none;
+}
+
+.popover {
+    width: 12% !important;
+}
+
+#solutionfund-furtherprogress {
+    padding: 7px 23px !important;
+}

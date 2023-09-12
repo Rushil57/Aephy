@@ -588,7 +588,7 @@ namespace Aephy.API.Controllers
 
                         }
                     }
-
+                    var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -601,7 +601,8 @@ namespace Aephy.API.Controllers
                             SuccessfullProjects = successfullProjectList,
                             SolutionFund = fundProgress,
                             SolutionTeam = solutionteamList,
-                            MileStoneProgressData = solutionMilesData
+                            MileStoneProgressData = solutionMilesData,
+                            FundDecided = Funddecided
                         }
                     });
                 }
@@ -1807,9 +1808,9 @@ namespace Aephy.API.Controllers
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
                     if(mileStoneData != null)
                     {
-                        if (model.MileStoneCheckout){model.FundType = SolutionFund.FundTypes.MilestoneFund;}
-                        else{model.FundType = SolutionFund.FundTypes.ProjectFund;}
-
+                        //if (model.MileStoneCheckout){model.FundType = SolutionFund.FundTypes.MilestoneFund;}
+                        //else{model.FundType = SolutionFund.FundTypes.ProjectFund;}
+                        var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).Select(x => x.FundType).FirstOrDefault();
                         var solutionfund = new SolutionFund()
                         {
                             SolutionId = model.SolutionId,
@@ -1818,7 +1819,7 @@ namespace Aephy.API.Controllers
                             ProjectType = model.ProjectType,
                             ProjectPrice = model.ProjectPrice,
                             ProjectStatus = "INITIATED",
-                            //FundType = model.FundType,
+                            FundType = checkType,
                             MileStoneId = mileStoneData.Id
                         };
                         _db.SolutionFund.Add(solutionfund);
@@ -1840,6 +1841,7 @@ namespace Aephy.API.Controllers
 
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
+                        var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -1848,7 +1850,8 @@ namespace Aephy.API.Controllers
                             Result = new
                             {
                                 ProjectDetails = data,
-                                MileStoneData = mileStone
+                                MileStoneData = mileStone,
+                                FundDecided = Funddecided
                             }
                         });
                     }
@@ -1926,20 +1929,24 @@ namespace Aephy.API.Controllers
                     var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED").FirstOrDefault();
                     if (data != null)
                     {
-                        if (model.MileStoneCheckout)
-                        {
-                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
-                        }
-                        else
-                        {
-                            model.FundType = SolutionFund.FundTypes.ProjectFund;
-                        }
+                        //if (model.GetNextMileStoneData)
+                        //{
+                        //    if (model.MileStoneCheckout)
+                        //    {
+                        //        model.FundType = SolutionFund.FundTypes.MilestoneFund;
+                        //    }
+                        //    else
+                        //    {
+                        //        model.FundType = SolutionFund.FundTypes.ProjectFund;
+                        //    }
+                        //}
+                           
 
                         if (data.ProjectStatus == "INITIATED")
                         {
                             data.ProjectStatus = "INPROGRESS";
                             data.MileStoneId = model.MileStoneId;
-                            data.FundType = model.FundType;
+                            data.FundType = data.FundType;
                             _db.SaveChanges();
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
@@ -1985,7 +1992,7 @@ namespace Aephy.API.Controllers
                             {
                                 var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
                                 var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
-
+                                
                                 if (checkoutSession != null)
                                 {
                                     contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);

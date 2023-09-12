@@ -367,6 +367,8 @@ namespace Aephy.API.Models
             public bool IsCheckOutDone { get; set; }
 
             public bool MileStoneCheckout { get; set; }
+
+            public bool GetNextMileStoneData { get; set; }
         }
 
         public class SolutionDisputeViewModel

@@ -294,9 +294,9 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;width: 100%;">
-                                <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true)" style="width:42%;font-size:15px;"></button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;"></button>
                                 <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;font-size:15px;" onclick="CheckEvent()"></button>
-                                <button type="button" class="btn btn-brand" id="solutionfund-projectPay" onclick="CheckoutSolution(false)" style="width:50%;font-size:15px;">Pay Project</button>
+                                <button type="button" class="btn btn-brand" id="solutionfund-projectPay" onclick="ProjectInitiated(false,false)" style="width:50%;font-size:15px;"></button>
                             </div>
                         </div>
                     </div>
@@ -665,7 +665,14 @@
                                 teamsize = 2;
                        }
                        $(".cls-team-size").text(teamsize)
-                      var mileStoneData = data.MileStone[0];
+
+                       var mileStoneData;
+                       if(data.MileStoneProgressData != null){
+                           mileStoneData = data.MileStoneProgressData;
+                       }else{
+                           mileStoneData = data.MileStone[0];
+                       }
+                      
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
                       BindSolutionFundData(data.SolutionFund,mileStoneData);
@@ -819,7 +826,7 @@
         $("#CheckoutModal").modal('hide');
     }
 
-    function ProjectInitiated(checkCheckoutType){
+    function ProjectInitiated(checkCheckoutType,nextMilestoneData){
 
         if('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
               var Projectprice = 0;
@@ -847,7 +854,9 @@
                 ProjectType : projectType,
                 ProjectPrice : Projectprice.toString(),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
-                MileStoneCheckout : mileStoneCheckout
+                MileStoneCheckout : mileStoneCheckout,
+                GetNextMileStoneData : nextMilestoneData
+
             }
            $("#preloader").show();
             $.ajax({
@@ -860,22 +869,49 @@
                    if(result.Message == "projectDetails"){
                        var data = result.Result;
                        $("#solutionFundId").val(data.ProjectDetails.Id);
+                       sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
                        BindSolutionFundData(data.ProjectDetails,data.MileStoneData);
+                        $("#preloader").hide();
+                       return;
                    }
                    if(result.Message == "EmptyMilestoneData"){
                        showToaster("error", "Error !", "No MilestoneData Available");
+                        $("#preloader").hide();
                    }
                    if(result.Message == "CompleteProcess"){
                         CheckoutSolution(true);
+                         $("#preloader").hide();
+                         return;
+                   }
+                   if(result.Message == "NoFurtherMileStone"){
+                       $("#solutionfund-furtherprogress").text('Project Completed');
+                       $("#solutionfund-furtherprogress").addClass('disabled');
+                       $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                       $("#solutionfund-furtherprogress").css("color","black");
+                        $("#solutionfund-projectPay").addClass('disabled');
+                        $("#solutionfund-projectPay").css("background-color", "var(--brand)");
+                        $("#solutionfund-projectPay").css("color","black");
+                        $("#solutionfund-projectPay").text('Project Completed');
+                        $("#preloader").hide();
+                       return;
                    }
                    else{
                         showToaster("success", "Success !", result.Message);
-                        $("#solutionfund-furtherprogress").addClass('disabled');
-                        $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                        $("#solutionfund-furtherprogress").css("color","black");
+                         $("#preloader").hide();
+                        if(result.Result.IsTransfer)
+                        {
+                            $("#solutionfund-furtherprogress").removeClass('disabled');
+                            $("#solutionfund-furtherprogress").css("color","white");
+                            $("#solutionfund-projectPay").removeClass('disabled');
+                            $("#solutionfund-projectPay").css("color","white");
+                            setTimeout(function () {
+                                 $("#solutionFundId").val(0);
+                                ProjectInitiated(false,true);
+                            }, 2500);
+                        }
                    }
-                    $("#preloader").hide();
+                   
                 },
                 error: function (result) {
                     $("#preloader").hide();
@@ -908,6 +944,7 @@
               $("#project-progress").html("Project " + status)
               $("#solutionfund-furtherprogress").text('Fund ' + milestoneData.Title);
               $("#solutionfund-details").text('Stop Project');
+              $("#solutionfund-projectPay").text('Fund Project')
            }
 
            if(data.ProjectStatus == "COMPLETED"){
@@ -915,6 +952,7 @@
               $("#project-progress").html("Project Completed");
               $("#solutionfund-furtherprogress").text("Pay " +  milestoneData.Title);
               $("#solutionfund-details").text('Raise a Dispute');
+              $("#solutionfund-projectPay").text('Pay Project')
 
                if(data.IsDispute){
                     $("#solutionfund-furtherprogress").addClass('disabled');
@@ -928,6 +966,10 @@
                         $("#solutionfund-projectPay").addClass('disabled');
                         $("#solutionfund-projectPay").css("background-color", "var(--brand)");
                         $("#solutionfund-projectPay").css("color","black");
+                    }else{
+                        $("#solutionfund-furtherprogress").addClass('disabled');
+                        $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                        $("#solutionfund-furtherprogress").css("color","black");
                     }
                 }
 

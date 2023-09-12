@@ -95,6 +95,8 @@
 
         public bool MileStoneCheckout { get; set; }
 
+        public bool GetNextMileStoneData { get; set; }
+
     }
     
 }

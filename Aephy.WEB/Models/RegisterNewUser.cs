@@ -35,12 +35,16 @@
 
         public string? FreelancerAddress { get; set; }
         public string? FreelancerLevel { get; set; }
+
+        public int CountryId { get; set; }
     }
 
     public class ClientDetail
     {
         public string? ClientAddress { get; set; }
         public string? Description { get; set; }
+
+        public int CountryId { get; set; }
     }
 
     public class UserCvFile

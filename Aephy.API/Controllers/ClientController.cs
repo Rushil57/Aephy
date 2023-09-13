@@ -564,14 +564,21 @@ namespace Aephy.API.Controllers
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                     var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
                     var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
-                    List<SolutionTeam> solutionteamList = new List<SolutionTeam>();
+                    List<SolutionTeamViewModel> solutionteamList = new List<SolutionTeamViewModel>();
                     if(solutionTeamData.Count > 0)
                     {
                         foreach(var soltiondata in solutionTeamData)
                         {
-                            SolutionTeam solutionTeam = new SolutionTeam();
+                            SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
                             var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            solutionTeam.FreelancerId = fullname.FirstName + " " + fullname.LastName;
+                            solutionTeam.FreelancerName = fullname.FirstName + " " + fullname.LastName;
+                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == soltiondata.FreelancerId).FirstOrDefault();
+                            if(freelancerDetails != null)
+                            {
+                                solutionTeam.FreelancerLevel = freelancerDetails.FreelancerLevel;
+                                solutionTeam.ImagePath = freelancerDetails.ImagePath;
+                                solutionTeam.ImageUrlWithSas = freelancerDetails.ImageUrlWithSas;
+                            }
                             solutionteamList.Add(solutionTeam);
                         }
                     }

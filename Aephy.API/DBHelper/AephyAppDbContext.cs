@@ -61,6 +61,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<SolutionTeam> SolutionTeam { get; set; }
 
+        public DbSet<Country> Country { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

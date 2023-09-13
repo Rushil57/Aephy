@@ -51,8 +51,13 @@ namespace Aephy.API.Controllers
                 if (!string.IsNullOrEmpty(model.UserId))
                 {
                     var user = await _userManager.FindByIdAsync(model.UserId.Trim());
+                    var Countryname = string.Empty;
                     if (user != null)
                     {
+                        if(user.CountryId != 0)
+                        {
+                            Countryname = _db.Country.Where(x => x.Id == user.CountryId).Select(x => x.CountryName).FirstOrDefault();
+                        }
                         if (user.UserType == "Client")
                         {
                             clientDetails = _db.ClientDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
@@ -82,7 +87,9 @@ namespace Aephy.API.Controllers
                                 FreelancerLevel = freelancerDetails.FreelancerLevel,
                                 CVPath = freelancerDetails.CVPath,
                                 ImagePath = freelancerDetails.ImagePath,
-                                ImageUrlWithSas = freelancerDetails.ImageUrlWithSas
+                                ImageUrlWithSas = freelancerDetails.ImageUrlWithSas,
+                                CountryId = user.CountryId,
+                                CountryName = Countryname
                             }
                         });
                     }
@@ -178,6 +185,14 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
+                    //if(model.freelancerDetail != null)
+                    //{
+                    //    user.CountryId = model.freelancerDetail.CountryId;
+                    //}
+                    //if(model.clientDetail != null)
+                    //{
+                    //    user.CountryId = model.clientDetail.CountryId;
+                    //}
                     var result = await _userManager.UpdateAsync(user);
 
                     if (model.freelancerDetail != null)
@@ -190,6 +205,10 @@ namespace Aephy.API.Controllers
                             freelancerDetails.Education = model.freelancerDetail.Education;
                             freelancerDetails.ProffessionalExperience = model.freelancerDetail.ProffessionalExperience;
                             _db.SaveChanges();
+
+                            var userData = _db.Users.Where(x => x.Id == freelancerDetails.UserId).FirstOrDefault();
+                            userData.CountryId = model.freelancerDetail.CountryId;
+                            _db.SaveChanges();
                         }
                     }
 
@@ -200,6 +219,10 @@ namespace Aephy.API.Controllers
                         {
                             clientDetails.Description = model.clientDetail.Description;
                             clientDetails.Address = model.clientDetail.ClientAddress;
+                            _db.SaveChanges();
+
+                            var userData = _db.Users.Where(x => x.Id == clientDetails.UserId).FirstOrDefault();
+                            userData.CountryId = model.clientDetail.CountryId;
                             _db.SaveChanges();
                         }
                     }

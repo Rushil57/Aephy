@@ -158,24 +158,13 @@
                             </div>
                         </div>*@
 
-                         <div class="col-6">
-                            <div class="card">
-                                <div class="card-body pb-0" style="height:303px;">
-                                    <h5 class="card-title">SolutionTeam List</h5>
-                                    <table class="table table-borderless" id="solutionList">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Teammate Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-
+                           <div class="row">
+                                <div class="col">
+                                <div class="row" id="solutionTeamSection">
+                                    
                             </div>
-                         </div>
+                            </div>
+                            </div>
                        
                         <div class="row JoinUs" style="padding:50px 0;">
                             <div class="col-12 column-client-guide">
@@ -617,26 +606,32 @@
                 }
 
                 if(data.SolutionTeam != ""){
-                      var index = 0;
-                        var subObj = '';
-                        var htm = '';
-                        var resultLength = data.SolutionTeam.length;
-                        if(resultLength > 0){
-                            for (index = 0; index < resultLength; index++) {
-                                subObj = data.SolutionTeam[index];
-
-                                htm += '<tr>';
-                                htm += '<td>' + subObj.FreelancerId + '</td>';
-                                htm += '</tr>';
-                            }
-                        }
-                        $("#solutionList").find("tr:gt(0)").remove();
-                        $("#solutionList tbody").append(htm);
-                         $(".cls-temp").remove();
+                      var solutionTeam = "";
+                     $.each(data.SolutionTeam, function (solutiondata, solutionValue) {
+                       solutionTeam += '<div class="col-xxl-4 col-md-6">' +
+                                      '<div class="card info-card sales-card">' +
+                                        '<div class="card-body cls-solution-card">' +
+                                          '<div class="d-flex align-items-center">' +
+                                            '<img src="'+solutionValue.ImageUrlWithSas+'" alt="Image" style="height:60px;width:60px;border-radius:50%">' +
+                                             '<div class="ps-3">' +
+                                              '<h6>'+solutionValue.FreelancerName+'</h6>' +
+                                              '<span class="text-muted small pt-2 ps-1">'+solutionValue.FreelancerLevel+'</span>' +
+                                              '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots" style="color: var(--aephy) !important;"></i></div>' + 
+                                            '</div>' +
+                                            
+                                            '</div>' +
+                                           
+                                          '</div>' +
+                                        '</div>' +
+                                      '</div>' +
+                                    '</div>';
+                    })
+                    $('#solutionTeamSection').html(solutionTeam);
+                   $(".cls-temp").remove();
                 }
                 else{
                     $(".cls-temp").remove();
-                    //$( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#solutionTeamSection");
 
                 }
                 if(data.SuccessfullProjects != ""){
@@ -835,7 +830,8 @@
                        $("#solutionfund-furtherprogress").addClass('disabled');
                        $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                        $("#solutionfund-furtherprogress").css("color","black");
-                        $("#preloader").hide();
+                       $("#project-progress").html("Project Completed");
+                       $("#preloader").hide();
                        return;
                    }
                    else{
@@ -846,6 +842,7 @@
                             $("#solutionfund-furtherprogress").addClass('disabled');
                             $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                             $("#solutionfund-furtherprogress").css("color","black");
+                            $("#project-progress").html("Project Completed");
                             $("#preloader").hide();
                             return;
                          }
@@ -893,25 +890,37 @@
           $("#projectfund-projectprice").html(data.ProjectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
-                var status = data.ProjectStatus
-                status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 
-              $("#project-progress").html("Project " + status)
               $("#solutionfund-details").text('Stop Project');
-
                fundDecided = fundDecided + 1;
+
                if(data.FundType == 1){
-                   $("#solutionfund-furtherprogress").text("Fund Project " + fundDecided)
+                   $("#solutionfund-furtherprogress").text("Fund Project " + fundDecided);
+
+                   var total = fundDecided - 1;
+                   if(total == 0){
+                        var status = data.ProjectStatus
+                        status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+                        $("#project-progress").html("Project " + status)
+                   }
                }
                if(data.FundType == 0){
                      if(fundDecided > 0 ){
+                         var total = fundDecided - 1
                           $("#solutionfund-furtherprogress").show();
                           $("#fundPopOver").hide();
                           $("#solutionfund-furtherprogress").text("Fund Milestone " + fundDecided)
+                          $("#project-progress").html("Milestone " + total + " is Completed")
                       }else{
                           $("#fundPopOver").show();
                           $("#solutionfund-furtherprogress").hide();
+                            var status = data.ProjectStatus
+                            status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
+
+                            $("#project-progress").html("Project " + status)
                       }
+
                }
              
               
@@ -925,36 +934,38 @@
 
               if(data.FundType == 1)
               {
-                $("#project-progress").html("Project Completed");
-                if(IsFundCompleted)
-                 {
-                  $("#solutionfund-furtherprogress").text('Project Completed');
-                  $("#solutionfund-furtherprogress").addClass('disabled');
-                  $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                  $("#solutionfund-furtherprogress").css("color","black");
-                 }
-                else
-                  {
-                    $("#solutionfund-furtherprogress").text("Pay Project");
-                  }     
-              }
-              if(data.FundType == 0)
-              {
-                  $("#project-progress").html("Milestone Completed");
-                  if(IsFundCompleted)
-                    {
+                    if(IsFundCompleted)
+                     {
                       $("#solutionfund-furtherprogress").text('Project Completed');
                       $("#solutionfund-furtherprogress").addClass('disabled');
                       $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                       $("#solutionfund-furtherprogress").css("color","black");
-                    }
-                  else
-                   {
-                    if(fundDecided > 0 )
+                      $("#project-progress").html("Project Completed");
+                     }
+                    else
                       {
-                        $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
-                      }
-                   }
+                        $("#solutionfund-furtherprogress").text("Pay Project");
+                        $("#project-progress").html("Project is in Progress");
+                      }     
+              }
+              if(data.FundType == 0)
+              {
+                  if(IsFundCompleted)
+                  {
+                      $("#solutionfund-furtherprogress").text('Project Completed');
+                      $("#solutionfund-furtherprogress").addClass('disabled');
+                      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                      $("#solutionfund-furtherprogress").css("color","black");
+                      $("#project-progress").html("Project Completed");
+                  }
+                  else
+                  {
+                        if(fundDecided > 0 )
+                        {
+                          $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
+                          $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
+                        }
+                  }
                      
               }
                

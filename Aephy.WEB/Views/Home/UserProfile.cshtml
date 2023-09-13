@@ -104,6 +104,13 @@
                                         </div>
                                     </div>
 
+                                     <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Country</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Country" type="text" class="form-control cls-country" readonly>
+                                        </div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Address</div>
                                         <div class="col-md-8 col-lg-9">
@@ -132,6 +139,13 @@
                                         <div class="col-lg-3 col-md-4 label">Proffessional Experience</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" readonly />
+                                        </div>
+                                    </div>
+
+                                     <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Country</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Country" type="text" class="form-control cls-country" readonly>
                                         </div>
                                     </div>
 
@@ -212,6 +226,15 @@
                                             </div>
                                         </div>
 
+                                         <div class="row mb-3">
+                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="client-country">
+                                                    <option value="0">Select Country</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div class="row mb-3">
                                             <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                             <div class="col-md-8 col-lg-9">
@@ -239,6 +262,15 @@
                                             <label for="ProffessionalExperience" class="col-md-4 col-lg-3 col-form-label">Proffessional Experience</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" id="ProffessionalExperience" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="freelancer-country">
+                                                    <option value="0">Select Country</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -342,7 +374,12 @@
                 role: { required: "Select valid role" },
             },
             submitHandler: function (form) {
-                validateFreelancerRate();
+                if('@ViewData["Role"]' != 'Freelancer'){
+                    UpdateUserData();
+                }else{
+                    validateFreelancerRate();
+                }
+                
             }
         });
 
@@ -368,7 +405,6 @@
             }
         });
         GetUserData()
-
     });
 
     function GetUserData() {
@@ -397,6 +433,12 @@
                     $(".cls-client-address").val(data.ClientAddress)
                     $(".description").val(data.Description)
                     $(".drp-freelancer-level").val(data.FreelancerLevel)
+                    //$("#country").val(data.CountryId)
+                    setTimeout(function () {
+                        $("#client-country").val(data.CountryId)
+                        $("#freelancer-country").val(data.CountryId)
+                    }, 2500);
+                    $(".cls-country").val(data.CountryName)
                     $("#CVPath-id").val(data.CVPath)
                     if(data.CVPath != null){
                         addNameToFile(data.CVPath.split("/")[4])
@@ -414,6 +456,7 @@
                          $("#profile-intial").css("display","flex")
                     }
                 }
+                
                  $('#preloader').hide();
 
             },
@@ -484,11 +527,13 @@
                 Education: $("#Education").val(),
                 ProffessionalExperience: $("#ProffessionalExperience").val(),
                 FreelancerAddress: $("#Freelancer-Address").val(),
+                CountryId: $("#freelancer-country").val(),
             }
 
             var ClientDetail = {
                 Description: $("#Description").val(),
                 ClientAddress: $("#Client-Address").val(),
+                CountryId: $("#client-country").val(),
             }
 
             var Userdata = {
@@ -500,7 +545,7 @@
                 freelancerDetail: FreelancerDetail,
                 clientDetail: ClientDetail
             }
-            debugger
+           
             var formData = new FormData();
             for (var i = 0; i < files.length; i++) {
                 formData.append("httpPostedFileBase", files[i]);
@@ -603,6 +648,7 @@
             $(".FreelancerFields").hide();
             $(".ClientFields").show();
         }
+        BindCountry();
     }
 
     function DownloadCv() {
@@ -629,5 +675,36 @@
         $("#preloader").show();
         window.location = "@Url.Action("RegisterStripeUser", "Home")";
         $("#preloader").hide();
+    }
+
+    function BindCountry(){
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetCountryList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if(result.Message == "success"){
+                    $("#client-country option:not(:first)").remove()
+                        $.each(result.Result, function (data, value) {
+                        $("#client-country").append($("<option     />").val(value.Id).text(value.CountryName));
+                        })
+
+                    $("#freelancer-country option:not(:first)").remove()
+                    $.each(result.Result, function (data, value) {
+                        $("#freelancer-country").append($("<option     />").val(value.Id).text(value.CountryName));
+                    })
+                }
+
+                $("#preloader").hide();
+
+
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
     }
 </script>

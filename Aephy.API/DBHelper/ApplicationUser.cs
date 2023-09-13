@@ -23,6 +23,8 @@ namespace Aephy.API.DBHelper
 
         public bool IsInvitedRemoved { get; set; }
 
+        public int CountryId { get; set; }
+
         /// <summary>
         /// StripeAccountStatus
         /// </summary>
@@ -40,5 +42,14 @@ namespace Aephy.API.DBHelper
         public string? StripeConnectedId { get; set; }
 
         public StripeAccountStatuses StripeAccountStatus { get; set; }
+    }
+
+    public class Country
+    {
+        public int Id { get; set; }
+
+        public int CountryCode { get; set; }
+
+        public string? CountryName { get; set; }
     }
 }

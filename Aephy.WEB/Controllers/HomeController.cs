@@ -1119,7 +1119,34 @@ namespace Aephy.WEB.Controllers
                 }
                 model.UserId = userId;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetActiveSolutionDetailsInProject", HttpMethod.Post, model);
-				return solutionData;
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.SolutionTeam)
+                        {
+                            if (service.ImagePath != null)
+                            {
+                                string imagepath = service.ImagePath;
+                                string sasToken = GenerateImageSasToken(imagepath);
+                                string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                                service.ImageUrlWithSas = imageUrlWithSas;
+                            }
+
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+                return solutionData;
             }
             else
             {
@@ -1620,6 +1647,14 @@ namespace Aephy.WEB.Controllers
 
         }
 
-		
+        //GetCountryList
+        [HttpGet]
+        public async Task<string> GetCountryList()
+        {
+            var countryData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetCountryList", HttpMethod.Get);
+            return countryData;
+        }
+
+
     }
 }

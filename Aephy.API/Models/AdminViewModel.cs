@@ -453,5 +453,15 @@ namespace Aephy.API.Models
             public string? JobDescription { get; set; }
             public DateTime? CreatedDateTime { get; set; }
         }
+
+        public class SolutionTeamViewModel
+        {
+            public string? FreelancerName { get; set; }
+
+            public string? FreelancerLevel { get; set; }
+            public string? ImagePath { get; set; }
+
+            public string? ImageUrlWithSas { get; set; }
+        }
     }
 }

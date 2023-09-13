@@ -1419,5 +1419,19 @@ namespace Aephy.API.Controllers
             });
         }
 
+        //GetCountryList
+        [HttpGet]
+        [Route("GetCountryList")]
+        public async Task<IActionResult> GetCountryList()
+        {
+            var countryList = await _db.Country.ToListAsync();
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "success",
+                Result = countryList
+            });
+        }
+
     }
 }

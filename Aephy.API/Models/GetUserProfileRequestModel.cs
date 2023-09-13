@@ -24,6 +24,8 @@ namespace Aephy.API.Models
         public ClientDetail clientDetail { get; set; }
 
         public string? UserName { get; set; }
+
+       
     }
 
     public class ChangePasswordModel
@@ -44,6 +46,8 @@ namespace Aephy.API.Models
         public string? Education { get; set; }
 
         public string? FreelancerAddress { get; set; }
+
+        public int CountryId { get; set; }
     }
 
     public class ClientDetail
@@ -51,5 +55,7 @@ namespace Aephy.API.Models
         public string? UserId { get; set; }
         public string? ClientAddress { get; set; }
         public string? Description { get; set; }
+
+        public int CountryId { get; set; }
     }
 }

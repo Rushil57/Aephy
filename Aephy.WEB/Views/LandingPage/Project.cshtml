@@ -73,7 +73,7 @@
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
                                         @*<input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">*@
-                                        <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated()" style="width: 50%;">Initiate Contract</button>
+                                        <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated(false)" style="width: 50%;">Initiate Contract</button>
                                         <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                                         </div>
                                     </div>
@@ -483,7 +483,7 @@
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
                             @*<input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">  *@
-                            <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated()" style="width: 50%;">Initiate Contract</button>
+                            <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated(false)" style="width: 50%;">Initiate Contract</button>
                             <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
                             </div>
                         </div>
@@ -1286,10 +1286,10 @@
                  return;
              }
 
-              var mileStoneCheckout = false;
-                if(checkCheckoutType){
-                    mileStoneCheckout = checkCheckoutType;
-                }
+              //var mileStoneCheckout = false;
+              //  if(checkCheckoutType){
+              //      mileStoneCheckout = checkCheckoutType;
+              //  }
             var Industryid = @ViewData["Industry"]; 
             var Solutionid = @ViewData["Solution"];
 
@@ -1300,7 +1300,7 @@
                 ProjectType : projectType,
                 ProjectPrice : Projectprice.toString(),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
-                MileStoneCheckout : mileStoneCheckout
+                MileStoneCheckout : checkCheckoutType
             }
            $("#preloader").show();
             $.ajax({

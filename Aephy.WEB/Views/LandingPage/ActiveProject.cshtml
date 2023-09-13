@@ -771,7 +771,8 @@
                             })
 
                 }
-    function ProjectInitiated(checkCheckoutType,nextMilestoneData){
+
+    function ProjectInitiated(mileStoneCheckOut,nextMilestoneData){
 
         if('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
               var Projectprice = 0;
@@ -785,10 +786,10 @@
              if(projectType == 'large'){
                  Projectprice = 500;
              }
-              var mileStoneCheckout = false;
-                if(checkCheckoutType){
-                    mileStoneCheckout = checkCheckoutType;
-                }
+              //var mileStoneCheckout = false;
+              //  if(checkCheckoutType){
+              //      mileStoneCheckout = checkCheckoutType;
+              //  }
             var Industryid = @ViewData["Industry"]; 
             var Solutionid = @ViewData["Solution"];
 
@@ -799,7 +800,7 @@
                 ProjectType : projectType,
                 ProjectPrice : Projectprice.toString(),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
-                MileStoneCheckout : mileStoneCheckout,
+                MileStoneCheckout : mileStoneCheckOut,
                 GetNextMileStoneData : nextMilestoneData
 
             }
@@ -840,15 +841,28 @@
                    else{
                         showToaster("success", "Success !", result.Message);
                          $("#preloader").hide();
-                        if(result.Result.IsTransfer)
-                        {
-                            $("#solutionfund-furtherprogress").removeClass('disabled');
-                            $("#solutionfund-furtherprogress").css("color","white");
-                            setTimeout(function () {
-                                 $("#solutionFundId").val(0);
-                                ProjectInitiated(false,true);
-                            }, 2500);
-                        }
+                         if(result.Result.FundType == 1){
+                            $("#solutionfund-furtherprogress").text('Project Completed');
+                            $("#solutionfund-furtherprogress").addClass('disabled');
+                            $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                            $("#solutionfund-furtherprogress").css("color","black");
+                            $("#preloader").hide();
+                            return;
+                         }
+                         else{
+                              if(result.Result.IsTransfer)
+                                {
+                                    $("#solutionfund-furtherprogress").removeClass('disabled');
+                                    $("#solutionfund-furtherprogress").css("color","white");
+                                    setTimeout(function () {
+                                         $("#solutionFundId").val(0);
+                                        ProjectInitiated(false,true);
+                                    }, 2500);
+                                }
+                            $("#preloader").hide();
+                            return;
+                         }
+                       
                    }
                    
                 },

@@ -1494,9 +1494,9 @@ namespace Aephy.API.Controllers
                                     }
                                 }
                             }
-                           
+
                         }
-                       
+
                     }
 
                 }
@@ -1510,7 +1510,7 @@ namespace Aephy.API.Controllers
                 {
                     contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
                 }
-                
+
 
                 var domain = _configuration.GetValue<string>("DomainUrl:Domain");
                 var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
@@ -1929,24 +1929,23 @@ namespace Aephy.API.Controllers
                     var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED").FirstOrDefault();
                     if (data != null)
                     {
-                        //if (model.GetNextMileStoneData)
-                        //{
-                        //    if (model.MileStoneCheckout)
-                        //    {
-                        //        model.FundType = SolutionFund.FundTypes.MilestoneFund;
-                        //    }
-                        //    else
-                        //    {
-                        //        model.FundType = SolutionFund.FundTypes.ProjectFund;
-                        //    }
-                        //}
-                           
+
+                        if (model.MileStoneCheckout)
+                        {
+                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
+                        }
+                        else
+                        {
+                            model.FundType = SolutionFund.FundTypes.ProjectFund;
+                        }
+
+
 
                         if (data.ProjectStatus == "INITIATED")
                         {
                             data.ProjectStatus = "INPROGRESS";
                             data.MileStoneId = model.MileStoneId;
-                            data.FundType = data.FundType;
+                            data.FundType = model.FundType;
                             _db.SaveChanges();
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
@@ -1992,7 +1991,7 @@ namespace Aephy.API.Controllers
                             {
                                 var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
                                 var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
-                                
+
                                 if (checkoutSession != null)
                                 {
                                     contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
@@ -2040,7 +2039,8 @@ namespace Aephy.API.Controllers
                                                 Message = message,
                                                 Result = new
                                                 {
-                                                    IsTransfer = transfertoFreelancer
+                                                    IsTransfer = transfertoFreelancer,
+                                                    FundType = completedData.FundType
                                                 }
 
                                             });
@@ -2083,7 +2083,7 @@ namespace Aephy.API.Controllers
                             }
                         }
                     }
-                    
+
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2291,7 +2291,7 @@ namespace Aephy.API.Controllers
         }
 
 
-    [HttpPost]
+        [HttpPost]
         [Route("RaiseDispute")]
         public async Task<IActionResult> RaiseDispute([FromBody] solutionFundViewModel model)
         {
@@ -2352,7 +2352,7 @@ namespace Aephy.API.Controllers
                         Message = ex.Message + ex.InnerException,
                     });
                 }
-               
+
             }
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel

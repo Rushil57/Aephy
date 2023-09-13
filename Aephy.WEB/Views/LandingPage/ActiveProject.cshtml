@@ -675,7 +675,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted);
                    }
                 }
 
@@ -817,7 +817,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false);
                         $("#preloader").hide();
                        return;
                    }
@@ -879,8 +879,8 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided){
-        var count = 1;
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted){
+       
 
           $("#solutioninfo-popUp").css("display","none")
           $("#solutionfund-popUp").css("display","block")
@@ -923,24 +923,48 @@
                $("#fundPopOver").hide();
                $("#solutionfund-furtherprogress").show();
 
-               if(data.FundType == 1){
-                   $("#project-progress").html("Project Completed");
-                   $("#solutionfund-furtherprogress").text("Pay Project");
-               }if(data.FundType == 0){
-                   $("#project-progress").html("Milestone Completed");
-                   if(fundDecided > 0 ){
-                     $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
+              if(data.FundType == 1)
+              {
+                $("#project-progress").html("Project Completed");
+                if(IsFundCompleted)
+                 {
+                  $("#solutionfund-furtherprogress").text('Project Completed');
+                  $("#solutionfund-furtherprogress").addClass('disabled');
+                  $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                  $("#solutionfund-furtherprogress").css("color","black");
                  }
-               }
+                else
+                  {
+                    $("#solutionfund-furtherprogress").text("Pay Project");
+                  }     
+              }
+              if(data.FundType == 0)
+              {
+                  $("#project-progress").html("Milestone Completed");
+                  if(IsFundCompleted)
+                    {
+                      $("#solutionfund-furtherprogress").text('Project Completed');
+                      $("#solutionfund-furtherprogress").addClass('disabled');
+                      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                      $("#solutionfund-furtherprogress").css("color","black");
+                    }
+                  else
+                   {
+                    if(fundDecided > 0 )
+                      {
+                        $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
+                      }
+                   }
+                     
+              }
+               
                $("#solutionfund-details").text('Raise a Dispute');
-              count++;
                if(data.IsDispute){
                     $("#solutionfund-furtherprogress").addClass('disabled');
                     $("#solutionfund-projectPay").addClass('disabled');
                     $(".btn.disabled").css("background-color", "var(--brand)");
                     $(".btn.disabled").css("color","black");
                }
-
            }
    }
 

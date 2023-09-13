@@ -1642,7 +1642,6 @@ progress::-webkit-progress-value {
 }
 
 #project-progress {
-    /*appearance: none;*/
     cursor: pointer;
     border-radius: 20px;
     padding: 9px 10px;
@@ -1650,14 +1649,12 @@ progress::-webkit-progress-value {
     font-size: 18px;
     font-family: sans-serif;
     transition: all 0.1s;
-    /* width: 100%;*/
     height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /*  margin: 10px;
-    border: 2px solid rgba(58,58,58,0.2);*/
     background-color: #001973;
+    width: 100%;
 }
 
 #feedback-form-wrapper #floating-icon > button {

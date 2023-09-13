@@ -88,12 +88,12 @@ namespace Aephy.API.Controllers
                     applicantsDetails.BlobStorageBaseUrl = freelancerDetails.BlobStorageBaseUrl;
                     _db.SaveChanges();
 
-					return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-					{
-						StatusCode = StatusCodes.Status200OK,
-						Message = "Applied Successfully !"
-					});
-				}
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Applied Successfully !"
+                    });
+                }
             }
             else
             {
@@ -1085,7 +1085,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-       
+
         [HttpPost]
         [Route("UnSavedProject")]
         public async Task<IActionResult> UnSavedProject([FromBody] MileStoneDetailsViewModel model)
@@ -1127,7 +1127,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        
+
         [HttpPost]
         [Route("GetAllSavedProjectList")]
         public async Task<IActionResult> GetAllSavedProjectList([FromBody] MileStoneIdViewModel model)
@@ -1206,30 +1206,53 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
+                        List<solutionFundViewModel> finalFundList = new List<solutionFundViewModel>();
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
-                        if (projectData.Count > 0)
+                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
+                        if(projectData.Count > 0)
                         {
-                            List<string> industrylist = new List<string>();
-                            foreach (var data in projectData)
+                            var grouped_teachers = projectData
+                             .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
+                             .Select(g => new
+                             {
+                                 FundList = g.ToList(),
+                             });
+
+                            foreach (var group in grouped_teachers)
                             {
-                                SolutionsModel solutionsdataStore = new SolutionsModel();
-                                var FreelancerTransfer = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                if(FreelancerTransfer != Contract.PaymentStatuses.Splitted)
+                                var list = group.FundList;
+                                solutionFundViewModel grouping = new solutionFundViewModel();
+                                if (list.Count != 1)
                                 {
-                                    var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
-                                    var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                    grouping.solutionFunds = list.Last();
+                                    finalFundList.Add(grouping);
+                                }
+                                else
+                                {
+                                    grouping.solutionFunds = list.FirstOrDefault();
+                                    finalFundList.Add(grouping);
+                                }
+
+                            }
+                            if (finalFundList.Count > 0)
+                            {
+                                List<string> industrylist = new List<string>();
+                                foreach (var data in finalFundList)
+                                {
+                                    SolutionsModel solutionsdataStore = new SolutionsModel();
+                                    var solutionData = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).FirstOrDefault();
+                                    var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.solutionFunds.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
                                     var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-                                    var industryname = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                                    var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                    var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                    var industryname = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                    var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();
 
                                     solutionsdataStore.Services = serviceData;
                                     solutionsdataStore.ServiceId = serviceId;
-                                    solutionsdataStore.SolutionId = data.SolutionId;
-                                    solutionsdataStore.IndustryId = data.IndustryId;
+                                    solutionsdataStore.SolutionId = data.solutionFunds.SolutionId;
+                                    solutionsdataStore.IndustryId = data.solutionFunds.IndustryId;
                                     solutionsdataStore.Industries = industryname;
-                                    solutionsdataStore.Id = data.Id;
+                                    solutionsdataStore.Id = data.solutionFunds.Id;
                                     solutionsdataStore.Title = solutionData.Title;
                                     solutionsdataStore.Description = solutionData.Description;
                                     solutionsdataStore.ImagePath = solutionData.ImagePath;
@@ -1237,16 +1260,30 @@ namespace Aephy.API.Controllers
                                     solutionsdataStore.PaymentStatus = contractStatus.ToString();
                                     solutionsModel.Add(solutionsdataStore);
                                     industrylist.Clear();
+
                                 }
+
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "success",
+                                    Result = solutionsModel
+                                });
                             }
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = solutionsModel
+                            });
                         }
-                       
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
                             Message = "success",
                             Result = solutionsModel
                         });
+
                     }
                     catch (Exception ex)
                     {

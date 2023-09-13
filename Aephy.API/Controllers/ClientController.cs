@@ -542,9 +542,15 @@ namespace Aephy.API.Controllers
                 {
                     SolutionFund fundProgress = new SolutionFund();
                     SolutionMilestone solutionMilesData = new SolutionMilestone();
+                    bool fundCompleted = false;
                     if (model.UserId != "")
                     {
                         fundProgress = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
+                        var checkfundCompleted = await _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.PaymentStatus).FirstOrDefaultAsync();
+                        if(checkfundCompleted == Contract.PaymentStatuses.Splitted)
+                        {
+                            fundCompleted = true;
+                        }
                     }
                     if (fundProgress != null && fundProgress.ProjectType != null)
                     {
@@ -602,7 +608,8 @@ namespace Aephy.API.Controllers
                             SolutionFund = fundProgress,
                             SolutionTeam = solutionteamList,
                             MileStoneProgressData = solutionMilesData,
-                            FundDecided = Funddecided
+                            FundDecided = Funddecided,
+                            FundCompleted = fundCompleted
                         }
                     });
                 }

@@ -97,7 +97,11 @@ namespace Aephy.API.Stripe
                 AutomaticTax = new SessionAutomaticTaxOptions
                 {
                     Enabled = true
-                }
+                },
+                 TaxIdCollection = new SessionTaxIdCollectionOptions
+                 {
+                     Enabled = true
+                 }
             };
 
             try
@@ -148,6 +152,10 @@ namespace Aephy.API.Stripe
                         { "Architect", "123" }
                     },
                 AutomaticTax = new SessionAutomaticTaxOptions
+                {
+                    Enabled = true
+                },
+                TaxIdCollection = new SessionTaxIdCollectionOptions
                 {
                     Enabled = true
                 }

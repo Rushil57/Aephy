@@ -185,5 +185,8 @@ namespace Aephy.WEB.Admin.Models
         public bool IsDisputeResolved { get; set; }
 
         public string? StopPaymentReason { get; set; }
+
+        public string? ClientName { get; set; }
+
     }
 }

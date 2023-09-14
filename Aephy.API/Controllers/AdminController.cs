@@ -3280,6 +3280,7 @@ namespace Aephy.API.Controllers
                             var fullname = _db.Users.Where(x => x.Id == data.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
                             disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
+                            disputeViewModel.IsClientRefund = data.IsClientRefund;
                             bool PaymentStopped = false;
                             var IsPaymentStopped = _db.SolutionStopPayment.Where(x => x.ContractId == data.Id).FirstOrDefault();
                             if (IsPaymentStopped != null)
@@ -3548,6 +3549,114 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
+
+        //GetClientDetailsForRefund
+        [HttpPost]
+        [Route("GetClientDetailsForRefund")]
+        public async Task<IActionResult> GetClientDetailsForRefund([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var contractData = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
+                    if (contractData != null)
+                    {
+                        SolutionDisputeViewModel solutionDetails = new SolutionDisputeViewModel();
+                        var clientName =  _db.Users.Where(x => x.Id == contractData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                        solutionDetails.ClientName = clientName.FirstName + " " + clientName.LastName;
+                        solutionDetails.LatestChargeId = contractData.LatestChargeId;
+                        solutionDetails.ContractId = contractData.Id;
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionDetails
+                        });
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "No Data Available!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
+        //RefundClientAmount
+        [HttpPost]
+        [Route("RefundClientAmount")]
+        public async Task<IActionResult> RefundClientAmount([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    var clienttransfer = _stripeAccountService.RefundAmountToClient(model.LatestChargeId, long.Parse(model.TransferAmount), model.Currency);
+                    if(clienttransfer == "succeeded")
+                    {
+                        var contractDetails = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
+                        if(contractDetails != null)
+                        {
+                            contractDetails.IsClientRefund = true;
+                            contractDetails.RefundAmount = model.TransferAmount;
+                            contractDetails.RefundDateTime = DateTime.Now;
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Refund Succesfully !",
+                            });
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Not able to refund please try again.",
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
+        }
+
     }
 }
 

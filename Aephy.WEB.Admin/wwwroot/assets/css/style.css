@@ -1453,3 +1453,7 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
+
+#ActiveProjectList {
+    width: 1200px !important;
+}

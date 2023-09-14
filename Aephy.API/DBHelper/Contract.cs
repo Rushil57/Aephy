@@ -51,6 +51,12 @@ namespace Aephy.API.DBHelper
         public string? LatestChargeId { get; set; }
         public int SolutionFundId { get; set; }
 
+        public bool IsClientRefund { get; set; }
+
+        public string? RefundAmount { get; set; }
+
+        public DateTime RefundDateTime { get; set; }
+
         // Stripe fields above
 
     }

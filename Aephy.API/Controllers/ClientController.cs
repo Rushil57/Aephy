@@ -602,6 +602,20 @@ namespace Aephy.API.Controllers
                         }
                     }
                     var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
+
+                    var contractId = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Id).FirstOrDefault();
+                    bool IsProjectstop = false;
+                    if(contractId != 0)
+                    {
+                        var solutionStopData = _db.SolutionStopPayment.Where(x => x.ContractId == contractId).FirstOrDefault();
+                        if(solutionStopData != null)
+                        {
+                            IsProjectstop = true;
+                        }
+                    }
+
+
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -616,7 +630,8 @@ namespace Aephy.API.Controllers
                             SolutionTeam = solutionteamList,
                             MileStoneProgressData = solutionMilesData,
                             FundDecided = Funddecided,
-                            FundCompleted = fundCompleted
+                            FundCompleted = fundCompleted,
+                            IsProjectStop = IsProjectstop
                         }
                     });
                 }

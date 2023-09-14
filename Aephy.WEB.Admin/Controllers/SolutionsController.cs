@@ -829,6 +829,22 @@ namespace Aephy.WEB.Admin.Controllers
             return clientPayment;
         }
 
+        //GetClientDetailsForRefund
+        [HttpPost]
+        public async Task<string> GetClientDetailsForRefund([FromBody] SolutionDisputeModel model)
+        {
+            var clientData = await _apiRepository.MakeApiCallAsync("api/Admin/GetClientDetailsForRefund", HttpMethod.Post, model);
+            return clientData;
+        }
+
+        //RefundClientAmount
+        [HttpPost]
+        public async Task<string> RefundClientAmount([FromBody] SolutionDisputeModel model)
+        {
+            var clientTransfertData = await _apiRepository.MakeApiCallAsync("api/Admin/RefundClientAmount", HttpMethod.Post, model);
+            return clientTransfertData;
+        }
+
 
     }
 }

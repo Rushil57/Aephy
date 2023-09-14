@@ -408,6 +408,8 @@ namespace Aephy.API.Models
 
             public bool IsPaymentStop { get; set; }
 
+            public bool IsClientRefund { get; set; }
+
         }
         public class CustomSolutionsModel
         {

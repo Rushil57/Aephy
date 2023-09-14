@@ -142,28 +142,14 @@
 
                       
                         <!-- Reviews row -->
-                        @*<div class="row justify-content-center reviews px-0 gx-0" id="reviews">
-                            <h3 class="pt-2 justify-content-center label-title-size title-path">
-                                Solution Team
-                            </h3>
-                            <div id="solutionTeamDiv">
-                               <ul id="TeamList">
-
-                               </ul>
-                               <table>
-                                   <td>
-
-                                   </td>
-                               </table>
-                            </div>
-                        </div>*@
 
                            <div class="row">
                                 <div class="col">
-                                <div class="row" id="solutionTeamSection">
+                                     <h3 class="label-title-size title-path">Solution Team</h3>
+                                    <div class="row" id="solutionTeamSection">
                                     
-                            </div>
-                            </div>
+                                    </div>
+                                 </div>
                             </div>
                        
                         <div class="row JoinUs" style="padding:50px 0;">
@@ -608,15 +594,23 @@
                 if(data.SolutionTeam != ""){
                       var solutionTeam = "";
                      $.each(data.SolutionTeam, function (solutiondata, solutionValue) {
+                          var name =solutionValue.FreelancerName.split(" ")
+                         var firstname = name[0].charAt(0);
+                         var lastname = name[1].charAt(0);
+
                        solutionTeam += '<div class="col-xxl-4 col-md-6">' +
-                                      '<div class="card info-card sales-card">' +
+                                      '<div class="card info-card cls-solutionTeam-card">' +
                                         '<div class="card-body cls-solution-card">' +
-                                          '<div class="d-flex align-items-center">' +
-                                            '<img src="'+solutionValue.ImageUrlWithSas+'" alt="Image" style="height:60px;width:60px;border-radius:50%">' +
-                                             '<div class="ps-3">' +
-                                              '<h6>'+solutionValue.FreelancerName+'</h6>' +
-                                              '<span class="text-muted small pt-2 ps-1">'+solutionValue.FreelancerLevel+'</span>' +
-                                              '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots" style="color: var(--aephy) !important;"></i></div>' + 
+                                          '<div class="d-flex align-items-center">';
+                                            if(solutionValue.ImageUrlWithSas != null){
+                                                solutionTeam +='<img src="'+solutionValue.ImageUrlWithSas+'" alt="Image" style="height:46px;width:46px;border-radius:50%">';
+                                            }else{
+                                                solutionTeam += '<div class="cls-freelancerImage">'+ firstname +''+ lastname +'</div>'
+                                            }
+                                             solutionTeam +='<div class="ps-3">' +
+                                              '<h6 style="margin-bottom: 0; !important">'+solutionValue.FreelancerName+'</h6>' +
+                                              '<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
+                                              '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots cls-chat-icon"></i></div>' + 
                                             '</div>' +
                                             
                                             '</div>' +
@@ -670,7 +664,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop);
                    }
                 }
 
@@ -812,7 +806,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false);
                         $("#preloader").hide();
                        return;
                    }
@@ -876,7 +870,7 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted){
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop){
        
 
           $("#solutioninfo-popUp").css("display","none")
@@ -934,40 +928,60 @@
 
               if(data.FundType == 1)
               {
-                    if(IsFundCompleted)
+                     if(IsFundCompleted)
                      {
-                      $("#solutionfund-furtherprogress").text('Project Completed');
-                      $("#solutionfund-furtherprogress").addClass('disabled');
-                      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                      $("#solutionfund-furtherprogress").css("color","black");
-                      $("#project-progress").html("Project Completed");
+                          $("#solutionfund-furtherprogress").text('Project Completed');
+                          $("#solutionfund-furtherprogress").addClass('disabled');
+                          $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                          $("#solutionfund-furtherprogress").css("color","black");
+                          $("#project-progress").html("Project Completed");
                      }
                     else
                       {
                         $("#solutionfund-furtherprogress").text("Pay Project");
                         $("#project-progress").html("Project is in Progress");
-                      }     
+                                 if(IsProjectStop){
+                                $("#solutionfund-furtherprogress").addClass('disabled');
+                                $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                                $("#solutionfund-furtherprogress").css("color","black");
+                                 $("#solutionfund-details").addClass('disabled');
+                                $("#solutionfund-details").css("background-color", "var(--brand)");
+                                $("#solutionfund-details").css("color","black");  
+                          }
+                         
+                    }
+                    
               }
               if(data.FundType == 0)
               {
-                  if(IsFundCompleted)
+                if(IsFundCompleted)
+                   {
+                     $("#solutionfund-furtherprogress").text('Project Completed');
+                     $("#solutionfund-furtherprogress").addClass('disabled');
+                     $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                     $("#solutionfund-furtherprogress").css("color","black");
+                     $("#project-progress").html("Project Completed");
+                   }
+                else
                   {
-                      $("#solutionfund-furtherprogress").text('Project Completed');
-                      $("#solutionfund-furtherprogress").addClass('disabled');
-                      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                      $("#solutionfund-furtherprogress").css("color","black");
-                      $("#project-progress").html("Project Completed");
-                  }
-                  else
-                  {
-                        if(fundDecided > 0 )
-                        {
-                          $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
-                          $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
+                     if(fundDecided > 0 )
+                       {
+                         if(IsProjectStop){
+                           $("#solutionfund-furtherprogress").addClass('disabled');
+                           $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+                           $("#solutionfund-furtherprogress").css("color","black");
+                           $("#solutionfund-details").addClass('disabled');
+                           $("#solutionfund-details").css("background-color", "var(--brand)");
+                           $("#solutionfund-details").css("color","black");  
+                         }
                         }
+                        $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
+                        $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
+                      }
+                       
                   }
-                     
-              }
+                 
+
                
                $("#solutionfund-details").text('Raise a Dispute');
                if(data.IsDispute){

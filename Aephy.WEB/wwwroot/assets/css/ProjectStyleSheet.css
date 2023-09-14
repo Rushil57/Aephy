@@ -1655,7 +1655,7 @@ progress::-webkit-progress-value {
     align-items: center;
     background-color: #001973;
     width: 100%;
-    height: 120%;
+    height: 100px;
     text-align: center;
 }
 
@@ -1764,5 +1764,32 @@ progress::-webkit-progress-value {
 }
 
 .cls-solution-card {
-    padding-top: 10% !important;
+    //padding-top: 10% !important;
+    padding: 4% 2% 1% 3% !important;
+}
+
+.cls-solutionTeam-card {
+    border: 2px solid #d38b4e;
+    margin-top: 5%;
+}
+
+.cls-freelancerImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    font-size: 18px;
+    color: #fff;
+    background-color: var(--brand);
+    border-radius: 50%;
+    height: 46px;
+    width: 46px;
+    border: 2px solid #fff;
+    outline: 2px solid #fff;
+    outline-offset: -8px;
+}
+
+.cls-chat-icon {
+    color: var(--aephy) !important;
+    font-size: 25px;
 }

@@ -62,7 +62,12 @@ namespace Aephy.API.DBHelper
         public DbSet<SolutionTeam> SolutionTeam { get; set; }
 
         public DbSet<Country> Country { get; set; }
-        
+
+        public DbSet<ProjectReview> ProjectReview { get; set; }
+
+        public DbSet<FreelancerReview> FreelancerReview { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

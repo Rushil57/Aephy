@@ -3657,6 +3657,112 @@ namespace Aephy.API.Controllers
 
         }
 
+        [HttpPost]
+        [Route("SaveFreelancerReview")]
+        public async Task<IActionResult> SaveFreelancerReview([FromBody] SolutionTeamReview model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    try
+                    {
+                        var checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId).FirstOrDefault();
+                        if(checkExistance != null)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You have already submitted review for this freelancer..!!" });
+                        }
+
+                        DateTime date = (DateTime)model.CreateDateTime;
+                        var freelancerReview = new FreelancerReview()
+                        {
+                            ClientId = model.ClientId,
+                            FreelancerId = model.FreelancerId,
+                            Feedback_Message = model.Feedback_Message,
+                            CommunicationRating = model.CommunicationRating,
+                            CollaborationRating = model.CollaborationRating,
+                            ProfessionalismRating = model.ProfessionalismRating,
+                            TechnicalRating = model.TechnicalRating,
+                            SatisfactionRating = model.SatisfactionRating,
+                            ResponsivenessRating = model.ResponsivenessRating,
+                            LikeToWorkRating = model.LikeToWorkRating,
+                            CreateDateTime = date
+                        };
+                        _db.FreelancerReview.Add(freelancerReview);
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Review Submitted Successfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+        [HttpPost]
+        [Route("SaveProjectReview")]
+        public async Task<IActionResult> SaveProjectReview([FromBody] SolutionReview model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    try
+                    {
+                        var checkExistance = _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                        if (checkExistance != null)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You have already submitted review..!!" });
+                        }
+
+                        DateTime date = (DateTime)model.CreateDateTime;
+                        int solutionId = (int)model.SolutionId;
+                        int industryId = (int)model.IndustryId;
+                        var projectReview = new ProjectReview()
+                        {
+                            ClientId = model.ClientId,
+                            SolutionId = solutionId,
+                            IndustryId = industryId,
+                            Feedback_Message = model.Feedback_Message,
+                            WellDefinedProjectScope = model.WellDefinedProjectScope,
+                            AdherenceToProjectScope = model.AdherenceToProjectScope,
+                            DeliverablesQuality = model.DeliverablesQuality,
+                            MeetingTimeliness = model.MeetingTimeliness,
+                            Clientsatisfaction = model.Clientsatisfaction,
+                            AdherenceToBudget = model.AdherenceToBudget,
+                            LikeToRecommend = model.LikeToRecommend,
+                            CreateDateTime = date
+                        };
+                        _db.ProjectReview.Add(projectReview);
+                        _db.SaveChanges();
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Review Submitted Successfully!."
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
     }
 }
 

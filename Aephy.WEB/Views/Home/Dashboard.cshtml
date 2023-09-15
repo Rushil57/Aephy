@@ -741,6 +741,605 @@
     </div>
 </div>
 
+<!--freelancerReviewList -->
+<div class="modal" id="freelancerReviewListModal" tabindex="-1" aria-labelledby="freelancerReviewListModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Give Your Feedback</h4>
+                <a class="close" onclick="CloseSolutionTeamPopup();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body pb-0" style="height:303px;">
+                                            <table class="table" id="solutionList">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Team List</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feedback Modal -->
+<div id="feedback-form-modal">
+    <div class="modal fade" id="FreelancerFeedbackModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title card-title py-0" id="exampleModalLabel">Add your feedback</h5>
+            <a class="close" onclick="closeFreelancerFeedbackPopup();" aria-label="Close">
+              <i class="bi bi-x-circle"></i>
+            </a>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+            <div class="card-body">
+              @*<h5 class="card-title">Feedback</h5>*@
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3 mt-2" name="FreelancerFeedback_form">
+                  <input type="text" class="form-control d-none" id="FreelancerID" name="FreelancerID" value="none">
+                  @* <div class="col-md-6">
+                      <div class="form-floating">
+                          <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Your Name">
+                        <label for="floatingName" class="sub-title">Name</label>
+                      </div>
+                  </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="email" class="form-control" id="UserEmail" name="UserEmail" placeholder="Your Email">
+                    <label for="floatingEmail" class="sub-title">Email *</label>
+                  </div>
+                </div> *@
+                <div class="col-12">
+                  <div class="form-floating">
+                    <textarea class="form-control" placeholder="Feedback" id="feedbackMessage" name="feedbackMessage" style="height: 100px;"></textarea>
+                    <label for="floatingTextarea" class="sub-title">Feedback</label>
+                    <p class="sub-title" style="font-family: sans-serif; font-size:0.9rem; font-weight:200;">Please provide your feedback here</p>
+                  </div>
+                </div>
+                @*<div class="col-md-6">
+                  <div class="col-md-12">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="floatingCity" placeholder="City">
+                      <label for="floatingCity" class="sub-title">City</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" aria-label="State">
+                      <option selected>New York</option>
+                      <option value="1">Oregon</option>
+                      <option value="2">DC</option>
+                    </select>
+                    <label for="floatingSelect" class="sub-title">State</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="floatingZip" placeholder="Zip">
+                    <label for="floatingZip" class="sub-title">Zip</label>
+                  </div>
+                </div>*@
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Communication Skills</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="communication-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="communication-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="communication-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="communication-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="communication-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="communication-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="communication-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="communication-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="communication-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="communication-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="communication-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="communication-rating" id="communication-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Collaboration Skills</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="collaboration-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="collaboration-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="collaboration-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="collaboration-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="collaboration-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="collaboration-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="collaboration-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="collaboration-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="collaboration-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="collaboration-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="collaboration-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="collaboration-rating" id="collaboration-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Professionalism</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="Professionalism-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="Professionalism-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="Professionalism-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="Professionalism-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="Professionalism-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="Professionalism-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="Professionalism-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="Professionalism-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="Professionalism-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="Professionalism-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="Professionalism-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="Professionalism-rating" id="Professionalism-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Technical Skills</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="technical-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="technical-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="technical-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="technical-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="technical-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="technical-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="technical-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="technical-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="technical-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="technical-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="technical-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="technical-rating" id="technical-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Client Satisfaction</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="satisfaction-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="satisfaction-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="satisfaction-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="satisfaction-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="satisfaction-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="satisfaction-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="satisfaction-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="satisfaction-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="satisfaction-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="satisfaction-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="satisfaction-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="satisfaction-rating" id="satisfaction-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Responsiveness</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="responsiveness-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="responsiveness-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="responsiveness-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="responsiveness-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="responsiveness-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="responsiveness-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="responsiveness-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="responsiveness-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="responsiveness-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="responsiveness-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="responsiveness-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="responsiveness-rating" id="responsiveness-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex flex-column align-items-start text-center">
+                            <div class="p-2">Would you consider working with <b class="freelancer-name" id="freelancerName"></b></div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="likeToWork-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="likeToWork-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="likeToWork-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="likeToWork-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="likeToWork-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="likeToWork-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-5" value="5" type="radio">
+                                    <label aria-label="6 star" class="rating__label" for="likeToWork-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-6" value="6" type="radio">
+                                    <label aria-label="7 stars" class="rating__label" for="likeToWork-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-7" value="7" type="radio">
+                                    <label aria-label="8 stars" class="rating__label" for="likeToWork-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-8" value="8" type="radio">
+                                    <label aria-label="9 stars" class="rating__label" for="likeToWork-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-9" value="9" type="radio">
+                                    <label aria-label="10 stars" class="rating__label" for="likeToWork-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToWork-rating" id="likeToWork-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <div class="col-12 d-flex justify-content-center align-items-center">
+                    <div class="form-floating d-flex flex-column justify-content-center align-items-center text-center">
+                        <div class="desc" style="font-family: sans-serif; font-size:0.9rem; font-weight:200;"><b style="font-size:1.1rem;">How would you rate the work with <b class="freelancer-name" id="freelancerName"></b> ?</b><br/><p class="sub-title">Please rate on a scale of 1 to 5 stars</p></div>
+                        <div id="full-stars-example-two">
+                            <div class="rating-group">
+                                <input disabled checked class="rating__input rating__input--none" name="rating" id="rating3-none" value="0" type="radio">
+                                <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-2"></i></label>
+                                <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-2"></i></label>
+                                <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-2"></i></label>
+                                <input class="rating__input" name="rating" id="rating-3" value="3" type="radio">
+                                <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-2"></i></label>
+                                <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-2"></i></label>
+                                <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-brand">Submit</button>
+                  <button type="reset" class="btn btn-secondary" onclick="resetFreelancerFeedbackForm();">Reset</button>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Feedback Modal -->
+<div id="feedback-form-modal">
+    <div class="modal fade" id="SolutionFeedbackModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title card-title py-0" id="exampleModalLabel">Add your feedback</h5>
+            <a class="close" onclick="CloseSolutionPopup();" aria-label="Close">
+              <i class="bi bi-x-circle"></i>
+            </a>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+            <div class="card-body">
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3 mt-2" name="SolutionFeedback_form">
+                    <input type="text" class="form-control d-none" id="SolutionID" name="SolutionID" value="0">
+                    <input type="text" class="form-control d-none" id="IndustryID" name="IndustryID" value="0">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <textarea class="form-control" placeholder="Feedback" id="Message" name="feedbackMessage" style="height: 100px;"></textarea>
+                    <label for="floatingTextarea" class="sub-title">Feedback</label>
+                    <p class="sub-title" style="font-family: sans-serif; font-size:0.9rem; font-weight:200;">Please provide your feedback here</p>
+                  </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Well-defined project scope</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="wellDefined-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="wellDefined-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="wellDefined-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="wellDefined-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="wellDefined-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="wellDefined-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="wellDefined-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="wellDefined-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="wellDefined-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="wellDefined-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="wellDefined-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="wellDefined-rating" id="wellDefined-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Adherence to project scope</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="adherence-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="adherence-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="adherence-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="adherence-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="adherence-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="adherence-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="adherence-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="adherence-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="adherence-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="adherence-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="adherence-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherence-rating" id="adherence-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Quality of deliverables</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="deliverablesQuality-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="deliverablesQuality-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="deliverablesQuality-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="deliverablesQuality-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="deliverablesQuality-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="deliverablesQuality-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="deliverablesQuality-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="deliverablesQuality-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="deliverablesQuality-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="deliverablesQuality-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="deliverablesQuality-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="deliverablesQuality-rating" id="deliverablesQuality-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Meeting timeliness</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="MeetingTimeliness-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="MeetingTimeliness-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="MeetingTimeliness-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="MeetingTimeliness-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="MeetingTimeliness-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="MeetingTimeliness-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="MeetingTimeliness-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="MeetingTimeliness-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="MeetingTimeliness-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="MeetingTimeliness-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="MeetingTimeliness-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="MeetingTimeliness-rating" id="MeetingTimeliness-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Client Satisfaction</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="clientsatisfaction-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="clientsatisfaction-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="clientsatisfaction-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="clientsatisfaction-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="clientsatisfaction-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="clientsatisfaction-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="clientsatisfaction-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="clientsatisfaction-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="clientsatisfaction-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="clientsatisfaction-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="clientsatisfaction-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="clientsatisfaction-rating" id="clientsatisfaction-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex align-items-center text-center">
+                            <div class="p-2">Adherence to budget</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="adherenceToBudget-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="adherenceToBudget-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="adherenceToBudget-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="adherenceToBudget-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="adherenceToBudget-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="adherenceToBudget-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="adherenceToBudget-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="adherenceToBudget-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="adherenceToBudget-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="adherenceToBudget-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="adherenceToBudget-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="adherenceToBudget-rating" id="adherenceToBudget-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating d-flex flex-column align-items-start text-center">
+                            <div class="p-2">Would you recommend the project to a partner/affiliate company?</div>
+                            <div id="full-stars-example-two">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="likeToRecommend-rating" id="rating3-none" value="0" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="likeToRecommend-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-1" value="1" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="likeToRecommend-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-2" value="2" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="likeToRecommend-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-3" value="3" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="likeToRecommend-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-4" value="4" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="likeToRecommend-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-5" value="5" type="radio">
+                                    <label aria-label="1 star" class="rating__label" for="likeToRecommend-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-6" value="6" type="radio">
+                                    <label aria-label="2 stars" class="rating__label" for="likeToRecommend-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-7" value="7" type="radio">
+                                    <label aria-label="3 stars" class="rating__label" for="likeToRecommend-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-8" value="8" type="radio">
+                                    <label aria-label="4 stars" class="rating__label" for="likeToRecommend-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-9" value="9" type="radio">
+                                    <label aria-label="5 stars" class="rating__label" for="likeToRecommend-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                    <input class="rating__input" name="likeToRecommend-rating" id="likeToRecommend-rating-10" value="10" type="radio">
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-brand">Submit</button>
+                  <button type="reset" class="btn btn-secondary" onclick="resetSolutionFeedbackForm();">Reset</button>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <!-- GuidelineModal Modal -->
     <div class="modal fade" id="guidelineModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
@@ -1034,6 +1633,144 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 wrapper_Approve.style.height = height + "px";
             }
         }
+
+        $(function () {
+        $("form[name='FreelancerFeedback_form']").validate({
+            rules: {},
+            messages: {},
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SubmitFreelancerFeedback()
+            }
+        });
+        $("form[name='SolutionFeedback_form']").validate({
+            rules: {},
+            messages: {},
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SubmitSolutionFeedback()
+            }
+        });
+    });
+    function SubmitFreelancerFeedback(){
+
+        var freelancerId = $('#FreelancerID').val();
+        var message = $('#feedbackMessage').val();
+        var communicationRating = $('input[name=communication-rating]:checked').val();
+        var collaborationRating = $('input[name=collaboration-rating]:checked').val();
+        var professionalismRating = $('input[name=Professionalism-rating]:checked').val();
+        var technicalRating = $('input[name=technical-rating]:checked').val();
+        var satisfactionRating = $('input[name=satisfaction-rating]:checked').val();
+        var responsivenessRating = $('input[name=responsiveness-rating]:checked').val();
+        var likeToWorkRating = $('input[name=likeToWork-rating]:checked').val(); 
+
+        var SolutionTeamReviewData = {
+            FreelancerId:freelancerId,
+            Feedback_Message: message,
+            CommunicationRating: communicationRating,
+            CollaborationRating: collaborationRating,
+            ProfessionalismRating: professionalismRating,
+            TechnicalRating: technicalRating,
+            SatisfactionRating: satisfactionRating,
+            ResponsivenessRating: responsivenessRating,
+            LikeToWorkRating: likeToWorkRating
+        };
+        $('#preloader').show();
+        $.ajax({
+            type:'POST',
+            url:'@Url.Action("SaveFreelancerReviewData","Home")',
+            dataType:'json',
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify(SolutionTeamReviewData),
+            success:function(result){
+                $('#preloader').hide();
+                if(result.StatusCode != 200){
+                    showToaster("error", "Error !", result.Message);
+                }else{
+                closeFreelancerFeedbackPopup();
+                showToaster("success", "Success", result.Message);
+                }
+            },
+            error:function(result){
+                $('#preloader').hide();
+                //showToaster("success", "Success", "Review submitted successfully !");
+                showToaster("error", "Error !", "Failed to submit !!");
+            }
+        });
+        $('#preloader').hide();
+
+        //alert('data:\n'+ message +'\n'+ communicationRating +'\n'+collaborationRating +'\n'+ ProfessionalismRating +'\n'+ technicalRating+'\n'+ satisfactionRating +'\n'+ responsivenessRating +'\n'+ likeToWorkRating+'\n'+ wellDefinedRating +'\n'+ adherenceRating +'\n'+ deliverablesQualityRating+'\n'+ meetingTimelinessRating +'\n'+ clientsatisfactionRating +'\n'+ adherenceToBudgetRating+'\n'+ likeToRecommendRating)
+        //alert('data: \n'+ message +'\n'+ rating)
+    }
+
+    function SubmitSolutionFeedback(){
+        var solutionId = $('#SolutionID').val();
+        var industryId = $('#IndustryID').val();
+        var message = $('#Message').val();
+        var wellDefinedRating = $('input[name=wellDefined-rating]:checked').val();
+        var adherenceRating = $('input[name=adherence-rating]:checked').val();
+        var deliverablesQualityRating = $('input[name=deliverablesQuality-rating]:checked').val();
+        var meetingTimelinessRating = $('input[name=MeetingTimeliness-rating]:checked').val();
+        var clientsatisfactionRating = $('input[name=clientsatisfaction-rating]:checked').val();
+        var adherenceToBudgetRating = $('input[name=adherenceToBudget-rating]:checked').val();
+        var likeToRecommendRating = $('input[name=likeToRecommend-rating]:checked').val();
+
+        var SolutionReviewData = {
+            SolutionId:solutionId,
+            IndustryId:industryId,
+            Feedback_Message: message,
+            WellDefinedProjectScope: wellDefinedRating,
+            AdherenceToProjectScope: adherenceRating,
+            DeliverablesQuality: deliverablesQualityRating,
+            MeetingTimeliness: meetingTimelinessRating,
+            Clientsatisfaction: clientsatisfactionRating,
+            AdherenceToBudget: adherenceToBudgetRating,
+            LikeToRecommend: likeToRecommendRating
+        };
+        $('#preloader').show();
+        $.ajax({
+            type:'POST',
+            url:'@Url.Action("SaveSolutionReviewData","Home")',
+            dataType:'json',
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify(SolutionReviewData),
+            success:function(result){
+                $('#preloader').hide();
+                if(result.StatusCode != 200){
+                    showToaster("error", "Error !", result.Message);
+                }else{
+                closeSolutionPopup();
+                showToaster("success", "Success", result.Message);
+                }
+            },
+            error:function(result){
+                $('#preloader').hide();
+                //showToaster("success", "Success", "Review submitted successfully !");
+                showToaster("error", "Error !", "Failed to submit !!");
+            }
+        });
+        $('#preloader').hide();
+
+        //alert('data:\n'+ message +'\n'+ communicationRating +'\n'+collaborationRating +'\n'+ ProfessionalismRating +'\n'+ technicalRating+'\n'+ satisfactionRating +'\n'+ responsivenessRating +'\n'+ likeToWorkRating+'\n'+ wellDefinedRating +'\n'+ adherenceRating +'\n'+ deliverablesQualityRating+'\n'+ meetingTimelinessRating +'\n'+ clientsatisfactionRating +'\n'+ adherenceToBudgetRating+'\n'+ likeToRecommendRating)
+        //alert('data: \n'+ message +'\n'+ rating)
+    }
+
     function getOpenRoles() {
             $("#preloader").show();
             if ("@Context.Session.GetString("LoggedUserRole").ToString()" == "Freelancer") {
@@ -1983,7 +2720,7 @@ function InvokeApprovedList() {
 
                         activeSection += '<div class="col-md-6 col-xl-4 cls-activediv" style="width:250px;cursor:pointer">' +
                             ' <div class="card shadow-lg cls-solutioncard">' +
-                            '<div class="card-body" onclick=GetActiveProjectDetails('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+')>' +
+                            '<div class="card-body" onclick=GetActiveProjectDetails(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ')>' +
                             '<div class="card-img justify-content-lg-center">' +
                             '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
                             '</div>' +
@@ -1993,11 +2730,25 @@ function InvokeApprovedList() {
                             '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
                             '<div class="icon-image">' +
                             '<i class="bi bi-shop-window"></i>' +
-                                    '<label> ' + value.Industries + ' </label>' +
-                       
-                        '</div></div>';
+                            '<label> ' + value.Industries + ' </label>' +
+
+                            '</div></div>';
                             if(Activedata[data].ProjectStatus != "INITIATED"){
-                                 activeSection += '<div class="card-footer"><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div></div>';
+                                 activeSection += '<div class="card-footer">'+
+                                 '<div class="d-flex justify-content-center py-2">'+
+                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
+                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Give Freelancers Feedback</a>'+
+                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Give Solution Feedback</a>'+
+                                '</div></div>'+
+                                '<div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div></div>';
+                            }else{
+                                activeSection += '<div class="card-footer">' +
+                                    '<div class="d-flex justify-content-center py-2">' +
+                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
+                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Give Freelancers Feedback</a>' +
+                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Give Solution Feedback</a>' +
+                                    '</div></div>' +
+                                    '</div>';
                             }
                          
                          activeSection +='</div></div>';
@@ -2044,6 +2795,118 @@ function InvokeApprovedList() {
                 showToaster("error", "Error !", result);
             }
         });
+    }
+
+    function bindteamList(ID,ServiceID,SolutionID,IndusryID){
+        $("#preloader").show();
+       
+        var solutionfundId = ID;
+             var Industryid = IndusryID; 
+             var Serviceid = ServiceID;
+             var Solutionid = SolutionID;
+            
+
+        var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid,
+            SolutionFundId : solutionfundId
+        }
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetActiveProjectDetails", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                var data = result.Result
+                var projecttype = data.SolutionFund.ProjectType;
+
+                if(data.SolutionTeam != ""){
+                      var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = data.SolutionTeam.length;
+                        if(resultLength > 0){
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = data.SolutionTeam[index];
+
+                                htm += '<tr>';
+                                htm += '<td><a onclick="openFreelancerFeedbackPopup('+"'"+ subObj.FreelancerName +"',"+"'"+subObj.FreelancerId+"'"+');" class="feedback-link">' + subObj.FreelancerName + '</a></td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#solutionList").find("tr:gt(0)").remove();
+                        $("#solutionList tbody").append(htm);
+                         $(".cls-temp").remove();
+                }
+                else{
+                    $(".cls-temp").remove();
+                    //$( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
+
+                }
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+    function OpenSolutionTeamPopup(ID,ServiceID,SolutionID,IndusryID){
+        $('#freelancerReviewListModal').modal('show');
+        bindteamList(ID,ServiceID,SolutionID,IndusryID);
+    }
+
+    function OpenSolutionPopup(ID,ServiceID,SolutionID,IndustryID){
+        resetSolutionFeedbackForm();
+        $('#SolutionFeedbackModal').modal('show');
+        $('#SolutionID').val(SolutionID);
+        $('#IndustryID').val(IndustryID);
+    }
+
+    function CloseSolutionPopup(){
+        $('#SolutionFeedbackModal').modal('hide');
+    }
+
+    function CloseSolutionTeamPopup(){
+        $('#freelancerReviewListModal').modal('hide');
+    }
+
+    function openFreelancerFeedbackPopup(freelancerName,FreelancerId){
+        $('#freelancerReviewListModal').modal('hide');
+        resetFreelancerFeedbackForm();
+        $('#FreelancerFeedbackModal').modal('show');
+        $('.freelancer-name').html(freelancerName);
+        $('#FreelancerID').val(FreelancerId);
+    }
+    function closeFreelancerFeedbackPopup(){
+        $('#freelancerReviewListModal').modal('show');
+        $('#FreelancerFeedbackModal').modal('hide');
+    }
+
+    function resetFreelancerFeedbackForm(){
+        $('#feedbackMessage').val('');
+        $('input[name=communication-rating][value="0"]').prop('checked',true);
+        $('input[name=collaboration-rating][value="0"]').prop('checked',true);
+        $('input[name=Professionalism-rating][value="0"]').prop('checked',true);
+        $('input[name=technical-rating][value="0"]').prop('checked',true);
+        $('input[name=satisfaction-rating][value="0"]').prop('checked',true);
+        $('input[name=responsiveness-rating][value="0"]').prop('checked',true);
+        $('input[name=likeToWork-rating][value="0"]').prop('checked',true);
+        $('#FreelancerID').val("");
+    }
+
+    function resetSolutionFeedbackForm(){
+        $('#SolutionId').val(0);
+        $('#IndustryId').val(0);
+        $('#Message').val('');
+        $('input[name=wellDefined-rating][value="0"]').prop('checked',true);
+        $('input[name=adherence-rating][value="0"]').prop('checked',true);
+        $('input[name=deliverablesQuality-rating][value="0"]').prop('checked',true);
+        $('input[name=MeetingTimeliness-rating][value="0"]').prop('checked',true);
+        $('input[name=clientsatisfaction-rating][value="0"]').prop('checked',true);
+        $('input[name=adherenceToBudget-rating][value="0"]').prop('checked',true);
+        $('input[name=likeToRecommend-rating][value="0"]').prop('checked',true);
     }
 
     function GetActiveProjectDetails(Id,ServiceId,SolutionId,IndustryId){

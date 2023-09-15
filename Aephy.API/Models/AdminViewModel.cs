@@ -464,8 +464,8 @@ namespace Aephy.API.Models
 
         public class SolutionTeamViewModel
         {
+            public string? FreelancerId { get; set; }
             public string? FreelancerName { get; set; }
-
             public string? FreelancerLevel { get; set; }
             public string? ImagePath { get; set; }
 

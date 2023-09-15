@@ -571,6 +571,7 @@ namespace Aephy.API.Controllers
                         {
                             SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
                             var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            solutionTeam.FreelancerId = soltiondata.FreelancerId;
                             solutionTeam.FreelancerName = fullname.FirstName + " " + fullname.LastName;
                             var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == soltiondata.FreelancerId).FirstOrDefault();
                             if(freelancerDetails != null)

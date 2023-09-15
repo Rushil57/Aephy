@@ -51,6 +51,9 @@
   border-radius: 10px;
   scrollbar-color: #d38b4e transparent;
 }
+#InvoiceContent h5 {
+    font-size: .875em;
+}
 </style>
 
 <main id="main" class="main cls-fixed-common">
@@ -923,19 +926,19 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             </div>
             <div class="modal-body p-0">
                  <div class="container" id="InvoiceContent">
-                                <div class="row pt-5">
+                                <div class="row pt-1">
                                     <div class="col-sm-8 col-lg-8">
                                         <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png" 
-                                        class="img-fluid" width="350" style="margin-left: -25px;"/>
+                                        class="img-fluid" width="265" height="150"/>
                                     </div>
 
                                     <div class="col-sm-4 col-lg-4">
-                                        <div class="p-2 text-center" style="background-color: #d9d9d9;">
-                                            <h3>Invoice</h3>
+                                        <div class="p-1 text-center" style="background-color: #d9d9d9;">
+                                            <span>Invoice</span>
                                         </div>
 
                                         <div class="mt-3">
-                                            <h5> Invoice # 00000000 </h5>
+                                            <h5> Invoice # INV-00129 </h5>
                                             <h5> Date 30 May 2023 </h5>
                                             <h5> <b> Due Date 30 May 2023 </b> </h5>
                                             <h5> Total Amount € 1,000.00 </h5>
@@ -944,7 +947,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                     </div>
                                 </div>
 
-                                <div class="row pt-5">
+                                <div class="row pt-2" style="padding-left:20px;">
                                     <div class="col-sm-6 col-lg-6">
                                         <h3 style="color: #c37813;">From</h3>
 
@@ -970,8 +973,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                         </div>
                                 </div>
 
-                                <div class="pt-5">
-                                    <table class="table table-bordered">
+                                <div class="pt-1" style="padding-left:10px;">
+                                    <table class="table table-bordered small">
                                         <tr style="background-color: #d9d9d9;">
                                             <th>DESCRIPTION</th>
                                             <th>AMOUNT</th>

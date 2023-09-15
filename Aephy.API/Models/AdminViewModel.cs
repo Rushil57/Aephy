@@ -60,6 +60,7 @@ namespace Aephy.API.Models
             public int SolutionId { get; set; }
             public int IndustryId { get; set; }
             public int ServiceId { get; set; }
+            public int ContractId { get; set; }
 
             //public IFormFile[] ImageFile { get; set; }
         }
@@ -409,6 +410,8 @@ namespace Aephy.API.Models
             public bool IsPaymentStop { get; set; }
 
             public bool IsClientRefund { get; set; }
+
+            public string? ProjectPrice { get; set; }
 
         }
         public class CustomSolutionsModel

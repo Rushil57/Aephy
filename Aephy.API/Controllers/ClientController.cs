@@ -1448,6 +1448,7 @@ namespace Aephy.API.Controllers
                                 SolutionFundId = model.SolutionFundId,
                                 SolutionId = model.SolutionId,
                                 IndustryId = model.IndustryId,
+                                CreatedDateTime = DateTime.Now,
 
                             };
                             _db.Contract.Add(contractSave);
@@ -1484,6 +1485,7 @@ namespace Aephy.API.Controllers
                                     PaymentStatus = Contract.PaymentStatuses.ContractCreated,
                                     PaymentIntentId = string.Empty,
                                     SolutionFundId = model.SolutionFundId,
+                                    CreatedDateTime = DateTime.Now,
 
                                 };
                                 _db.Contract.Add(contractSave);

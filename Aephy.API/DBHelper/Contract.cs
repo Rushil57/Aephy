@@ -56,6 +56,7 @@ namespace Aephy.API.DBHelper
         public string? RefundAmount { get; set; }
 
         public DateTime RefundDateTime { get; set; }
+        public DateTime CreatedDateTime { get; set; }
 
         // Stripe fields above
 

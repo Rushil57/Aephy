@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using static Aephy.API.Models.AdminViewModel;
 using static Azure.Core.HttpHeader;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
 {
@@ -1246,6 +1247,7 @@ namespace Aephy.API.Controllers
                                     var industryname = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                                     var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
                                     var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                    var contractid = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.Id).FirstOrDefault();
 
                                     solutionsdataStore.Services = serviceData;
                                     solutionsdataStore.ServiceId = serviceId;
@@ -1258,6 +1260,7 @@ namespace Aephy.API.Controllers
                                     solutionsdataStore.ImagePath = solutionData.ImagePath;
                                     solutionsdataStore.MileStoneTitle = milestoneData;
                                     solutionsdataStore.PaymentStatus = contractStatus.ToString();
+                                    solutionsdataStore.ContractId = contractid;
                                     solutionsModel.Add(solutionsdataStore);
                                     industrylist.Clear();
 
@@ -1433,5 +1436,64 @@ namespace Aephy.API.Controllers
             });
         }
 
+        //GetInvoiceDetails
+        [HttpPost]
+        [Route("GetInvoiceDetails")]
+        public async Task<IActionResult> GetInvoiceDetails([FromBody] SolutionDisputeViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    if(model.ContractId != 0)
+                    {
+                        var contarctData = _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefault();
+
+                        if(contarctData != null)
+                        {
+                            SolutionDisputeViewModel InvoiceDetails = new SolutionDisputeViewModel();
+                            var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            InvoiceDetails.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            InvoiceDetails.CreatedDate = contarctData.CreatedDateTime;
+                            
+                            var solutionFundData = _db.SolutionFund.Where(x => x.Id == contarctData.SolutionFundId).FirstOrDefault();
+                            if(solutionFundData != null)
+                            {
+                                InvoiceDetails.ProjectPrice = solutionFundData.ProjectPrice;
+                                if(solutionFundData.FundType.ToString() == "MilestoneFund")
+                                {
+                                    InvoiceDetails.Milestone = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    InvoiceDetails.SolutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                }
+                            }
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = InvoiceDetails
+                            });
+                        }
+                    }
+                    
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Not Found"
+                });
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message
+                });
+            }
+        }
     }
 }

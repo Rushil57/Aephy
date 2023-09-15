@@ -96,6 +96,7 @@
         public bool MileStoneCheckout { get; set; }
 
         public bool GetNextMileStoneData { get; set; }
+        public int ContractId { get; set; }
 
     }
     

@@ -1995,9 +1995,12 @@ function InvokeApprovedList() {
                             '<i class="bi bi-shop-window"></i>' +
                                     '<label> ' + value.Industries + ' </label>' +
                        
-                        '</div></div>'+ 
-                         '<div class="card-footer"><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>Open Invoice</div></div>' +
                         '</div></div>';
+                            if(Activedata[data].ProjectStatus != "INITIATED"){
+                                 activeSection += '<div class="card-footer"><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div></div>';
+                            }
+                         
+                         activeSection +='</div></div>';
 
 
                     })
@@ -2100,7 +2103,10 @@ function InvokeApprovedList() {
         var contractId = $("#InvoiceContractId").val();
          window.location = "@Url.Action("DownloadInvoice", "Home")?ContractId=" + contractId;
 
-         $("#preloader").hide();
+        // $("#preloader").hide();
+         setTimeout(function () {
+                        $("#preloader").hide();
+         }, 10000);
     }
 
     function CloseInvoicePopUp(){

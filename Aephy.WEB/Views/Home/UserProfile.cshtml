@@ -301,11 +301,12 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
-                                        @{
-                                            if (Context.Session.GetString("CompleteUserStripeAccount") != "Completed" && Context.Session.GetString("LoggedUserRole") != "Client")
+                                        @if (Context.Session.GetString("LoggedUserRole") != "Client")
+                                        {
+                                            if (Context.Session.GetString("CompleteUserStripeAccount") != "3")
                                             {
-                                                <input type="button" class="btn btn-primary" value="Click here to Register to stripe" onclick="StripeRegister()" />
-                                            }
+                                                <input type="button" class="btn btn-primary" value="Click here to Register to stripe" onclick="StripeRegister()"/>
+                                            }                                            
                                         }
                                     </div>
                                 </form>

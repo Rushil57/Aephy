@@ -114,10 +114,6 @@ namespace Aephy.WEB.Controllers
                     Level = jsonObj.Result.Level;
                     UserId = jsonObj.Result.UserId;
                     UserStripeAccount = jsonObj.Result.StripeStatus;
-                    if(UserStripeAccount == "3")
-                    {
-                        UserStripeAccount = "Completed";
-                    }
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
@@ -1664,19 +1660,51 @@ namespace Aephy.WEB.Controllers
             SolutionFundModel solutionFund = new SolutionFundModel();
             solutionFund.ContractId = ContractId;
             var invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
-            // dynamic data = JsonConvert.DeserializeObject(invoiceDetails);
-
+            dynamic datas = JObject.Parse(invoiceDetails);
+            var Details = datas.Result;
 
             float cellHeight = 100f;
             Document document = new Document();
             var memoryStream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
             document.Open();
-            AddClientTables(document, writer, invoiceDetails);
-            document.Add(new Paragraph("\r\n \r\n  \r\n "));
-            AddTwoContentTables(document, writer, invoiceDetails);
-            document.Add(new Paragraph("\r\n \r\n  \r\n "));
-            AddSingleTableWithCustomColumnWidths(document, writer, invoiceDetails);
+            PdfPTable centertable = new PdfPTable(1);
+            PdfPCell centerCell = new PdfPCell(new Phrase(" "));
+            centerCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            centerCell.Padding = 7.5f;
+
+            IPdfPCellEvent roundedRectangle = new RoundedCellEvent(5, new BaseColor(System.Drawing.Color.Gray)); // Specify corner radius and fill color
+            centerCell.Border = Rectangle.NO_BORDER;
+            centerCell.PaddingBottom = 5f;
+            centertable.DefaultCell.Border = 0;
+            centertable.AddCell(centerCell);
+
+
+            PdfPTable righttable = new PdfPTable(1);
+            PdfPCell rightCell = new PdfPCell();
+            rightCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            rightCell.Border = Rectangle.NO_BORDER;
+            righttable.DefaultCell.Border = 0;
+            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance("https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png");
+
+
+            logo.ScaleAbsolute(70f, 70f);
+            rightCell.PaddingLeft = 80f;
+            rightCell.PaddingBottom = -75f;
+            rightCell.PaddingTop = 0f;
+            rightCell.PaddingRight = 0f;
+
+            logo.SetAbsolutePosition(iTextSharp.text.PageSize.A4.Rotate().Width - 0, 20);
+            rightCell.AddElement(logo);
+
+
+            righttable.AddCell(rightCell);
+            AddClientTables(document, writer, Details);
+            document.Add(new Paragraph("\r\n  "));
+            AddTwoContentTables(document, writer, Details);
+            document.Add(new Paragraph("\r\n  "));
+            AddSingleTableWithCustomColumnWidths(document, writer, Details);
             document.NewPage();
             document.NewPage();
             document.Close();
@@ -1688,26 +1716,28 @@ namespace Aephy.WEB.Controllers
             };
             Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
             return File(memoryStream.ToArray(), Response.ContentType);
-
         }
 
-        private void AddClientTables(Document doc, PdfWriter writer, string data)
-        {
 
-            dynamic datas = JObject.Parse(data);
-            var Details = datas.Result;
+        private void AddClientTables(Document doc, PdfWriter writer, dynamic data)
+        {
+            //dynamic datas = JObject.Parse(data);
+            //var Details = datas.Result;
 
             BaseFont baseF14 = BaseFont.CreateFont();
 
             // Master Table: Contains two side-by-side tables
             PdfPTable masterTable = new PdfPTable(2);
-            masterTable.WidthPercentage = 110;
+            masterTable.WidthPercentage = 100;
+            masterTable.SetWidths(new float[] { 68f, 30f });
+            masterTable.DefaultCell.Border = 3;
 
             // Left Table: Display the logo
             PdfPTable leftTable = new PdfPTable(1);
-            leftTable.WidthPercentage = 80;
             leftTable.HorizontalAlignment = Element.ALIGN_LEFT;
+            float[] widths = new float[] { 40f };
 
+            leftTable.SetWidths(widths);
             iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance("https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png");
             img.ScaleToFit(150f, 150f);
             PdfPCell logoCell = new PdfPCell(img);
@@ -1717,22 +1747,30 @@ namespace Aephy.WEB.Controllers
 
             // Right Table: Labels and Text Fields
             PdfPTable rightTable = new PdfPTable(2);
-            rightTable.WidthPercentage = 30;
+            // rightTable.WidthPercentage = 30;
+            float[] widths1 = new float[] { 0f, 100f };
+            rightTable.SetWidths(widths1);
             rightTable.HorizontalAlignment = Element.ALIGN_RIGHT;
 
             // Set the font for the entire table
             rightTable.DefaultCell.Phrase = new Phrase() { Font = FontFactory.GetFont(FontFactory.HELVETICA, 8) };
 
             // Create label cells and set font styles
-            PdfPCell labelCell1 = new PdfPCell(new Phrase("Invoice"));
+            PdfPCell labelCell1 = new PdfPCell(new Phrase("               Invoice                   ", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11)));
             labelCell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Set background color
             labelCell1.VerticalAlignment = Element.ALIGN_MIDDLE; // Center the text vertically
+            labelCell1.Colspan = 5;
+            labelCell1.FixedHeight = 23; ;
 
-            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + Details.CreatedDate.ToString("dd MMMM yyyy")));
-            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
+            //labelCell1.Colspan = 2;
+            //labelCell1.PaddingLeft = 40;
 
-            PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount " + Details.ProjectPrice));
-            PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due "));
+
+            PdfPCell labelCell6 = new PdfPCell(new Phrase("Invoice  # INV-00129", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + data.CreatedDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date 15 September 2023", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
+            PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount € " + data.ProjectPrice, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+            PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due € " + data.ProjectPrice, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
 
             // Create textField cells
             PdfPCell textFieldCell1 = new PdfPCell(); // You need to add a text field here
@@ -1740,9 +1778,10 @@ namespace Aephy.WEB.Controllers
             PdfPCell textFieldCell3 = new PdfPCell(); // You need to add a text field here
             PdfPCell textFieldCell4 = new PdfPCell(); // You need to add a text field here
             PdfPCell textFieldCell5 = new PdfPCell(); // You need to add a text field here
+            PdfPCell textFieldCell6 = new PdfPCell(); // You need to add a text field here
 
             // Set cell properties
-            PdfPCell[] cells = { labelCell1, textFieldCell1, labelCell2, textFieldCell2, labelCell3, textFieldCell3, labelCell4, textFieldCell4, labelCell5, textFieldCell5 };
+            PdfPCell[] cells = { labelCell1, textFieldCell1, labelCell6, textFieldCell6, labelCell2, textFieldCell2, labelCell3, textFieldCell3, labelCell4, textFieldCell4, labelCell5, textFieldCell5 };
 
             foreach (PdfPCell cell in cells)
             {
@@ -1764,15 +1803,8 @@ namespace Aephy.WEB.Controllers
             doc.Add(masterTable);
         }
 
-        private void AddTwoContentTables(Document doc, PdfWriter writer, string data)
+        private void AddTwoContentTables(Document doc, PdfWriter writer, dynamic data)
         {
-            dynamic datas = JObject.Parse(data);
-            var Details = datas.Result;
-            if (Details.Address == null)
-            {
-                Details.Address = "";
-            }
-
             // Master Table: Contains two side-by-side tables
             PdfPTable masterTable = new PdfPTable(2);
             masterTable.WidthPercentage = 100;
@@ -1790,23 +1822,36 @@ namespace Aephy.WEB.Controllers
 
             foreach (string line in content1Lines)
             {
-                Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                Font font = FontFactory.GetFont(FontFactory.HELVETICA, 9);
                 if (line == "From")
                 {
                     font.Color = new BaseColor(195, 120, 19);
-                    font.Size = 12;
+                    font.Size = 14;
+
+
                 }
                 if (line == "Ephylink")
                 {
-
+                    PdfPCell spaceCell1 = new PdfPCell();
+                    spaceCell1.Border = 0;
+                    spaceCell1.FixedHeight = 6f;
+                    table1.AddCell(spaceCell1);
                     font.Size = 9;
                     font.SetStyle(Font.BOLD);
+
                 }
 
                 Chunk chunk = new Chunk(line, font);
                 PdfPCell contentCell1 = new PdfPCell(new Phrase(chunk));
                 contentCell1.Border = PdfPCell.NO_BORDER;
                 table1.AddCell(contentCell1);
+
+                PdfPCell spaceCell2 = new PdfPCell();
+                spaceCell2.Border = 0;
+                spaceCell2.FixedHeight = 3f;
+                table1.AddCell(spaceCell2);
+
+
             }
 
             // Table 2: Content 2
@@ -1815,21 +1860,25 @@ namespace Aephy.WEB.Controllers
             table2.HorizontalAlignment = Element.ALIGN_LEFT;
 
             // Content 2
-            string content2 = "Bill to\n " + Details.ClientName + "\nName (if applicable)\nAddress: "+ Details.Address  + "\nVAT ID: (If Applicable )\nTax ID: (other)";
+            string content2 = "Bill to\n" + data.ClientName + "\nName (if applicable)\nAddress: " + data.Address + "\nVAT ID: (If Applicable )\nTax ID: (other)";
 
             // Split content2 into lines
             string[] content2Lines = content2.Split('\n');
 
             foreach (string line in content2Lines)
             {
-                Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                Font font = FontFactory.GetFont(FontFactory.HELVETICA, 9);
                 if (line == "Bill to")
                 {
                     font.Color = new BaseColor(195, 120, 19);
-                    font.Size = 12;
+                    font.Size = 14;
                 }
                 if (line == "Client A")
                 {
+                    PdfPCell spaceCell3 = new PdfPCell();
+                    spaceCell3.Border = 0;
+                    spaceCell3.FixedHeight = 6f;
+                    table2.AddCell(spaceCell3);
                     font.SetStyle(Font.BOLD);
                     font.Size = 9;
                 }
@@ -1837,6 +1886,11 @@ namespace Aephy.WEB.Controllers
                 PdfPCell contentCell2 = new PdfPCell(new Phrase(chunk));
                 contentCell2.Border = PdfPCell.NO_BORDER;
                 table2.AddCell(contentCell2);
+
+                PdfPCell spaceCell4 = new PdfPCell();
+                spaceCell4.Border = 0;
+                spaceCell4.FixedHeight = 3f;
+                table2.AddCell(spaceCell4);
             }
 
             // Add the left and right tables to the master table
@@ -1853,77 +1907,78 @@ namespace Aephy.WEB.Controllers
             doc.Add(masterTable);
         }
 
-        private void AddSingleTableWithCustomColumnWidths(Document doc, PdfWriter writer, string data)
+        private void AddSingleTableWithCustomColumnWidths(Document doc, PdfWriter writer, dynamic data)
         {
+            PdfPTable table = new PdfPTable(2);
+            table.WidthPercentage = 100;
+            table.SetWidths(new float[] { 80f, 20f }); // Set column widths to 70% and 30%
+            table.DefaultCell.Border = PdfPCell.BOX;
+            table.DefaultCell.Phrase = new Phrase() { Font = FontFactory.GetFont(FontFactory.HELVETICA, 8) };
 
-            dynamic datas = JObject.Parse(data);
-            var Details = datas.Result;
-            try
+            // Cell 1: Description
+            PdfPCell cell1 = new PdfPCell(new Phrase("DESCRIPTION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
+            cell1.Border = PdfPCell.BOX;
+            cell1.PaddingBottom = 10;
+            cell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
+            table.AddCell(cell1);
+
+            // Cell 2: Amount
+            PdfPCell cell2 = new PdfPCell(new Phrase("AMOUNT", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
+            cell2.Border = PdfPCell.BOX;
+            cell2.PaddingBottom = 10;
+            cell2.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
+            table.AddCell(cell2);
+
+            // Row 1: Invoice Description
+            //PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone 1: \"Title of Milestone\"", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            //invoiceDescCell.Border = PdfPCell.BOX;
+            //table.AddCell(invoiceDescCell);
+            if (data.Milestone != null)
             {
-                PdfPTable table = new PdfPTable(2);
-                table.WidthPercentage = 100;
-                table.SetWidths(new float[] { 70f, 30f }); // Set column widths to 70% and 30%
-                table.DefaultCell.Border = PdfPCell.BOX;
-                table.DefaultCell.Phrase = new Phrase() { Font = FontFactory.GetFont(FontFactory.HELVETICA, 8) };
-
-                // Cell 1: Description
-                PdfPCell cell1 = new PdfPCell(new Phrase("DESCRIPTION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
-                cell1.Border = PdfPCell.BOX;
-                cell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
-                table.AddCell(cell1);
-
-                // Cell 2: Amount
-                PdfPCell cell2 = new PdfPCell(new Phrase("AMOUNT", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
-                cell2.Border = PdfPCell.BOX;
-                cell2.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
-                table.AddCell(cell2);
-
-                // Row 1: Invoice Description
-                if (Details.Milestone != null)
-                {
-                    PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone 1: \"" + Details.Milestone + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                    invoiceDescCell.Border = PdfPCell.BOX;
-                    table.AddCell(invoiceDescCell);
-                }
-                else
-                {
-                    PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Project : \"" + Details.SolutionName + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                    invoiceDescCell.Border = PdfPCell.BOX;
-                    table.AddCell(invoiceDescCell);
-                }
-
-
-                PdfPCell amount1Cell = new PdfPCell(new Phrase(Details.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                amount1Cell.Border = PdfPCell.BOX;
-                table.AddCell(amount1Cell);
-
-                // Row 2: VAT
-                PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (0%)", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                vatDescCell.Border = PdfPCell.BOX;
-                table.AddCell(vatDescCell);
-
-                PdfPCell amount2Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                amount2Cell.Border = PdfPCell.BOX;
-                table.AddCell(amount2Cell);
-
-                // Row 3: Total Amount
-                PdfPCell totalDescCell = new PdfPCell(new Phrase("Total amount", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                totalDescCell.Border = PdfPCell.BOX;
-                table.AddCell(totalDescCell);
-
-                PdfPCell totalAmountCell = new PdfPCell(new Phrase("€ " + Details.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                totalAmountCell.Border = PdfPCell.BOX;
-                table.AddCell(totalAmountCell);
-
-                // Add the table to the document
-                doc.Add(table);
+                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone : \"" + data.Milestone + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                invoiceDescCell.Border = PdfPCell.BOX;
+                table.AddCell(invoiceDescCell);
             }
-            catch (Exception ex)
+            else
             {
-
+                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Project : \"" + data.SolutionName + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                invoiceDescCell.Border = PdfPCell.BOX;
+                table.AddCell(invoiceDescCell);
             }
 
+            PdfPCell amount1Cell = new PdfPCell(new Phrase(data.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            amount1Cell.Border = PdfPCell.BOX;
+            amount1Cell.PaddingBottom = 10;
+            table.AddCell(amount1Cell);
+
+            // Row 2: VAT
+            PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (0%)", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            vatDescCell.Border = PdfPCell.BOX;
+            vatDescCell.PaddingBottom = 10;
+            table.AddCell(vatDescCell);
+
+            PdfPCell amount2Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            amount2Cell.Border = PdfPCell.BOX;
+            amount2Cell.PaddingBottom = 10;
+            table.AddCell(amount2Cell);
+
+            // Row 3: Total Amount
+            PdfPCell totalDescCell = new PdfPCell(new Phrase("Total amount", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            totalDescCell.Border = PdfPCell.BOX;
+            totalDescCell.PaddingBottom = 10;
+            table.AddCell(totalDescCell);
+
+            PdfPCell totalAmountCell = new PdfPCell(new Phrase("€ 1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            totalAmountCell.Border = PdfPCell.BOX;
+            totalAmountCell.PaddingBottom = 10;
+            table.AddCell(totalAmountCell);
+
+            // Add the table to the document
+            doc.Add(table);
         }
+
+
+
 
         //GetClientInvoiceDetails
         [HttpPost]

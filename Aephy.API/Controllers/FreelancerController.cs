@@ -1261,6 +1261,7 @@ namespace Aephy.API.Controllers
                                     solutionsdataStore.MileStoneTitle = milestoneData;
                                     solutionsdataStore.PaymentStatus = contractStatus.ToString();
                                     solutionsdataStore.ContractId = contractid;
+                                    solutionsdataStore.ProjectStatus = data.solutionFunds.ProjectStatus;
                                     solutionsModel.Add(solutionsdataStore);
                                     industrylist.Clear();
 

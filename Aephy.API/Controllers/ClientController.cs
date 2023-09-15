@@ -1329,7 +1329,7 @@ namespace Aephy.API.Controllers
             {
                 StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
                 // Connected Account creation.
-                if (userDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.NotCreated)
+                if (userDetails.StripeAccountStatus != ApplicationUser.StripeAccountStatuses.Complete)
                 {
                     userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
 

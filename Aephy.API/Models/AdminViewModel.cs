@@ -61,6 +61,7 @@ namespace Aephy.API.Models
             public int IndustryId { get; set; }
             public int ServiceId { get; set; }
             public int ContractId { get; set; }
+            public string? ProjectStatus { get; set; }
 
             //public IFormFile[] ImageFile { get; set; }
         }

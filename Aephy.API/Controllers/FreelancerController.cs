@@ -1455,7 +1455,8 @@ namespace Aephy.API.Controllers
                             var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             InvoiceDetails.ClientName = fullname.FirstName + " " + fullname.LastName;
                             InvoiceDetails.CreatedDate = contarctData.CreatedDateTime;
-                            
+                            InvoiceDetails.Address = _db.ClientDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault();
+
                             var solutionFundData = _db.SolutionFund.Where(x => x.Id == contarctData.SolutionFundId).FirstOrDefault();
                             if(solutionFundData != null)
                             {

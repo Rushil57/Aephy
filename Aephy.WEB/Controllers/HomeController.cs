@@ -1665,7 +1665,7 @@ namespace Aephy.WEB.Controllers
             solutionFund.ContractId = ContractId;
             var invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
             // dynamic data = JsonConvert.DeserializeObject(invoiceDetails);
-           
+
 
             float cellHeight = 100f;
             Document document = new Document();
@@ -1692,7 +1692,7 @@ namespace Aephy.WEB.Controllers
         }
 
         private void AddClientTables(Document doc, PdfWriter writer, string data)
-       {
+        {
 
             dynamic datas = JObject.Parse(data);
             var Details = datas.Result;
@@ -1728,7 +1728,7 @@ namespace Aephy.WEB.Controllers
             labelCell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Set background color
             labelCell1.VerticalAlignment = Element.ALIGN_MIDDLE; // Center the text vertically
 
-            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + Details.CreatedDate));
+            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + Details.CreatedDate.ToString("dd MMMM yyyy")));
             PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
 
             PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount " + Details.ProjectPrice));
@@ -1768,6 +1768,10 @@ namespace Aephy.WEB.Controllers
         {
             dynamic datas = JObject.Parse(data);
             var Details = datas.Result;
+            if (Details.Address == null)
+            {
+                Details.Address = "";
+            }
 
             // Master Table: Contains two side-by-side tables
             PdfPTable masterTable = new PdfPTable(2);
@@ -1811,7 +1815,7 @@ namespace Aephy.WEB.Controllers
             table2.HorizontalAlignment = Element.ALIGN_LEFT;
 
             // Content 2
-            string content2 = "Bill to\nClient "+ Details.ClientName + "\nName (if applicable)\nAddress:\nVAT ID: (If Applicable )\nTax ID: (other)";
+            string content2 = "Bill to\n " + Details.ClientName + "\nName (if applicable)\nAddress: "+ Details.Address  + "\nVAT ID: (If Applicable )\nTax ID: (other)";
 
             // Split content2 into lines
             string[] content2Lines = content2.Split('\n');
@@ -1854,64 +1858,71 @@ namespace Aephy.WEB.Controllers
 
             dynamic datas = JObject.Parse(data);
             var Details = datas.Result;
-
-            PdfPTable table = new PdfPTable(2);
-            table.WidthPercentage = 100;
-            table.SetWidths(new float[] { 70f, 30f }); // Set column widths to 70% and 30%
-            table.DefaultCell.Border = PdfPCell.BOX;
-            table.DefaultCell.Phrase = new Phrase() { Font = FontFactory.GetFont(FontFactory.HELVETICA, 8) };
-
-            // Cell 1: Description
-            PdfPCell cell1 = new PdfPCell(new Phrase("DESCRIPTION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
-            cell1.Border = PdfPCell.BOX;
-            cell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
-            table.AddCell(cell1);
-
-            // Cell 2: Amount
-            PdfPCell cell2 = new PdfPCell(new Phrase("AMOUNT", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
-            cell2.Border = PdfPCell.BOX;
-            cell2.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
-            table.AddCell(cell2);
-
-            // Row 1: Invoice Description
-            if(Details.Milestone != null)
+            try
             {
-                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone 1: \""+Details.Milestone + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                invoiceDescCell.Border = PdfPCell.BOX;
-                table.AddCell(invoiceDescCell);
+                PdfPTable table = new PdfPTable(2);
+                table.WidthPercentage = 100;
+                table.SetWidths(new float[] { 70f, 30f }); // Set column widths to 70% and 30%
+                table.DefaultCell.Border = PdfPCell.BOX;
+                table.DefaultCell.Phrase = new Phrase() { Font = FontFactory.GetFont(FontFactory.HELVETICA, 8) };
+
+                // Cell 1: Description
+                PdfPCell cell1 = new PdfPCell(new Phrase("DESCRIPTION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
+                cell1.Border = PdfPCell.BOX;
+                cell1.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
+                table.AddCell(cell1);
+
+                // Cell 2: Amount
+                PdfPCell cell2 = new PdfPCell(new Phrase("AMOUNT", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
+                cell2.Border = PdfPCell.BOX;
+                cell2.BackgroundColor = new BaseColor(0xD9, 0xD9, 0xD9); // Background color #D9D9D9
+                table.AddCell(cell2);
+
+                // Row 1: Invoice Description
+                if (Details.Milestone != null)
+                {
+                    PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone 1: \"" + Details.Milestone + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                    invoiceDescCell.Border = PdfPCell.BOX;
+                    table.AddCell(invoiceDescCell);
+                }
+                else
+                {
+                    PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Project : \"" + Details.SolutionName + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                    invoiceDescCell.Border = PdfPCell.BOX;
+                    table.AddCell(invoiceDescCell);
+                }
+
+
+                PdfPCell amount1Cell = new PdfPCell(new Phrase(Details.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                amount1Cell.Border = PdfPCell.BOX;
+                table.AddCell(amount1Cell);
+
+                // Row 2: VAT
+                PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (0%)", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                vatDescCell.Border = PdfPCell.BOX;
+                table.AddCell(vatDescCell);
+
+                PdfPCell amount2Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                amount2Cell.Border = PdfPCell.BOX;
+                table.AddCell(amount2Cell);
+
+                // Row 3: Total Amount
+                PdfPCell totalDescCell = new PdfPCell(new Phrase("Total amount", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                totalDescCell.Border = PdfPCell.BOX;
+                table.AddCell(totalDescCell);
+
+                PdfPCell totalAmountCell = new PdfPCell(new Phrase("€ " + Details.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                totalAmountCell.Border = PdfPCell.BOX;
+                table.AddCell(totalAmountCell);
+
+                // Add the table to the document
+                doc.Add(table);
             }
-            else
+            catch (Exception ex)
             {
-                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Project : \""+Details.SolutionName + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                invoiceDescCell.Border = PdfPCell.BOX;
-                table.AddCell(invoiceDescCell);
+
             }
-           
 
-            PdfPCell amount1Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            amount1Cell.Border = PdfPCell.BOX;
-            table.AddCell(amount1Cell);
-
-            // Row 2: VAT
-            PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (0%)", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            vatDescCell.Border = PdfPCell.BOX;
-            table.AddCell(vatDescCell);
-
-            PdfPCell amount2Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            amount2Cell.Border = PdfPCell.BOX;
-            table.AddCell(amount2Cell);
-
-            // Row 3: Total Amount
-            PdfPCell totalDescCell = new PdfPCell(new Phrase("Total amount", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            totalDescCell.Border = PdfPCell.BOX;
-            table.AddCell(totalDescCell);
-
-            PdfPCell totalAmountCell = new PdfPCell(new Phrase("€ 1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            totalAmountCell.Border = PdfPCell.BOX;
-            table.AddCell(totalAmountCell);
-
-            // Add the table to the document
-            doc.Add(table);
         }
 
         //GetClientInvoiceDetails

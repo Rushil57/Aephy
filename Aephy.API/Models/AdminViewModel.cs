@@ -413,6 +413,8 @@ namespace Aephy.API.Models
 
             public string? ProjectPrice { get; set; }
 
+            public string? Address { get; set; }
+
         }
         public class CustomSolutionsModel
         {

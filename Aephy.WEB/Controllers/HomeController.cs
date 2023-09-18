@@ -1743,7 +1743,7 @@ namespace Aephy.WEB.Controllers
             Response.ContentType = MediaTypeNames.Application.Pdf;
             var contentDisposition = new ContentDisposition
             {
-                FileName = "ClientDetails.pdf",
+                FileName = "INV-00129.pdf",
                 Inline = false
             };
             Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
@@ -1800,7 +1800,7 @@ namespace Aephy.WEB.Controllers
 
             PdfPCell labelCell6 = new PdfPCell(new Phrase("Invoice  # INV-00129", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
             PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + data.CreatedDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date 15 September 2023", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
+            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date " + data.CreatedDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
             PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount € " + data.ProjectPrice, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
             PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due € " + data.ProjectPrice, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
 
@@ -1989,7 +1989,7 @@ namespace Aephy.WEB.Controllers
             vatDescCell.PaddingBottom = 10;
             table.AddCell(vatDescCell);
 
-            PdfPCell amount2Cell = new PdfPCell(new Phrase("1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            PdfPCell amount2Cell = new PdfPCell(new Phrase("0.00", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
             amount2Cell.Border = PdfPCell.BOX;
             amount2Cell.PaddingBottom = 10;
             table.AddCell(amount2Cell);
@@ -2000,7 +2000,7 @@ namespace Aephy.WEB.Controllers
             totalDescCell.PaddingBottom = 10;
             table.AddCell(totalDescCell);
 
-            PdfPCell totalAmountCell = new PdfPCell(new Phrase("€ 1,000.00", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            PdfPCell totalAmountCell = new PdfPCell(new Phrase(data.ProjectPrice.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
             totalAmountCell.Border = PdfPCell.BOX;
             totalAmountCell.PaddingBottom = 10;
             table.AddCell(totalAmountCell);

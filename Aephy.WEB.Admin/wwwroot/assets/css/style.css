@@ -1454,6 +1454,6 @@ input:checked + .slider:before {
         border-radius: 50%;
     }
 
-#ActiveProjectList {
-    width: 1200px !important;
+#ActiveProjectList, #DisputeList {
+    width: 1600px !important;
 }

@@ -406,7 +406,7 @@
         });
         $(".info-popover").popover();
         // $(".checkout-popover").popover();
-        var newContent = "<div class='checkoutOption'><a title='milestone' role='button'>Milestone</a> <hr/> <a title='project'  role='button'>Project</a></div>";
+        var newContent = "<div class='checkoutOption'><a title='milestone' role='button'>Milestone (Milestone 1)</a> <hr/> <a title='project'  role='button'>Project</a></div>";
         $('.checkout-popover').popover({
            content:newContent,
            html:true,
@@ -775,10 +775,6 @@
              if(projectType == 'large'){
                  Projectprice = 500;
              }
-              //var mileStoneCheckout = false;
-              //  if(checkCheckoutType){
-              //      mileStoneCheckout = checkCheckoutType;
-              //  }
             var Industryid = @ViewData["Industry"]; 
             var Solutionid = @ViewData["Solution"];
 
@@ -815,9 +811,13 @@
                         $("#preloader").hide();
                    }
                    if(result.Message == "CompleteProcess"){
-                        CheckoutSolution(true);
-                         $("#preloader").hide();
-                         return;
+                       if(result.Result.ProjectDetails.FundType == 1){
+                           CheckoutSolution(false);
+                       }else{
+                           CheckoutSolution(true);
+                       } 
+                       $("#preloader").hide();
+                       return;
                    }
                    if(result.Message == "NoFurtherMileStone"){
                        $("#solutionfund-furtherprogress").text('Project Completed');
@@ -847,7 +847,7 @@
                                     $("#solutionfund-furtherprogress").css("color","white");
                                     setTimeout(function () {
                                          $("#solutionFundId").val(0);
-                                        ProjectInitiated(false,true);
+                                           ProjectInitiated(false,true);
                                     }, 2500);
                                 }
                             $("#preloader").hide();
@@ -1041,10 +1041,10 @@
 
    function CheckoutSolution(checkoutType){
 
-        var mileStoneCheckOut = false;
-        if(checkoutType){
-            mileStoneCheckOut = checkoutType
-        }
+        //var mileStoneCheckOut = false;
+        //if(checkoutType){
+        //    mileStoneCheckOut = checkoutType
+        //}
 
         var Industryid = @ViewData["Industry"]; 
         var Solutionid = @ViewData["Solution"];

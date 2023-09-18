@@ -1755,9 +1755,9 @@ progress::-webkit-progress-value {
     text-decoration: none;
 }
 
-.popover {
+/*.popover {
     width: 12% !important;
-}
+}*/
 
 #solutionfund-furtherprogress {
     padding: 7px 0px !important;

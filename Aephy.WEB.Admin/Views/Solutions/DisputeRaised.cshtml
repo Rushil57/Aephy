@@ -7,12 +7,13 @@
                 <div class="card-body">
                     <h5 class="card-title">Dispute List</h5>
 
-                    <table class="table table-borderless datatable" id="DisputeList">
+                    <table class="table table-borderless datatable" id="DisputeList"> 
                         <thead>
                             <tr>
-                                <th scope="col">SolutionName</th>
+                                <th scope="col">SolutionName</th> 
                                 <th scope="col">IndustryName</th>
                                 <th scope="col">ClientName</th>
+                                <th scope="col">Amount</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Dispute Resolved?</th>
                                 <th scope="col">View</th>
@@ -65,7 +66,7 @@
                                         <div class="col-12">
                                             <label for="ChargedId" class="form-label">Last Charged Id</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="ChargedId" name="chargedId">
+                                                <input type="text" class="form-control" id="ChargedId" name="chargedId" readonly>
                                             </div>
                                         </div>
 
@@ -232,7 +233,8 @@
                     "columns": [
                         { "data": "SolutionName" },
                         { "data": "IndustryName" },
-                        { "data": "ClientName" },
+                        { "data": "ClientName"},
+                        { "data": "ProjectPrice"},
                         {
                             "data": "CreatedDate",
                             "render": function (data, type, full, meta) {
@@ -259,7 +261,7 @@
                             }
                         },
                         {
-                            "data": "ContractId",
+                            "data": "ContractId", 
                             "render": function (data, type, full, meta) {
                                 if (full.IsDisputeResolved) {
                                     $("#frelancer-Refund_" + data).attr('disabled', true);
@@ -277,10 +279,10 @@
                             "render": function (data, type, full, meta) {
                                if (full.IsDisputeResolved) {
                                     $("#client-Refund_" + data).attr('disabled', true);
-                                    return '<button class="btn btn-primary btn-sm" id="client-Refund_' + data + '" style=width:120%;>Refund to Client</button>';
+                                    return '<button class="btn btn-primary btn-sm" id="client-Refund_' + data + '">Refund to Client</button>';
                                }
                                else{
-                                   return '<button class="btn btn-primary btn-sm" id="client-Refund_' + data + '" onclick=OpenClientRefundPopUp(' + data + '); style=width:120%;>Refund to Client</button>';
+                                   return '<button class="btn btn-primary btn-sm" id="client-Refund_' + data + '" onclick=OpenClientRefundPopUp(' + data + ');>Refund to Client</button>';
                                }
 
                             }
@@ -318,6 +320,7 @@
                 });
 
                 $("#ContractId").val(result.Result[0].ContractId);
+                $("#ChargedId").val(result.Result[0].LatestChargeId);
                 $("#preloader").hide();
             },
             error: function (result) {

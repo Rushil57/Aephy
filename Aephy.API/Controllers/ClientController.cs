@@ -1430,7 +1430,7 @@ namespace Aephy.API.Controllers
             try
             {
                 var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
-                var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id).FirstOrDefaultAsync();
+                var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId).FirstOrDefaultAsync();
 
                 if (contractData == null)
                 {
@@ -1536,11 +1536,11 @@ namespace Aephy.API.Controllers
                 var contract = new Contract();
                 if (model.MileStoneCheckout)
                 {
-                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id);
+                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId);
                 }
                 else
                 {
-                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId);
+                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId);
                 }
 
 
@@ -1747,7 +1747,7 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
 
                                 //var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
-                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MilestoneDataId).FirstOrDefault();
+                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
                                 if (data != null)
                                 {
                                     data.IsCheckOutDone = true;

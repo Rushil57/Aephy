@@ -2948,6 +2948,7 @@ namespace Aephy.API.Controllers
                                 disputeViewModel.IsDisputeResolved = false;
                             }
                             disputeViewModel.ContractId = data.ContractId;
+                            disputeViewModel.ProjectPrice = solutionFundData.ProjectPrice;
                             disputeList.Add(disputeViewModel);
                         }
                     }
@@ -2993,6 +2994,7 @@ namespace Aephy.API.Controllers
                                 solutionDisputeView.FreelancerName = fullname;
                                 solutionDisputeView.FreelancerId = freelancerDetails.Id;
                                 solutionDisputeView.ContractId = model.ContractId;
+                                solutionDisputeView.LatestChargeId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.LatestChargeId).FirstOrDefault();
                                 freelancerList.Add(solutionDisputeView);
                             }
 
@@ -3292,7 +3294,7 @@ namespace Aephy.API.Controllers
                             {
                                 disputeViewModel.IsPaymentStop = PaymentStopped;
                             }
-
+                            disputeViewModel.ProjectPrice = _db.SolutionFund.Where(x => x.Id == data.SolutionFundId).Select(x => x.ProjectPrice).FirstOrDefault();
 
                             successProjectList.Add(disputeViewModel);
                         }

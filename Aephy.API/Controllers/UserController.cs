@@ -89,7 +89,8 @@ namespace Aephy.API.Controllers
                                 ImagePath = freelancerDetails.ImagePath,
                                 ImageUrlWithSas = freelancerDetails.ImageUrlWithSas,
                                 CountryId = user.CountryId,
-                                CountryName = Countryname
+                                CountryName = Countryname,
+                                CompanyName = clientDetails.CompanyName
                             }
                         });
                     }
@@ -185,6 +186,7 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
+                    
                     //if(model.freelancerDetail != null)
                     //{
                     //    user.CountryId = model.freelancerDetail.CountryId;
@@ -219,6 +221,7 @@ namespace Aephy.API.Controllers
                         {
                             clientDetails.Description = model.clientDetail.Description;
                             clientDetails.Address = model.clientDetail.ClientAddress;
+                            clientDetails.CompanyName = model.clientDetail.CompanyName;
                             _db.SaveChanges();
 
                             var userData = _db.Users.Where(x => x.Id == clientDetails.UserId).FirstOrDefault();

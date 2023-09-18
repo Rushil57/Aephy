@@ -57,5 +57,7 @@ namespace Aephy.API.Models
         public string? Description { get; set; }
 
         public int CountryId { get; set; }
+        public string? CompanyName { get; set; }
+
     }
 }

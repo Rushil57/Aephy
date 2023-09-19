@@ -2939,7 +2939,7 @@ namespace Aephy.API.Controllers
                             disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
                             disputeViewModel.CreatedDate = data.CreatedDateTime;
                             var disputeResolved = data.Status;
-                            if(disputeResolved == "RESOLVED")
+                            if (disputeResolved == "RESOLVED")
                             {
                                 disputeViewModel.IsDisputeResolved = true;
                             }
@@ -2982,31 +2982,31 @@ namespace Aephy.API.Controllers
                     //var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     //if (disputeData != null)
                     //{
-                        var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToList();
-                        List<SolutionDisputeViewModel> freelancerList = new List<SolutionDisputeViewModel>();
-                        if (contractUserData.Count > 0)
+                    var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToList();
+                    List<SolutionDisputeViewModel> freelancerList = new List<SolutionDisputeViewModel>();
+                    if (contractUserData.Count > 0)
+                    {
+                        foreach (var data in contractUserData)
                         {
-                            foreach (var data in contractUserData)
-                            {
-                                SolutionDisputeViewModel solutionDisputeView = new SolutionDisputeViewModel();
-                                var freelancerDetails = _db.Users.Where(x => x.Id == data.ApplicationUserId).FirstOrDefault();
-                                var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
-                                solutionDisputeView.FreelancerName = fullname;
-                                solutionDisputeView.FreelancerId = freelancerDetails.Id;
-                                solutionDisputeView.ContractId = model.ContractId;
-                                solutionDisputeView.LatestChargeId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.LatestChargeId).FirstOrDefault();
-                                freelancerList.Add(solutionDisputeView);
-                            }
-
-
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = freelancerList
-                            });
-
+                            SolutionDisputeViewModel solutionDisputeView = new SolutionDisputeViewModel();
+                            var freelancerDetails = _db.Users.Where(x => x.Id == data.ApplicationUserId).FirstOrDefault();
+                            var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                            solutionDisputeView.FreelancerName = fullname;
+                            solutionDisputeView.FreelancerId = freelancerDetails.Id;
+                            solutionDisputeView.ContractId = model.ContractId;
+                            solutionDisputeView.LatestChargeId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.LatestChargeId).FirstOrDefault();
+                            freelancerList.Add(solutionDisputeView);
                         }
+
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = freelancerList
+                        });
+
+                    }
 
                     //}
 
@@ -3154,9 +3154,9 @@ namespace Aephy.API.Controllers
                 if (model != null)
                 {
                     var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                    if(disputeData != null)
+                    if (disputeData != null)
                     {
-                        if(model.IsDisputeResolved)
+                        if (model.IsDisputeResolved)
                         {
                             disputeData.Status = "RESOLVED";
                             _db.SaveChanges();
@@ -3273,7 +3273,7 @@ namespace Aephy.API.Controllers
                     foreach (var data in successPaymentList)
                     {
                         var disputeData = _db.SolutionDispute.Where(x => x.ContractId == data.Id).FirstOrDefault();
-                        if(disputeData == null)
+                        if (disputeData == null)
                         {
                             SolutionDisputeViewModel disputeViewModel = new SolutionDisputeViewModel();
                             disputeViewModel.ContractId = data.Id;
@@ -3298,7 +3298,7 @@ namespace Aephy.API.Controllers
 
                             successProjectList.Add(disputeViewModel);
                         }
-                       
+
 
                     }
                 }
@@ -3522,11 +3522,11 @@ namespace Aephy.API.Controllers
                 var EmployeeopenRolesList = _db.EmployeeOpenRole.ToList();
                 if (EmployeeopenRolesList != null)
                 {
-                    if(model.Department != "0" && model.Department != null)
+                    if (model.Department != "0" && model.Department != null)
                     {
                         EmployeeopenRolesList = EmployeeopenRolesList.Where(x => x.Department == model.Department).ToList();
                     }
-                    if(model.Type != "0" && model.Type != null)
+                    if (model.Type != "0" && model.Type != null)
                     {
                         EmployeeopenRolesList = EmployeeopenRolesList.Where(x => x.Type == model.Type).ToList();
                     }
@@ -3565,7 +3565,7 @@ namespace Aephy.API.Controllers
                     if (contractData != null)
                     {
                         SolutionDisputeViewModel solutionDetails = new SolutionDisputeViewModel();
-                        var clientName =  _db.Users.Where(x => x.Id == contractData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                        var clientName = _db.Users.Where(x => x.Id == contractData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                         solutionDetails.ClientName = clientName.FirstName + " " + clientName.LastName;
                         solutionDetails.LatestChargeId = contractData.LatestChargeId;
                         solutionDetails.ContractId = contractData.Id;
@@ -3615,10 +3615,10 @@ namespace Aephy.API.Controllers
                 if (model != null)
                 {
                     var clienttransfer = _stripeAccountService.RefundAmountToClient(model.LatestChargeId, long.Parse(model.TransferAmount), model.Currency);
-                    if(clienttransfer == "succeeded")
+                    if (clienttransfer == "succeeded")
                     {
                         var contractDetails = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
-                        if(contractDetails != null)
+                        if (contractDetails != null)
                         {
                             contractDetails.IsClientRefund = true;
                             contractDetails.RefundAmount = model.TransferAmount;
@@ -3665,21 +3665,25 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if (model != null)
+                if (model != null && model.FreelancerId != null && model.FreelancerId != "none")
                 {
                     try
                     {
-                        var checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId).FirstOrDefault();
-                        if(checkExistance != null)
+                        var checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                        if (checkExistance != null)
                         {
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You have already submitted review for this freelancer..!!" });
                         }
 
+                        int solution = (int)model.SolutionId;
+                        int industry = (int)model.IndustryId;
                         DateTime date = (DateTime)model.CreateDateTime;
                         var freelancerReview = new FreelancerReview()
                         {
                             ClientId = model.ClientId,
                             FreelancerId = model.FreelancerId,
+                            SolutionId = solution,
+                            IndustryId = industry,
                             Feedback_Message = model.Feedback_Message,
                             CommunicationRating = model.CommunicationRating,
                             CollaborationRating = model.CollaborationRating,
@@ -3710,13 +3714,14 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
+
         [HttpPost]
         [Route("SaveProjectReview")]
         public async Task<IActionResult> SaveProjectReview([FromBody] SolutionReview model)
         {
             try
             {
-                if (model != null)
+                if (model != null && model.SolutionId != 0 && model.IndustryId != 0)
                 {
                     try
                     {
@@ -3755,6 +3760,58 @@ namespace Aephy.API.Controllers
                     catch (Exception ex)
                     {
                         return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetProjectReviewById")]
+        public async Task<IActionResult> GetProjectReviewById([FromBody] SolutionReview model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    ProjectReview checkExistance = _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    if (checkExistance != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Success", Result = checkExistance });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Does Not Exists !" });
+                    }
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetFreelancerReviewById")]
+        public async Task<IActionResult> GetFreelancerReviewById([FromBody] SolutionTeamReview model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    FreelancerReview checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    if (checkExistance != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Success", Result = checkExistance });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Does Not Exists !" });
                     }
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });

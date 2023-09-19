@@ -784,7 +784,7 @@
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title card-title py-0" id="exampleModalLabel">Add your feedback</h5>
+            <h5 class="modal-title card-title py-0" id="freelancerReviewModalTitle">Add your feedback</h5>
             <a class="close" onclick="closeFreelancerFeedbackPopup();" aria-label="Close">
               <i class="bi bi-x-circle"></i>
             </a>
@@ -797,6 +797,9 @@
               <!-- Floating Labels Form -->
               <form class="row g-3 mt-2" name="FreelancerFeedback_form">
                   <input type="text" class="form-control d-none" id="FreelancerID" name="FreelancerID" value="none">
+                  <input type="text" class="form-control d-none" id="Service_Id" name="Sol_Id" value="0">
+                  <input type="text" class="form-control d-none" id="Industry_Id" name="Industry_Id" value="0">
+                  <input type="text" class="form-control d-none" id="Solution_Id" name="Solution_Id" value="0">
                   @* <div class="col-md-6">
                       <div class="form-floating">
                           <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Your Name">
@@ -1074,8 +1077,8 @@
                 </div> *@
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-brand">Submit</button>
-                  <button type="reset" class="btn btn-secondary" onclick="resetFreelancerFeedbackForm();">Reset</button>
+                  <button type="submit" class="btn btn-brand freelancerFeedback_btn">Submit</button>
+                  <button type="button" class="btn btn-secondary freelancerFeedback_btn" onclick="resetFreelancerFeedbackForm();">Reset</button>
                 </div>
               </form><!-- End floating Labels Form -->
 
@@ -1093,7 +1096,7 @@
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title card-title py-0" id="exampleModalLabel">Add your feedback</h5>
+            <h5 class="modal-title card-title py-0" id="SolutionReviewModalTitle">Add your feedback</h5>
             <a class="close" onclick="CloseSolutionPopup();" aria-label="Close">
               <i class="bi bi-x-circle"></i>
             </a>
@@ -1327,8 +1330,8 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-brand">Submit</button>
-                  <button type="reset" class="btn btn-secondary" onclick="resetSolutionFeedbackForm();">Reset</button>
+                  <button type="submit" class="btn btn-brand SolutionFeedback_btn">Submit</button>
+                  <button type="button" class="btn btn-secondary SolutionFeedback_btn" onclick="resetSolutionFeedbackForm();">Reset</button>
                 </div>
               </form><!-- End floating Labels Form -->
 
@@ -1671,6 +1674,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
     function SubmitFreelancerFeedback(){
 
         var freelancerId = $('#FreelancerID').val();
+        var Industry = $('#Industry_Id').val();
+        var Solution = $('#Solution_Id').val();
         var message = $('#feedbackMessage').val();
         var communicationRating = $('input[name=communication-rating]:checked').val();
         var collaborationRating = $('input[name=collaboration-rating]:checked').val();
@@ -1682,6 +1687,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 
         var SolutionTeamReviewData = {
             FreelancerId:freelancerId,
+            SolutionId:Solution,
+            IndustryId:Industry,
             Feedback_Message: message,
             CommunicationRating: communicationRating,
             CollaborationRating: collaborationRating,
@@ -1755,7 +1762,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 if(result.StatusCode != 200){
                     showToaster("error", "Error !", result.Message);
                 }else{
-                closeSolutionPopup();
+                CloseSolutionPopup();
                 showToaster("success", "Success", result.Message);
                 }
             },
@@ -2737,16 +2744,16 @@ function InvokeApprovedList() {
                                  activeSection += '<div class="card-footer">'+
                                  '<div class="d-flex justify-content-center py-2">'+
                                     '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Give Freelancers Feedback</a>'+
-                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Give Solution Feedback</a>'+
+                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Freelancers Feedback</a>'+
+                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Solution Feedback</a>'+
                                 '</div></div>'+
                                 '<div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div></div>';
                             }else{
                                 activeSection += '<div class="card-footer">' +
                                     '<div class="d-flex justify-content-center py-2">' +
                                     '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Give Freelancers Feedback</a>' +
-                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Give Solution Feedback</a>' +
+                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Freelancers Feedback</a>' +
+                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Solution Feedback</a>' +
                                     '</div></div>' +
                                     '</div>';
                             }
@@ -2831,7 +2838,7 @@ function InvokeApprovedList() {
                                 subObj = data.SolutionTeam[index];
 
                                 htm += '<tr>';
-                                htm += '<td><a onclick="openFreelancerFeedbackPopup('+"'"+ subObj.FreelancerName +"',"+"'"+subObj.FreelancerId+"'"+');" class="feedback-link">' + subObj.FreelancerName + '</a></td>';
+                                htm += '<td><a onclick="openFreelancerFeedbackPopup('+"'"+ subObj.FreelancerName +"',"+"'"+subObj.FreelancerId+"',"+Industryid+","+Solutionid+","+Serviceid+');" class="feedback-link">' + subObj.FreelancerName + '</a></td>';
                                 htm += '</tr>';
                             }
                         }
@@ -2842,7 +2849,6 @@ function InvokeApprovedList() {
                 else{
                     $(".cls-temp").remove();
                     //$( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#projectReviewCarousel");
-
                 }
                  $("#preloader").hide();
             },
@@ -2859,9 +2865,35 @@ function InvokeApprovedList() {
 
     function OpenSolutionPopup(ID,ServiceID,SolutionID,IndustryID){
         resetSolutionFeedbackForm();
-        $('#SolutionFeedbackModal').modal('show');
         $('#SolutionID').val(SolutionID);
         $('#IndustryID').val(IndustryID);
+        var data = {
+            SolutionId:SolutionID,
+            IndustryId:IndustryID
+        };
+        $('#preloader').show();
+        $.ajax({
+            type:'POST',
+            url:'@Url.Action("checkSolutionReviewExists","Home")',
+            dataType:'json',
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify(data),
+            success:function(result){
+                $('#preloader').hide();
+                if(result.StatusCode == 200){
+                    bindSolutionFeedbackModal(result.Result);
+                    $('#SolutionFeedbackModal').modal('show');
+                }else{
+                    $('#SolutionFeedbackModal').modal('show');
+                }
+            },
+            error:function(result){
+                $('#preloader').hide();
+                //showToaster("success", "Success", "Review submitted successfully !");
+                showToaster("error", "Error !", "Failed to submit !!");
+            }
+        });
+        $('#preloader').hide();
     }
 
     function CloseSolutionPopup(){
@@ -2872,13 +2904,79 @@ function InvokeApprovedList() {
         $('#freelancerReviewListModal').modal('hide');
     }
 
-    function openFreelancerFeedbackPopup(freelancerName,FreelancerId){
+    function bindSolutionFeedbackModal(data){
+        $('#SolutionID').val(data.SolutionId);
+        $('#IndustryID').val(data.IndustryId);
+        $('#Message').val(data.Feedback_Message).prop('disabled','disabled');
+        $('input[name=wellDefined-rating][value='+data.WellDefinedProjectScope+']').prop('checked','checked');
+        $('input[name=adherence-rating][value='+data.AdherenceToProjectScope+']').prop('checked','checked');
+        $('input[name=deliverablesQuality-rating][value='+data.DeliverablesQuality+']').prop('checked','checked');
+        $('input[name=MeetingTimeliness-rating][value='+data.MeetingTimeliness+']').prop('checked','checked');
+        $('input[name=clientsatisfaction-rating][value='+data.Clientsatisfaction+']').prop('checked','checked');
+        $('input[name=adherenceToBudget-rating][value='+data.AdherenceToBudget+']').prop('checked','checked');
+        $('input[name=likeToRecommend-rating][value='+data.LikeToRecommend+']').prop('checked','checked');
+        $('#SolutionReviewModalTitle').html('View Feedback');
+        $('.SolutionFeedback_btn').prop('disabled', 'disabled');
+
+        $('.rating__input').prop('disabled', 'disabled');
+    }
+
+    function openFreelancerFeedbackPopup(freelancerName,FreelancerID,IndustryID,SolutionID,ServiceId){
         $('#freelancerReviewListModal').modal('hide');
         resetFreelancerFeedbackForm();
-        $('#FreelancerFeedbackModal').modal('show');
+        $('#Industry_Id').val(IndustryID);
+        $('#Solution_Id').val(SolutionID);
+        $('#Service_Id').val(ServiceId);
+
+        var data = {
+            FreelancerId:FreelancerID,
+            SolutionId:SolutionID,
+            IndustryId:IndustryID
+        };
+        $('#preloader').show();
+        $.ajax({
+            type:'POST',
+            url:'@Url.Action("checkSolutionTeamReviewExists","Home")',
+            dataType:'json',
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify(data),
+            success:function(result){
+                $('#preloader').hide();
+                if(result.StatusCode == 200){
+                    bindSolutionTeamFeedbackModal(result.Result);
+                    $('#FreelancerFeedbackModal').modal('show');
+                }else{
+                    $('#FreelancerFeedbackModal').modal('show');
+                }
+            },
+            error:function(result){
+                $('#preloader').hide();
+                //showToaster("success", "Success", "Review submitted successfully !");
+                showToaster("error", "Error !", "Failed to submit !!");
+            }
+        });
+        $('#preloader').hide();
+
         $('.freelancer-name').html(freelancerName);
-        $('#FreelancerID').val(FreelancerId);
+        $('#FreelancerID').val(FreelancerID);
     }
+
+    function bindSolutionTeamFeedbackModal(data){
+    $('#FreelancerID').val(data.FreelancerId);
+        $('#feedbackMessage').val(data.Feedback_Message).prop('disabled','disabled');
+        $('input[name=communication-rating][value='+data.CommunicationRating+']').prop('checked','checked');
+        $('input[name=collaboration-rating][value='+data.CollaborationRating+']').prop('checked','checked');
+        $('input[name=Professionalism-rating][value='+data.ProfessionalismRating+']').prop('checked','checked');
+        $('input[name=technical-rating][value='+data.TechnicalRating+']').prop('checked','checked');
+        $('input[name=satisfaction-rating][value='+data.SatisfactionRating+']').prop('checked','checked');
+        $('input[name=responsiveness-rating][value='+data.ResponsivenessRating+']').prop('checked','checked');
+        $('input[name=likeToWork-rating][value='+data.LikeToWorkRating+']').prop('checked','checked');
+        $('.freelancerFeedback_btn').prop('disabled', 'disabled');
+        $('#freelancerReviewModalTitle').html('View Feedback');
+
+        $('.rating__input').prop('disabled', 'disabled');
+    }
+
     function closeFreelancerFeedbackPopup(){
         $('#freelancerReviewListModal').modal('show');
         $('#FreelancerFeedbackModal').modal('hide');
@@ -2893,20 +2991,25 @@ function InvokeApprovedList() {
         $('input[name=satisfaction-rating][value="0"]').prop('checked',true);
         $('input[name=responsiveness-rating][value="0"]').prop('checked',true);
         $('input[name=likeToWork-rating][value="0"]').prop('checked',true);
-        $('#FreelancerID').val("");
+        $('.freelancerFeedback_btn').prop('disabled', false);
+        $('#feedbackMessage').prop('disabled',false);
+        $('#freelancerReviewModalTitle').html('Add Your Feedback');
+        $('.rating__input').prop('disabled', false);
     }
 
     function resetSolutionFeedbackForm(){
-        $('#SolutionId').val(0);
-        $('#IndustryId').val(0);
         $('#Message').val('');
-        $('input[name=wellDefined-rating][value="0"]').prop('checked',true);
-        $('input[name=adherence-rating][value="0"]').prop('checked',true);
-        $('input[name=deliverablesQuality-rating][value="0"]').prop('checked',true);
-        $('input[name=MeetingTimeliness-rating][value="0"]').prop('checked',true);
-        $('input[name=clientsatisfaction-rating][value="0"]').prop('checked',true);
-        $('input[name=adherenceToBudget-rating][value="0"]').prop('checked',true);
-        $('input[name=likeToRecommend-rating][value="0"]').prop('checked',true);
+        $('input[name=wellDefined-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=adherence-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=deliverablesQuality-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=MeetingTimeliness-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=clientsatisfaction-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=adherenceToBudget-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('input[name=likeToRecommend-rating][value="0"]').prop('checked',true).prop('disabled',false);
+        $('#SolutionReviewModalTitle').html('Add Your Feedback');
+        $('#Message').prop('disabled',false);
+        $('.SolutionFeedback_btn').prop('disabled', false);
+        $('.rating__input').prop('disabled', false);
     }
 
     function GetActiveProjectDetails(Id,ServiceId,SolutionId,IndustryId){

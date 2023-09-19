@@ -1187,6 +1187,39 @@ namespace Aephy.WEB.Controllers
             }
             return "Failed to submit feedback !!";
         }
+
+        [HttpPost]
+        public async Task<string> checkSolutionReviewExists([FromBody] SolutionReview model)
+        {
+            if (model != null)
+            {
+                var clientId = HttpContext.Session.GetString("LoggedUser");
+                if (clientId != null)
+                {
+                    model.ClientId = clientId;
+                    var response = await _apiRepository.MakeApiCallAsync("api/Admin/GetProjectReviewById", HttpMethod.Post, model);
+                    return response;
+                }
+            }
+            return "Failed to submit feedback !!";
+        }
+
+        [HttpPost]
+        public async Task<string> checkSolutionTeamReviewExists([FromBody] SolutionTeamReview model)
+        {
+            if (model != null)
+            {
+                var clientId = HttpContext.Session.GetString("LoggedUser");
+                if (clientId != null)
+                {
+                    model.ClientId = clientId;
+                    var response = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancerReviewById", HttpMethod.Post, model);
+                    return response;
+                }
+            }
+            return "Failed to submit feedback !!";
+        }
+
         [HttpPost]
         public async Task<string> GetProjectDetails([FromBody] MileStoneDetailsViewModel model)
         {

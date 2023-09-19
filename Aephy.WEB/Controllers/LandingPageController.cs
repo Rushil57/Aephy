@@ -670,7 +670,7 @@ namespace Aephy.WEB.Controllers
         }
 
         
-        public async Task<string> CheckOut([FromBody] MileStoneViewModel model)
+        public async Task<string> CheckOut([FromBody] SolutionFundModel model)
         {
             try
             {

@@ -540,6 +540,20 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
+                    //var CheckInCompeleteFund = _db.Contract.Where(x => x.ClientUserId == model.UserId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.PaymentStatus == Contract.PaymentStatuses.UnPaid && x.PaymentIntentId == "").FirstOrDefault();
+                    //if(CheckInCompeleteFund != null)
+                    //{
+                    //    //var solutionFundData = _db.SolutionFund.Where(x => x.Id == CheckInCompeleteFund.SolutionFundId).FirstOrDefault();
+                    //    //if(solutionFundData != null)
+                    //    //{
+                    //    //    solutionFundData.ProjectStatus = "INITIATED";
+                    //    //    _db.SaveChanges();
+                    //    //}
+
+                    //    _db.Contract.Remove(CheckInCompeleteFund);
+                    //    _db.SaveChanges();
+                    //}
+
                     SolutionFund fundProgress = new SolutionFund();
                     SolutionMilestone solutionMilesData = new SolutionMilestone();
                     bool fundCompleted = false;
@@ -1425,7 +1439,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("CheckOut")]
-        public async Task<IActionResult> CheckOut([FromBody] SolutionIndustryDetailsModel model)
+        public async Task<IActionResult> CheckOut([FromBody] solutionFundViewModel model)
         {
             try
             {
@@ -1554,11 +1568,11 @@ namespace Aephy.API.Controllers
                     Session session = new Session();
                     if (model.MileStoneCheckout)
                     {
-                        session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+                        session = _stripeAccountService.CreateCheckoutSession(mileStone,model.ProjectPrice, successUrl, cancelUrl);
                     }
                     else
                     {
-                        session = _stripeAccountService.CreateProjectCheckoutSession(successUrl, cancelUrl);
+                        session = _stripeAccountService.CreateProjectCheckoutSession(model.ProjectPrice,successUrl, cancelUrl);
                     }
 
                     if (session == null || string.IsNullOrEmpty(session.Id))
@@ -1612,7 +1626,7 @@ namespace Aephy.API.Controllers
                         }
                         else
                         {
-                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, successUrl, cancelUrl);
+                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone,model.ProjectPrice, successUrl, cancelUrl);
 
                             if (session == null || string.IsNullOrEmpty(session.Id))
                             {
@@ -1747,7 +1761,8 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
 
                                 //var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
-                                var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
+                              // var solutionFundId = _db.Contract.Where(x => x.Id == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
+                                var data = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();
                                 if (data != null)
                                 {
                                     data.IsCheckOutDone = true;

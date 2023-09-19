@@ -57,22 +57,23 @@ namespace Aephy.API.Stripe
                 return false;
             }
         }
-
-        public Session CreateCheckoutSession(SolutionMilestone mileStone, string successUrl, string cancelUrl)
+        
+        public Session CreateCheckoutSession(SolutionMilestone mileStone, string projectPrice, string successUrl, string cancelUrl)
         {
+            var ProjectPrice = Convert.ToInt64(projectPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
-                    {
-                        "card",
-                    },
+                {
+                    "card",
+                },
                 LineItems = new List<SessionLineItemOptions>
                     {
                         new SessionLineItemOptions
                         {
                             PriceData = new SessionLineItemPriceDataOptions
                             {
-                                UnitAmount = Convert.ToInt64(200 * 100), // Amount in cents ($100)
+                                UnitAmount = Convert.ToInt64(ProjectPrice * 100), // Amount in cents ($100)
                                 Currency = "usd",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
@@ -98,10 +99,10 @@ namespace Aephy.API.Stripe
                 {
                     Enabled = true
                 },
-                 TaxIdCollection = new SessionTaxIdCollectionOptions
-                 {
-                     Enabled = true
-                 }
+                TaxIdCollection = new SessionTaxIdCollectionOptions
+                {
+                    Enabled = true
+                }
             };
 
             try
@@ -115,8 +116,9 @@ namespace Aephy.API.Stripe
             }
         }
 
-        public Session CreateProjectCheckoutSession(string successUrl, string cancelUrl)
+        public Session CreateProjectCheckoutSession(string projectPrice,string successUrl, string cancelUrl)
         {
+            var ProjectPrice = Convert.ToInt64(projectPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -129,7 +131,7 @@ namespace Aephy.API.Stripe
                         {
                            PriceData = new SessionLineItemPriceDataOptions
                             {
-                                UnitAmount = Convert.ToInt64(200 * 100), // Amount in cents ($100)
+                                UnitAmount = Convert.ToInt64(ProjectPrice * 100), // Amount in cents ($100)
                                 Currency = "usd",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {

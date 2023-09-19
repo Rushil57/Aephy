@@ -13,9 +13,9 @@ namespace Aephy.API.Stripe
         public Contract.PaymentStatuses GetPaymentStatus(Session session);
         public Session GetCheckOutSesssion(string sessionId);
         public PaymentIntent GetPaymentIntent(string paymentIntentId);
-        public Session CreateCheckoutSession(SolutionMilestone milestone, string successUrl, string cancelUrl);
+        public Session CreateCheckoutSession(SolutionMilestone milestone,string projectPrice, string successUrl, string cancelUrl);
 
-        public Session CreateProjectCheckoutSession(string successUrl, string cancelUrl);
+        public Session CreateProjectCheckoutSession(string projectPrice, string successUrl, string cancelUrl);
 
         public string CreateTransferonCharge(long amount, string currency, string destination, string sourceTransaction, string transferGroup);
 

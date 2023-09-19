@@ -1912,10 +1912,11 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 
         if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
             GetSavedProjects();
-            GetActiveProjectList();
+            GetClientActiveProjectList();
         }else{
             $("#savedProjects").hide();
-            $("#activeProjects").hide();
+            //$("#activeProjects").hide();
+            GetFreelancerActiveProjectList();
         }
     });
 
@@ -2708,7 +2709,7 @@ function InvokeApprovedList() {
         $("#SavedProjectModal").modal('hide');
     }
 
-    function GetActiveProjectList(){
+    function GetClientActiveProjectList(){
         $("#preloader").show();
           $.ajax({
             type: "Get",
@@ -2718,7 +2719,54 @@ function InvokeApprovedList() {
             success: function (result) {
                 if(result.Result != ""){
                      var Activedata = result.Result
-                    var activeSection = "";
+                       BindActiveProject(Activedata);
+                      $(".cls-temp").remove();
+                }
+                else{
+                    $(".cls-temp").remove();
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#activeProjectdiv");
+                }
+                   
+                $("#preloader").hide();
+               
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function GetFreelancerActiveProjectList(){
+          $("#preloader").show();
+          $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetFreelancerActiveProjectList", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if(result.Result != ""){
+                     var Activedata = result.Result
+                      BindActiveProject(Activedata);
+                      $(".cls-temp").remove();
+                }
+                else{
+                    $(".cls-temp").remove();
+                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#activeProjectdiv");
+                }
+                   
+                $("#preloader").hide();
+               
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function BindActiveProject(Activedata){
+         var activeSection = "";
                     $.each(Activedata, function (data, value) {
                         var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
                         var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
@@ -2764,21 +2812,6 @@ function InvokeApprovedList() {
                     })
                   
                       $('#activeProjectdiv').html(activeSection);
-                      $(".cls-temp").remove();
-                }
-                else{
-                    $(".cls-temp").remove();
-                    $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#activeProjectdiv");
-                }
-                   
-                $("#preloader").hide();
-               
-            },
-            error: function (result) {
-                showToaster("error", "Error !", result);
-                $("#preloader").hide();
-            }
-        });
     }
 
     function ApproveFreelancerPayment(Id){
@@ -2794,7 +2827,7 @@ function InvokeApprovedList() {
             data: JSON.stringify(data),
             success: function (result) {
                 showToaster("success", "Success !", result.Message);
-                GetActiveProjectList();
+                GetClientActiveProjectList();
                 $("#preloader").hide();
             },
             error: function (result) {

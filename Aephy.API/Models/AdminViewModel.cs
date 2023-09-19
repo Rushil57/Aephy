@@ -373,6 +373,10 @@ namespace Aephy.API.Models
             public bool GetNextMileStoneData { get; set; }
 
             public SolutionFund? solutionFunds { get; set; }
+
+            public int SolutionFundId { get; set; }
+
+            public string? UserId { get; set; }
         }
 
         public class SolutionDisputeViewModel
@@ -470,6 +474,48 @@ namespace Aephy.API.Models
             public string? ImagePath { get; set; }
 
             public string? ImageUrlWithSas { get; set; }
+        }
+
+        public class UserDetailsModel
+        {
+            public string? UserId { get; set; }
+
+            public string? FirstName { get; set; }
+
+            public string? LastName { get; set;}
+
+            public string? Email { get; set; }
+
+            public string? ProfileUrl { get; set;}
+
+            public string? Role { get; set; }
+
+            public string? Description { get; set; }
+
+            public string? ClientAddress { get; set; }
+
+            public string? HourlyRate { get; set;}
+
+            public string? Education { get; set;}
+
+            public string? ProffessionalExperience { get; set;}
+
+            public string? FreelancerAddress { get; set; }
+
+            public string? FreelancerLevel { get; set;}
+
+            public string? CVPath { get; set; }
+
+            public string? ImagePath { get; set;}
+
+            public string? ImageUrlWithSas { get; set;}
+
+            public int CountryId { get; set; }
+
+            public string? CountryName { get; set;}
+
+            public string? CompanyName { get; set; }
+
         }
     }
 }

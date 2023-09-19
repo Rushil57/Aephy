@@ -98,6 +98,10 @@
         public bool GetNextMileStoneData { get; set; }
         public int ContractId { get; set; }
 
+        public int SolutionFundId { get; set; }
+
+        public string? UserId { get; set; }
+
     }
     
 }

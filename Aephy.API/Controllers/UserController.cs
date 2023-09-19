@@ -66,32 +66,33 @@ namespace Aephy.API.Controllers
                         {
                             freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.UserId).FirstOrDefault();
                         }
+
+                        AdminViewModel.UserDetailsModel UserDetails = new AdminViewModel.UserDetailsModel();
+                        UserDetails.UserId = user.Id;
+                        UserDetails.FirstName = string.IsNullOrEmpty(user.FirstName) ? "" : user.FirstName;
+                        UserDetails.LastName = string.IsNullOrEmpty(user.LastName) ? "" : user.LastName;
+                        UserDetails.Email = user.Email;
+                        UserDetails.ProfileUrl = filePath;
+                        UserDetails.Role = user.UserType;
+                        UserDetails.Description = clientDetails.Description;
+                        UserDetails.ClientAddress = clientDetails.Address;
+                        UserDetails.HourlyRate = freelancerDetails.HourlyRate;
+                        UserDetails.Education = freelancerDetails.Education;
+                        UserDetails.ProffessionalExperience = freelancerDetails.ProffessionalExperience;
+                        UserDetails.FreelancerAddress = freelancerDetails.Address;
+                        UserDetails.FreelancerLevel = freelancerDetails.FreelancerLevel;
+                        UserDetails.CVPath = freelancerDetails.CVPath;
+                        UserDetails.ImagePath = freelancerDetails.ImagePath;
+                        UserDetails.ImageUrlWithSas = freelancerDetails.ImageUrlWithSas;
+                        UserDetails.CountryId = user.CountryId;
+                        UserDetails.CountryName = Countryname;
+                        UserDetails.CompanyName = clientDetails.CompanyName;
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
                             Message = "Success",
-                            Result = new
-                            {
-                                UserId = user.Id,
-                                FirstName = string.IsNullOrEmpty(user.FirstName) ? "" : user.FirstName,
-                                LastName = string.IsNullOrEmpty(user.LastName) ? "" : user.LastName,
-                                Email = user.Email,
-                                ProfileUrl = filePath,
-                                Role = user.UserType,
-                                Description = clientDetails.Description,
-                                ClientAddress = clientDetails.Address,
-                                HourlyRate = freelancerDetails.HourlyRate,
-                                Education = freelancerDetails.Education,
-                                ProffessionalExperience = freelancerDetails.ProffessionalExperience,
-                                FreelancerAddress = freelancerDetails.Address,
-                                FreelancerLevel = freelancerDetails.FreelancerLevel,
-                                CVPath = freelancerDetails.CVPath,
-                                ImagePath = freelancerDetails.ImagePath,
-                                ImageUrlWithSas = freelancerDetails.ImageUrlWithSas,
-                                CountryId = user.CountryId,
-                                CountryName = Countryname,
-                                CompanyName = clientDetails.CompanyName
-                            }
+                            Result = UserDetails
                         });
                     }
                     else

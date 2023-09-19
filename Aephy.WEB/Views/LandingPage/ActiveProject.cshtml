@@ -106,10 +106,12 @@
 
                                 <!--Description column-->
 
-                                <h4 class="pt-2 label-title-size title-path">Project Outline</h4>
+                                <input type="hidden" value="0" id="SolutionDefineId" />
+                                <h4 class="pt-2 label-title-size title-path">Project Outline <i class="bi bi-pencil-fill cls-edit-pencil" onclick='EditActiveSolutionDetailsByFreelancer("ProjectOutline")'></i></h4>
                                 <p style="display:block;" id="project-outline-div">
 
                                 </p>
+                                <textarea id="ProjectOutline" class="form-control cls-solution-details" style="display:none" rows="4" cols="50"></textarea>
                             </div>
                         </div>
                     </div>
@@ -120,10 +122,11 @@
                     <div class="container-flued">
                         <div class="row justify-content-center">
                             <div class="col-12 content d-flex flex-column">
-                                <h3 class="pt-2 label-title-size title-path">Project Details</h3>
+                                <h3 class="pt-2 label-title-size title-path">Project Details <i class="bi bi-pencil-fill cls-edit-pencil" onclick='EditActiveSolutionDetailsByFreelancer("ProjectDetail")'></i></h3>
                                 <p class="section-detail-size" id="project-details-div">
 
                                 </p>
+                                <textarea id="ProjectDetails" class="form-control cls-solution-details" style="display:none" rows="4" cols="50"></textarea>
                             </div>
                         </div>
 
@@ -412,6 +415,12 @@
            html:true,
         });
         GetProjectDetails();
+
+         if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
+            $(".cls-edit-pencil").show()
+         }else{
+             $(".cls-edit-pencil").hide()
+         }
     });
 
     
@@ -497,6 +506,7 @@
                 if(data.SolutionDefine != null){
                     $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
                     $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                    $("#SolutionDefineId").val(data.SolutionDefine.Id);
 
                     if(data.SolutionDefine.Duration != null){
                         $(".cls-duration").text(data.SolutionDefine.Duration)
@@ -636,7 +646,6 @@
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
                 }
 
-                if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
                    {
                       projecttype = data.SolutionFund.ProjectType;
@@ -666,7 +675,7 @@
                       $("#solutionFundId").val(data.SolutionFund.Id);
                       BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop);
                    }
-                }
+                
 
 
                 var newContent = "";
@@ -683,6 +692,13 @@
                 $('.team-popover').popover({
                     content:newContent,
                 });
+
+                  if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer'){
+                        $("#solutionfund-popUp").hide();
+                    }else{
+                        $("#solutionfund-popUp").show();
+                    }
+
                  $("#preloader").hide();
             },
             error: function (result) {
@@ -811,10 +827,11 @@
                         $("#preloader").hide();
                    }
                    if(result.Message == "CompleteProcess"){
-                       if(result.Result.ProjectDetails.FundType == 1){
-                           CheckoutSolution(false);
+                       var ProjectData = result.Result.ProjectDetails;
+                       if(ProjectData.FundType == 1){
+                           CheckoutSolution(false,ProjectData.ProjectPrice);
                        }else{
-                           CheckoutSolution(true);
+                           CheckoutSolution(true,ProjectData.ProjectPrice);
                        } 
                        $("#preloader").hide();
                        return;
@@ -886,7 +903,7 @@
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
               $("#solutionfund-details").text('Stop Project');
-               fundDecided = fundDecided + 1;
+              fundDecided = fundDecided + 1;
 
                if(data.FundType == 1){
                    $("#solutionfund-furtherprogress").text("Fund Project " + fundDecided);
@@ -1039,12 +1056,7 @@
             });
    }
 
-   function CheckoutSolution(checkoutType){
-
-        //var mileStoneCheckOut = false;
-        //if(checkoutType){
-        //    mileStoneCheckOut = checkoutType
-        //}
+   function CheckoutSolution(checkoutType, projectPrice){
 
         var Industryid = @ViewData["Industry"]; 
         var Solutionid = @ViewData["Solution"];
@@ -1053,7 +1065,8 @@
             SolutionId : Solutionid,
             Id :$("#solutionFundMileStoneId").val(),
             SolutionFundId :$("#solutionFundId").val(),
-            MileStoneCheckout : checkoutType
+            MileStoneCheckout : checkoutType,
+            ProjectPrice : projectPrice
         }
        $("#preloader").show();
         $.ajax({
@@ -1077,5 +1090,23 @@
             }
         });
         //window.location = "@Url.Action("CheckOut", "LandingPage")?data=" + JSON.stringify(data)
+    }
+
+    function EditActiveSolutionDetailsByFreelancer(EditType){
+        //var solutiondefineId = $("#SolutionDefineId").val();
+        //if(solutiondefineId != 0){
+        //    alert(ProjectType)
+        //}
+        if(EditType == "ProjectOutline"){
+            $("#project-outline-div").hide();
+           //$("#project-outline-div").html()
+            $("#ProjectOutline").show();
+             $("#ProjectOutline").val($("#project-outline-div").html())
+        }
+        if(EditType == "ProjectDetail"){
+            $("#project-details-div").hide();
+            $("#ProjectDetails").show();
+            $("#ProjectDetails").val($("#project-details-div").html())
+        }
     }
 </script>

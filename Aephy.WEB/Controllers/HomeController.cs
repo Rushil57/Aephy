@@ -2096,6 +2096,25 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        //EditActiveSolutionDefineDetails
+        [HttpPost]
+        public async Task<string> EditActiveSolutionDefineDetails([FromBody] SolutionIndustryDetailsViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/EditActiveSolutionDefineDetails", HttpMethod.Post, model);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
 
     }
 }

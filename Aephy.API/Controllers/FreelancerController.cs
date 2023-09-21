@@ -1627,5 +1627,33 @@ namespace Aephy.API.Controllers
                 Message = "Data not Found"
             });
         }
+
+        //EditActiveSolutionDefineDetails
+        [HttpPost]
+        [Route("EditActiveSolutionDefineDetails")]
+        public async Task<IActionResult> EditActiveSolutionDefineDetails([FromBody] SolutionIndustryDetailsModel model)
+        {
+            if (model != null)
+            {
+                if(model.Id != 0)
+                {
+                    var solutiondefineData = await _db.SolutionDefine.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                    if(solutiondefineData != null)
+                    {
+                        solutiondefineData.ProjectOutline = model.ProjectOutline;
+                        solutiondefineData.ProjectDetails = model.ProjectDetails;
+                        _db.SaveChanges();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel {
+                            StatusCode = StatusCodes.Status200OK, 
+                            Message = "Data Update Successfully!" 
+                        });
+                    }
+                }
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "No Data Found" });
+
+        }
     }
 }

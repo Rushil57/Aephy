@@ -107,11 +107,11 @@
                                 <!--Description column-->
 
                                 <input type="hidden" value="0" id="SolutionDefineId" />
-                                <h4 class="pt-2 label-title-size title-path">Project Outline <i class="bi bi-pencil-fill cls-edit-pencil" onclick='EditActiveSolutionDetailsByFreelancer("ProjectOutline")'></i></h4>
+                                <h4 class="pt-2 label-title-size title-path">Project Outline <i class="bi bi-pencil-fill cls-edit-pencil" title="Click To Edit" id="projectOutlinePencilIcon" onclick='EditActiveSolutionDetailsByFreelancer(this,"ProjectOutline")'></i><i class="bi cls-save-icon bi-save-fill" id="projectOutlineSaveIcon" title="Click To Save" style="font-size: 20px;display:none" onclick='EditActiveSolutionDefineDetails("ProjectOutline")'></i></h4>
                                 <p style="display:block;" id="project-outline-div">
 
                                 </p>
-                                <textarea id="ProjectOutline" class="form-control cls-solution-details" style="display:none" rows="4" cols="50"></textarea>
+                                <textarea id="ProjectOutline" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50"></textarea>
                             </div>
                         </div>
                     </div>
@@ -122,11 +122,11 @@
                     <div class="container-flued">
                         <div class="row justify-content-center">
                             <div class="col-12 content d-flex flex-column">
-                                <h3 class="pt-2 label-title-size title-path">Project Details <i class="bi bi-pencil-fill cls-edit-pencil" onclick='EditActiveSolutionDetailsByFreelancer("ProjectDetail")'></i></h3>
+                                <h3 class="pt-2 label-title-size title-path">Project Details <i class="bi bi-pencil-fill cls-edit-pencil" title="Click To Edit" id="projectDetailPencilIcon" onclick='EditActiveSolutionDetailsByFreelancer(this,"ProjectDetail")'></i><i class="bi cls-save-icon bi-save-fill" title="Click To Save" id="projectDetailSaveIcon" style="font-size: 20px;display:none" onclick='EditActiveSolutionDefineDetails("ProjectDetail")'></i></h3>
                                 <p class="section-detail-size" id="project-details-div">
 
                                 </p>
-                                <textarea id="ProjectDetails" class="form-control cls-solution-details" style="display:none" rows="4" cols="50"></textarea>
+                                <textarea id="ProjectDetails" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50"></textarea>
                             </div>
                         </div>
 
@@ -287,6 +287,10 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="progressContainer d-flex flex-column">
+                        <div class="form-group pt-3">
+                             <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()" id="btn-milestone">Add Milestones</button>
+                        </div>
+
                         <ul class="progress" id="milestone-Popup-div">
                         </ul>
                         <div class="d-flex align-self-start btn-more-less" style="padding:1rem 0 0 1em;">
@@ -396,7 +400,62 @@
         </div>
     </div>
 
+    <div class="modal" id="MileStonePopModal" tabindex="-1" aria-labelledby="MileStonePopModal" aria-hidden="true">
+    
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Add Milestone</h4>
+                    <a class="close" onclick="ResetMileStoneForm();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
+                </div>
+                 <div class="modal-body p-0">
+                    <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="row g-3 mt-3" name="MileStoneForm">
+                                    <input type="hidden" id="MileStoneId" value="0" />
+                                    <div class="col-12">
+                                        <label for="Title" class="form-label">Title</label>
+                                        <div class="input-group">
+                                            <input type="text" id="mileStoneTitle" class="form-control" name="milestonetitle" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <div class="input-group">
+                                            <input type="text" id="mileStoneDescription" class="form-control" name="milestonedescription" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Days" class="form-label">Days</label>
+                                        <div class="input-group">
+                                            <input type="text" id="txtMilestoneDays" class="form-control" name="txtMilestoneDays" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12" style="display:none;">
+                                        <label for="dueDate" class="form-label">Due Date</label>
+                                        <div class="input-group">
+                                            @*<input type="text" id="mileStonedueDate" class="form-control" name="milestoneduedate" />*@
+                                            <input type="date" id="mileStonedueDate" class="form-control" name="milestoneduedate">
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button  type="button" class="btn btn-secondary" onclick="ResetMileStoneForm();">Reset</button>
+                                    </div>
+                                </form>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+            
+            </div>
+        </div>
+    </div>
    
 <script>
     $(document).ready(function () {
@@ -421,6 +480,30 @@
          }else{
              $(".cls-edit-pencil").hide()
          }
+
+        $("form[name='MileStoneForm']").validate({
+            rules: {
+                milestonedescription: { required: true },
+                milestonetitle: { required: true },
+                txtMilestoneDays: { required: true },
+            },
+            messages: {
+                milestonedescription: { required: "Please enter description" },
+                milestonetitle: { required: "please enter title" },
+                txtMilestoneDays: { required: "Please enter days" }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SaveMilStoneData()
+            }
+        });
     });
 
     
@@ -559,7 +642,7 @@
                                     '</li>'
 
                         milestonePopupsection +=  '<li class="progress__item">' +
-                                '<p class="progress__title">'+ values.Title+'</p>' +
+                                '<p class="progress__title">'+ values.Title+'<i class="bi bi-pencil-fill cls-milestone-edit-pencil" title="Click To Edit" onclick="EditActiveMileStoneDetailsByFreelancer('+values.Id+')" style="padding-left:2%"></i></p>' +
                                 '<p class="progress__info">'+values.Description+'</p>' +
                                 '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
                             '</li>';
@@ -695,6 +778,13 @@
 
                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer'){
                         $("#solutionfund-popUp").hide();
+                         if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
+                             $("#btn-milestone").show();
+                            $(".cls-milestone-edit-pencil").show()
+                         }else{
+                             $("#btn-milestone").hide();
+                             $(".cls-milestone-edit-pencil").hide()
+                         }
                     }else{
                         $("#solutionfund-popUp").show();
                     }
@@ -1092,21 +1182,184 @@
         //window.location = "@Url.Action("CheckOut", "LandingPage")?data=" + JSON.stringify(data)
     }
 
-    function EditActiveSolutionDetailsByFreelancer(EditType){
+   function EditActiveSolutionDetailsByFreelancer1(curIcon, EditType){
         //var solutiondefineId = $("#SolutionDefineId").val();
         //if(solutiondefineId != 0){
         //    alert(ProjectType)
         //}
-        if(EditType == "ProjectOutline"){
-            $("#project-outline-div").hide();
-           //$("#project-outline-div").html()
-            $("#ProjectOutline").show();
-             $("#ProjectOutline").val($("#project-outline-div").html())
+        if($(curIcon).hasClass('bi-save-fill')){
+            $(curIcon).attr('title','Click To Edit')
+            $(curIcon).removeClass('bi-save-fill').addClass('bi-pencil-fill');
+            if(EditType == "ProjectOutline"){
+                $("#project-outline-div").show();
+                $("#ProjectOutline").hide();
+                 $("#project-outline-div").html($("#ProjectOutline").val());
+            }
+            if(EditType == "ProjectDetail"){
+                $("#project-details-div").show();
+                $("#ProjectDetails").hide();
+                $("#project-details-div").html($("#ProjectDetails").val());
+            }
+            showToaster("success", "Success !", "Data Updated Successfully");
         }
-        if(EditType == "ProjectDetail"){
-            $("#project-details-div").hide();
-            $("#ProjectDetails").show();
-            $("#ProjectDetails").val($("#project-details-div").html())
+        else{
+            $(curIcon).removeClass('bi-pencil-fill').addClass('bi-save-fill');
+            $(curIcon).attr('title','Click To Save');
+            if(EditType == "ProjectOutline"){
+                $("#project-outline-div").hide();
+               //$("#project-outline-div").html()
+                $("#ProjectOutline").show();
+                 $("#ProjectOutline").val($("#project-outline-div").html())
+            }
+            if(EditType == "ProjectDetail"){
+                $("#project-details-div").hide();
+                $("#ProjectDetails").show();
+                $("#ProjectDetails").val($("#project-details-div").html())
+            }
         }
+    }
+
+      function OpenMileStonePopup() {
+        $("#MileStonePopModal").modal('show')
+    }
+
+    function SaveMilStoneData(){
+
+        var solutionid = @ViewData["Solution"];
+        var Industryid = @ViewData["Industry"]; 
+
+          var MileStoneData = {
+            Id: $("#MileStoneId").val(),
+            Description: $("#mileStoneDescription").val(),
+            Title: $("#mileStoneTitle").val(),
+            Days: $("#txtMilestoneDays").val(),
+            SolutionId: solutionid,
+            IndustryId:Industryid,
+            ProjectType: $("#projSize").val().toUpperCase(),
+        };
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveMileStone", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(MileStoneData),
+            success: function (result) {
+                $("#preloader").hide();
+                showToaster("success", "Success", result.Message);
+                GetProjectTypeValue()
+                ResetMileStoneForm()
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+            }
+        });
+    }
+
+    function ResetMileStoneForm() {
+        $("#MileStoneId").val(0);
+        $("#mileStoneDescription").val("");
+        $("#mileStoneTitle").val("");
+        $("#txtMilestoneDays").val(0);
+        $("#mileStonedueDate").val("");
+        $("#MileStonePopModal").modal('hide')
+    }
+
+    function EditActiveMileStoneDetailsByFreelancer(id){
+        var data = {
+            Id: id,
+        };
+         $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetMileStoneById", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result != null) {
+                    $("#MileStonePopModal").modal('show')
+                    var data = result.Result;
+                    $("#MileStoneId").val(data.Id);
+                    $("#mileStoneDescription").val(data.Description);
+                    $("#txtMilestoneDays").val(data.Days);
+                    $("#mileStoneTitle").val(data.Title);
+                    $("#mileStonedueDate").val(moment(data.DueDate).format('YYYY-MM-DD'));
+                }
+                 $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !",result);
+            }
+        });
+
+    }
+
+     function EditActiveSolutionDetailsByFreelancer(curIcon, EditType){
+      if(EditType == "ProjectOutline"){
+          $("#ProjectOutline").show();
+          $("#project-outline-div").hide();
+          $("#ProjectOutline").html($("#project-outline-div").html());
+          $("#projectOutlinePencilIcon").hide();
+          $("#projectOutlineSaveIcon").show();
+      }
+      if(EditType == "ProjectDetail"){
+          $("#ProjectDetails").show();
+          $("#project-details-div").hide();
+          $("#ProjectDetails").html($("#project-details-div").html());
+          $("#projectDetailPencilIcon").hide();
+          $("#projectDetailSaveIcon").show();
+      }
+    }
+
+    function EditActiveSolutionDefineDetails(EditType){
+         var solutiondefineId = $("#SolutionDefineId").val();
+        if(solutiondefineId != 0){
+            var Projectdetail = "";
+            var Projectoutline = "";
+            if(EditType == "ProjectOutline"){
+                Projectdetail = $("#project-details-div").html();
+                Projectoutline =  $("#ProjectOutline").val();
+            }
+            if(EditType == "ProjectDetail"){
+                  Projectdetail = $("#ProjectDetails").val();
+                Projectoutline =  $("#project-outline-div").html();
+            }
+
+              var data = {
+                Id: solutiondefineId,
+                ProjectDetails : Projectdetail,
+                ProjectOutline : Projectoutline
+            };
+
+             $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditActiveSolutionDefineDetails", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                     showToaster("success", "Success", result.Message);
+                     ResetDefineDetails()
+                      $("#preloader").hide();
+                },
+                error: function (result) {
+                    showToaster("error", "Error !",result);
+                }
+            });
+        }
+    }
+
+    function ResetDefineDetails(){
+       $("#ProjectOutline").hide();
+       $("#project-outline-div").show();
+       $("#projectOutlinePencilIcon").show();
+       $("#projectOutlineSaveIcon").hide();
+       $("#ProjectDetails").hide();
+       $("#project-details-div").show();
+       $("#projectDetailPencilIcon").show();
+       $("#projectDetailSaveIcon").hide();
+       GetProjectTypeValue()
     }
 </script>

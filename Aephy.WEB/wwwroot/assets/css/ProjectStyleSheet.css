@@ -1794,7 +1794,7 @@ progress::-webkit-progress-value {
     font-size: 25px;
 }
 
-.cls-edit-pencil {
+.cls-edit-pencil, .cls-milestone-edit-pencil, .cls-save-icon {
     color: var(--brand);
     font-size: 20px !important;
     cursor: pointer;

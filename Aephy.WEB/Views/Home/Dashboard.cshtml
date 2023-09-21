@@ -1,13 +1,22 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.Extensions.Configuration  
+@inject IConfiguration Configuration
+@using System
 @{
     ViewData["Title"] = "Dashboard";
     ViewData["Role"] = Context.Session.GetString("LoggedUserRole");
     ViewData["Fullname"] = Context.Session.GetString("FullName");
     ViewData["Level"] = @Context.Session.GetString("LoggedUserLevel");
-}
 
+    string apiKey = Configuration.GetSection("FirebaseConfig:apiKey").Value.ToString();
+    string authDomain = Configuration.GetSection("FirebaseConfig:authDomain").Value.ToString();
+    string projectId = Configuration.GetSection("FirebaseConfig:projectId").Value.ToString();
+    string storageBucket = Configuration.GetSection("FirebaseConfig:storageBucket").Value.ToString();
+    string messagingSenderId = Configuration.GetSection("FirebaseConfig:messagingSenderId").Value.ToString();
+    string appId = Configuration.GetSection("FirebaseConfig:appId").Value.ToString();
+    string measurementId = Configuration.GetSection("FirebaseConfig:measurementId").Value.ToString();
+
+}
+<link href="~/assets/css/chat.css" rel="stylesheet" />
 <style>
         .progressContainer {
         position: relative;
@@ -50,6 +59,19 @@
 #InvoiceContent h5 {
     font-size: .875em;
 }
+
+.cls-chat-icon {
+    color: var(--aephy) !important;
+    font-size: 25px;
+}
+.chat-message-icon{
+    position: absolute;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
 </style>
 
 <main id="main" class="main cls-fixed-common">
@@ -1514,6 +1536,72 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         </div>
     </div>
 
+    <div class="modal fade" id="chatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Chat</h5>
+            <a onclick="closeChatModal()">
+              <span aria-hidden="true">&times;</span>
+            </a>
+          </div>
+          <div class="modal-body">
+            <div class="messaging">
+              <div class="inbox_msg">
+                <div class="inbox_people">
+                  <div class="headind_srch">
+                    <div class="recent_heading">
+                      <h4>Freelanceres</h4>
+                    </div>
+                    @*<div class="srch_bar">
+                      <div class="stylish-input-group">
+                        <input type="text" class="search-bar" placeholder="Search">
+                        <span class="input-group-addon">
+                          <button type="button">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>*@
+                  </div>
+                  <div class="inbox_chat" id="inboxPeople">
+                    @*<div class="chat_list active_chat">
+                      <div class="chat_people">
+                        <div class="chat_img">
+                          <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                        </div>
+                        <div class="chat_ib">
+                          <h5>
+                              Sunil Rajput 
+                              <span class="chat_date">Dec 25</span>
+                          </h5>
+                          <p>Test, which is a new approach to have all solutions astrology under one roof.</p>
+                        </div>
+                      </div>
+                    </div>*@
+                  </div>
+                </div>
+                <div class="mesgs">
+                  <div class="msg_history" id="chat_history">
+                    <div class="text-center">
+                        <img src="https://shorturl.at/bhou4"/>
+                    </div>
+                  </div>
+                  <div class="type_msg d-none" id="type-chat">
+                    <div class="input_msg_write">
+                      <input type="text" id="txt_message" class="write_msg" placeholder="Type a message" />
+                      <button class="msg_send_btn" type="button" id="btn_chat_send">
+                        <i class="bi bi-send" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -1605,7 +1693,102 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
     </div>
 </div>
 
-<script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+<div class="modal" id="CreditMemoModal" tabindex="-1" aria-labelledby="CreditMemoModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Credit Memo</h4>
+                <a class="close" onclick="CloseCreditMemoModalPopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <input type="hidden" value="0" id="InvoiceContractId"/>
+                 <div class="container" id="InvoiceContent">
+                                <div class="row pt-1">
+                                    <div class="col-sm-8 col-lg-8">
+                                        <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png" 
+                                        class="img-fluid" width="265" height="150"/>
+                                    </div>
+
+                                    <div class="col-sm-4 col-lg-4">
+                                        <div class="p-1 text-center" style="background-color: #d9d9d9;">
+                                            <span>CREDIT MEMO</span>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <h5> Invoice # 00000000 </h5>
+                                            <h5 id="ContractCreatedDate">Date 30 May 2023</h5>
+                                            <h5 id="ContractDueDate"> <b>Due Date 30 May 2023</b> </h5>
+                                            <h5 id="ProjectTotalAmount">Total Amount € -1,198.92</h5>
+                                            <h5 id="ProjectTotalDueAmount"> <b> Total Due € -1,198.92 </b> </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-2" style="padding-left:20px;">
+                                    <div class="col-sm-6 col-lg-6">
+                                        <h3 style="color: #c37813;">From</h3>
+
+                                        <div class="mt-3">
+                                            <h5> <b> Ephylink </b> </h5>
+                                            <h5> Dimitrios Vamvakas </h5>
+                                            <h5> Ellispontou 39, Patra, 26226 </h5>
+                                            <h5> Achaia, Greece </h5>
+                                            <h5> VAT ID: 148366653 </h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-lg-6">
+                                            <h3 style="color: #c37813;">Bill to</h3>
+
+                                            <div class="mt-3">
+                                                <h5 id="ContractClientName"> <b>Client 1 International Client</b> </h5>
+                                                <h5> Name </h5>
+                                                <h5 id="ClientAddress"> Address: </h5>
+                                                <h5> VAT ID: </h5>
+                                                <h5> Tax ID: </h5>
+                                            </div>
+                                        </div>
+                                </div>
+
+                                <div class="pt-1" style="padding-left:10px;">
+                                    <table class="table table-bordered small">
+                                        <tr style="background-color: #d9d9d9;">
+                                            <th>DESCRIPTION</th>
+                                            <th>AMOUNT</th>
+                                        </tr>
+                
+                                        <tr>
+                                            <td id="FundTitle">Paid from escrow for "Title of Milestone"</td>
+                                            <td id="FundAmount">(1,198.92)</td>
+                                        </tr>
+                                        <tr>
+                                            <td> VAT (0%) </td>
+                                            <td> 0.00 </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td> Total amount </td>
+                                            <td id="TotalFundAmount"> -€ 1,198.92 </td>
+                                        </tr>
+                                    </table>
+                    </div>
+                 </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                     <button type="button" class="btn btn-brand" onclick="DownloadCreditMemoInvoice();">Download Credit Memo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script> *@
+<!-- Firebase app and db file -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+<script src="~/assets/js/chat.js"></script>
 <script>
     "use strict";
 
@@ -1914,9 +2097,9 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             GetSavedProjects();
             GetClientActiveProjectList();
         }else{
+            GetFreelancerActiveProjectList();
             $("#savedProjects").hide();
             //$("#activeProjects").hide();
-            GetFreelancerActiveProjectList();
         }
     });
 
@@ -2719,7 +2902,7 @@ function InvokeApprovedList() {
             success: function (result) {
                 if(result.Result != ""){
                      var Activedata = result.Result
-                       BindActiveProject(Activedata);
+                     BindActiveProject(Activedata);
                       $(".cls-temp").remove();
                 }
                 else{
@@ -2737,7 +2920,62 @@ function InvokeApprovedList() {
         });
     }
 
-    function GetFreelancerActiveProjectList(){
+    function BindActiveProject(Activedata){
+         var activeSection = "";
+                    $.each(Activedata, function (data, value) {
+                        var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
+                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+                        var industryList = Activedata[data].Industries.split(",")
+                        var count = 0;
+                        var client = "@Context.Session.GetString("LoggedUser")"; 
+
+                        activeSection += '<div class="col-md-6 col-xl-4 cls-activediv" style="width:250px;cursor:pointer">' +
+                            ' <div class="card shadow-lg cls-solutioncard">' +
+                            '<div class="card-body" onclick=GetActiveProjectDetails(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ')>' +
+                            '<div class="card-img justify-content-lg-center">' +
+                            '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
+                            '</div>' +
+                            '<h3>' +
+                            '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
+                            '</h3>' +
+                            '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
+                            '<div class="icon-image">' +
+                            '<i class="bi bi-shop-window"></i>' +
+                            '<label> ' + value.Industries + ' </label>' +
+
+                            '</div></div>';
+                            if(Activedata[data].ProjectStatus != "INITIATED"){
+                                 activeSection += '<div class="card-footer">'+
+                                 '<div class="d-flex justify-content-center py-2">'+
+                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
+                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Freelancers Feedback</a>'+
+                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Solution Feedback</a>'+
+                                '</div></div>'+
+                                '<div class="d-flex align-items-center">'+
+                                '<div><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div>'+
+                                '<div class="like" style="font-size: 16px;" onclick=OpenCreditMemoModalPopUp();>View Credit Memo</div></div>'+
+                                "<div class=\"chat-message-icon\"><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div></div></div>";
+                            }else{
+                                activeSection += '<div class="card-footer">' +
+                                    '<div class="d-flex justify-content-center py-2">' +
+                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
+                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Freelancers Feedback</a>' +
+                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Solution Feedback</a>' +
+                                    '</div></div>' +
+                                    '<div class="d-flex align-items-center chat-message-icon position-static">'+
+                                    "<div><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div></div></div>";
+                                    '</div>';
+                            }
+                         
+                         //activeSection += '<i class="bi bi-chat" style="position: absolute;right: 0;padding-right: 1rem;padding-top: 2px;" onclick="openChatModal("'+ value.IndustryId + '","' + value.SolutionId + '","' + client + '");></i>';
+                         activeSection +='</div></div>';
+
+
+                    })
+                  
+                      $('#activeProjectdiv').html(activeSection);
+    }
+        function GetFreelancerActiveProjectList(){
           $("#preloader").show();
           $.ajax({
             type: "Get",
@@ -2763,55 +3001,6 @@ function InvokeApprovedList() {
                 $("#preloader").hide();
             }
         });
-    }
-
-    function BindActiveProject(Activedata){
-         var activeSection = "";
-                    $.each(Activedata, function (data, value) {
-                        var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
-                        var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
-                        var industryList = Activedata[data].Industries.split(",")
-                        var count = 0;
-
-                        activeSection += '<div class="col-md-6 col-xl-4 cls-activediv" style="width:250px;cursor:pointer">' +
-                            ' <div class="card shadow-lg cls-solutioncard">' +
-                            '<div class="card-body" onclick=GetActiveProjectDetails(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ')>' +
-                            '<div class="card-img justify-content-lg-center">' +
-                            '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
-                            '</div>' +
-                            '<h3>' +
-                            '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
-                            '</h3>' +
-                            '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
-                            '<div class="icon-image">' +
-                            '<i class="bi bi-shop-window"></i>' +
-                            '<label> ' + value.Industries + ' </label>' +
-
-                            '</div></div>';
-                            if(Activedata[data].ProjectStatus != "INITIATED"){
-                                 activeSection += '<div class="card-footer">'+
-                                 '<div class="d-flex justify-content-center py-2">'+
-                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Freelancers Feedback</a>'+
-                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Solution Feedback</a>'+
-                                '</div></div>'+
-                                '<div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div></div>';
-                            }else{
-                                activeSection += '<div class="card-footer">' +
-                                    '<div class="d-flex justify-content-center py-2">' +
-                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Freelancers Feedback</a>' +
-                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Solution Feedback</a>' +
-                                    '</div></div>' +
-                                    '</div>';
-                            }
-                         
-                         activeSection +='</div></div>';
-
-
-                    })
-                  
-                      $('#activeProjectdiv').html(activeSection);
     }
 
     function ApproveFreelancerPayment(Id){
@@ -3113,5 +3302,233 @@ function InvokeApprovedList() {
 
     function CloseInvoicePopUp(){
         $("#InvoiceModal").modal('hide')
+    }
+
+    function OpenCreditMemoModalPopUp(ContractId){
+        $("#CreditMemoModal").modal('show');
+    }
+
+    function CloseCreditMemoModalPopUp(){
+        $("#CreditMemoModal").modal('hide');
+    }
+
+    function DownloadCreditMemoInvoice(){
+        $("#preloader").show();
+        var contractId = $("#InvoiceContractId").val();
+         window.location = "@Url.Action("DownloadCreditMemo", "Home")";
+
+        // $("#preloader").hide();
+         setTimeout(function () {
+                        $("#preloader").hide();
+         }, 10000);
+    }
+    //========== Chat Module Coding Start ================//
+
+    $(document).ready(function(){
+
+        // firebase database configuration which is copy from firebase setting
+        firebaseConfig = {
+            apiKey: "@apiKey",
+            authDomain: "@authDomain",
+            projectId: "@projectId",
+            storageBucket: "@storageBucket",
+            messagingSenderId: "@messagingSenderId",
+            appId: "@appId",
+            measurementId: "@measurementId"
+        };
+
+        InitFirebase(firebaseConfig);
+    });
+
+    function openChatModal(IndustryId,SolutionID,ClietnId) {
+        let model = {
+            IndustryId : IndustryId,
+            SolutionID : SolutionID,
+            UserId: ClietnId,
+            UserRole:''
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetChatResponse", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(model),
+            success: function (result) {
+                if(result.StatusCode == 200)
+                {
+                    var index = 0;
+                    var subObj = '';
+                    var html = '';
+                    var resultLength = result.Result.length;
+                    var profileHtml = '';
+                    if(resultLength > 0){
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = result.Result[index];
+                            if(subObj.ProfileUrl == null)
+                            {
+                                var splitName =  subObj.FreelancerName.split(" ");
+
+                                html += "<div class=\"chat_list\" id="+ subObj.FreelancerId +" onclick=\"onPeopleClick('"+subObj.FreelancerId+"','"+subObj.FreelancerName+"');\">"+
+                                            "<div class=\"chat_people\">"+
+                                                "<div class=\"chat_no_img\">"+
+	                                                splitName[0].charAt(0) +
+                                                    splitName[1].charAt(0) +
+	                                            "</div>"+
+	                                            "<div class=\"chat_no_ib\">"+
+	                                                "<h5>"+ subObj.FreelancerName +"</h5>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                            }
+                            else
+                            {
+                                html += "<div class=\"chat_list\" id="+ subObj.FreelancerId +" onclick=\"onPeopleClick('"+subObj.FreelancerId+"','"+subObj.FreelancerName+"');\">"+
+                                            "<div class=\"chat_people\">"+
+	                                            "<div class=\"chat_img\">"+
+	                                                "<img src=\""+subObj.ProfileUrl+"\">"+
+	                                            "</div>"+
+	                                            "<div class=\"chat_ib\">"+
+	                                                "<h5>"+ subObj.FreelancerName +"</h5>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                            }
+                        }
+                    }
+                    else{
+                        htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+                    }
+                    $("#inboxPeople .chat_list").remove();
+                    $("#inboxPeople").append(html);
+                }
+                $('#chatModal').modal('show');
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function closeChatModal(){
+        $("#inboxPeople .chat_list").removeClass("active_chat");
+        $("#type-chat").addClass("d-none");
+        $("#txt_message").val("");
+        $("#chat_history").empty();
+        $("#chat_history").append("<div class=\"text-center\"><img src=\"https://shorturl.at/bhou4\"/></div>")
+        $('#chatModal').modal('hide');
+    }
+
+    
+    function onPeopleClick(id,name)
+    {
+        reciverToken = null;
+
+        $("#inboxPeople .chat_list").removeClass("active_chat");
+        $("#"+id).addClass("active_chat");
+        $("#type-chat").removeClass("d-none");
+
+
+        let currentUser = "@Context.Session.GetString("LoggedUser")";
+        let role = "@Context.Session.GetString("LoggedUserRole")";
+
+        if(role == "Client")
+        {
+            //username = name;
+            //chatroom = currentUser +"-join-"+ id ;
+            //bindMessage();
+            //console.log(chatroom);
+
+            var testchatroom = currentUser + "-join-" + id;
+            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+            findRoom.on("value", function(data) {
+
+                if(data.val() != undefined)
+                {
+                    username = name;
+                    chatroom = testchatroom;
+                }
+                else
+                {
+                    username = name;
+                    chatroom = id + "-join-" + currentUser;
+                }
+
+                console.log(chatroom);
+
+                bindMessage();
+
+            }, function (error) {
+                return false;
+            });
+        }
+        else
+        {
+            var testchatroom = currentUser + "-join-" + id;
+            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+            findRoom.on("value", function(data) {
+
+                if(data.val() != undefined)
+                {
+                    username = name;
+                    chatroom = testchatroom;
+                }
+                else
+                {
+                    username = name;
+                    chatroom = id + "-join-" + currentUser;
+                }
+
+                console.log(chatroom);
+
+                bindMessage();
+
+            }, function (error) {
+                return false;
+            });
+        }
+    }
+
+    $("#btn_chat_send").click(function(){
+        sendChatMessage();
+    });
+
+    $('#txt_message').keypress(function(event){
+	    var keycode = (event.keyCode ? event.keyCode : event.which);
+	    if(keycode == '13'){
+		    sendChatMessage();
+	    }
+    });
+
+    function sendChatMessage(){
+        let msg = $("#txt_message").val();
+
+        if(msg == "")
+        {
+            return false;
+        }
+
+        let senderName = "@Context.Session.GetString("FullName").ToString()";
+
+        let model = {
+            sedername : senderName,
+            recivername : username,
+            message : msg,
+            timestamp : Date.now(),
+            image : ''
+        }
+
+        $("#txt_message").val("");
+        sendMessage(model);
+        model = null;
+    }
+
+    function bindMessage(){
+        offconn();
+        $("#chat_history").empty();
+
+        let senderName = "@Context.Session.GetString("FullName").ToString()";
+
+        fetchMessage(senderName);
     }
 </script>

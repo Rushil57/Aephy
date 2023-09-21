@@ -1213,14 +1213,14 @@ namespace Aephy.API.Controllers
                         var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
                         if(projectData.Count > 0)
                         {
-                            var grouped_activeproject = projectData
+                            var grouped_teachers = projectData
                              .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
                              .Select(g => new
                              {
                                  FundList = g.ToList(),
                              });
 
-                            foreach (var group in grouped_activeproject)
+                            foreach (var group in grouped_teachers)
                             {
                                 var list = group.FundList;
                                 solutionFundViewModel grouping = new solutionFundViewModel();
@@ -1499,6 +1499,48 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetChatResponse")]
+        public async Task<IActionResult> GetChatResponse([FromBody] ChatPopupRequestViewModel model)
+        {
+            try
+            {
+                // [-- Method Needs To Be Update --]
+                // [-- This Method Needs to be updated for generating freelancers list --]
+                var userList = await _db.Users.ToListAsync();
+                var ids = await _db.FreelancerPool.Where(x => x.IndustryId == model.IndustryId &&
+                x.SolutionID == model.SolutionID).Select(x => x.FreelancerID).ToListAsync();
+
+                if (model.UserRole != "Client")
+                {
+                    ids.Add(model.UserId);
+                    ids.Remove(model.LoginFreelancerId);
+                }
+
+                var finalData = userList.Where(x => ids.Contains(x.Id)).Select(x => new ChatPopupResponseViewModel
+                {
+                    FreelancerId = x.Id,
+                    FreelancerName = x.FirstName + " " + x.LastName
+                }).ToList();
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = finalData
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
         //GetFreelancerActiveProjectList
         [HttpPost]
         [Route("GetFreelancerActiveProjectList")]
@@ -1568,6 +1610,7 @@ namespace Aephy.API.Controllers
                                     var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
                                     var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();
                                     var contractid = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.Id).FirstOrDefault();
+                                    var clientId = _db.SolutionFund.Where(x => x.Id == data.solutionFunds.Id).Select(f => f.ClientId).FirstOrDefault();
 
                                     solutionsdataStore.Services = serviceData;
                                     solutionsdataStore.ServiceId = serviceId;
@@ -1581,6 +1624,7 @@ namespace Aephy.API.Controllers
                                     solutionsdataStore.MileStoneTitle = milestoneData;
                                     solutionsdataStore.PaymentStatus = contractStatus.ToString();
                                     solutionsdataStore.ContractId = contractid;
+                                    solutionsdataStore.ClientId = clientId;
                                     solutionsdataStore.ProjectStatus = data.solutionFunds.ProjectStatus;
                                     solutionsModel.Add(solutionsdataStore);
                                     industrylist.Clear();

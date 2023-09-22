@@ -1149,6 +1149,19 @@ namespace Aephy.WEB.Controllers
 
                         }
 
+                        foreach (var service in data.Result.DocumentDataList)
+                        {
+                            if (service.DocumentPath != null)
+                            {
+                                string documentpath = service.DocumentPath;
+                                string sasToken = GenerateSasToken(documentpath);
+                                string documentUrlWithSas = $"{service.DocumentPath}?{sasToken}";
+                                service.DocumentUrlWithSas = documentUrlWithSas;
+                            }
+
+
+                        }
+
                     }
 
                 }
@@ -1158,7 +1171,6 @@ namespace Aephy.WEB.Controllers
                 }
                 string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
                 return jsonString;
-                return solutionData;
             }
             else
             {

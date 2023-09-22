@@ -143,21 +143,38 @@
                             </div>
                         </div>
 
-                      
-                        <!-- Reviews row -->
-
-                           <div class="row">
-                                <div class="col">
-                                     <h3 class="label-title-size title-path">Solution Team</h3>
-                                    <div class="row" id="solutionTeamSection">
+                        <div class="row">
+                           <div class="col">
+                               <h3 class="label-title-size title-path">Solution Team</h3>
+                                <div class="row" id="solutionTeamSection">
                                     
-                                    </div>
-                                 </div>
-                            </div>
+                                </div>
+                           </div>
+                        </div>
+
+                         <div class="row" style="margin-top:5%;">
+                           <div class="col">
+                               <h3 class="label-title-size title-path">Documents</h3>
+                               <a class="cls-new-activeDocuments" onclick="OpenDocumentsUploadPopUp()" style="margin-top:8%;">Add New</a>
+                                <div class="row" id="DoumentsSection" style="margin-top:3%;">
+                                     <div class="card-body">
+                                            <table class="table datatable" id="table-DocumentDetails">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Document Name</th>
+                                                        <th scope="col">File</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                           </div>
+                        </div>
                        
                         <div class="row JoinUs" style="padding:50px 0;">
                             <div class="col-12 column-client-guide">
-                                @*<img src="~/assets/img/opengigsimage.png" class="img-fluid" alt="">*@
                                 <h3 class="label-title-size title-path">
                                     Client Guide
                                 </h3>
@@ -456,6 +473,49 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="DocumnetsModal" tabindex="-1" aria-labelledby="DocumnetsModal" aria-hidden="true">
+    
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Upload Documents</h4>
+                    <a onclick="ResetDocumentPopUp();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
+                </div>
+                 <div class="modal-body p-0">
+                    <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="row g-3 mt-3" name="UploadDocumentForm">
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="ActiveProjectDescription" name="activeprojectdescription" rows="4" cols="50"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Days" class="form-label">Upload File</label>
+                                        <div class="input-group">
+                                            <input class="form-control" type="file" id="ActiveProjectDocument" name="activeprojectdocument">
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button  type="button" class="btn btn-secondary" onclick="ResetDocumentPopUp();">Reset</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+            
+            </div>
+        </div>
+    </div>
    
 <script>
     $(document).ready(function () {
@@ -501,6 +561,28 @@
             },
             submitHandler: function (form) {
                 SaveMilStoneData()
+            }
+        });
+
+         $("form[name='UploadDocumentForm']").validate({
+            rules: {
+                activeprojectdescription: { required: true },
+                activeprojectdocument: { required: true },
+            },
+            messages: {
+                activeprojectdescription: { required: "Please enter description" },
+                activeprojectdocument: { required: "please upload valid file" },
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                SaveActiveProjectDocuments()
             }
         });
     });
@@ -758,7 +840,28 @@
                       BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop);
                    }
                 
-
+                if(data.DocumentDataList != ""){
+                    $("#DoumentsSection").show()
+                     var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        for (index = 0; index < data.DocumentDataList.length; index++) {
+                            
+                                subObj = data.DocumentDataList[index];
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.DocumentName + '</td>';
+                                htm += "<td><a class='cls-dwld-document' onclick=DownloadDocument('"+subObj.DocumentPath+"') >Download File</a></td>";
+                                htm += '</tr>';
+                            
+                        }
+                        $("#table-DocumentDetails").find("tr:gt(0)").remove();
+                        $("#table-DocumentDetails tbody").append(htm);
+                        $(".cls-documentTemp").hide();
+                }else{
+                    $("#DoumentsSection").hide();
+                    $(".cls-documentTemp").css("padding-top","10px");
+                    $( "<p class='cls-documentTemp'>No Data Available</p>" ).insertAfter("#DoumentsSection");
+                }
 
                 var newContent = "";
                 if(projecttype == "medium"){
@@ -1360,5 +1463,63 @@
        $("#projectDetailPencilIcon").show();
        $("#projectDetailSaveIcon").hide();
        GetProjectTypeValue()
+    }
+
+    function OpenDocumentsUploadPopUp(){
+        $("#DocumnetsModal").modal('show')
+    }
+
+    function SaveActiveProjectDocuments(){
+        
+        var filename = $("#ActiveProjectDocument").val();
+        var validFileExtentions = /(\.pdf|\.docx)$/i;
+        if (validFileExtentions.exec(filename)) {
+            $('#preloader').show();
+            var fileUpload = $("#ActiveProjectDocument").get(0);
+            var files = fileUpload.files;
+
+            var data = {
+                SolutionFundId : $("#solutionFundId").val(),
+                Description: $("#ActiveProjectDescription").val(),
+            }
+            
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append("httpPostedFileBase", files[i]);
+            }
+            formData.append("ActiveProjectsDocumentDetails", JSON.stringify(data));
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveActiveProjectDocumentsDetails", "LandingPage")",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                     showToaster("success", "Success !", result);
+                     ResetDocumentPopUp();
+                      GetProjectTypeValue()
+                    $('#preloader').hide();
+                },
+                error: function (result) {
+                    $('#preloader').hide();
+
+                }
+            });
+        } else {
+            showToaster("error", "Error !", "You can upload only PDF or Document file..");
+        }
+    }
+
+    function DownloadDocument(DocumentPath){
+        if (DocumentPath != "") {
+            window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + DocumentPath;
+        }
+    }
+
+    function ResetDocumentPopUp(){
+        $("#DocumnetsModal").modal('hide')
+        $("#ActiveProjectDescription").val("");
+        $("#ActiveProjectDocument").val("")
     }
 </script>

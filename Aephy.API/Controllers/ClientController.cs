@@ -10,6 +10,7 @@ using Stripe;
 using Stripe.Checkout;
 using Stripe.Identity;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Xml.Schema;
 using static Aephy.API.DBHelper.ApplicationUser;
 using static Aephy.API.Models.AdminViewModel;
@@ -548,7 +549,7 @@ namespace Aephy.API.Controllers
                     {
                         fundProgress = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
                         var checkfundCompleted = await _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.PaymentStatus).FirstOrDefaultAsync();
-                        if(checkfundCompleted == Contract.PaymentStatuses.Splitted)
+                        if (checkfundCompleted == Contract.PaymentStatuses.Splitted)
                         {
                             fundCompleted = true;
                         }
@@ -586,16 +587,16 @@ namespace Aephy.API.Controllers
                     var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
                     var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
                     List<SolutionTeamViewModel> solutionteamList = new List<SolutionTeamViewModel>();
-                    if(solutionTeamData.Count > 0)
+                    if (solutionTeamData.Count > 0)
                     {
-                        foreach(var soltiondata in solutionTeamData)
+                        foreach (var soltiondata in solutionTeamData)
                         {
                             SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
                             var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             solutionTeam.FreelancerId = soltiondata.FreelancerId;
                             solutionTeam.FreelancerName = fullname.FirstName + " " + fullname.LastName;
                             var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == soltiondata.FreelancerId).FirstOrDefault();
-                            if(freelancerDetails != null)
+                            if (freelancerDetails != null)
                             {
                                 solutionTeam.FreelancerLevel = freelancerDetails.FreelancerLevel;
                                 solutionTeam.ImagePath = freelancerDetails.ImagePath;
@@ -627,16 +628,16 @@ namespace Aephy.API.Controllers
 
                     var contractId = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Id).FirstOrDefault();
                     bool IsProjectstop = false;
-                    if(contractId != 0)
+                    if (contractId != 0)
                     {
                         var solutionStopData = _db.SolutionStopPayment.Where(x => x.ContractId == contractId).FirstOrDefault();
-                        if(solutionStopData != null)
+                        if (solutionStopData != null)
                         {
                             IsProjectstop = true;
                         }
                     }
 
-
+                    var DocumentList = _db.ActiveProjectDocuments.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -653,7 +654,8 @@ namespace Aephy.API.Controllers
                             MileStoneProgressData = solutionMilesData,
                             FundDecided = Funddecided,
                             FundCompleted = fundCompleted,
-                            IsProjectStop = IsProjectstop
+                            IsProjectStop = IsProjectstop,
+                            DocumentDataList = DocumentList
                         }
                     });
                 }
@@ -1496,7 +1498,7 @@ namespace Aephy.API.Controllers
                         else
                         {
                             var contractDetails = _db.Contract.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId).FirstOrDefault();
-                            if(contractDetails == null)
+                            if (contractDetails == null)
                             {
                                 contractSave = new Contract()
                                 {
@@ -1535,9 +1537,9 @@ namespace Aephy.API.Controllers
                             else
                             {
                                 var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
-                                if(solutionFundData != null)
+                                if (solutionFundData != null)
                                 {
-                                    if(solutionFundData.ProjectStatus == "COMPLETED")
+                                    if (solutionFundData.ProjectStatus == "COMPLETED")
                                     {
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {
@@ -1575,11 +1577,11 @@ namespace Aephy.API.Controllers
                     Session session = new Session();
                     if (model.MileStoneCheckout)
                     {
-                        session = _stripeAccountService.CreateCheckoutSession(mileStone,model.ProjectPrice, successUrl, cancelUrl);
+                        session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
                     }
                     else
                     {
-                        session = _stripeAccountService.CreateProjectCheckoutSession(model.ProjectPrice,successUrl, cancelUrl);
+                        session = _stripeAccountService.CreateProjectCheckoutSession(model.ProjectPrice, successUrl, cancelUrl);
                     }
 
                     if (session == null || string.IsNullOrEmpty(session.Id))
@@ -1633,7 +1635,7 @@ namespace Aephy.API.Controllers
                         }
                         else
                         {
-                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone,model.ProjectPrice, successUrl, cancelUrl);
+                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
 
                             if (session == null || string.IsNullOrEmpty(session.Id))
                             {
@@ -1768,7 +1770,7 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
 
                                 //var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
-                              // var solutionFundId = _db.Contract.Where(x => x.Id == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
+                                // var solutionFundId = _db.Contract.Where(x => x.Id == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
                                 var data = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();
                                 if (data != null)
                                 {
@@ -1860,7 +1862,7 @@ namespace Aephy.API.Controllers
                 if (model.GetNextMileStoneData)
                 {
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
-                    if(mileStoneData != null)
+                    if (mileStoneData != null)
                     {
                         //if (model.MileStoneCheckout){model.FundType = SolutionFund.FundTypes.MilestoneFund;}
                         //else{model.FundType = SolutionFund.FundTypes.ProjectFund;}
@@ -2015,7 +2017,7 @@ namespace Aephy.API.Controllers
                                 }
                             });
                         }
-                        if(data.ProjectStatus == "INPROGRESS")
+                        if (data.ProjectStatus == "INPROGRESS")
                         {
                             //data.ProjectStatus = "COMPLETED";
                             //_db.SaveChanges();
@@ -2360,7 +2362,7 @@ namespace Aephy.API.Controllers
                         if (contractId != 0)
                         {
                             var checkDisputeData = _db.SolutionDispute.Where(x => x.ContractId == contractId).FirstOrDefault();
-                            if(checkDisputeData != null)
+                            if (checkDisputeData != null)
                             {
                                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                 {
@@ -2398,7 +2400,7 @@ namespace Aephy.API.Controllers
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2415,6 +2417,70 @@ namespace Aephy.API.Controllers
                 Message = "Data Not Found",
             });
         }
+
+        [HttpPost]
+        [Route("SaveActiveProjectDocumentsDetails")]
+        public async Task<IActionResult> SaveActiveProjectDocumentsDetails([FromBody] ActiveProjectDocuments model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    if (model.Id == 0)
+                    {
+                        var DocumentData = new ActiveProjectDocuments()
+                        {
+                            SolutionFundId = model.SolutionFundId,
+                            Description = model.Description,
+                            ClientId = model.ClientId,
+                            CreatedDateTime = DateTime.Now
+                        };
+                        await _db.ActiveProjectDocuments.AddAsync(DocumentData);
+                        await _db.SaveChangesAsync();
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Save Successfully!",
+                            Result = DocumentData.Id
+                        });
+                    }
+                    else
+                    {
+                        var DocumentDetails = await _db.ActiveProjectDocuments.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                        if(DocumentDetails != null)
+                        {
+                            DocumentDetails.DocumentName = model.DocumentName;
+                            DocumentDetails.DocumentBlobStorageBaseUrl= model.DocumentBlobStorageBaseUrl;
+                            DocumentDetails.DocumentPath = model.DocumentPath;
+                            DocumentDetails.DocumentUrlWithSas = model.DocumentUrlWithSas;
+                            _db.SaveChanges();
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Updated Successfully!",
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
+
 
     }
 }

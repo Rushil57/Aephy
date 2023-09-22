@@ -1803,3 +1803,13 @@ progress::-webkit-progress-value {
 .cls-solution-details {
     resize: none;
 }
+
+.cls-new-activeDocuments, .cls-dwld-document {
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+
+#ActiveProjectDescription{
+    resize: none;
+}

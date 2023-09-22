@@ -289,9 +289,9 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<string> FilterEmployeeRolesList([FromBody]EmployeeOpenRole model)
+        public async Task<string> FilterEmployeeRolesList([FromBody] EmployeeOpenRole model)
         {
-            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilterEmployeeRolesList", HttpMethod.Post,model);
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Admin/FilterEmployeeRolesList", HttpMethod.Post, model);
             return RolesList;
         }
 
@@ -669,7 +669,7 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        
+
         public async Task<string> CheckOut([FromBody] SolutionFundModel model)
         {
             try
@@ -684,11 +684,11 @@ namespace Aephy.WEB.Controllers
                 var checkOutResponse = await _apiRepository.MakeApiCallAsync("api/Client/CheckOut", HttpMethod.Post, model);
                 return checkOutResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-            
+
             return "Something went wrong";
         }
 
@@ -697,7 +697,7 @@ namespace Aephy.WEB.Controllers
         public async Task<string> GetCheckoutMileStoneData([FromBody] MileStoneDetailsViewModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
-            if(userId == null)
+            if (userId == null)
             {
                 userId = "";
             }
@@ -789,7 +789,7 @@ namespace Aephy.WEB.Controllers
                     return "Dispute email not send.";
                 }
             }
-           
+
 
             return Data;
         }
@@ -800,6 +800,119 @@ namespace Aephy.WEB.Controllers
             ViewData["Industry"] = Industry;
             ViewData["Service"] = Service;
             return View();
+        }
+
+        //SaveActiveProjectDocumentsDetails
+        [HttpPost]
+        public async Task<string> SaveActiveProjectDocumentsDetails(IFormFile httpPostedFileBase, string ActiveProjectsDocumentDetails)
+        {
+            try
+            {
+                var result = JsonConvert.DeserializeObject<ActiveProjectDocumentViewModel>(ActiveProjectsDocumentDetails);
+                var UserId = HttpContext.Session.GetString("LoggedUser");
+                if (User == null)
+                {
+                    return "User Not Found";
+                }
+                result.ClientId = UserId;
+                var Documentsdata = await _apiRepository.MakeApiCallAsync("api/Client/SaveActiveProjectDocumentsDetails", HttpMethod.Post, result);
+
+                dynamic data = JsonConvert.DeserializeObject(Documentsdata);
+                if (data.Message == "Save Successfully!")
+                {
+                    if (data != null)
+                    {
+                        int Id = data.Result;
+                        var DocumentDetails = await SaveActiveDocumentFile(httpPostedFileBase, Id);
+                        var ok = await _apiRepository.MakeApiCallAsync("api/Client/SaveActiveProjectDocumentsDetails", HttpMethod.Post, DocumentDetails);
+                        dynamic ImageResponse = JsonConvert.DeserializeObject(ok);
+                        if (ImageResponse != null)
+                        {
+                            return ImageResponse.Message;
+                        }
+                        else
+                        {
+                            return "Failed to Apply !";
+                        }
+                    }
+
+                }
+                else
+                {
+                    return data.Message;
+                }
+
+                return "abc";
+
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        public async Task<ActiveProjectDocumentViewModel> SaveActiveDocumentFile(IFormFile DocumentFile, object Id)
+        {
+            ActiveProjectDocumentViewModel DocumentDetails = new ActiveProjectDocumentViewModel();
+            try
+            {
+                if (DocumentFile != null && DocumentFile.Length > 0)
+                {
+                    string BlobStorageBaseUrl = string.Empty;
+                    string DocumentPath = string.Empty;
+                    string DocumentUrlWithSas = string.Empty;
+
+                    string fileName = Guid.NewGuid().ToString() + "_" + DocumentFile.FileName;
+
+                    // Get the Azure Blob Storage connection string from configuration
+                    var connectionString = _configuration.GetConnectionString("AzureBlobStorage");
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream = DocumentFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+
+                    DocumentPath = blobClient.Uri.ToString();
+
+
+                    string sasToken = GenerateSasToken(DocumentPath);
+
+
+                    string cvUrlWithSas = DocumentFile + sasToken;
+
+
+
+                    BlobStorageBaseUrl = containerClient.Uri.ToString();
+
+
+                    DocumentUrlWithSas = cvUrlWithSas;
+
+                    DocumentDetails.DocumentBlobStorageBaseUrl = BlobStorageBaseUrl;
+                    DocumentDetails.DocumentPath = DocumentPath;
+                    DocumentDetails.DocumentUrlWithSas = DocumentUrlWithSas;
+                    DocumentDetails.DocumentName = DocumentFile.FileName;
+                    DocumentDetails.Id = (int)(Id);
+
+                    return DocumentDetails;
+                }
+                else
+                {
+                    ModelState.AddModelError("ImageFile", "Please select an image file.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return DocumentDetails;
+
+
         }
 
     }

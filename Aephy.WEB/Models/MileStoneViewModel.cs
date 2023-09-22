@@ -100,7 +100,27 @@
 
         public int SolutionFundId { get; set; }
 
-        public string? UserId { get; set; }
+        public string? UserId { get; set; } 
+
+    }
+
+    public class ActiveProjectDocumentViewModel
+    {
+        public int Id { get; set; }
+        public string? ClientId { get; set; }
+
+        public string? Description { get; set; }
+
+        public int SolutionFundId { get; set; }
+
+        public string? DocumentBlobStorageBaseUrl { get; set; }
+
+        public string? DocumentPath { get; set; }
+
+        public string? DocumentUrlWithSas { get; set; }
+
+        public string? DocumentName { get; set; }
+
 
     }
     

@@ -1738,5 +1738,21 @@ namespace Aephy.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "No Data Found" });
 
         }
+
+
+        //get project count on dashbord
+        [HttpGet]
+        [Route("GetContractUser")]
+        public async Task<IActionResult> GetContractUser([FromBody] string userId)
+        {
+            var contractUser = _db.ContractUser.Where(x => x.ApplicationUserId == userId).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "success",
+                Result = contractUser.Select(m => m.ContractId).Distinct().Count()
+            });
+        }
     }
 }

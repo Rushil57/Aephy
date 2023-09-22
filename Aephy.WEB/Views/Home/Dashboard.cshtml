@@ -92,41 +92,29 @@
             <!-- Left side columns -->
             <div class="col-lg-8">
                 <div class="row">
-
+                  
                     <!-- Sales Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card sales-card">
-
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
+                         
                             <div class="card-body">
-                                <h5 class="card-title">Projects <span>| This Year</span></h5>
+                                <h5 class="card-title">Projects</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-cart"></i>
+                                        <i class="bi-journals"></i>
+                    
                                     </div>
                                     <div class="ps-3">
-                                        <h6>145</h6>
-                                        <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                                        <h6><span id="ContractUser-Value"></span></h6>
+                  
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div><!-- End Sales Card -->
+
                     <!-- Revenue Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card revenue-card">
@@ -1820,40 +1808,121 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             }
         }
 
+         var validator;
+         var pointsvalidator;
         $(function () {
-        $("form[name='FreelancerFeedback_form']").validate({
-            rules: {},
-            messages: {},
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
+            $("form[name='FreelancerFeedback_form']").validate({
+                rules: {},
+                messages: {},
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    SubmitFreelancerFeedback()
                 }
-                else {
-                    error.insertAfter(element);
+            });
+            $("form[name='SolutionFeedback_form']").validate({
+                rules: {},
+                messages: {},
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    SubmitSolutionFeedback()
                 }
-            },
-            submitHandler: function (form) {
-                SubmitFreelancerFeedback()
+            });
+             $("form[name='GigOpeningApplyForm']").validate({
+                rules: {
+                    Description: { required: true },
+                    CVPath: { required: true }
+                },
+                messages: {
+                    Description: { required: "Please enter Description" },
+                    CVPath: { required: "Please Upload Cv" }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    GigOpenRolesApply()
+                }
+             });
+            validator = $("form[name='MileStoneForm']").validate({
+                    rules: {
+                        milestonedescription: { required: true },
+                        milestonetitle: { required: true },
+                        txtMilestoneDays: { required: true },
+                    },
+                    messages: {
+                        milestonedescription: { required: "Please enter description" },
+                        milestonetitle: { required: "please enter title" },
+                        txtMilestoneDays: { required: "Please enter days" }
+                    },
+                    errorPlacement: function (error, element) {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        }
+                        else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    submitHandler: function (form) {
+                        SaveMilStoneData()
+                    }
+                });
+            pointsvalidator = $("form[name='PointsForm']").validate({
+                rules: {
+                    pointsKey: { required: true },
+                    pointsValue: { required: true }
+                },
+                messages: {
+                    pointsKey: { required: "Please enter points key" },
+                    pointsValue : { required: "Please enter points value" }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    SavePointsData()
+                }
+            });
+
+             if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
+                GetSavedProjects();
+                GetClientActiveProjectList();
+            }else{
+                GetFreelancerActiveProjectList();
+                $("#savedProjects").hide();
             }
-        });
-        $("form[name='SolutionFeedback_form']").validate({
-            rules: {},
-            messages: {},
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                }
-                else {
-                    error.insertAfter(element);
-                }
-            },
-            submitHandler: function (form) {
-                SubmitSolutionFeedback()
-            }
-        });
-    });
+
+            $('.news_card').hide();
+            BindProjects();
+            InvokeOpenRoles();
+            InvokeApprovedList();
+            GetApprovedList()
+     });
     function SubmitFreelancerFeedback(){
 
         var freelancerId = $('#FreelancerID').val();
@@ -2009,114 +2078,20 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                     GetSolutionDefineDetails()
                 });
         }
-
-    var validator;
-    var pointsvalidator;
-    $(function () {
-        //connection.start().then(function () {
-		//alert('Connected to dashboardHub');
-		InvokeOpenRoles();
-        InvokeApprovedList();
-	//}).catch(function (err) {
-		//return console.error(err.toString());
-	//});
-
-        $("form[name='GigOpeningApplyForm']").validate({
-            rules: {
-                Description: { required: true },
-                CVPath: { required: true }
-            },
-            messages: {
-                Description: { required: "Please enter Description" },
-                CVPath: { required: "Please Upload Cv" }
-            },
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                }
-                else {
-                    error.insertAfter(element);
-                }
-            },
-            submitHandler: function (form) {
-                GigOpenRolesApply()
-            }
-        });
-
-
-        validator = $("form[name='MileStoneForm']").validate({
-            rules: {
-                milestonedescription: { required: true },
-                milestonetitle: { required: true },
-                txtMilestoneDays: { required: true },
-            },
-            messages: {
-                milestonedescription: { required: "Please enter description" },
-                milestonetitle: { required: "please enter title" },
-                txtMilestoneDays: { required: "Please enter days" }
-            },
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                }
-                else {
-                    error.insertAfter(element);
-                }
-            },
-            submitHandler: function (form) {
-                SaveMilStoneData()
-            }
-        });
-
-
-
-        pointsvalidator = $("form[name='PointsForm']").validate({
-            rules: {
-                pointsKey: { required: true },
-                pointsValue: { required: true }
-            },
-            messages: {
-                pointsKey: { required: "Please enter points key" },
-                pointsValue : { required: "Please enter points value" }
-            },
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                }
-                else {
-                    error.insertAfter(element);
-                }
-            },
-            submitHandler: function (form) {
-                SavePointsData()
-            }
-        });
-        GetApprovedList()
-
-        if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
-            GetSavedProjects();
-            GetClientActiveProjectList();
-        }else{
-            GetFreelancerActiveProjectList();
-            $("#savedProjects").hide();
-            //$("#activeProjects").hide();
-        }
-    });
-
     // Product
-function InvokeOpenRoles() {
-	getOpenRoles();
-	/*connection.invoke("SendProducts").catch(function (err) {
-		return console.error(err.toString());
-	});*/
-}
+        function InvokeOpenRoles() {
+	        getOpenRoles();
+	        /*connection.invoke("SendProducts").catch(function (err) {
+		        return console.error(err.toString());
+	        });*/
+        }
 
-//connection.on("chnagedopenroles", function (statusbool) {
-	/*bindproductstogrid(products);*/
-//	if (statusbool) {
-//		getopenroles();
-//	}
-//});
+        //connection.on("chnagedopenroles", function (statusbool) {
+	        /*bindproductstogrid(products);*/
+        //	if (statusbool) {
+        //		getopenroles();
+        //	}
+        //});
 
 //Approved List
 function InvokeApprovedList() {
@@ -2128,13 +2103,8 @@ function InvokeApprovedList() {
 //		GetApprovedList();
 //	}
 //});
-    $(document).ready(function () {
+   
 
-        //$('.sales-card').hide();
-        //$('.revenue-card').hide();
-        //$('.customers-card').hide();
-        $('.news_card').hide();
-    });
     function CloseGigOpeningApplyModal() {
         $("#GigOpeningApplyModal").modal('hide')
     }
@@ -3535,4 +3505,25 @@ function InvokeApprovedList() {
 
         fetchMessage(senderName);
     }
+
+        function BindProjects(){
+         $("#preloader").show();
+             $.ajax({
+                 type: "Get",
+                 url: "@Url.Action("GetDashbordContractUser", "Home")",
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function (result) {
+                     if(result.Message == "success"){
+                         $("#ContractUser-Value").text(result.Result);
+                     }
+                     $("#preloader").hide();
+                 },
+                 error: function (result) {
+                     $("#preloader").hide();
+                     showToaster("error", "Error !", "Failure");
+                 }
+             });
+        }
+
 </script>

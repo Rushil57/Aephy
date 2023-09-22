@@ -74,6 +74,15 @@ namespace Aephy.WEB.Admin.Controllers
                     LastName = jsonObj.Result.LastName;
                     Role = jsonObj.Result.Role;
 
+                    var cookieOptions = new CookieOptions();
+                    if (loginModel.RememberMe == true)
+                    {
+                        cookieOptions.Expires = DateTime.Now.AddDays(1);
+                        //cookieOptions.Path = "/";
+                        Response.Cookies.Append("userName", loginModel.Username, cookieOptions);
+                        Response.Cookies.Append("password", loginModel.Password, cookieOptions);
+                    }
+
                     if (Role != "Admin")
                     {
                         return Json(new { message = "Invalid Credentials" });

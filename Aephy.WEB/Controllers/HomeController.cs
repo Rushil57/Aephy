@@ -119,6 +119,18 @@ namespace Aephy.WEB.Controllers
                     HttpContext.Session.SetString("LoggedUserRole", Role);
                     HttpContext.Session.SetString("ShortName", FirstName[0] + "" + LastName[0]);
 
+                    // REMEMBER ME FUNCTANALITY
+                    var cookieOptions = new CookieOptions();
+                    if (loginModel.RememberMe == true)
+                    {
+
+                        cookieOptions.Expires = DateTime.Now.AddDays(1);
+                        //cookieOptions.Path = "/";
+                        Response.Cookies.Append("userName", loginModel.Username, cookieOptions);
+                        Response.Cookies.Append("password", loginModel.Password, cookieOptions);
+                    }
+                    // REMEMBER ME FUNCTANALITY
+
                     if (Level != "none")
                     {
                         HttpContext.Session.SetString("LoggedUserLevel", Level);
@@ -2385,6 +2397,18 @@ namespace Aephy.WEB.Controllers
                 }
             }
             return "";
+        }
+
+        public async Task<string> GetDashbordContractUser()
+        {
+            string userId = HttpContext.Session.GetString("LoggedUser");
+            var contractCount = string.Empty;
+            if (userId != null)
+            {
+                contractCount = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetContractUser", HttpMethod.Get, userId);
+            }
+
+            return contractCount;
         }
 
 

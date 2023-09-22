@@ -58,10 +58,19 @@
 
 
 <script type="text/javascript">
-
-
-
     $(function () {
+
+          var cookie_username = $.cookie("userName");
+            var cookie_password = $.cookie("password");
+            if (cookie_username != null && cookie_password != null) {
+                $("#username").val(cookie_username);
+                $("#Password").val(cookie_password);
+                $("#rememberMe").prop('checked', true);
+            }
+            else {
+                ResetForm()
+            }
+
         $("form[name='loginForm']").validate({
             rules: {
                 username: { required: true },

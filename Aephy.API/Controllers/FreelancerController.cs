@@ -1449,36 +1449,75 @@ namespace Aephy.API.Controllers
                 {
                     if(model.ContractId != 0)
                     {
-                        var contarctData = _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefault();
+                        var contarctData = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
 
                         if(contarctData != null)
                         {
-                            SolutionDisputeViewModel InvoiceDetails = new SolutionDisputeViewModel();
-                            var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            InvoiceDetails.ClientName = fullname.FirstName + " " + fullname.LastName;
-                            InvoiceDetails.CreatedDate = contarctData.CreatedDateTime;
-                            InvoiceDetails.Address = _db.ClientDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault();
-
                             var solutionFundData = _db.SolutionFund.Where(x => x.Id == contarctData.SolutionFundId).FirstOrDefault();
-                            if(solutionFundData != null)
+                            var CheckDataExists = _db.Invoices.Where(x => x.SolutionFundId == contarctData.SolutionFundId).FirstOrDefault();
+                            if(CheckDataExists == null)
                             {
-                                InvoiceDetails.ProjectPrice = solutionFundData.ProjectPrice;
-                                if(solutionFundData.FundType.ToString() == "MilestoneFund")
+                                var InvoiceNumber = 0;
+                                var TotalInvoiceData = _db.Invoices.ToList().Count();
+                                if(TotalInvoiceData == 0)
                                 {
-                                    InvoiceDetails.Milestone = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                    InvoiceNumber = 100;
                                 }
                                 else
                                 {
-                                    InvoiceDetails.SolutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                    var GetLastInvoiceNum = _db.Invoices.OrderByDescending(x => x.InvoiceNumber).FirstOrDefault();
+                                    InvoiceNumber = Convert.ToInt32(GetLastInvoiceNum.InvoiceNumber) + 1;
                                 }
+                                var Title = string.Empty;
+                                if (solutionFundData.FundType.ToString() == "MilestoneFund")
+                                {
+                                    Title = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    Title = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                                var InvoiceData = new Invoices()
+                                {
+                                    SolutionId = contarctData.SolutionId,
+                                    IndustryId = contarctData.IndustryId,
+                                    SolutionFundId = contarctData.SolutionFundId,
+                                    InvoiceNumber = InvoiceNumber.ToString(),
+                                    Date = contarctData.CreatedDateTime,
+                                    DueDate = contarctData.CreatedDateTime,
+                                    TotalAmount = solutionFundData.ProjectPrice,
+                                    DueAmount = solutionFundData.ProjectPrice,
+                                    ClientId = contarctData.ClientUserId,
+                                    ClientName = fullname.FirstName + " " + fullname.LastName,
+                                    ClientAddress = _db.FreelancerDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault(),
+                                    VatId = "1",
+                                    TaxId = "1",
+                                    Title = Title,
+                                    Amount = solutionFundData.ProjectPrice,
+                                    VatPercentage = "20%",
+                                    VatAmount = "$200"
+                                };
+                                _db.Invoices.Add(InvoiceData);
+                                _db.SaveChanges();
                             }
+                            
+                            var Invoicedetails = _db.Invoices.Where(x => x.SolutionFundId == solutionFundData.Id).FirstOrDefault();
+                            var Fundtype = solutionFundData.FundType.ToString();
 
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            if (Invoicedetails != null)
                             {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = InvoiceDetails
-                            });
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "success",
+                                    Result = new
+                                    {
+                                      InvoiceDetails = Invoicedetails,
+                                      FundType = Fundtype
+                                    }
+                                });
+                            }
                         }
                     }
                     

@@ -67,6 +67,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<FreelancerReview> FreelancerReview { get; set; }
 
+        public DbSet<Invoices> Invoices { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

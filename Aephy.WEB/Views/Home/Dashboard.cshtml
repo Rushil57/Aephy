@@ -1625,7 +1625,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                         </div>
 
                                         <div class="mt-3">
-                                            <h5> Invoice # INV-00129 </h5>
+                                            <h5 id="InvoiceNumber"></h5>
                                             <h5 id="ContractCreatedDate"></h5>
                                             <h5 id="ContractDueDate"> <b></b> </h5>
                                             <h5 id="ProjectTotalAmount"> </h5>
@@ -1672,8 +1672,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                             <td id="FundAmount"></td>
                                         </tr>
                                         <tr>
-                                            <td> VAT (0%) </td>
-                                            <td> 0.00 </td>
+                                            <td id="VatPercentage">  </td>
+                                            <td id="VatAmount">  </td>
                                         </tr>
 
                                         <tr>
@@ -3253,31 +3253,35 @@ function InvokeApprovedList() {
             data: JSON.stringify(data),
             success: function (result) {
                 if(result.Result != null){
-                    var data = result.Result;
-                    $("#ContractCreatedDate").html("Date " + moment(data.CreatedDate).format('DD MMMM YYYY'));
-                    $("#ContractDueDate").html("Due Date " + moment(data.CreatedDate).format('DD MMMM YYYY'));
+                    $("#InvoiceModal").modal('show')
+                    var data = result.Result.InvoiceDetails;
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+                    $("#ContractCreatedDate").html("Date " + moment(data.Date).format('DD MMMM YYYY'));
+                    $("#ContractDueDate").html("Due Date " + moment(data.DueDate).format('DD MMMM YYYY'));
                     $("#ContractClientName").html(data.ClientName);
-                    $("#ProjectTotalAmount").html("Total Amount € " + data.ProjectPrice);
-                    $("#ProjectTotalDueAmount").html("Due Amount € " + data.ProjectPrice);
+                    $("#ProjectTotalAmount").html("Total Amount € " + data.TotalAmount);
+                    $("#ProjectTotalDueAmount").html("Due Amount € " + data.DueAmount);
                     $("#ProjectTotalDueAmount").css("font-weight","bold");
                      $("#ContractDueDate").css("font-weight","bold");
-                    if(data.Address == null){
-                        data.Address = "";
+                    if(data.ClientAddress == null){
+                        data.ClientAddress = "";
                     }
-                    $("#ClientAddress").html("Address : " + data.Address)
-                    $("#TotalFundAmount").html(data.ProjectPrice);
+                    $("#ClientAddress").html("Address : " + data.ClientAddress)
+                    $("#TotalFundAmount").html(data.TotalAmount);
+                    $("#VatPercentage").html("VAT ("+data.VatPercentage+")");
+                    $("#VatAmount").html(data.VatAmount);
 
-                    if(data.Milestone != null){
-                        $("#FundTitle").html("Invoice for Milestone : " + ""+data.Milestone+"");
-                        $("#FundAmount").html(data.ProjectPrice);
+                    if(result.Result.FundType ==  "MilestoneFund"){
+                        $("#FundTitle").html("Invoice for Milestone : " + ""+data.Title+"");
 
                     }else{
-                       
-                        $("#FundTitle").html("Invoice for Project : " + data.SolutionName);
-                        $("#FundAmount").html(data.ProjectPrice);
+                        $("#FundTitle").html("Invoice for Project : " + data.Title);
+                        
                     }
+                    $("#FundAmount").html(data.Amount);  
+                     
                 }
-                 $("#InvoiceModal").modal('show')
+               
                  $("#InvoiceContractId").val(ContractId)
                 $("#preloader").hide();
             },

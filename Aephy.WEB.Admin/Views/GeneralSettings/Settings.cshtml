@@ -120,11 +120,8 @@
 </main><!-- End #main -->
 <script type="text/javascript">
 
-    $(document).ready(function(){
-        bindLevelsRangeData();
-    });
-
     $(function () {
+        bindLevelsRangeData();
         $("form[name='SaveLevelsForm']").validate({
             submitHandler: function (form) {
                 SaveLevelsData()

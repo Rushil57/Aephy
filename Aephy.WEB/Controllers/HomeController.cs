@@ -103,7 +103,7 @@ namespace Aephy.WEB.Controllers
                 var Role = string.Empty;
                 var Level = string.Empty;
                 var imageUrlWithSas = string.Empty;
-                var UserStripeAccount = string.Empty;
+               // var UserStripeAccount = string.Empty;
 
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj["StatusCode"] == 200)
@@ -113,7 +113,7 @@ namespace Aephy.WEB.Controllers
                     Role = jsonObj.Result.Role;
                     Level = jsonObj.Result.Level;
                     UserId = jsonObj.Result.UserId;
-                    UserStripeAccount = jsonObj.Result.StripeStatus;
+                    //UserStripeAccount = jsonObj.Result.StripeStatus;
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
                     HttpContext.Session.SetString("LoggedUserRole", Role);
@@ -145,7 +145,7 @@ namespace Aephy.WEB.Controllers
                     }
 
                     HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
-                    HttpContext.Session.SetString("CompleteUserStripeAccount", UserStripeAccount);
+                   // HttpContext.Session.SetString("CompleteUserStripeAccount", UserStripeAccount);
                 }
 
                 return test;

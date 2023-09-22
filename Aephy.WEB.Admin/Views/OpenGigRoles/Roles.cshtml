@@ -320,32 +320,6 @@
     }
 
     function DeleteSolution(Id) {
-
-        //if (confirm('Are you sure want to delete solution?')) {
-        //    $("#preloader").show();
-        //    var RolesData = {
-        //        Id: Id
-        //    };
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "@Url.Action("DeleteRoles", "OpenGigRoles")",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify(RolesData),
-        //        success: function (result) {
-        //            $("#preloader").hide();
-        //            //alert(result.Message);
-        //            showToaster("success", "Success", result.Message);
-        //            GetRolesList();
-        //        },
-        //        error: function (result) {
-        //            $("#preloader").hide();
-        //            //alert("Error occured..");
-        //            showToaster("error", "Error !", "Something went wrong !!");
-        //        }
-        //    });
-        //}
-
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",

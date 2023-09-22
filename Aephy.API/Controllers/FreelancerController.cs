@@ -81,7 +81,7 @@ namespace Aephy.API.Controllers
         {
             if (OpengigroleCv.AlreadyExist)
             {
-                var applicantsDetails = _db.OpenGigRolesApplications.Where(x => x.ID == OpengigroleCv.ID).FirstOrDefault();
+                var applicantsDetails = await _db.OpenGigRolesApplications.Where(x => x.ID == OpengigroleCv.ID).FirstOrDefaultAsync();
                 var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == OpengigroleCv.FreelancerId).FirstOrDefault();
                 if (freelancerDetails != null)
                 {
@@ -143,7 +143,7 @@ namespace Aephy.API.Controllers
         {
             if (usercv.UserId != null)
             {
-                var userData = _db.FreelancerDetails.Where(x => x.UserId == usercv.UserId).FirstOrDefault();
+                var userData = await _db.FreelancerDetails.Where(x => x.UserId == usercv.UserId).FirstOrDefaultAsync();
                 if (userData != null)
                 {
                     userData.BlobStorageBaseUrl = usercv.BlobStorageBaseUrl;
@@ -181,7 +181,7 @@ namespace Aephy.API.Controllers
                 var approvedJobs = _db.OpenGigRolesApplications.Where(x => x.FreelancerID == model.UserId
                 && x.IsApproved).ToList();
 
-                var freelancerDetails = _db.FreelancerDetails.Where(flnc => flnc.UserId == model.UserId).FirstOrDefault();
+                var freelancerDetails = await _db.FreelancerDetails.Where(flnc => flnc.UserId == model.UserId).FirstOrDefaultAsync();
 
                 List<dynamic> finalList = new List<dynamic>();
                 listDB.ForEach(x =>
@@ -321,7 +321,7 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    var data = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (data != null)
                     {
                         data.Description = model.Description;
@@ -350,7 +350,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                FreelancerDetails openRolesdata = _db.FreelancerDetails.Where(x => x.UserId == userData.Id).FirstOrDefault();
+                FreelancerDetails openRolesdata = await _db.FreelancerDetails.Where(x => x.UserId == userData.Id).FirstOrDefaultAsync();
                 if (openRolesdata != null)
                 {
                     openRolesdata.FreelancerLevel = userData.FreelancerLevel;
@@ -375,8 +375,8 @@ namespace Aephy.API.Controllers
         {
             if (model != null)
             {
-                var solutionIndustryDetails = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
-                                                && x.SolutionId == model.SolutionId).FirstOrDefault();
+                var solutionIndustryDetails = await _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
+                                                && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
                 if (solutionIndustryDetails != null)
                 {
                     //data.ProjectOutline = model.ProjectOutline;
@@ -437,9 +437,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var milestoneList = _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId
+                var milestoneList = await _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId
                 && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-                && x.ProjectType == model.ProjectType).ToList();
+                && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -465,7 +465,7 @@ namespace Aephy.API.Controllers
         {
             if (model != null)
             {
-                var data = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -504,7 +504,7 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    var pointsData = _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var pointsData = await _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (pointsData != null)
                     {
                         pointsData.PointValue = model.PointValue;
@@ -527,9 +527,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var pointsList = _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId
+                var pointsList = await _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId
                 && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-                && x.ProjectType == model.ProjectType).ToList();
+                && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -555,7 +555,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var pointsData = _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefault();
+                var pointsData = await _db.SolutionPoints.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                 if (pointsData != null)
                 {
                     _db.SolutionPoints.Remove(pointsData);
@@ -583,7 +583,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var milestoneData = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+                var milestoneData = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                 if (milestoneData != null)
                 {
                     _db.SolutionMilestone.Remove(milestoneData);
@@ -1320,7 +1320,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var contract = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Include("ContractUsers").FirstOrDefault();
+                        var contract = await _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Include("ContractUsers").FirstOrDefaultAsync();
 
                         if (contract != null)
                         {
@@ -1745,7 +1745,7 @@ namespace Aephy.API.Controllers
         [Route("GetContractUser")]
         public async Task<IActionResult> GetContractUser([FromBody] string userId)
         {
-            var contractUser = _db.ContractUser.Where(x => x.ApplicationUserId == userId).ToList();
+            var contractUser = await _db.ContractUser.Where(x => x.ApplicationUserId == userId).ToListAsync();
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {

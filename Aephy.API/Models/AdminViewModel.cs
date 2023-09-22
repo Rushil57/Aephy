@@ -518,6 +518,8 @@ namespace Aephy.API.Models
 
             public string? CompanyName { get; set; }
 
+            public string? StripeAccountStatus { get; set; }
+
         }
 
         public class InvoiceViewModel

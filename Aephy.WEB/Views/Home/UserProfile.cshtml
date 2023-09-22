@@ -126,6 +126,21 @@
 
                                 <div class="FreelancerFields" style="display:none;">
                                     <input type="hidden" value="" id="CVPath-id" />
+
+                                    <div class="row StripePending" style="display:none;">
+                                        <div class="col-lg-3 col-md-4 label">Stripe Account Status</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <span class="badge bg-danger">PENDING</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row StripeCompleted" style="display:none;">
+                                        <div class="col-lg-3 col-md-4 label">Stripe Account Status</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <span class="badge bg-success">COMPLETED</span>
+                                        </div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Hourly Rate Per Day ($)</div>
                                         <div class="col-md-8 col-lg-9">
@@ -254,6 +269,21 @@
                                     </div>
 
                                     <div class="FreelancerFields" style="display:none;">
+                                         <div class="row mb-3 StripePending" style="display:none;">
+                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Strip Account Status</label>
+                                            <div class="col-md-8 col-lg-9">
+                                              <span class="badge bg-danger">PENDING</span>
+                                              <span style="padding-left: 2%"><a onclick="StripeRegister()" class="cls-stripe-link">Click here to Register to stripe</a></span>
+                                            </div>
+                                         </div>
+
+                                        <div class="row mb-3 StripeCompleted" style="display:none;">
+                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Strip Account Status</label>
+                                              <div class="col-md-8 col-lg-9">
+                                                <span class="badge bg-success">COMPLETED</span>
+                                              </div>
+                                         </div>
+                                         
                                         <div class="row mb-3">
                                             <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate Per Day ($)</label>
                                             <div class="col-md-8 col-lg-9">
@@ -311,13 +341,6 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
-                                        @if (Context.Session.GetString("LoggedUserRole") != "Client")
-                                        {
-                                            if (Context.Session.GetString("CompleteUserStripeAccount") != "3")
-                                            {
-                                                <input type="button" class="btn btn-primary" value="Click here to Register to stripe" onclick="StripeRegister()"/>
-                                            }                                            
-                                        }
                                     </div>
                                 </form>
                             </div>
@@ -466,6 +489,13 @@
                         $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#profile-image").css("display", "none")
                          $("#profile-intial").css("display","flex")
+                    }
+                    if(data.StripeAccountStatus == "Complete"){
+                        $(".StripePending").hide();
+                        $(".StripeCompleted").show();
+                    }else{
+                        $(".StripePending").show();
+                        $(".StripeCompleted").hide();
                     }
                 }
                 

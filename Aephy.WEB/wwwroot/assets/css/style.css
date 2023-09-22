@@ -1431,7 +1431,7 @@ textarea.form-control {
     }
 }
 
-.cls-resume-dwld {
+.cls-resume-dwld, .cls-stripe-link {
     color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
     text-decoration: underline !important;
     cursor: pointer;

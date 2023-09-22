@@ -2078,33 +2078,14 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                     GetSolutionDefineDetails()
                 });
         }
-    // Product
-        function InvokeOpenRoles() {
-	        getOpenRoles();
-	        /*connection.invoke("SendProducts").catch(function (err) {
-		        return console.error(err.toString());
-	        });*/
-        }
-
-        //connection.on("chnagedopenroles", function (statusbool) {
-	        /*bindproductstogrid(products);*/
-        //	if (statusbool) {
-        //		getopenroles();
-        //	}
-        //});
-
-//Approved List
-function InvokeApprovedList() {
-	GetApprovedList();
-}
-
-//connection.on("ChangedApprovedList", function (statusBool) {
-//	if (statusBool) {
-//		GetApprovedList();
-//	}
-//});
    
-
+   function InvokeOpenRoles() {
+	    getOpenRoles(); 
+   }
+    //Approved List
+    function InvokeApprovedList() {
+	    GetApprovedList();
+    }
     function CloseGigOpeningApplyModal() {
         $("#GigOpeningApplyModal").modal('hide')
     }

@@ -394,6 +394,7 @@
 
     $('[data-solution-search]').on('keyup', function () {        
         var searchVal = $(this).val();
+
         var filterItems = $('[data-solution-item]');
         if (searchVal != '') {
             filterItems.parent().addClass('d-none');
@@ -451,7 +452,6 @@
                     $('.carousel-indicators > li').first().addClass('active');
 
                     $('#search-list').html(searchList);
-
                     var items2 = document.querySelectorAll('.carousel .carousel-item')
 
                     items2.forEach((el) => {

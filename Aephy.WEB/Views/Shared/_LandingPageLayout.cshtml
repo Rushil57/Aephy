@@ -47,24 +47,12 @@
                             </div>
                             <div class="col-3">
                                 <div class="search-bar">
-                                    <form class="search-form d-flex align-items-center dropdown" method="POST" action="#">
+                                    <form class="search-form d-flex align-items-center dropdown" method="POST" action="#" name="landingPageSolutionSearchBox">
                                         <input type="text" name="query" placeholder="Search" title="Enter search keyword" autocomplete="off" data-search>@* data-bs-toggle="dropdown" *@
-                                        <ul class="dropdown-menu dropdown-menu-end w-100">
+                                        <ul class="dropdown-menu dropdown-menu-end w-100" id="landingPageSearch-list" style="align-items: flex-start;  margin-top: 130px;">
                                             <li class="dropdown-item">
                                                 <div data-filter-item data-filter-name="service1" class="search-item">service1</div>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <div data-filter-item data-filter-name="service2" class="search-item">service2</div>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <div data-filter-item data-filter-name="service3" class="search-item">service3</div>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <div data-filter-item data-filter-name="service4" class="search-item">service4</div>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <div data-filter-item data-filter-name="service5" class="search-item">service5</div>
-                                            </li>
+                                            </li>                                            
                                         </ul>
                                         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                                     </form>
@@ -1287,6 +1275,8 @@
             document.getElementsByName("DeliveryTime")[0].setAttribute('min', today);
             document.getElementsByName("startDate")[0].setAttribute('min', today);
             document.getElementsByName("endDate")[0].setAttribute('min', today);
+
+            GetPopularSolutionLandingPage();
         });
 
         $('#postProjectInfo').on('click', function () {
@@ -1311,6 +1301,27 @@
                 GetClientForm(this);
             }
         });
+
+        $("form[name='landingPageSolutionSearchBox']").validate({
+            rules: {
+                //searchText: { required: true }
+            },
+            messages: {
+                //searchText: { required: "Please insert solution name to search.." }
+            },
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                landingPageSearchFromSolutions();
+            }
+        });
+
 
         $('#delivery-time').on('change', function () {
             var deliveryTime = $(this).val();
@@ -1825,6 +1836,98 @@
                     alert("failure");
                 }
             });
+        }
+
+        function landingPageSearchFromSolutions() {
+            searchData = $('[data-search]').val();
+            if (searchData != '') {
+                var compareData = '';
+                compareData = $('[data-filter-item][data-filter-name*="' + searchData.toLowerCase() + '"]').data('solutionName');
+                if (compareData != '') {
+                    window.location = "../LandingPage/BrowseSolutions?solution=" + searchData;
+                }
+            }
+        }
+
+        $('[data-search]').on('keyup', function () {
+            var searchVal = $(this).val();
+            var filterItems = $('[data-filter-item]');
+            if (searchVal != '') {
+                filterItems.parent().addClass('d-none');
+                $('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').parent().removeClass('d-none');
+                $('#landingPageSearch-list').css('display', 'block');
+            } else {
+                $('#landingPageSearch-list').css('display', 'none');
+                filterItems.parent().removeClass('d-none');
+            }
+        });
+        function GetPopularSolutionLandingPage() {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetSolutionList", "LandingPage")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Result != 0) {
+                        var data = result.Result
+                        data = data.slice(0, 6);
+                        var popularAiSection = "";
+                        var searchList = "";
+                        $.each(data, function (data, value) {
+                            var title = value.Title.length > 50 ? value.Title.substring(0, 50) + "..." : value.Title;
+                            var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
+
+                            popularAiSection += '<div class="carousel-item" >' +
+                                '<div class="col-md-3">' +
+                                '<div class="card">' +
+                                '<div class="card-img">' +
+                                '<img src=' + value.ImageUrlWithSas + ' alt ="Image" class="img-fluid" data-aos="zoom-out">' +
+                                '</div>' +
+                                '<h3>' +
+                                '<a class="stretched-link">' + title + '</a>' +
+                                '</h3>' +
+                                '<p class="section-detail-size" >' + description + '</p>' +
+
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+
+                            searchList += '<li class="dropdown-item">' +
+                                '<div data-filter-item data-filter-name="' + title.toLowerCase() + '" class="search-item" onclick="landingPageSetToSearch(' + "'" + title + "'" + ');">' + title + '</div>' +
+                                '</li>';
+                        })
+                        // $('#ai-Section').html(popularAiSection);
+                        $('.carousel-item').first().addClass('active');
+                        $('.carousel-indicators > li').first().addClass('active');
+
+                        $('#landingPageSearch-list').html(searchList);
+                        var items2 = document.querySelectorAll('.carousel .carousel-item')
+
+                        items2.forEach((el) => {
+                            const minPerSlide = 4
+                            let next = el.nextElementSibling
+                            for (var i = 1; i < minPerSlide; i++) {
+                                if (!next) {
+                                    next = items2[0]
+                                }
+                                let cloneChild = next.cloneNode(true)
+                                el.appendChild(cloneChild.children[0])
+                                next = next.nextElementSibling
+                            }
+                        })
+                    }
+                },
+                error: function (result) {
+                    alert("failure");
+                }
+            });
+
+        }
+
+        function landingPageSetToSearch(searchData) {
+            var text = searchData;
+            $('[data-search]').val(text);
+            $('#landingPageSearch-list').css('display', 'none');
         }
     </script>
 </body>

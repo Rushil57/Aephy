@@ -58,6 +58,13 @@ namespace Aephy.API.DBHelper
         public DateTime RefundDateTime { get; set; }
         public DateTime CreatedDateTime { get; set; }
 
+        public string? TaxId { get; set; }
+
+        public string? TaxType { get; set; }
+        public string? VATPercentage { get; set; }
+
+        public string? VATAmount { get; set; }
+
         // Stripe fields above
 
     }

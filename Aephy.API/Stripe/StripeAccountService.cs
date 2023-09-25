@@ -275,5 +275,18 @@ namespace Aephy.API.Stripe
             }
 
         }
+
+        public Session GetTaxDetails(string sessionId)
+        {
+            try
+            {
+                var taxDetails = new SessionService();
+                return taxDetails.Get(sessionId);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

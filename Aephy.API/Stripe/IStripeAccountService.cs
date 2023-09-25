@@ -20,6 +20,7 @@ namespace Aephy.API.Stripe
         public string CreateTransferonCharge(long amount, string currency, string destination, string sourceTransaction, string transferGroup);
 
         public string RefundAmountToClient(string lastChargeId, long amount, string currency);
-        
+
+        public Session GetTaxDetails(string sessionId);
     }
 }

@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230925080416_Updated_table_Contract")]
+    partial class Updated_table_Contract
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,16 +281,13 @@ namespace Aephy.API.Migrations
                     b.Property<string>("TaxId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TaxType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TransactionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VATAmount")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VATPercentage")
+                    b.Property<string>("VATId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

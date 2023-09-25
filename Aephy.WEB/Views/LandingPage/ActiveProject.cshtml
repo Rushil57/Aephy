@@ -156,7 +156,7 @@
                            <div class="col">
                                <h3 class="label-title-size title-path">Documents</h3>
                                <a class="cls-new-activeDocuments" onclick="OpenDocumentsUploadPopUp()" style="margin-top:8%;">Add New</a>
-                                <div class="row" id="DoumentsSection" style="margin-top:3%;">
+                                <div class="row" id="DoumentsSection" style="margin-top:1%;">
                                      <div class="card-body">
                                             <table class="table datatable" id="table-DocumentDetails">
                                                 <thead>
@@ -304,7 +304,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="progressContainer d-flex flex-column">
-                        <div class="form-group pt-3">
+                        <div class="form-group pt-3" id="milestone-btn-div" style="display:none;">
                              <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()" id="btn-milestone">Add Milestones</button>
                         </div>
 
@@ -714,27 +714,7 @@
                     $(".cls-team-size").text(teamsize)
                 }
                 if(data.MileStone != ""){
-                     var milestoneSection = "";
-                     var milestonePopupsection = "";
-                     $.each(data.MileStone, function (datas, values) {
-                       milestoneSection +=  '<li class="progress__item">' +
-                                        '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
-                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
-                                    '</li>'
-
-                        milestonePopupsection +=  '<li class="progress__item">' +
-                                '<p class="progress__title">'+ values.Title+'<i class="bi bi-pencil-fill cls-milestone-edit-pencil" title="Click To Edit" onclick="EditActiveMileStoneDetailsByFreelancer('+values.Id+')" style="padding-left:2%"></i></p>' +
-                                '<p class="progress__info">'+values.Description+'</p>' +
-                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
-                            '</li>';
-
-                    })
-                    $('#progress-div').html(milestoneSection);
-                    $('#milestone-Popup-div').html(milestonePopupsection);
-                       $('#progress-div li:first').addClass('progress__item--active');
-                    $('#milestone-Popup-div li:first').addClass('progress__item--active');
-                    $(".cls-milestone-popup").css("display","block")
-                    $(".cls-mileStone").remove()
+                    BindMileStoneSection(data.MileStone);
                 }
                  else{
                     $('#progress-div').empty()
@@ -747,7 +727,6 @@
                 if(data.PointsData != ""){
                     var pointsSection = "";
                      $.each(data.PointsData, function (pointsdata, pointsvalues) {
-                         //var pointkeys = pointsvalues.PointKey;
                          if(pointsvalues.PointKey == null || pointsvalues.PointKey == undefined){
                              pointsvalues.PointKey = ""
                          }
@@ -766,36 +745,7 @@
                 }
 
                 if(data.SolutionTeam != ""){
-                      var solutionTeam = "";
-                     $.each(data.SolutionTeam, function (solutiondata, solutionValue) {
-                          var name =solutionValue.FreelancerName.split(" ")
-                         var firstname = name[0].charAt(0);
-                         var lastname = name[1].charAt(0);
-
-                       solutionTeam += '<div class="col-xxl-4 col-md-6">' +
-                                      '<div class="card info-card cls-solutionTeam-card">' +
-                                        '<div class="card-body cls-solution-card">' +
-                                          '<div class="d-flex align-items-center">';
-                                            if(solutionValue.ImageUrlWithSas != null){
-                                                solutionTeam +='<img src="'+solutionValue.ImageUrlWithSas+'" alt="Image" style="height:46px;width:46px;border-radius:50%">';
-                                            }else{
-                                                solutionTeam += '<div class="cls-freelancerImage">'+ firstname +''+ lastname +'</div>'
-                                            }
-                                             solutionTeam +='<div class="ps-3">' +
-                                              '<h6 style="margin-bottom: 0; !important">'+solutionValue.FreelancerName+'</h6>' +
-                                              '<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
-                                              '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots cls-chat-icon"></i></div>' + 
-                                            '</div>' +
-                                            
-                                            '</div>' +
-                                           
-                                          '</div>' +
-                                        '</div>' +
-                                      '</div>' +
-                                    '</div>';
-                    })
-                    $('#solutionTeamSection').html(solutionTeam);
-                   $(".cls-temp").remove();
+                     BindSolutionTeamData(data.SolutionTeam);
                 }
                 else{
                     $(".cls-temp").remove();
@@ -859,8 +809,8 @@
                         $(".cls-documentTemp").hide();
                 }else{
                     $("#DoumentsSection").hide();
-                    $(".cls-documentTemp").css("padding-top","10px");
                     $( "<p class='cls-documentTemp'>No Data Available</p>" ).insertAfter("#DoumentsSection");
+                    $(".cls-documentTemp").css("padding-top","10px");
                 }
 
                 var newContent = "";
@@ -881,15 +831,16 @@
                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer'){
                         $("#solutionfund-popUp").hide();
                          if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
-                             $("#btn-milestone").show();
-                            $(".cls-milestone-edit-pencil").show()
+                             $("#milestone-btn-div").show();
+                            $(".cls-milestone-edit-pencil").show();
                          }else{
-                             $("#btn-milestone").hide();
+                             $("#milestone-btn-div").hide();
                              $(".cls-milestone-edit-pencil").hide()
                          }
-                    }else{
+                  }
+                  else{
                         $("#solutionfund-popUp").show();
-                    }
+                  }
 
                  $("#preloader").hide();
             },
@@ -1521,5 +1472,60 @@
         $("#DocumnetsModal").modal('hide')
         $("#ActiveProjectDescription").val("");
         $("#ActiveProjectDocument").val("")
+    }
+
+    function BindMileStoneSection(milestoneData){
+         var milestoneSection = "";
+         var milestonePopupsection = "";
+           $.each(milestoneData, function (datas, values) {
+              milestoneSection +=  '<li class="progress__item">' +
+                  '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
+                  '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
+               '</li>'
+
+              milestonePopupsection +=  '<li class="progress__item">' +
+                 '<p class="progress__title">'+ values.Title+'<i class="bi bi-pencil-fill cls-milestone-edit-pencil" title="Click To Edit" onclick="EditActiveMileStoneDetailsByFreelancer('+values.Id+')" style="padding-left:2%;display:none;"></i></p>' +
+                 '<p class="progress__info">'+values.Description+'</p>' +
+                 '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
+              '</li>';
+           })
+        $('#progress-div').html(milestoneSection);
+        $('#milestone-Popup-div').html(milestonePopupsection);
+        $('#progress-div li:first').addClass('progress__item--active');
+        $('#milestone-Popup-div li:first').addClass('progress__item--active');
+        $(".cls-milestone-popup").css("display","block")
+        $(".cls-mileStone").remove()
+    }
+
+    function BindSolutionTeamData(solutionTeamData){
+         var solutionTeam = "";
+         $.each(solutionTeamData, function (solutiondata, solutionValue) {
+            var name =solutionValue.FreelancerName.split(" ")
+            var firstname = name[0].charAt(0);
+            var lastname = name[1].charAt(0);
+
+            solutionTeam += '<div class="col-xxl-4 col-md-6">' +
+                '<div class="card info-card cls-solutionTeam-card">' +
+                    '<div class="card-body cls-solution-card">' +
+                        '<div class="d-flex align-items-center">';
+                            if(solutionValue.ImageUrlWithSas != null){
+                               solutionTeam +='<img src="'+solutionValue.ImageUrlWithSas+'" alt="Image" style="height:46px;width:46px;border-radius:50%">';
+                            }
+                            else{
+                               solutionTeam += '<div class="cls-freelancerImage">'+ firstname +''+ lastname +'</div>'
+                            }
+                          solutionTeam +='<div class="ps-3">' +
+                          '<h6 style="margin-bottom: 0; !important">'+solutionValue.FreelancerName+'</h6>' +
+                          '<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
+                          '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots cls-chat-icon"></i></div>' + 
+                          '</div>' +
+                        '</div>' +
+                       '</div>' +
+                     '</div>' +
+                   '</div>' +
+                 '</div>';
+         })
+        $('#solutionTeamSection').html(solutionTeam);
+        $(".cls-temp").remove();
     }
 </script>

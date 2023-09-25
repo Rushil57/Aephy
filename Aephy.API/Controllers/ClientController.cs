@@ -1765,12 +1765,41 @@ namespace Aephy.API.Controllers
 
                             if (paymentIntent != null && !string.IsNullOrEmpty(paymentIntent.LatestChargeId))
                             {
+                                var taxIdType = string.Empty;
+                                var taxIdValue = string.Empty;
+                                var vatPercentage = string.Empty;
+                                decimal vatAmount = 0;
+                                //TAX DETAILS SECTION
+                                var taxDetails = _stripeAccountService.GetTaxDetails(contract.SessionId);
+                                if (taxDetails != null)
+                                {
+                                    var Subtotal = (decimal)taxDetails.AmountSubtotal / 100; //(20000 / 100) = 200
+                                    var Total = (decimal)taxDetails.AmountTotal / 100;  //(24800 / 100) = 248
+                                    vatAmount = Total - Subtotal;
+                                    var calculateVatPercentage = Math.Abs((Subtotal - Total)) / Subtotal; // 0.24
+                                    vatPercentage = (calculateVatPercentage * 100) + "%"; // (0.24 * 100) = 24.00%
+                                    var customerDetails = taxDetails.CustomerDetails;
+                                    var CustomerBussinessname = customerDetails.Name; // name of bussiness = test
+                                    if (customerDetails.TaxIds.Count > 0)
+                                    {
+                                        for (int i = 0; i < customerDetails.TaxIds.Count(); i++)
+                                        {
+                                            taxIdType = customerDetails.TaxIds[i].Type;
+                                            taxIdValue = customerDetails.TaxIds[i].Value;
+                                        }
+
+                                    }
+                                }
+                                //TAX DETAILS SECTION
+
                                 contract.LatestChargeId = paymentIntent.LatestChargeId;
                                 contract.PaymentStatus = Contract.PaymentStatuses.Paid;
+                                contract.TaxId = taxIdValue;
+                                contract.TaxType = taxIdType;
+                                contract.VATPercentage = vatPercentage;
+                                contract.VATAmount = vatAmount.ToString();
                                 _db.SaveChanges();
 
-                                //var data = _db.SolutionFund.Where(x => x.MileStoneId == contract.MileStoneId).FirstOrDefault();
-                                // var solutionFundId = _db.Contract.Where(x => x.Id == contract.MilestoneDataId && x.ClientId == model.UserId).FirstOrDefault();
                                 var data = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();
                                 if (data != null)
                                 {
@@ -2448,17 +2477,17 @@ namespace Aephy.API.Controllers
                     else
                     {
                         var DocumentDetails = await _db.ActiveProjectDocuments.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                        if(DocumentDetails != null)
+                        if (DocumentDetails != null)
                         {
                             DocumentDetails.DocumentName = model.DocumentName;
-                            DocumentDetails.DocumentBlobStorageBaseUrl= model.DocumentBlobStorageBaseUrl;
+                            DocumentDetails.DocumentBlobStorageBaseUrl = model.DocumentBlobStorageBaseUrl;
                             DocumentDetails.DocumentPath = model.DocumentPath;
                             DocumentDetails.DocumentUrlWithSas = model.DocumentUrlWithSas;
                             _db.SaveChanges();
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "Updated Successfully!",
+                                Message = "File Uploaded Successfully!",
                             });
                         }
                     }

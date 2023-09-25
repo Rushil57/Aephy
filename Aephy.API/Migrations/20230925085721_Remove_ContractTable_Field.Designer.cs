@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230925085721_Remove_ContractTable_Field")]
+    partial class Remove_ContractTable_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,16 +281,10 @@ namespace Aephy.API.Migrations
                     b.Property<string>("TaxId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TaxType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TransactionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VATAmount")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VATPercentage")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

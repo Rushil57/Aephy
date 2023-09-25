@@ -3614,8 +3614,8 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var clienttransfer = _stripeAccountService.RefundAmountToClient(model.LatestChargeId, long.Parse(model.TransferAmount), model.Currency);
-                    if (clienttransfer == "succeeded")
+                    var clienttransfer = _stripeAccountService.RefundAmountToClient(model.LatestChargeId, long.Parse(model.TransferAmount));
+                    if (clienttransfer.Status == "succeeded")
                     {
                         var contractDetails = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
                         if (contractDetails != null)

@@ -254,7 +254,7 @@ namespace Aephy.API.Stripe
 
         }
 
-        public string RefundAmountToClient(string lastChargeId, long amount, string currency)
+        public Refund RefundAmountToClient(string lastChargeId, long amount)
         {
             var options = new RefundCreateOptions
             {
@@ -265,9 +265,7 @@ namespace Aephy.API.Stripe
             try
             {
                 var service = new RefundService();
-                var refundStatus = service.Create(options);
-
-                return refundStatus.Status;
+                return service.Create(options);
             }
             catch (Exception ex)
             {

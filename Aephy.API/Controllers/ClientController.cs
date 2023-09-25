@@ -1767,17 +1767,20 @@ namespace Aephy.API.Controllers
                             {
                                 var taxIdType = string.Empty;
                                 var taxIdValue = string.Empty;
-                                var vatPercentage = string.Empty;
+                                decimal vatPercentage = 0;
                                 decimal vatAmount = 0;
+                                bool Istaxrefund = false;
+                                long taxtransferamount = 0;
+
                                 //TAX DETAILS SECTION
                                 var taxDetails = _stripeAccountService.GetTaxDetails(contract.SessionId);
                                 if (taxDetails != null)
                                 {
-                                    var Subtotal = (decimal)taxDetails.AmountSubtotal / 100; //(20000 / 100) = 200
-                                    var Total = (decimal)taxDetails.AmountTotal / 100;  //(24800 / 100) = 248
+                                    var Subtotal = (decimal)taxDetails.AmountSubtotal / 100; // AmountSubtotal = Original Project Price (20000 / 100) = 200
+                                    var Total = (decimal)taxDetails.AmountTotal / 100;  // AmountTotal = Original Project Price + Tax Price (24800 / 100) = 248
                                     vatAmount = Total - Subtotal;
                                     var calculateVatPercentage = Math.Abs((Subtotal - Total)) / Subtotal; // 0.24
-                                    vatPercentage = (calculateVatPercentage * 100) + "%"; // (0.24 * 100) = 24.00%
+                                    vatPercentage = (calculateVatPercentage * 100); // (0.24 * 100) = 24.00%
                                     var customerDetails = taxDetails.CustomerDetails;
                                     var CustomerBussinessname = customerDetails.Name; // name of bussiness = test
                                     if (customerDetails.TaxIds.Count > 0)
@@ -1792,12 +1795,28 @@ namespace Aephy.API.Controllers
                                 }
                                 //TAX DETAILS SECTION
 
+                                //REFUND TAX TO CLIENT SECTION
+
+                                if(vatAmount > 0)
+                                {
+                                    var finalVatAmount = Convert.ToInt64(vatAmount);
+                                    var clienttransfer = _stripeAccountService.RefundAmountToClient(paymentIntent.LatestChargeId, finalVatAmount);
+                                    if (clienttransfer.Status == "succeeded")
+                                    {
+                                        Istaxrefund = true;
+                                        taxtransferamount = clienttransfer.Amount;
+                                    }
+                                }
+
+                                //REFUND TAX TO CLIENT SECTION
                                 contract.LatestChargeId = paymentIntent.LatestChargeId;
                                 contract.PaymentStatus = Contract.PaymentStatuses.Paid;
                                 contract.TaxId = taxIdValue;
                                 contract.TaxType = taxIdType;
-                                contract.VATPercentage = vatPercentage;
+                                contract.VATPercentage = vatPercentage.ToString();
                                 contract.VATAmount = vatAmount.ToString();
+                                contract.IsTaxRefund = Istaxrefund;
+                                contract.TaxRefundAmount = taxtransferamount.ToString();
                                 _db.SaveChanges();
 
                                 var data = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();

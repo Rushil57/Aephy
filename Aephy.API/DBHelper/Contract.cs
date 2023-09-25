@@ -65,6 +65,10 @@ namespace Aephy.API.DBHelper
 
         public string? VATAmount { get; set; }
 
+        public bool IsTaxRefund { get; set; }
+
+        public string? TaxRefundAmount { get; set; }
+
         // Stripe fields above
 
     }

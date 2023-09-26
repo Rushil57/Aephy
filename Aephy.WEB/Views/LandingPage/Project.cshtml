@@ -1309,7 +1309,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : Projectprice.toString(),
+                ProjectPrice : Projectprice.toString().replace("$", ""),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : checkCheckoutType
             }

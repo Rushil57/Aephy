@@ -566,13 +566,7 @@ namespace Aephy.API.Controllers
                     }
                     if (fundProgress != null && fundProgress.ProjectType != null)
                     {
-                        model.ProjectType = fundProgress.ProjectType;
-                        if(fundProgress.ProjectStatus != "INITIATED")
-                        {
-                            var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
-                            fundProgress.ProjectPrice = contractAmount;
-                        }
-                        
+                        model.ProjectType = fundProgress.ProjectType; 
                         solutionMilesData = _db.SolutionMilestone.Where(x => x.Id == fundProgress.MileStoneId).FirstOrDefault();
                     }
 
@@ -591,9 +585,16 @@ namespace Aephy.API.Controllers
 
                             _db.SaveChanges();
                         }
-
                         _db.Contract.Remove(CheckInCompeleteFund);
                         _db.SaveChanges();
+                    }
+                    else
+                    {
+                        if (fundProgress.ProjectStatus != "INITIATED")
+                        {
+                            var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
+                            fundProgress.ProjectPrice = contractAmount;
+                        }
                     }
 
 
@@ -1953,23 +1954,16 @@ namespace Aephy.API.Controllers
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
                     if (mileStoneData != null)
                     {
-                        //var freelancerDetail = _db.FreelancerDetails.Where(x => x.HourlyRate != null & x.HourlyRate != "").FirstOrDefault();
-                        //if(freelancerDetail != null)
-                        //{
-                        //    var calculateProjectPrice = (Convert.ToInt32(freelancerDetail.HourlyRate) * 8) * mileStoneData.Days;
-                        //    model.ProjectPrice = calculateProjectPrice.ToString();
-                        //}
-
-                        var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).Select(x => x.FundType).FirstOrDefault();
+                        var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
                         var solutionfund = new SolutionFund()
                         {
                             SolutionId = model.SolutionId,
                             IndustryId = model.IndustryId,
                             ClientId = model.ClientId,
                             ProjectType = model.ProjectType,
-                            ProjectPrice = model.ProjectPrice,
+                            ProjectPrice = checkType.ProjectPrice,
                             ProjectStatus = "INITIATED",
-                            FundType = checkType,
+                            FundType = checkType.FundType,
                             MileStoneId = mileStoneData.Id
                         };
                         _db.SolutionFund.Add(solutionfund);
@@ -1988,6 +1982,25 @@ namespace Aephy.API.Controllers
                         }
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
+
+                        var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                        if (MilestoneTotalDaysByProjectType.Count > 0)
+                        {
+                            SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                           .GroupBy(l => l.ProjectType)
+                           .Select(cl => new SolutionMilestone
+                           {
+                               ProjectType = cl.First().ProjectType,
+                               Days = cl.Sum(c => c.Days),
+                           }).FirstOrDefault();
+
+                            if (mileStoneToTalDays.Days > 0)
+                            {
+                               // var trimmedPrice = model.ProjectPrice.Replace("$", "");
+                                var ProjectPrice = Convert.ToInt64(checkType.ProjectPrice);
+                                var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
+                            }
+                        }
 
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();

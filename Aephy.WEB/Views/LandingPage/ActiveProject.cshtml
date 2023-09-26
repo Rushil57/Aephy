@@ -851,9 +851,7 @@
         });
     }
 
-
-
-     function BindSuccessfullProject(data){
+    function BindSuccessfullProject(data){
           var successfullProject = "";
           $.each(data, function (datas, values) {
 
@@ -923,17 +921,7 @@
     function ProjectInitiated(mileStoneCheckOut,nextMilestoneData){
 
         if('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
-              var Projectprice = 0;
              var projectType = $("input[name='projSize']:checked").val();
-             if(projectType == 'small'){
-                 Projectprice = 100;
-             }
-             if(projectType == 'medium'){
-                 Projectprice = 200;
-             }
-             if(projectType == 'large'){
-                 Projectprice = 500;
-             }
             var Industryid = @ViewData["Industry"]; 
             var Solutionid = @ViewData["Solution"];
 
@@ -942,7 +930,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : Projectprice.toString(),
+                ProjectPrice : $("#projectfund-projectprice").html(),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : mileStoneCheckOut,
                 GetNextMileStoneData : nextMilestoneData
@@ -1031,9 +1019,7 @@
     }
 
    function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop){
-       
 
-          $("#solutioninfo-popUp").css("display","none")
           $("#solutionfund-popUp").css("display","block")
           $("#solution-fund-radio-check").prop("checked", true);
 
@@ -1041,7 +1027,7 @@
           projectType =  projectType.split(' ').map(projectType => projectType.charAt(0).toUpperCase() + projectType.slice(1).toLowerCase()).join(' ');
 
           $("#projectfund-projecttype").html(projectType)
-          $("#projectfund-projectprice").html(data.ProjectPrice)
+          $("#projectfund-projectprice").html("$" + data.ProjectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
@@ -1125,7 +1111,7 @@
                 else
                   {
                      if(fundDecided > 0 )
-                       {
+                     {
                          if(IsProjectStop){
                            $("#solutionfund-furtherprogress").addClass('disabled');
                            $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
@@ -1134,12 +1120,14 @@
                            $("#solutionfund-details").css("background-color", "var(--brand)");
                            $("#solutionfund-details").css("color","black");  
                          }
-                        }
+                     }
                         $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
                         $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
-                      }
+                        
+                        CalculateMileStonePrice(data,milestoneData,fundDecided);
+                   }
                        
-                  }
+              }
                  
 
                
@@ -1527,5 +1515,9 @@
          })
         $('#solutionTeamSection').html(solutionTeam);
         $(".cls-temp").remove();
+    }
+
+    function CalculateMileStonePrice(solutionFundData, mileStonData, totalMilestoneCompleted){
+
     }
 </script>

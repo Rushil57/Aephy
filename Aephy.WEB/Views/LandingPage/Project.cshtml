@@ -449,21 +449,21 @@
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                     <h4>Small</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
+                                    <h5 style="opacity:0.5;" id="small-projectPrice"></h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="medium" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Medium</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
+                                    <h5 style="opacity:0.5;" id="medium-projectPrice"></h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Large</h4>
-                                    <h5 style="opacity:0.5;">$-</h5>
+                                    <h5 style="opacity:0.5;" id="large-projectPrice"></h5>
                                 </label>
                             </div>
                         </div>
@@ -490,6 +490,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" value="0" id="MilestoneDays" />
         </div>
     </div>
 </main>
@@ -971,6 +972,7 @@
                 if(data.MileStone != ""){
                      var milestoneSection = "";
                      var milestonePopupsection = "";
+                     var TotalMileStoneDays = 0;
                      $.each(data.MileStone, function (datas, values) {
                        milestoneSection +=  '<li class="progress__item">' +
                                         '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
@@ -982,13 +984,15 @@
                                 '<p class="progress__info">'+values.Description+'</p>' +
                                 '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
                             '</li>';
-                      
+
+                      TotalMileStoneDays += values.Days;
                     })
                     $('#progress-div').html(milestoneSection);
                     $('#milestone-Popup-div').html(milestonePopupsection);
-                       $('#progress-div li:first').addClass('progress__item--active');
+                    $('#progress-div li:first').addClass('progress__item--active');
                     $('#milestone-Popup-div li:first').addClass('progress__item--active');
                     $(".cls-milestone-popup").css("display","block")
+                    $("#MilestoneDays").val(TotalMileStoneDays);
                     $(".cls-mileStone").remove()
                 }
                  else{
@@ -1083,6 +1087,10 @@
                 }else{
                     $(".cls-temp").remove();
                     $( "<p class='cls-temp'>No Data Available</p>" ).insertAfter("#SuccessfulProjectsCarousel");
+                }
+
+                if(data.FreelancerHourlyList != ""){
+                    BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays)
                 }
 
                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
@@ -1271,13 +1279,16 @@
               var Projectprice = 0;
              var projectType = $("input[name='projSize']:checked").val();
              if(projectType == 'small'){
-                 Projectprice = 100;
+                // Projectprice = 100;
+                Projectprice = $("#small-projectPrice").html();
              }
              if(projectType == 'medium'){
-                 Projectprice = 200;
+                 //Projectprice = 200;
+                 Projectprice =  $("#medium-projectPrice").html();
              }
              if(projectType == 'large'){
-                 Projectprice = 500;
+                 //Projectprice = 500;
+                 Projectprice = $("#large-projectPrice").html();
              }
 
              var checkPayment =  $("#solutionfund-furtherprogress").text();
@@ -1329,5 +1340,88 @@
         }
 
        
+    }
+
+    function BindProjectPricingBasedOnFreelancerHourlyRate(hourlyrateData,TotalMilestoneDays){
+
+       // var TotalMilestoneDays = $("#MilestoneDays").val();
+        var HoursPerDay = 8;
+        var countPricing = 0;
+        var IsSmallPriceAvailable = false;
+        var IsMeduimPriceAvailable = false;
+        var IsLargePriceAvailable = false;
+
+         $.each(TotalMilestoneDays, function (milestonedata, milestonevalue) {
+                // small project price counting
+                if(milestonevalue.ProjectType == "SMALL"){
+                    IsSmallPriceAvailable = true;
+                    if(milestonevalue.Days > 0){
+                          var TotalMilestoneDays = milestonevalue.Days;
+                         var smallProjectList = hourlyrateData.slice(0,2);
+                         $.each(smallProjectList, function (data, value) {
+                             var HourlyRate = parseInt(value.HourlyRate);
+                             var freelancerPriceCount = (HourlyRate * HoursPerDay) *  TotalMilestoneDays;
+                             countPricing += freelancerPriceCount
+                         });   
+                         $("#small-projectPrice").html("$" + countPricing);
+                    }
+                    else{
+                        $("#small-projectPrice").html("$" + countPricing);
+                    }  
+                }
+                // small project price counting
+
+               // medium project price counting
+               countPricing = 0;
+               if(milestonevalue.ProjectType == "MEDIUM"){
+                   IsMeduimPriceAvailable = true
+                    if(milestonevalue.Days > 0){
+                      var MediumTotalMilestoneDays = milestonevalue.Days
+                      var mediumProjectList = hourlyrateData.slice(0,3);
+                         $.each(mediumProjectList, function (data, value) {
+                             var HourlyRate = parseInt(value.HourlyRate);
+                             var freelancerPriceCount = (HourlyRate * HoursPerDay) *  MediumTotalMilestoneDays;
+                             countPricing += freelancerPriceCount
+                         });   
+                         $("#medium-projectPrice").html("$" + countPricing);
+                    }
+                    else{
+                         $("#medium-projectPrice").html("$" + countPricing);
+                    }
+               }
+               // medium project price counting
+
+
+               // large project price counting
+                countPricing = 0;
+                if(milestonevalue.ProjectType == "LARGE"){
+                    IsLargePriceAvailable = true
+                    if(milestonevalue.Days > 0){
+                         var LargeTotalMilestoneDays = milestonevalue.Days
+                         var largeProjectList = hourlyrateData.slice(0,5);
+                         $.each(largeProjectList, function (data, value) {
+                             var HourlyRate = parseInt(value.HourlyRate);
+                             var freelancerPriceCount = (HourlyRate * HoursPerDay) *  LargeTotalMilestoneDays;
+                             countPricing += freelancerPriceCount
+                         });
+                           $("#large-projectPrice").html("$" + countPricing);
+                    }
+                    else{
+                      $("#large-projectPrice").html("$" + countPricing);
+                    }
+                }
+                // large project price counting
+         })
+
+         if(IsSmallPriceAvailable == false){
+             $("#small-projectPrice").html("$0");
+         }
+         if(IsMeduimPriceAvailable == false){
+             $("#medium-projectPrice").html("$0");
+         }
+         if(IsLargePriceAvailable == false){
+              $("#large-projectPrice").html("$0");
+         }
+
     }
 </script>

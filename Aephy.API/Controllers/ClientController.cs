@@ -491,12 +491,20 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    //SolutionFund fundProgress = new SolutionFund();
-                    //if (model.UserId != "")
-                    //{
-                    //    fundProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId).FirstOrDefault();
-                    //}
-
+                    List<SolutionMilestone> mileStoneToTalDays = new List<SolutionMilestone>();
+                    var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
+                    var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
+                    if(MilestoneTotalDaysByProjectType.Count > 0)
+                    {
+                        mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                       .GroupBy(l => l.ProjectType)
+                       .Select(cl => new SolutionMilestone
+                       {
+                           ProjectType = cl.First().ProjectType,
+                           Days = cl.Sum(c => c.Days),
+                       }).ToList();
+                    }
+                  
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -509,7 +517,9 @@ namespace Aephy.API.Controllers
                             PointsData = pointsData,
                             TopProfessional = professionalData,
                             SuccessfullProjects = successfullProjectList,
-                            SolutionFund = fundProgress
+                            SolutionFund = fundProgress,
+                            FreelancerHourlyList = freelancerList,
+                            MileStoneToTalDays = mileStoneToTalDays
                         }
                     });
                 }
@@ -557,6 +567,12 @@ namespace Aephy.API.Controllers
                     if (fundProgress != null && fundProgress.ProjectType != null)
                     {
                         model.ProjectType = fundProgress.ProjectType;
+                        if(fundProgress.ProjectStatus != "INITIATED")
+                        {
+                            var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
+                            fundProgress.ProjectPrice = contractAmount;
+                        }
+                        
                         solutionMilesData = _db.SolutionMilestone.Where(x => x.Id == fundProgress.MileStoneId).FirstOrDefault();
                     }
 
@@ -638,6 +654,8 @@ namespace Aephy.API.Controllers
                     }
 
                     var DocumentList = _db.ActiveProjectDocuments.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
+                    var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
+
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -655,7 +673,8 @@ namespace Aephy.API.Controllers
                             FundDecided = Funddecided,
                             FundCompleted = fundCompleted,
                             IsProjectStop = IsProjectstop,
-                            DocumentDataList = DocumentList
+                            DocumentDataList = DocumentList,
+                            FreelancerList = freelancerList
                         }
                     });
                 }
@@ -1348,7 +1367,7 @@ namespace Aephy.API.Controllers
         [Route("CreateUserStripeAccount")]
         public async Task<IActionResult> CreateUserStripeAccount([FromBody] MileStoneIdViewModel model)
         {
-            var userDetails = _db.Users.Where(x => x.Id == model.UserId).FirstOrDefault();
+            var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
             if (userDetails != null)
             {
                 StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
@@ -1460,8 +1479,28 @@ namespace Aephy.API.Controllers
                     if (model.Id != 0)
                     {
                         Contract? contractSave;
+                        var trimmedPrice = model.ProjectPrice.Replace("$", "");
+                        var ProjectPrice = Convert.ToInt64(trimmedPrice);
                         if (model.MileStoneCheckout)
                         {
+                            var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == mileStone.ProjectType).ToList();
+                            if (MilestoneTotalDaysByProjectType.Count > 0)
+                            {
+                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                               .GroupBy(l => l.ProjectType)
+                               .Select(cl => new SolutionMilestone
+                               {
+                                   ProjectType = cl.First().ProjectType,
+                                   Days = cl.Sum(c => c.Days),
+                               }).FirstOrDefault();
+
+                                if (mileStoneToTalDays.Days > 0)
+                                {
+                                    var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStone.Days;
+                                    model.ProjectPrice = calculateProjectPrice.ToString();
+                                }
+                            }
+
                             contractSave = new Contract()
                             {
                                 ClientUserId = model.UserId,
@@ -1473,6 +1512,7 @@ namespace Aephy.API.Controllers
                                 SolutionId = model.SolutionId,
                                 IndustryId = model.IndustryId,
                                 CreatedDateTime = DateTime.Now,
+                                Amount = model.ProjectPrice,
 
                             };
                             _db.Contract.Add(contractSave);
@@ -1510,6 +1550,7 @@ namespace Aephy.API.Controllers
                                     PaymentIntentId = string.Empty,
                                     SolutionFundId = model.SolutionFundId,
                                     CreatedDateTime = DateTime.Now,
+                                    Amount = ProjectPrice.ToString(),
 
                                 };
                                 _db.Contract.Add(contractSave);
@@ -1711,7 +1752,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var milestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                var milestoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
                 if (milestoneData != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1912,8 +1953,13 @@ namespace Aephy.API.Controllers
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
                     if (mileStoneData != null)
                     {
-                        //if (model.MileStoneCheckout){model.FundType = SolutionFund.FundTypes.MilestoneFund;}
-                        //else{model.FundType = SolutionFund.FundTypes.ProjectFund;}
+                        //var freelancerDetail = _db.FreelancerDetails.Where(x => x.HourlyRate != null & x.HourlyRate != "").FirstOrDefault();
+                        //if(freelancerDetail != null)
+                        //{
+                        //    var calculateProjectPrice = (Convert.ToInt32(freelancerDetail.HourlyRate) * 8) * mileStoneData.Days;
+                        //    model.ProjectPrice = calculateProjectPrice.ToString();
+                        //}
+
                         var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).Select(x => x.FundType).FirstOrDefault();
                         var solutionfund = new SolutionFund()
                         {

@@ -1,4 +1,5 @@
 ﻿using Aephy.API.DBHelper;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Stripe;
 using Stripe.Checkout;
 
@@ -60,7 +61,8 @@ namespace Aephy.API.Stripe
         
         public Session CreateCheckoutSession(SolutionMilestone mileStone, string projectPrice, string successUrl, string cancelUrl)
         {
-            var ProjectPrice = Convert.ToInt64(projectPrice);
+            var trimmedPrice = projectPrice.Replace("$", String.Empty);
+            var ProjectPrice = Convert.ToInt64(trimmedPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -118,7 +120,8 @@ namespace Aephy.API.Stripe
 
         public Session CreateProjectCheckoutSession(string projectPrice,string successUrl, string cancelUrl)
         {
-            var ProjectPrice = Convert.ToInt64(projectPrice);
+            var trimmedPrice = projectPrice.Replace("$", String.Empty);
+            var ProjectPrice = Convert.ToInt64(trimmedPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>

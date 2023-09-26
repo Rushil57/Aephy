@@ -69,6 +69,8 @@ namespace Aephy.API.DBHelper
 
         public string? TaxRefundAmount { get; set; }
 
+        public string? Amount { get; set; }
+
         // Stripe fields above
 
     }

@@ -787,7 +787,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice);
                    }
                 
                 if(data.DocumentDataList != ""){
@@ -949,7 +949,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice);
                         $("#preloader").hide();
                        return;
                    }
@@ -966,13 +966,16 @@
                        } 
                        $("#preloader").hide();
                        return;
-                   }
+                   }             
                    if(result.Message == "NoFurtherMileStone"){
                        $("#solutionfund-furtherprogress").text('Project Completed');
                        $("#solutionfund-furtherprogress").addClass('disabled');
                        $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                        $("#solutionfund-furtherprogress").css("color","black");
                        $("#project-progress").html("Project Completed");
+                       $("#solutionfund-details").addClass('disabled');
+                       $("#solutionfund-details").css("background-color", "var(--brand)");
+                       $("#solutionfund-details").css("color","black");
                        $("#preloader").hide();
                        return;
                    }
@@ -985,6 +988,9 @@
                             $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                             $("#solutionfund-furtherprogress").css("color","black");
                             $("#project-progress").html("Project Completed");
+                            $("#solutionfund-details").addClass('disabled');
+                            $("#solutionfund-details").css("background-color", "var(--brand)");
+                            $("#solutionfund-details").css("color","black"); 
                             $("#preloader").hide();
                             return;
                          }
@@ -1018,7 +1024,7 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop){
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice){
 
           $("#solutionfund-popUp").css("display","block")
           $("#solution-fund-radio-check").prop("checked", true);
@@ -1052,13 +1058,14 @@
                           $("#fundPopOver").hide();
                           $("#solutionfund-furtherprogress").text("Fund Milestone " + fundDecided)
                           $("#project-progress").html("Milestone " + total + " is Completed")
+                          $("#projectfund-projectprice").html("$" + NextMilestonePrice)
                       }else{
                           $("#fundPopOver").show();
                           $("#solutionfund-furtherprogress").hide();
                             var status = data.ProjectStatus
                             status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
-
                             $("#project-progress").html("Project " + status)
+
                       }
 
                }
@@ -1081,6 +1088,9 @@
                           $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                           $("#solutionfund-furtherprogress").css("color","black");
                           $("#project-progress").html("Project Completed");
+                          $("#solutionfund-details").addClass('disabled');
+                          $("#solutionfund-details").css("background-color", "var(--brand)");
+                          $("#solutionfund-details").css("color","black"); 
                      }
                     else
                       {
@@ -1107,6 +1117,9 @@
                      $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
                      $("#solutionfund-furtherprogress").css("color","black");
                      $("#project-progress").html("Project Completed");
+                      $("#solutionfund-details").addClass('disabled');
+                      $("#solutionfund-details").css("background-color", "var(--brand)");
+                      $("#solutionfund-details").css("color","black"); 
                    }
                 else
                   {

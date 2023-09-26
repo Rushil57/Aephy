@@ -588,13 +588,44 @@ namespace Aephy.API.Controllers
                         _db.Contract.Remove(CheckInCompeleteFund);
                         _db.SaveChanges();
                     }
+                    //else
+                    //{
+                    //    if (fundProgress.ProjectStatus != "INITIATED")
+                    //    {
+                    //        var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
+                    //        fundProgress.ProjectPrice = contractAmount;
+                    //    }
+                    //}
+                    if (fundProgress.ProjectStatus == "INITIATED")
+                    {
+                        if(solutionMilesData != null && fundProgress.FundType.ToString() == "MilestoneFund")
+                        {
+                            var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == solutionMilesData.SolutionId && x.IndustryId == solutionMilesData.IndustryId && x.ProjectType == solutionMilesData.ProjectType).ToList();
+                            long calculateProjectPrice = 0;
+                            if (MilestoneTotalDaysByProjectType.Count > 0)
+                            {
+                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                               .GroupBy(l => l.ProjectType)
+                               .Select(cl => new SolutionMilestone
+                               {
+                                   ProjectType = cl.First().ProjectType,
+                                   Days = cl.Sum(c => c.Days),
+                               }).FirstOrDefault();
+
+                                if (mileStoneToTalDays.Days > 0)
+                                {
+                                    // var trimmedPrice = model.ProjectPrice.Replace("$", "");
+                                    var ProjectPrice = Convert.ToInt64(fundProgress.ProjectPrice);
+                                    calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * solutionMilesData.Days;
+                                    fundProgress.ProjectPrice = calculateProjectPrice.ToString();
+                                }
+                            }
+                        }
+                    }
                     else
                     {
-                        if (fundProgress.ProjectStatus != "INITIATED")
-                        {
-                            var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
-                            fundProgress.ProjectPrice = contractAmount;
-                        }
+                        var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
+                         fundProgress.ProjectPrice = contractAmount; 
                     }
 
 
@@ -1984,6 +2015,7 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
                         var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                        long calculateProjectPrice = 0;
                         if (MilestoneTotalDaysByProjectType.Count > 0)
                         {
                             SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
@@ -1998,7 +2030,7 @@ namespace Aephy.API.Controllers
                             {
                                // var trimmedPrice = model.ProjectPrice.Replace("$", "");
                                 var ProjectPrice = Convert.ToInt64(checkType.ProjectPrice);
-                                var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
+                                calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
                             }
                         }
 
@@ -2014,7 +2046,8 @@ namespace Aephy.API.Controllers
                             {
                                 ProjectDetails = data,
                                 MileStoneData = mileStone,
-                                FundDecided = Funddecided
+                                FundDecided = Funddecided,
+                                NextMileStonePrice = calculateProjectPrice
                             }
                         });
                     }

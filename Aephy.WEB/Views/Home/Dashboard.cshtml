@@ -1706,7 +1706,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 </div>
 
 <div class="modal" id="InvoiceGridPopUpModal" tabindex="-1" aria-labelledby="InvoiceGridPopUpModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="width: 800px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title main-title">Invoice Grid</h4>
@@ -1714,6 +1714,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             </div>
             <div class="modal-body p-0">
                <div class="card recent-sales overflow-auto">
+                   <input type="hidden" id="GridContractId" value="0" />
                             <div class="card-body">
                                 <table class="table datatable" id="InvoiceGridTable">
                                     <thead>
@@ -1748,7 +1749,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 
                             </div>
 
-                        </div>
+                             </div>
             </div>
           
         </div>
@@ -3267,10 +3268,10 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         window.location.href = '/LandingPage/ActiveProject?Service=' + ServiceId + '&Solution=' + SolutionId + '&Industry=' + IndustryId;
     }
 
-    function OpenInvoiceModalPopUp(Contractid){
-        var ContractId = 451
+    function OpenInvoiceModalPopUp(){
+        var Contractid = $("#GridContractId").val();
            var data = {
-            ContractId: ContractId,
+            ContractId: Contractid,
         }
         $("#preloader").show();
         $.ajax({
@@ -3310,7 +3311,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                      
                 }
                
-                 $("#InvoiceContractId").val(ContractId)
+                 $("#InvoiceContractId").val(Contractid)
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -3609,7 +3610,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                 htm += '<td>' + subObj.Title + '</td>';
                                 htm += '<td>' + subObj.Industries + '</td>';
                                 htm += '<td>' + subObj.MileStoneTitle + '</td>';
-                                htm += '<td><a class="text-primary" onclick=ViewInvoiceGridPopUp()>View Invoice</a></td>';
+                                htm += '<td><a class="text-primary" onclick=ViewInvoiceGridPopUp('+subObj.ContractId+')>View Invoice</a></td>';
                                 htm += '</tr>';
                             }
                         }
@@ -3630,8 +3631,9 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             });
         }
 
-        function ViewInvoiceGridPopUp(){
+        function ViewInvoiceGridPopUp(contractId){
             $("#InvoiceGridPopUpModal").modal('show');
+            $("#GridContractId").val(contractId)
         }
 
         function CloseInvoiceGridPopUp(){

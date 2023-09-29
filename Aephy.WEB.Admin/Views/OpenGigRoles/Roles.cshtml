@@ -398,16 +398,17 @@
             data: JSON.stringify(RolesData),
             success: function (result) {
                 if (result != null) {
+                    var data = result.Result.OpenRoles;
                     $("#addRolesModal").modal('show');
                     $(".modal-title").html("Edit Roles");
-                    $("#ID").val(result.Result.ID);
-                    $('#drp-Solutions').val(result.Result.SolutionId).trigger('chosen:updated');
-                    $("#Title").val(result.Result.Title)
-                    $('#drp-Level').val(result.Result.Level).trigger('chosen:updated');
-                    $('#RoleDescription').val(result.Result.Description);
+                        $("#ID").val(data.ID);
+                        $('#drp-Solutions').val(data.SolutionId).trigger('chosen:updated');
+                        $("#Title").val(data.Title)
+                        $('#drp-Level').val(data.Level).trigger('chosen:updated');
+                        $('#RoleDescription').val(data.Description);
                         GetSolutionDataById();
-                    $('#drp-industries').val(result.Result.IndustryId).trigger('chosen:updated');
-                    if(result.Result.isActive){
+                        $('#drp-industries').val(data.IndustryId).trigger('chosen:updated');
+                        if(data.isActive){
                             $("#isRoleActive").prop('checked', true);
                     }else{
                         $("#isRoleActive").prop('checked', false);

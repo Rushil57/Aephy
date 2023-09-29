@@ -52,7 +52,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var CheckServices = _db.Services.Where(x => x.ServicesName == model.ServiceName).FirstOrDefault();
+                        var CheckServices = await _db.Services.Where(x => x.ServicesName == model.ServiceName).FirstOrDefaultAsync();
                         if (CheckServices != null)
                         {
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Services Already Added!" });
@@ -115,7 +115,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var list = _db.Services.ToList();
+                var list = await _db.Services.ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -141,7 +141,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var servicesData = _db.Services.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var servicesData = await _db.Services.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -3569,7 +3569,7 @@ namespace Aephy.API.Controllers
                         solutionDetails.ClientName = clientName.FirstName + " " + clientName.LastName;
                         solutionDetails.LatestChargeId = contractData.LatestChargeId;
                         solutionDetails.ContractId = contractData.Id;
-
+                        
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,

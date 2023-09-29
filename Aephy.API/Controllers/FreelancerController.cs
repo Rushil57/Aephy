@@ -1478,6 +1478,8 @@ namespace Aephy.API.Controllers
                                     Title = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                                 }
                                 var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                                //var totalAmount = decimal.Parse(solutionFundData.ProjectPrice) + decimal.Parse(contarctData.VATAmount);
+                                Decimal totalAmount = Decimal.Add(decimal.Parse(contarctData.Amount), decimal.Parse(contarctData.VATAmount));
                                 var InvoiceData = new Invoices()
                                 {
                                     SolutionId = contarctData.SolutionId,
@@ -1486,17 +1488,17 @@ namespace Aephy.API.Controllers
                                     InvoiceNumber = InvoiceNumber.ToString(),
                                     Date = contarctData.CreatedDateTime,
                                     DueDate = contarctData.CreatedDateTime,
-                                    TotalAmount = solutionFundData.ProjectPrice,
-                                    DueAmount = solutionFundData.ProjectPrice,
+                                    TotalAmount = totalAmount.ToString(),
+                                    DueAmount = totalAmount.ToString(),
                                     ClientId = contarctData.ClientUserId,
                                     ClientName = fullname.FirstName + " " + fullname.LastName,
                                     ClientAddress = _db.FreelancerDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault(),
                                     VatId = "1",
-                                    TaxId = "1",
+                                    TaxId = contarctData.TaxId,
                                     Title = Title,
-                                    Amount = solutionFundData.ProjectPrice,
-                                    VatPercentage = "20%",
-                                    VatAmount = "200"
+                                    Amount = contarctData.Amount,
+                                    VatPercentage = contarctData.VATPercentage,
+                                    VatAmount = contarctData.VATAmount
                                 };
                                 _db.Invoices.Add(InvoiceData);
                                 _db.SaveChanges();

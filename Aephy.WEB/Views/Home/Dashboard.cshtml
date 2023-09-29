@@ -70,6 +70,7 @@
     display: flex;
     align-items: center;
     justify-content: end;
+        padding-bottom: 8%;
 }
 
 </style>
@@ -300,6 +301,30 @@
                                        
                                        
                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                     <div class="col-12" id="ActiveProjectInvoices">
+                        <div class="card recent-sales overflow-auto">
+                            <div class="card-body">
+                                <h5 class="card-title">Invoices</h5>
+
+                                <table class="table datatable" id="InvoiceTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Solution Title</th>
+                                            <th scope="col">Industry Name</th>
+                                            <th scope="col">MilestoneName</th>
+                                            <th scope="col">View Invoice</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      
+                                    </tbody>
+                                </table>
+
                             </div>
 
                         </div>
@@ -1590,8 +1615,147 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         </div>
       </div>
     </div>
+    <div class="modal" id="CreditMemoModal" tabindex="-1" aria-labelledby="CreditMemoModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Credit Memo</h4>
+                <a class="close" onclick="CloseCreditMemoModalPopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <input type="hidden" value="0" id="InvoiceContractId1"/>
+                 <div class="container" id="InvoiceContent">
+                                <div class="row pt-1">
+                                    <div class="col-sm-8 col-lg-8">
+                                        <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png" 
+                                        class="img-fluid" width="265" height="150"/>
+                                    </div>
 
-    <div class="modal" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModal" aria-hidden="true">
+                                    <div class="col-sm-4 col-lg-4">
+                                        <div class="p-1 text-center" style="background-color: #d9d9d9;">
+                                            <span>CREDIT MEMO</span>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <h5> Invoice # 00000000 </h5>
+                                            <h5 id="ContractCreatedDate1">Date 30 May 2023</h5>
+                                            <h5 id="ContractDueDate1"> <b>Due Date 30 May 2023</b> </h5>
+                                            <h5 id="ProjectTotalAmount1">Total Amount € -1,198.92</h5>
+                                            <h5 id="ProjectTotalDueAmount1"> <b> Total Due € -1,198.92 </b> </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-2" style="padding-left:20px;">
+                                    <div class="col-sm-6 col-lg-6">
+                                        <h3 style="color: #c37813;">From</h3>
+
+                                        <div class="mt-3">
+                                            <h5> <b> Ephylink </b> </h5>
+                                            <h5> Dimitrios Vamvakas </h5>
+                                            <h5> Ellispontou 39, Patra, 26226 </h5>
+                                            <h5> Achaia, Greece </h5>
+                                            <h5> VAT ID: 148366653 </h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-lg-6">
+                                            <h3 style="color: #c37813;">Bill to</h3>
+
+                                            <div class="mt-3">
+                                                <h5 id="ContractClientName1"> <b>Client 1 International Client</b> </h5>
+                                                <h5> Name </h5>
+                                                <h5 id="ClientAddress1"> Address: </h5>
+                                                <h5> VAT ID: </h5>
+                                                <h5> Tax ID: </h5>
+                                            </div>
+                                        </div>
+                                </div>
+
+                                <div class="pt-1" style="padding-left:10px;">
+                                    <table class="table table-bordered small">
+                                        <tr style="background-color: #d9d9d9;">
+                                            <th>DESCRIPTION</th>
+                                            <th>AMOUNT</th>
+                                        </tr>
+                
+                                        <tr>
+                                            <td id="FundTitle1">Paid from escrow for "Title of Milestone"</td>
+                                            <td id="FundAmount1">(1,198.92)</td>
+                                        </tr>
+                                        <tr>
+                                            <td> VAT (0%) </td>
+                                            <td> 0.00 </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td> Total amount </td>
+                                            <td id="TotalFundAmount1"> -€ 1,198.92 </td>
+                                        </tr>
+                                    </table>
+                    </div>
+                 </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                     <button type="button" class="btn btn-brand" onclick="DownloadCreditMemoInvoice();">Download Credit Memo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="InvoiceGridPopUpModal" tabindex="-1" aria-labelledby="InvoiceGridPopUpModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Invoice Grid</h4>
+                <a class="close" onclick="CloseInvoiceGridPopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+               <div class="card recent-sales overflow-auto">
+                            <div class="card-body">
+                                <table class="table datatable" id="InvoiceGridTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Invoice Name</th>
+                                            <th scope="col">View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Portal To Client</td>
+                                            <td><a class="text-primary" onclick=OpenInvoiceModalPopUp()>View </a></td>
+                                       </tr>
+                                        <tr>
+                                            <td>Platform Commission</td>
+                                            <td><a class="text-primary" onclick=OpenInvoiceModalPopUp()>View </a></td>
+                                       </tr>
+                                        <tr>
+                                            <td>Receipt</td>
+                                            <td><a class="text-primary" onclick=OpenInvoiceModalPopUp()>View </a></td>
+                                       </tr>
+                                        <tr>
+                                            <td>Tax Return Credit Memo</td>
+                                            <td><a class="text-primary" onclick=OpenInvoiceModalPopUp()>View </a></td>
+                                       </tr>
+                                        <tr>
+                                            <td>Freelancer To Client (After Approve)</td>
+                                            <td><a class="text-primary" onclick=OpenInvoiceModalPopUp()>View </a></td>
+                                       </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+            </div>
+          
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -1675,96 +1839,6 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             <div class="modal-footer">
                 <div class="text-center">
                      <button type="button" class="btn btn-brand" onclick="DownloadSolutionInvoice()">Download Invoice</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="CreditMemoModal" tabindex="-1" aria-labelledby="CreditMemoModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title main-title">Credit Memo</h4>
-                <a class="close" onclick="CloseCreditMemoModalPopUp();"><i class="bi bi-x-circle"></i></a>
-            </div>
-            <div class="modal-body p-0">
-                <input type="hidden" value="0" id="InvoiceContractId"/>
-                 <div class="container" id="InvoiceContent">
-                                <div class="row pt-1">
-                                    <div class="col-sm-8 col-lg-8">
-                                        <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png" 
-                                        class="img-fluid" width="265" height="150"/>
-                                    </div>
-
-                                    <div class="col-sm-4 col-lg-4">
-                                        <div class="p-1 text-center" style="background-color: #d9d9d9;">
-                                            <span>CREDIT MEMO</span>
-                                        </div>
-
-                                        <div class="mt-3">
-                                            <h5> Invoice # 00000000 </h5>
-                                            <h5 id="ContractCreatedDate">Date 30 May 2023</h5>
-                                            <h5 id="ContractDueDate"> <b>Due Date 30 May 2023</b> </h5>
-                                            <h5 id="ProjectTotalAmount">Total Amount € -1,198.92</h5>
-                                            <h5 id="ProjectTotalDueAmount"> <b> Total Due € -1,198.92 </b> </h5>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row pt-2" style="padding-left:20px;">
-                                    <div class="col-sm-6 col-lg-6">
-                                        <h3 style="color: #c37813;">From</h3>
-
-                                        <div class="mt-3">
-                                            <h5> <b> Ephylink </b> </h5>
-                                            <h5> Dimitrios Vamvakas </h5>
-                                            <h5> Ellispontou 39, Patra, 26226 </h5>
-                                            <h5> Achaia, Greece </h5>
-                                            <h5> VAT ID: 148366653 </h5>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-6 col-lg-6">
-                                            <h3 style="color: #c37813;">Bill to</h3>
-
-                                            <div class="mt-3">
-                                                <h5 id="ContractClientName"> <b>Client 1 International Client</b> </h5>
-                                                <h5> Name </h5>
-                                                <h5 id="ClientAddress"> Address: </h5>
-                                                <h5> VAT ID: </h5>
-                                                <h5> Tax ID: </h5>
-                                            </div>
-                                        </div>
-                                </div>
-
-                                <div class="pt-1" style="padding-left:10px;">
-                                    <table class="table table-bordered small">
-                                        <tr style="background-color: #d9d9d9;">
-                                            <th>DESCRIPTION</th>
-                                            <th>AMOUNT</th>
-                                        </tr>
-                
-                                        <tr>
-                                            <td id="FundTitle">Paid from escrow for "Title of Milestone"</td>
-                                            <td id="FundAmount">(1,198.92)</td>
-                                        </tr>
-                                        <tr>
-                                            <td> VAT (0%) </td>
-                                            <td> 0.00 </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td> Total amount </td>
-                                            <td id="TotalFundAmount"> -€ 1,198.92 </td>
-                                        </tr>
-                                    </table>
-                    </div>
-                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="text-center">
-                     <button type="button" class="btn btn-brand" onclick="DownloadCreditMemoInvoice();">Download Credit Memo</button>
                 </div>
             </div>
         </div>
@@ -1912,9 +1986,11 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
              if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
                 GetSavedProjects();
                 GetClientActiveProjectList();
+                GetActiveProjectInvoices();
             }else{
                 GetFreelancerActiveProjectList();
                 $("#savedProjects").hide();
+                $("#ActiveProjectInvoices").hide();
             }
 
             $('.news_card').hide();
@@ -2903,8 +2979,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                         '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Solution Feedback</a>'+
                                 '</div></div>'+
                                 '<div class="d-flex align-items-center">'+
-                                '<div><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div>'+
-                                '<div class="like" style="font-size: 16px;" onclick=OpenCreditMemoModalPopUp();>View Credit Memo</div></div>'+
+                                //'<div><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div>'+
+                                //'<div class="like" style="font-size: 16px;" onclick=OpenCreditMemoModalPopUp();>View Credit Memo</div></div>'+
                                 "<div class=\"chat-message-icon\"><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div></div></div>";
                             }else{
                                 activeSection += '<div class="card-footer">' +
@@ -3191,7 +3267,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         window.location.href = '/LandingPage/ActiveProject?Service=' + ServiceId + '&Solution=' + SolutionId + '&Industry=' + IndustryId;
     }
 
-    function OpenInvoiceModalPopUp(ContractId){
+    function OpenInvoiceModalPopUp(Contractid){
+        var ContractId = 451
            var data = {
             ContractId: ContractId,
         }
@@ -3352,7 +3429,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                         }
                     }
                     else{
-                        htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+                        html = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
                     }
                     $("#inboxPeople .chat_list").remove();
                     $("#inboxPeople").append(html);
@@ -3505,6 +3582,60 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                      showToaster("error", "Error !", "Failure");
                  }
              });
+        }
+
+        function GetActiveProjectInvoices(){
+              $("#preloader").show();
+                 $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetActiveProjectInvoices", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if(result.Result.length!=0){
+                         var invoiceData = result.Result
+                          var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = invoiceData.length;
+                        if(resultLength > 0){
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = invoiceData[index];
+                                if(subObj.MileStoneTitle == null){
+                                    subObj.MileStoneTitle = ""
+                                }
+
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.Title + '</td>';
+                                htm += '<td>' + subObj.Industries + '</td>';
+                                htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                                htm += '<td><a class="text-primary" onclick=ViewInvoiceGridPopUp()>View Invoice</a></td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#InvoiceTable").find("tr:gt(0)").remove();
+                        $("#InvoiceTable tbody").append(htm);
+                        $(".cls-invoice-temp").hide();
+                    }
+                    else{
+                                $(".cls-invoice-temp").remove();
+                                $( "<p class='cls-invoice-temp'>No Data Available</p>" ).insertAfter("#InvoiceTable");
+                   }
+                   $("#preloader").hide();
+               },
+                error: function (result) {
+                    showToaster("error", "Error !", result);
+                    $("#preloader").hide();
+                }
+            });
+        }
+
+        function ViewInvoiceGridPopUp(){
+            $("#InvoiceGridPopUpModal").modal('show');
+        }
+
+        function CloseInvoiceGridPopUp(){
+            $("#InvoiceGridPopUpModal").modal('hide');
         }
 
 </script>

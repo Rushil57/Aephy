@@ -399,7 +399,7 @@ namespace Aephy.WEB.Controllers
                 }
                 catch (Exception ex)
                 {
-
+                    return ex.Message + ex.InnerException;
                 }
                 string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
                 return jsonString;

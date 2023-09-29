@@ -997,7 +997,7 @@ namespace Aephy.API.Controllers
                         UserId = model.UserId,
                     };
                     _db.SavedProjects.Add(data);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -1402,7 +1402,7 @@ namespace Aephy.API.Controllers
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "success",
+                            Message = "Contract Details Not Found",
                         });
                     }
                     catch (Exception ex)
@@ -1496,12 +1496,12 @@ namespace Aephy.API.Controllers
                                     Title = Title,
                                     Amount = solutionFundData.ProjectPrice,
                                     VatPercentage = "20%",
-                                    VatAmount = "$200"
+                                    VatAmount = "200"
                                 };
                                 _db.Invoices.Add(InvoiceData);
                                 _db.SaveChanges();
                             }
-                            
+
                             var Invoicedetails = _db.Invoices.Where(x => x.SolutionFundId == solutionFundData.Id).FirstOrDefault();
                             var Fundtype = solutionFundData.FundType.ToString();
 
@@ -1513,14 +1513,14 @@ namespace Aephy.API.Controllers
                                     Message = "success",
                                     Result = new
                                     {
-                                      InvoiceDetails = Invoicedetails,
-                                      FundType = Fundtype
+                                        InvoiceDetails = Invoicedetails,
+                                        FundType = Fundtype
                                     }
                                 });
                             }
                         }
                     }
-                    
+
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1584,7 +1584,7 @@ namespace Aephy.API.Controllers
         [HttpPost]
         [Route("GetFreelancerActiveProjectList")]
         public async Task<IActionResult> GetFreelancerActiveProjectList([FromBody] MileStoneIdViewModel model)
-       {
+        {
             if (model != null)
             {
                 if (model.UserId != null)
@@ -1728,8 +1728,8 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel {
-                            StatusCode = StatusCodes.Status200OK, 
-                            Message = "Data Update Successfully!" 
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Update Successfully!"
                         });
                     }
                 }
@@ -1752,6 +1752,60 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "success",
                 Result = contractUser.Select(m => m.ContractId).Distinct().Count()
+            });
+        }
+
+        //GetActiveProjectInvoices
+        [HttpPost]
+        [Route("GetActiveProjectInvoices")]
+        public async Task<IActionResult> GetActiveProjectInvoices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.ProjectStatus != "INITIATED").ToListAsync();
+                        if (projectData.Count > 0)
+                        {
+                            foreach (var data in projectData)
+                            {
+                                SolutionsModel solutionsdataStore = new SolutionsModel();
+                                solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                solutionsdataStore.Title = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                if(data.FundType.ToString() == "MilestoneFund")
+                                {
+                                    solutionsdataStore.MileStoneTitle = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                solutionsModel.Add(solutionsdataStore);
+                            }
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionsModel
+                        });
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
             });
         }
     }

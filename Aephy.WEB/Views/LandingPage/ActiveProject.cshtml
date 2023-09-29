@@ -969,13 +969,9 @@
                    }             
                    if(result.Message == "NoFurtherMileStone"){
                        $("#solutionfund-furtherprogress").text('Project Completed');
-                       $("#solutionfund-furtherprogress").addClass('disabled');
-                       $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                       $("#solutionfund-furtherprogress").css("color","black");
+                       DisabledSolutionFurtherProgressButton();
                        $("#project-progress").html("Project Completed");
-                       $("#solutionfund-details").addClass('disabled');
-                       $("#solutionfund-details").css("background-color", "var(--brand)");
-                       $("#solutionfund-details").css("color","black");
+                        DisabledSolutionDetailsButton();
                        $("#preloader").hide();
                        return;
                    }
@@ -984,13 +980,9 @@
                          $("#preloader").hide();
                          if(result.Result.FundType == 1){
                             $("#solutionfund-furtherprogress").text('Project Completed');
-                            $("#solutionfund-furtherprogress").addClass('disabled');
-                            $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                            $("#solutionfund-furtherprogress").css("color","black");
+                            DisabledSolutionFurtherProgressButton()
                             $("#project-progress").html("Project Completed");
-                            $("#solutionfund-details").addClass('disabled');
-                            $("#solutionfund-details").css("background-color", "var(--brand)");
-                            $("#solutionfund-details").css("color","black"); 
+                            DisabledSolutionDetailsButton()
                             $("#preloader").hide();
                             return;
                          }
@@ -1084,25 +1076,17 @@
                      if(IsFundCompleted)
                      {
                           $("#solutionfund-furtherprogress").text('Project Completed');
-                          $("#solutionfund-furtherprogress").addClass('disabled');
-                          $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                          $("#solutionfund-furtherprogress").css("color","black");
+                          DisabledSolutionFurtherProgressButton();
                           $("#project-progress").html("Project Completed");
-                          $("#solutionfund-details").addClass('disabled');
-                          $("#solutionfund-details").css("background-color", "var(--brand)");
-                          $("#solutionfund-details").css("color","black"); 
+                          DisabledSolutionDetailsButton();
                      }
                     else
                       {
                         $("#solutionfund-furtherprogress").text("Pay Project");
                         $("#project-progress").html("Project is in Progress");
-                                 if(IsProjectStop){
-                                $("#solutionfund-furtherprogress").addClass('disabled');
-                                $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                                $("#solutionfund-furtherprogress").css("color","black");
-                                 $("#solutionfund-details").addClass('disabled');
-                                $("#solutionfund-details").css("background-color", "var(--brand)");
-                                $("#solutionfund-details").css("color","black");  
+                         if(IsProjectStop){
+                             DisabledSolutionFurtherProgressButton()
+                             DisabledSolutionDetailsButton();
                           }
                          
                     }
@@ -1113,37 +1097,24 @@
                 if(IsFundCompleted)
                    {
                      $("#solutionfund-furtherprogress").text('Project Completed');
-                     $("#solutionfund-furtherprogress").addClass('disabled');
-                     $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                     $("#solutionfund-furtherprogress").css("color","black");
+                     DisabledSolutionFurtherProgressButton();
                      $("#project-progress").html("Project Completed");
-                      $("#solutionfund-details").addClass('disabled');
-                      $("#solutionfund-details").css("background-color", "var(--brand)");
-                      $("#solutionfund-details").css("color","black"); 
+                     DisabledSolutionDetailsButton();
                    }
                 else
                   {
                      if(fundDecided > 0 )
                      {
                          if(IsProjectStop){
-                           $("#solutionfund-furtherprogress").addClass('disabled');
-                           $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-                           $("#solutionfund-furtherprogress").css("color","black");
-                           $("#solutionfund-details").addClass('disabled');
-                           $("#solutionfund-details").css("background-color", "var(--brand)");
-                           $("#solutionfund-details").css("color","black");  
+                            DisabledSolutionFurtherProgressButton();
+                            DisabledSolutionDetailsButton();
                          }
                      }
                         $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
                         $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
-                        
-                        CalculateMileStonePrice(data,milestoneData,fundDecided);
                    }
                        
               }
-                 
-
-               
                $("#solutionfund-details").text('Raise a Dispute');
                if(data.IsDispute){
                     $("#solutionfund-furtherprogress").addClass('disabled');
@@ -1530,7 +1501,15 @@
         $(".cls-temp").remove();
     }
 
-    function CalculateMileStonePrice(solutionFundData, mileStonData, totalMilestoneCompleted){
+     function DisabledSolutionFurtherProgressButton(){
+         $("#solutionfund-furtherprogress").addClass('disabled');
+         $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
+         $("#solutionfund-furtherprogress").css("color","black");
+     }
 
-    }
+     function DisabledSolutionDetailsButton(){
+       $("#solutionfund-details").addClass('disabled');
+       $("#solutionfund-details").css("background-color", "var(--brand)");
+       $("#solutionfund-details").css("color","black"); 
+     }
 </script>

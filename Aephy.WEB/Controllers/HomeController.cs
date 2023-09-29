@@ -191,7 +191,7 @@ namespace Aephy.WEB.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    return ex.Message + ex.InnerException;
                 }
             }
 
@@ -346,7 +346,7 @@ namespace Aephy.WEB.Controllers
             }
             catch (Exception ex)
             {
-
+                return ex.Message + ex.InnerException;
             }
             return "";
         }
@@ -363,8 +363,6 @@ namespace Aephy.WEB.Controllers
             {
                 throw ex;
             }
-
-            return "";
         }
 
         [HttpPost]
@@ -2423,6 +2421,21 @@ namespace Aephy.WEB.Controllers
             return contractCount;
         }
 
+        //GetActiveProjectInvoices
+        [HttpGet]
+        public async Task<string> GetActiveProjectInvoices()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetActiveProjectInvoices", HttpMethod.Post, model);
+            return projectData;
+
+        }
 
     }
 }

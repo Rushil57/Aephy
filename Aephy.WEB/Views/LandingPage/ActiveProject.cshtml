@@ -20,38 +20,21 @@
                                 <div class="col-0 col-sm-auto order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
                                     <div class="row m-lg-2 d-flex justify-content-center align-center RButtons">
                                         <div class="col-6 d-flex justify-content-center">
-                                            <input type="radio" name="preferOptionmobile" label="Select Project" value="select" checked />
-                                        </div>
-                                        <div class="col-6 d-flex justify-content-center">
-                                            <input type="radio" name="preferOptionmobile" label="Customize Project" value="customize" onclick="OpenCustomisePopUp()"/>
+                                            <label class="project-progress"></label>
                                         </div>
                                     </div>
                                     <div class="row m-lg-2 pt-4">
-                                        <h5 class="section-detail-size">
-                                            Select size and approximate price
+                                        <h5 class="section-detail-size" style="text-align:center;">
+                                              Project Price & Size
                                             &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
                                         </h5>
                                     </div>
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
                                         <div class="col-4">
-                                            <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked/>
-                                                <h4>Small</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
-                                            </label>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="medium"/>
-                                                <h4>Medium</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
-                                            </label>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="radio-inline" style="text-align:center;">
-                                                <input class="form-check-input" type="radio" name="projSizemobile" value="large"/>
-                                                <h4>Large</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
+                                        <label class="radio-inline" style="text-align:center;">
+                                                <input class="form-check-input" type="radio"  id="solution-fund-radio-check" />
+                                                <h4 class="projectfund-projecttype"></h4>
+                                                <h5 style="opacity:0.5;" class="cls-projectPrice"></h5>
                                             </label>
                                         </div>
                                     </div>
@@ -71,8 +54,9 @@
 
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div style="text-align: center;font-size: 16px;display: flex;width: 100%;">
-                                        <input type="submit" name="btnBuy" value="Initiate Contract" class="btn btn-brand" style="width: 50%;" onclick="ProjectInitiated()" id="btn-contract">
-                                        <a class="btn btn-brand ms-lg-3" href="#" style="font-size: 16px;width: 50%;">Message</a>
+                                             <a data-toggle="popover" class="checkout-popover btn btn-brand cls-fundPopOver" data-open-accessibility-text-original="16px" style="font-size: 16px;width: 45%;">Fund</a>
+                                            <button type="button" class="btn btn-brand cls-fundProgress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;display:none;"></button>
+                                            <button type="button" class="btn btn-brand cls-solutionDetails" style="width:45%;" onclick="CheckEvent()"></button>
                                         </div>
                                     </div>
                                 </div>
@@ -247,7 +231,7 @@
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center" style="width:63% !important">
-                                <label id="project-progress"></label>
+                                <label class="project-progress"></label>
                             </div>
                         </div>
                         <div class="row m-lg-2 pt-4">
@@ -261,8 +245,8 @@
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio"  id="solution-fund-radio-check" />
-                                    <h4 id="projectfund-projecttype"></h4>
-                                    <h5 style="opacity:0.5;" id="projectfund-projectprice"></h5>
+                                    <h4 class="projectfund-projecttype"></h4>
+                                    <h5 style="opacity:0.5;" id="projectfund-projectprice" class="cls-projectPrice"></h5>
                                 </label>
                             </div>
 
@@ -282,9 +266,9 @@
                         </div> 
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;width: 100%;display:flex">
-                                <a data-toggle="popover" class="checkout-popover btn btn-brand" data-open-accessibility-text-original="16px" style="font-size: 16px;width: 45%;" id="fundPopOver">Fund</a>
-                                <button type="button" class="btn btn-brand" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;display:none;"></button>
-                                <button type="button" class="btn btn-brand" id="solutionfund-details" style="width:45%;" onclick="CheckEvent()"></button>
+                                <a data-toggle="popover" class="checkout-popover btn btn-brand cls-fundPopOver" data-open-accessibility-text-original="16px" style="font-size: 16px;width: 45%;">Fund</a>
+                                <button type="button" class="btn btn-brand cls-fundProgress" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;display:none;"></button>
+                                <button type="button" class="btn btn-brand cls-solutionDetails" id="solutionfund-details" style="width:45%;" onclick="CheckEvent()"></button>
                             </div>
                         </div>
                     </div>
@@ -968,9 +952,9 @@
                        return;
                    }             
                    if(result.Message == "NoFurtherMileStone"){
-                       $("#solutionfund-furtherprogress").text('Project Completed');
+                       $(".cls-fundProgress").text('Project Completed');
                        DisabledSolutionFurtherProgressButton();
-                       $("#project-progress").html("Project Completed");
+                       $(".project-progress").html("Project Completed");
                         DisabledSolutionDetailsButton();
                        $("#preloader").hide();
                        return;
@@ -979,9 +963,9 @@
                         showToaster("success", "Success !", result.Message);
                          $("#preloader").hide();
                          if(result.Result.FundType == 1){
-                            $("#solutionfund-furtherprogress").text('Project Completed');
+                            $(".cls-fundProgress").text('Project Completed');
                             DisabledSolutionFurtherProgressButton()
-                            $("#project-progress").html("Project Completed");
+                            $(".project-progress").html("Project Completed");
                             DisabledSolutionDetailsButton()
                             $("#preloader").hide();
                             return;
@@ -989,8 +973,8 @@
                          else{
                               if(result.Result.IsTransfer)
                                 {
-                                    $("#solutionfund-furtherprogress").removeClass('disabled');
-                                    $("#solutionfund-furtherprogress").css("color","white");
+                                    $(".cls-fundProgress").removeClass('disabled');
+                                    $(".cls-fundProgress").css("color","white");
                                     setTimeout(function () {
                                          $("#solutionFundId").val(0);
                                            ProjectInitiated(false,true);
@@ -1024,39 +1008,39 @@
           var projectType = data.ProjectType;
           projectType =  projectType.split(' ').map(projectType => projectType.charAt(0).toUpperCase() + projectType.slice(1).toLowerCase()).join(' ');
 
-          $("#projectfund-projecttype").html(projectType)
-          $("#projectfund-projectprice").html("$" + data.ProjectPrice)
+          $(".projectfund-projecttype").html(projectType)
+          $(".cls-projectPrice").html("$" + data.ProjectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
-              $("#solutionfund-details").text('Stop Project');
+              $(".cls-solutionDetails").text('Stop Project');
               fundDecided = fundDecided + 1;
 
                if(data.FundType == 1){
-                   $("#solutionfund-furtherprogress").text("Fund Project " + fundDecided);
+                   $(".cls-fundProgress").text("Fund Project " + fundDecided);
 
                    var total = fundDecided - 1;
                    if(total == 0){
                         var status = data.ProjectStatus
                         status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
 
-                        $("#project-progress").html("Project " + status)
+                        $(".project-progress").html("Project " + status)
                    }
                }
                if(data.FundType == 0){
                      if(fundDecided > 0 ){
                          var total = fundDecided - 1
-                          $("#solutionfund-furtherprogress").show();
-                          $("#fundPopOver").hide();
-                          $("#solutionfund-furtherprogress").text("Fund Milestone " + fundDecided)
-                          $("#project-progress").html("Milestone " + total + " is Completed")
-                          $("#projectfund-projectprice").html("$" + NextMilestonePrice)
+                          $(".cls-fundProgress").show();
+                          $(".cls-fundPopOver").hide();
+                          $(".cls-fundProgress").text("Fund Milestone " + fundDecided)
+                          $(".project-progress").html("Milestone " + total + " is Completed")
+                          $(".cls-projectPrice").html("$" + NextMilestonePrice)
                       }else{
-                          $("#fundPopOver").show();
-                          $("#solutionfund-furtherprogress").hide();
+                          $(".cls-fundPopOver").show();
+                          $(".cls-fundProgress").hide();
                             var status = data.ProjectStatus
                             status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
-                            $("#project-progress").html("Project " + status)
+                            $(".project-progress").html("Project " + status)
 
                       }
 
@@ -1068,22 +1052,22 @@
 
            if(data.ProjectStatus == "COMPLETED"){
 
-               $("#fundPopOver").hide();
-               $("#solutionfund-furtherprogress").show();
+               $(".cls-fundPopOver").hide();
+               $(".cls-fundProgress").show();
 
               if(data.FundType == 1)
               {
                      if(IsFundCompleted)
                      {
-                          $("#solutionfund-furtherprogress").text('Project Completed');
+                          $(".cls-fundProgress").text('Project Completed');
                           DisabledSolutionFurtherProgressButton();
-                          $("#project-progress").html("Project Completed");
+                          $(".project-progress").html("Project Completed");
                           DisabledSolutionDetailsButton();
                      }
                     else
                       {
-                        $("#solutionfund-furtherprogress").text("Pay Project");
-                        $("#project-progress").html("Project is in Progress");
+                        $(".cls-fundProgress").text("Pay Project");
+                        $(".project-progress").html("Project is in Progress");
                          if(IsProjectStop){
                              DisabledSolutionFurtherProgressButton()
                              DisabledSolutionDetailsButton();
@@ -1096,9 +1080,9 @@
               {
                 if(IsFundCompleted)
                    {
-                     $("#solutionfund-furtherprogress").text('Project Completed');
+                     $(".cls-fundProgress").text('Project Completed');
                      DisabledSolutionFurtherProgressButton();
-                     $("#project-progress").html("Project Completed");
+                     $(".project-progress").html("Project Completed");
                      DisabledSolutionDetailsButton();
                    }
                 else
@@ -1110,14 +1094,14 @@
                             DisabledSolutionDetailsButton();
                          }
                      }
-                        $("#solutionfund-furtherprogress").text("Pay Milestone " + fundDecided);
-                        $("#project-progress").html("Milestone " + fundDecided + " is in Progress");
+                        $(".cls-fundProgress").text("Pay Milestone " + fundDecided);
+                        $(".project-progress").html("Milestone " + fundDecided + " is in Progress");
                    }
                        
               }
-               $("#solutionfund-details").text('Raise a Dispute');
+               $(".cls-solutionDetails").text('Raise a Dispute');
                if(data.IsDispute){
-                    $("#solutionfund-furtherprogress").addClass('disabled');
+                    $(".cls-fundProgress").addClass('disabled');
                     $("#solutionfund-projectPay").addClass('disabled');
                     $(".btn.disabled").css("background-color", "var(--brand)");
                     $(".btn.disabled").css("color","black");
@@ -1152,9 +1136,9 @@
                 success: function (result) {
                     if(result.Message == "Dispute Raised"){
                         showToaster("success", "Success", result.Message);
-                        $("#solutionfund-furtherprogress").css("cursor","not-allowed");    
+                        $(".cls-fundProgress").css("cursor","not-allowed");    
                         
-                            $("#solutionfund-furtherprogress").addClass('disabled');
+                            $(".cls-fundProgress").addClass('disabled');
                            
                             $(".btn.disabled").css("background-color", "var(--brand)");
                              $(".btn.disabled").css("color","black");
@@ -1502,14 +1486,14 @@
     }
 
      function DisabledSolutionFurtherProgressButton(){
-         $("#solutionfund-furtherprogress").addClass('disabled');
-         $("#solutionfund-furtherprogress").css("background-color", "var(--brand)");
-         $("#solutionfund-furtherprogress").css("color","black");
+         $(".cls-fundProgress").addClass('disabled');
+         $(".cls-fundProgress").css("background-color", "var(--brand)");
+         $(".cls-fundProgress").css("color","black");
      }
 
      function DisabledSolutionDetailsButton(){
-       $("#solutionfund-details").addClass('disabled');
-       $("#solutionfund-details").css("background-color", "var(--brand)");
-       $("#solutionfund-details").css("color","black"); 
+       $(".cls-solutionDetails").addClass('disabled');
+       $(".cls-solutionDetails").css("background-color", "var(--brand)");
+       $(".cls-solutionDetails").css("color","black"); 
      }
 </script>

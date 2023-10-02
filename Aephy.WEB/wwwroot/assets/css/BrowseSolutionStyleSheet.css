@@ -462,3 +462,8 @@ h6 {
             color: #fff;
             background: var(--brand);
         }
+
+.modal label.error {
+    color: #ff0000a6 !important;
+    margin: 0px !important;
+}

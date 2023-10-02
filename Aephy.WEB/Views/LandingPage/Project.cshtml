@@ -38,21 +38,21 @@
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Small</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
+                                                <h5 style="opacity:0.5;" class="cls-smallProjectprice"></h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="medium" onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Medium</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
+                                                <h5 style="opacity:0.5;" class="cls-mediumProjectprice"></h5>
                                             </label>
                                         </div>
                                         <div class="col-4">
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="large" onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Large</h4>
-                                                <h5 style="opacity:0.5;">$-</h5>
+                                                <h5 style="opacity:0.5;" class="cls-largeProjectprice"></h5>
                                             </label>
                                         </div>
                                     </div>
@@ -449,21 +449,21 @@
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                     <h4>Small</h4>
-                                    <h5 style="opacity:0.5;" id="small-projectPrice"></h5>
+                                    <h5 style="opacity:0.5;" id="small-projectPrice" class="cls-smallProjectprice"></h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="medium" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Medium</h4>
-                                    <h5 style="opacity:0.5;" id="medium-projectPrice"></h5>
+                                    <h5 style="opacity:0.5;" id="medium-projectPrice" class="cls-mediumProjectprice"></h5>
                                 </label>
                             </div>
                             <div class="col-4">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Large</h4>
-                                    <h5 style="opacity:0.5;" id="large-projectPrice"></h5>
+                                    <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectprice"></h5>
                                 </label>
                             </div>
                         </div>
@@ -1363,10 +1363,10 @@
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  TotalMilestoneDays;
                              countPricing += freelancerPriceCount
                          });   
-                         $("#small-projectPrice").html("$" + countPricing);
+                         $(".cls-smallProjectprice").html("$" + countPricing);
                     }
                     else{
-                        $("#small-projectPrice").html("$" + countPricing);
+                        $(".cls-smallProjectprice").html("$" + countPricing);
                     }  
                 }
                 // small project price counting
@@ -1383,10 +1383,10 @@
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  MediumTotalMilestoneDays;
                              countPricing += freelancerPriceCount
                          });   
-                         $("#medium-projectPrice").html("$" + countPricing);
+                         $(".cls-mediumProjectprice").html("$" + countPricing);
                     }
                     else{
-                         $("#medium-projectPrice").html("$" + countPricing);
+                         $(".cls-mediumProjectprice").html("$" + countPricing);
                     }
                }
                // medium project price counting
@@ -1404,23 +1404,23 @@
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  LargeTotalMilestoneDays;
                              countPricing += freelancerPriceCount
                          });
-                           $("#large-projectPrice").html("$" + countPricing);
+                           $(".cls-largeProjectprice").html("$" + countPricing);
                     }
                     else{
-                      $("#large-projectPrice").html("$" + countPricing);
+                      $(".cls-largeProjectprice").html("$" + countPricing);
                     }
                 }
                 // large project price counting
          })
 
          if(IsSmallPriceAvailable == false){
-             $("#small-projectPrice").html("$0");
+             $(".cls-smallProjectprice").html("$0");
          }
          if(IsMeduimPriceAvailable == false){
-             $("#medium-projectPrice").html("$0");
+             $(".cls-mediumProjectprice").html("$0");
          }
          if(IsLargePriceAvailable == false){
-              $("#large-projectPrice").html("$0");
+              $(".cls-largeProjectprice").html("$0");
          }
 
     }

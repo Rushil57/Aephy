@@ -1641,7 +1641,7 @@ progress::-webkit-progress-value {
     display: flex !important
 }
 
-#project-progress {
+.project-progress {
     cursor: pointer;
     border-radius: 20px;
     padding: 9px 10px;

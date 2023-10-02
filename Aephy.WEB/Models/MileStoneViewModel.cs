@@ -49,6 +49,7 @@
         public int? pageNumber { get; set; }
 
         public int SolutionFundId { get; set; }
+        public string? SolutionName { get; set; }
     }
 
     public class SolutionIndustryDetailsViewModel

@@ -269,6 +269,8 @@ namespace Aephy.API.Models
             public int? pageNumber { get; set; }
 
             public int SolutionFundId { get; set; }
+
+            public string? SolutionName { get; set; }
         }
 
         public class MileStoneDetailsViewModel

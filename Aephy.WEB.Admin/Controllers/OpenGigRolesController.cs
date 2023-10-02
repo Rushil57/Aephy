@@ -219,7 +219,7 @@ namespace Aephy.WEB.Admin.Controllers
             }
             catch (Exception ex)
             {
-
+                return ex.Message + ex.InnerException;
             }
 
 

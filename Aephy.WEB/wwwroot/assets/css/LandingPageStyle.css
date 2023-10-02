@@ -1944,3 +1944,8 @@ padding-top: 5%;
         display:none !important;
     }
 }
+
+.cls-navicon{
+    font-size:15px !important;
+    cursor: pointer;
+}

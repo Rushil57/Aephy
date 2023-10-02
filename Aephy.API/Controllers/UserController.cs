@@ -17,7 +17,7 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
 
         CommonMethod common;
-        public UserController(UserManager<ApplicationUser> userManager, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, AephyAppDbContext dbContext)
+        public UserController(UserManager<ApplicationUser> userManager, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -181,8 +181,6 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var oldFilename = "";
-                bool isfileChange = false;
                 var user = await _userManager.FindByIdAsync(model.Id.Trim());
                 if (user != null)
                 {

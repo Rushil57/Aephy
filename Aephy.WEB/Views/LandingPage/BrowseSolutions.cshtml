@@ -15,7 +15,7 @@
                 </h3>
             </div>
             <div class="row gy-4 mt-4 d-flex" style="background-color:#f5f5f5; border-radius:10px;">
-                <div class="col-12 d-block my-2 columnDdl">
+                <div class="col-12 d-block my-2 columnDdl" id="columnDdl" data-is-searched="false">
                     <select class="dropdown btn-dropdown cls-Services" name="service" id="select-services" onchange="GetTopServicesValues(false,1,false)">
                         <option value="All">All Services</option>
                     </select>
@@ -51,7 +51,8 @@
             </div>
             @* <a style="display:none" class="cls-more-less" id="solution-moreinfo" onclick="BindAllSolutionsList()">View More <i class="bi bi-triangle-fill more-less-icon" id="browse-viewmoreIcon"></i></a>
             <a style="display:none" class="cls-more-less" id="solution-lessinfo" onclick="BindSolutionsList()">View Less <i class="bi bi-triangle-fill more-less-icon" id="browse-viewlessIcon"></i></a>
- *@        </div>
+            *@
+        </div>
     </section>
 
     <!-- Modal -->
@@ -200,7 +201,7 @@
             success: function (result) {
                 $.each(result.Result, function (data, value) {
                     $(".cls-Services").append($("<option     />").val(value.Id).text(value.ServicesName));
-                })     
+                })
                 SetServiceValue()
                 $('#preloader').hide();
             },
@@ -271,23 +272,34 @@
         });
     }
 
-    function changePagination(page){
+    function changePagination(page) {
         var pageNumber = page;
         var ServiceId = $("#select-services").val();
         var SolutionId = $("#select-solutions").val();
         var IndustryId = $("#select-industries").val();
-        if (ServiceId == "All" && SolutionId == "All" && IndustryId == "All") {
-            changeSolutionsListByPagination(pageNumber);
-            //BindTopPopularSolutionsList(pageNumber);
-        }
-        else if (ServiceId != "All" && SolutionId == "All") {
-            GetTopServicesValues(false, pageNumber, true);
-        }
-        else if (ServiceId != "All" && SolutionId != "All") {
-            GetSolutionValues(false, pageNumber, true);
-        }
-        else {
-            changeSolutionsListByPagination(pageNumber);
+        var IsSolutionSearched = $('#columnDdl').data('isSearched');
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var solutionName = urlParams.get('solution');
+        if (solutionName != undefined && solutionName != "" && solutionName != null && IsSolutionSearched) {
+            //var isRecordSearch = urlParams.get('isRecordSearch');
+            //if (isRecordSearch == 0 && isRecordSearch != null && ServiceId == "All" && SolutionId == "All" && IndustryId == "All") {
+            filterSolutionManually(solutionName, pageNumber);
+            //}
+        } else {
+            if (ServiceId == "All" && SolutionId == "All" && IndustryId == "All") {
+                changeSolutionsListByPagination(pageNumber);
+                //BindTopPopularSolutionsList(pageNumber);
+            }
+            else if (ServiceId != "All" && SolutionId == "All") {
+                GetTopServicesValues(false, pageNumber, true);
+            }
+            else if (ServiceId != "All" && SolutionId != "All") {
+                GetSolutionValues(false, pageNumber, true);
+            }
+            else {
+                changeSolutionsListByPagination(pageNumber);
+            }
         }
     }
 
@@ -324,7 +336,7 @@
                             $('.pagination').show();
                             createPagination(totalPages, 1);
                         }
-                        else{
+                        else {
                             $('.pagination').hide();
                         }
                         $(".cls-temp").remove()
@@ -394,43 +406,44 @@
             solutionSection += '</div></div>' +
                 '<div class="card-footer">' +
                 '<div class="like">';
-            if (solutiondata[data].IsProjectSaved){
+            if (solutiondata[data].IsProjectSaved) {
                 solutionSection += '<i class="bi bi-heart-fill solution-saved" onclick=UnSaveSolutionProject(' + value.Id + ') style="color: var(--brand);"> </i>';
-            }else{
+            } else {
                 solutionSection += '<i class="bi bi-heart solution-saved" onclick=SaveSolutionProject(' + value.Id + ')> </i>';
             }
-                
-                solutionSection += '</div>' +
+
+            solutionSection += '</div>' +
                 '</div>' +
                 '</div></div>';
         })
         $('#solution-Section').html(solutionSection);
         if ('@Context.Session.GetString("LoggedUserRole")' != "Client") {
-          $(".card-footer").hide()
+            $(".card-footer").hide()
             $(".icon-image").css("margin-bottom", "27px")
         }
     }
 
-    function GetSolutionValues(value,pageNumber,isPageChanged) {
+    function GetSolutionValues(value, pageNumber, isPageChanged) {
         var SolutionId;
         var page_Number = 1;
-        if(isPageChanged){
+        if (isPageChanged) {
             page_Number = pageNumber;
         }
         if (value) {
             SolutionId = $("#confirm-solutions").val()
         }
         else {
-            SolutionId = $("#select-solutions").val()
+            SolutionId = $("#select-solutions").val();
+            $('#columnDdl').data('isSearched', false);
         }
 
         if (SolutionId == "All") {
-            GetTopServicesValues(false,1,false)
+            GetTopServicesValues(false, 1, false)
             return
         }
         var data = {
             Id: SolutionId,
-            pageNumber:page_Number
+            pageNumber: page_Number
         }
         $("#preloader").show();
         $.ajax({
@@ -449,9 +462,9 @@
                         var totalPages = result.Result.PageCount;
                         if (totalPages > 1) {
                             $('.pagination').show();
-                            createPagination(totalPages,page_Number);
+                            createPagination(totalPages, page_Number);
                         }
-                        else{
+                        else {
                             $('.pagination').hide();
                         }
                     }
@@ -477,9 +490,17 @@
         var serviceName = urlParams.get('service');
         if (serviceName != undefined) {
             $("#select-services option:contains('" + serviceName + "')").attr('selected', 'selected');
-            setTimeout(function () {
-                GetTopServicesValues(false,1,false)
-            }, 2000);
+            var selectedSolution = $("#select-services").val();
+            if (selectedSolution != "All") {
+                setTimeout(function () {
+                    GetTopServicesValues(false, 1, false)
+                }, 2000);
+            } else {
+                $("#solution-Section").html("")
+                $(".cls-temp").remove()
+                $("<p class='cls-temp'>No Data Available</p>").insertAfter("#solution-Section");
+                $(".cls-temp").css("fontSize", "16px");
+            }
         }
         $("#preloader").hide();
     }
@@ -487,19 +508,94 @@
         $("#preloader").show();
         var urlParams = new URLSearchParams(window.location.search);
         var solutionName = urlParams.get('solution');
-        if (solutionName != undefined) {
-            $("#select-solutions option:contains('" + solutionName + "')").attr('selected', 'selected');
-            setTimeout(function () {
-                GetSolutionValues(false, 1, false)
-            }, 2000);
+        if (solutionName != undefined && solutionName != "" && solutionName != null) {
+            $('#columnDdl').data('isSearched', true);
+            filterSolutionManually(solutionName, 1);
         }
+        //if (solutionName != undefined && solutionName != "" && solutionName != null) {
+        //var isRecordSearch = urlParams.get('isRecordSearch');
+        //if (isRecordSearch != 0 || isRecordSearch == "" || isRecordSearch == null || isRecordSearch == undefined) {
+        //$("#select-solutions option:contains('" + solutionName + "')").attr('selected', 'selected');
+        //var selectedSolution = $("#select-solutions").val();
+        //if (selectedSolution != "All") {
+        //  setTimeout(function () {
+        //       GetSolutionValues(false, 1, false)
+        //   }, 2000);
+        //} else {
+        // $("#solution-Section").html("")
+        // $(".cls-temp").remove()
+        // $("<p class='cls-temp'>No Data Available</p>").insertAfter("#solution-Section");
+        //  $(".cls-temp").css("fontSize", "16px");
+        //}
+        //}else{
+        //    filterSolutionManually(solutionName,1);
+        //}
+        //} else {
+        // filterSolutionManually(solutionName,1);
+        //}
         $("#preloader").hide();
     }
 
     $('.close').on('click', function () {
         $('#confirmationModal').modal('hide');
-        BindSolutionsList()
+        //BindSolutionsList()
     });
+
+    function filterSolutionManually(solutionName, pageNumber) {
+        var Solution = solutionName;
+        var page_Number = 1;
+        page_Number = pageNumber;
+        //if (isPageChanged) {
+        //    page_Number = pageNumber;
+        //}
+        //SolutionId = $("#select-solutions").val();
+        var data = {
+            SolutionName: Solution,
+            pageNumber: page_Number
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("filterSolutionBySolutionName", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                var data = result.Result.SolutionData;
+                if (result.Result.TotalCount != 0) {
+                    $("#solution-Section").html("")
+                    BindSolutionSection(data)
+                    var totalPages = result.Result.PageCount;
+                    if (totalPages > 1) {
+                        $('.pagination').show();
+                        createPagination(totalPages, page_Number);
+                    }
+                    else {
+                        $('.pagination').hide();
+                    }
+                    $(".cls-Industries option:not(:first)").remove()
+                    $.each(result.Result.IndustriesData, function (datas, values) {
+                        $(".cls-Industries").append($("<option     />").val(values.Id).text(values.IndustryName));
+                    });
+                }
+                else {
+                    $("#solution-Section").html("")
+                    $(".cls-temp").remove()
+                    $("<p class='cls-temp'>No Data Available</p>").insertAfter("#solution-Section");
+                    $(".cls-temp").css("fontSize", "16px");
+                    $('.pagination').hide();
+                }
+                $("#solution-lessinfo").css("display", "none");
+                $("#solution-moreinfo").css("display", "none");
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                alert("failure");
+            }
+        });
+    }
 
     function BindTopPopularSolutionsList() {
         $("#preloader").show();
@@ -554,7 +650,7 @@
                     if (totalPages > 1) {
                         $('.pagination').show();
                         createPagination(totalPages, page_Number);
-                    }else{
+                    } else {
                         $('.pagination').hide();
                     }
                 }
@@ -572,7 +668,7 @@
         });
     }
 
-    function GetTopServicesValues(value,pageNumber,isPageChanged) {
+    function GetTopServicesValues(value, pageNumber, isPageChanged) {
         var page_Number = 1;
         if (isPageChanged) {
             page_Number = pageNumber;
@@ -583,6 +679,7 @@
         }
         else {
             ServiceId = $("#select-services").val()
+            $('#columnDdl').data('isSearched', false);
         }
         if (ServiceId == "All") {
             ServiceId = 0;
@@ -609,7 +706,7 @@
                         if (totalPages > 1) {
                             $('.pagination').show();
                             createPagination(totalPages, page_Number);
-                        }else{
+                        } else {
                             $('.pagination').hide();
                         }
                         $(".cls-temp").remove()
@@ -649,7 +746,7 @@
     function BindSolutionsList() {
         var ServiceId = $("#select-services").val()
         if (ServiceId != "All") {
-            GetTopServicesValues(false,1,false)
+            GetTopServicesValues(false, 1, false)
         }
         else {
             BindTopPopularSolutionsList();
@@ -660,7 +757,7 @@
     function BindAllSolutionsList() {
         var ServiceId = $("#select-services").val()
         if (ServiceId != "All") {
-            GetServicesValues(false,1,false)
+            GetServicesValues(false, 1, false)
         }
         else {
             BindPopularSolutionsList()
@@ -690,8 +787,8 @@
         });
     }
 
-    function UnSaveSolutionProject(id){
-           var data = {
+    function UnSaveSolutionProject(id) {
+        var data = {
             SolutionId: id,
         }
         $("#preloader").show();

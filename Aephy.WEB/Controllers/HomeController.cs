@@ -2437,5 +2437,77 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        //GetArchivesProject
+        [HttpGet]
+        public async Task<string> GetArchivesProject()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetArchivesProject", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
+        [HttpPost]
+        public async Task<string> filterSolutionBySolutionName([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    userId = "";
+                }
+                model.UserId = userId;
+                var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/filterSolutionBySolutionName", HttpMethod.Post, model);
+                dynamic data = JsonConvert.DeserializeObject(solutionData);
+                try
+                {
+                    if (data.Result != null)
+                    {
+                        foreach (var service in data.Result.SolutionData)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        //GetFreelancerArchivesProject
+        [HttpGet]
+        public async Task<string> GetFreelancerArchivesProject()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerArchivesProject", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
     }
 }

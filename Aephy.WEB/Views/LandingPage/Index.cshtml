@@ -25,7 +25,7 @@
 
                     <form class="form-search d-flex align-items-stretch mb-3 mt-4" data-aos="fade-up" data-aos-delay="200" name="solutionSearchForm"> 
                         <input type="text" name="searchText" id="searchText" class="form-control dropdown" placeholder='Try "Chatbots"' autocomplete="off" data-solution-search> <!--data-bs-toggle="dropdown"-->
-                        <ul class="dropdown-menu dropdown-menu-end mt-5" id="search-list">
+                        <ul class="dropdown-menu dropdown-menu-end mt-5 position-fixed" id="search-list" style="height:150px; overflow:hidden; overflow-y:scroll;">
                             @* <li class="dropdown-item">
                                 <div data-solution-item data-solution-name="ai roadmap development" class="search-item">AI Roadmap Development</div>
                             </li>*@
@@ -443,10 +443,14 @@
                             '</div>' +
                             '</div>';
 
-                        searchList += '<li class="dropdown-item">' + 
-                            '<div data-solution-item data-solution-name="' + title.toLowerCase() + '" class="search-item" onclick="setToSearch(' + "'" + title + "'" + ');">' + title + '</div>' +
-                                '</li>';
-                    })
+                      
+                    });
+                    $.each(data, function (data, value) {
+                    var title = value.Title.length > 50 ? value.Title.substring(0, 50) + "..." : value.Title;
+                    searchList += '<li class="dropdown-item">' +
+                        '<div data-solution-item data-solution-name="' + title.toLowerCase() + '" class="search-item" onclick="setToSearch(' + "'" + title + "'" + ');">' + title + '</div>' +
+                        '</li>';
+                    });
                     $('#ai-Section').html(popularAiSection);
                     $('.carousel-item').first().addClass('active');
                     $('.carousel-indicators > li').first().addClass('active');

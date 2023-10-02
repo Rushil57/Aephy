@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3 d-flex justify-content-center">
+                                   @* <div class="row mb-3 d-flex justify-content-center">
                                         <label for="minLevel" class="col-md-4 col-lg-5 col-form-label">Project Manager / Project Architect</label>
                                         <input name="LevelID" type="text" class="form-control d-none" value="0">
                                         <div class="col-3">
@@ -102,7 +102,7 @@
                                             <input name="maxLevel" id="maxLevel1" type="text" class="form-control">
                                             <label class="error required-error">This field is required.</label>
                                         </div>
-                                    </div>
+                                    </div>*@
 
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary px-4">Save</button>
@@ -226,19 +226,22 @@
                 if(size > 0){
                     for(res = 0; res < size; res++){
                         var item = result.Result[res];
-                        var level = res+1;
-                        htm += '<div class="row mb-3 d-flex justify-content-center">';
-                        htm += '<label class= "col-md-4 col-lg-5 col-form-label">' + item.Level + '</label>';
-                        htm += '<input name = "LevelID" type = "text" class="form-control d-none" value = "'+item.ID+'" id = "architect_LevelID">';
-                        htm += '<div class="col-3">';
-                        htm += '<input name="minLevel" id="minLevel'+level+'" type = "text" class="form-control" value="'+item.minLevel+'" id = "architect_minLevel">';
-                        htm += '<label class="error required-error">This field is required.</label>';
-                        htm += '</div>';
-                        htm += '<div class="col-3">';
-                        htm += '<input name="maxLevel"  id="maxLevel' + level + '" type = "text" class="form-control" value="' + item.maxLevel + '" id = "architect_maxLevel">';
-                        htm += '<label class="error required-error">This field is required.</label>';
-                        htm += '</div>';
-                        htm += '</div>';
+                        if (item.Level != "Project Manager / Project Architect"){
+                            var level = res + 1;
+                            htm += '<div class="row mb-3 d-flex justify-content-center">';
+                            htm += '<label class= "col-md-4 col-lg-5 col-form-label">' + item.Level + '</label>';
+                            htm += '<input name = "LevelID" type = "text" class="form-control d-none" value = "' + item.ID + '" id = "architect_LevelID">';
+                            htm += '<div class="col-3">';
+                            htm += '<input name="minLevel" id="minLevel' + level + '" type = "text" class="form-control" value="' + item.minLevel + '" id = "architect_minLevel">';
+                            htm += '<label class="error required-error">This field is required.</label>';
+                            htm += '</div>';
+                            htm += '<div class="col-3">';
+                            htm += '<input name="maxLevel"  id="maxLevel' + level + '" type = "text" class="form-control" value="' + item.maxLevel + '" id = "architect_maxLevel">';
+                            htm += '<label class="error required-error">This field is required.</label>';
+                            htm += '</div>';
+                            htm += '</div>';
+                        }
+                       
                     }
                     htm += '<div class="text-end">';
                     htm += '<button type="submit" class="btn btn-primary px-4"> Save </button>';

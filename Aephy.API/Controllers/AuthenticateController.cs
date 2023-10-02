@@ -19,7 +19,7 @@ namespace Aephy.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnv;
+        private Microsoft.AspNetCore.Hosting.IWebHostEnvironment _hostingEnv;
         CommonMethod common;
         private readonly AephyAppDbContext _db;
 
@@ -27,7 +27,7 @@ namespace Aephy.API.Controllers
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
-            Microsoft.AspNetCore.Hosting.IHostingEnvironment env, AephyAppDbContext dbContext)
+            Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -111,11 +111,11 @@ namespace Aephy.API.Controllers
                 {
                     strError = "User does not exists with this email address";
                 }
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = !string.IsNullOrEmpty(strError) ? strError : "Something Went Wrong" });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = !string.IsNullOrEmpty(strError) ? strError : "Something Went Wrong" });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong" });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = ex.Message + ex.InnerException });
             }
         }
 

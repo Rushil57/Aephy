@@ -329,6 +329,28 @@
 
                         </div>
                     </div>
+
+                     <div class="col-12" id="ArchivesProject">
+                        <div class="card recent-sales overflow-auto">
+                            <div class="card-body">
+                                <h5 class="card-title">Archived Project</h5>
+                                <table class="table datatable" id="ArchieveTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Solution Title</th>
+                                            <th scope="col">Industry Name</th>
+                                            <th scope="col">MilestoneName</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div><!-- End Left side columns -->
             <!-- Right side columns -->
@@ -1988,17 +2010,20 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 GetSavedProjects();
                 GetClientActiveProjectList();
                 GetActiveProjectInvoices();
+                 GetClientArchivesProject();
             }else{
                 GetFreelancerActiveProjectList();
                 $("#savedProjects").hide();
                 $("#ActiveProjectInvoices").hide();
+                GetFreelancerArchivesProject();
             }
 
             $('.news_card').hide();
             BindProjects();
             InvokeOpenRoles();
             InvokeApprovedList();
-            GetApprovedList()
+            GetApprovedList();
+           
      });
     function SubmitFreelancerFeedback(){
 
@@ -3638,6 +3663,99 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 
         function CloseInvoiceGridPopUp(){
             $("#InvoiceGridPopUpModal").modal('hide');
+        }
+
+        function GetClientArchivesProject(){
+             $("#preloader").show();
+                 $.ajax({
+                type: "Get",
+                url: "@Url.Action("GetArchivesProject", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if(result.Result.length!=0){
+                         var archivesData = result.Result
+                          var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = archivesData.length;
+                        if(resultLength > 0){
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = archivesData[index];
+                                if(subObj.MileStoneTitle == null){
+                                    subObj.MileStoneTitle = ""
+                                }
+
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.Title + '</td>';
+                                htm += '<td>' + subObj.Industries + '</td>';
+                                htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#ArchieveTable").find("tr:gt(0)").remove();
+                        $("#ArchieveTable tbody").append(htm);
+                        $(".cls-archive-temp").hide();
+                    }
+                    else{
+                                $(".cls-archive-temp").remove();
+                                $( "<p class='cls-archive-temp'>No Data Available</p>" ).insertAfter("#ArchieveTable");
+                   }
+                   $("#preloader").hide();
+               },
+                error: function (result) {
+                    showToaster("error", "Error !", result);
+                    $("#preloader").hide();
+                }
+            });
+        }
+
+        function GetFreelancerArchivesProject(){
+                $("#preloader").show();
+          $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetFreelancerArchivesProject", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+               if(result.Result.length!=0){
+                         var archivesData = result.Result
+                          var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = archivesData.length;
+                        if(resultLength > 0){
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = archivesData[index];
+                                if(subObj.MileStoneTitle == null){
+                                    subObj.MileStoneTitle = ""
+                                }
+
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.Title + '</td>';
+                                htm += '<td>' + subObj.Industries + '</td>';
+                                htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#ArchieveTable").find("tr:gt(0)").remove();
+                        $("#ArchieveTable tbody").append(htm);
+                        $(".cls-archive-temp").hide();
+                    }
+                    else{
+                                $(".cls-archive-temp").remove();
+                                $( "<p class='cls-archive-temp'>No Data Available</p>" ).insertAfter("#ArchieveTable");
+                   }
+                   $("#preloader").hide();
+                   
+                $("#preloader").hide();
+               
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+                $("#preloader").hide();
+            }
+        });
         }
 
 </script>

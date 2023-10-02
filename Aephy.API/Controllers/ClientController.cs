@@ -1880,8 +1880,11 @@ namespace Aephy.API.Controllers
                                         taxtransferamount = clienttransfer.Amount;
                                     }
                                 }
-
                                 //REFUND TAX TO CLIENT SECTION
+
+                                //CALCULATE STRIPE FEE SECTION
+                                //var stripeFeeDetails = _stripeAccountService.GetStripeFeedetails(contract.PaymentIntentId);
+                                //CALCULATE STRIPE FEE SECTION
                                 contract.LatestChargeId = paymentIntent.LatestChargeId;
                                 contract.PaymentStatus = Contract.PaymentStatuses.Paid;
                                 contract.TaxId = taxIdValue;
@@ -2619,6 +2622,127 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Data Not Found",
             });
+        }
+
+        [HttpPost]
+        [Route("filterSolutionBySolutionName")]
+        public async Task<IActionResult> filterSolutionBySolutionName([FromBody] MileStoneIdViewModel model)
+        {
+            if (model.SolutionName != "" || model.SolutionName != null)
+            {
+                try
+                {
+                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                    List<Solutions> solutionList = _db.Solutions.ToList();
+                    List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                    List<Industries> industrylistDetails = new List<Industries>();
+                    List<string> industrylist = new List<string>();
+                    List<int> industryIdlist = new List<int>();
+                    bool IsSavedProject = false;
+
+                    var filteredSolutions = _db.Solutions.Where(s => s.Title.Contains(model.SolutionName) || s.SubTitle.Contains(model.SolutionName) || s.Description.Contains(model.SolutionName)).ToList();
+
+                    if (filteredSolutions.Count > 0)
+                    {
+                        foreach (var list in filteredSolutions)
+                        {
+                            var serviceId = _db.SolutionServices.Where(x => x.SolutionId == list.Id).Select(x => x.ServicesId).FirstOrDefault();
+                            var Servicename = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                            if (model.UserId != "")
+                            {
+                                var SavedProjectData = _db.SavedProjects.Where(x => x.SolutionId == list.Id && x.UserId == model.UserId).FirstOrDefault();
+                                if (SavedProjectData != null)
+                                {
+                                    IsSavedProject = true;
+                                }
+                                else
+                                {
+                                    IsSavedProject = false;
+                                }
+                            }
+                            if (model.UserId != "" && CheckType != "Client")
+                            {
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForFreelancer == true).Select(x => x.IndustryId).ToList();
+                            }
+                            else
+                            {
+                                industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            }
+                            //var industryIdlist = _db.SolutionIndustryDetails.Where(x => x.SolutionId == list.Id && x.IsActiveForClient == true).Select(x => x.IndustryId).ToList();
+                            if (industryIdlist.Count > 0)
+                            {
+                                foreach (var industryId in industryIdlist)
+                                {
+                                    var industry = _db.Industries.Where(x => x.Id == industryId).FirstOrDefault();
+                                    industrylistDetails.Add(industry);
+                                    var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                    industrylist.Add(industryname);
+                                }
+                                SolutionsModel dataStore = new SolutionsModel();
+                                dataStore.IsProjectSaved = IsSavedProject;
+                                dataStore.Services = Servicename;
+                                dataStore.solutionServices = serviceId;
+                                dataStore.Industries = string.Join(",", industrylist);
+                                dataStore.Id = list.Id;
+                                dataStore.Description = list.Description;
+                                dataStore.ImagePath = list.ImagePath;
+                                dataStore.ImageUrlWithSas = list.ImageUrlWithSas;
+                                dataStore.Title = list.Title;
+                                dataStore.SubTitle = list.SubTitle;
+                                solutionsModel.Add(dataStore);
+                                industrylist.Clear();
+                            }
+
+                        }
+                    }
+                    float totalSolutions = solutionsModel.Count();
+                    double pagesCount = 0;
+                    if (totalSolutions > 0)
+                    {
+                        double val = Convert.ToDouble((float)totalSolutions / 6);
+                        pagesCount = Math.Ceiling(val);
+
+                    }
+                    List<SolutionsModel> mainlist = solutionsModel.Take(6).ToList();
+                    if (model.pageNumber > 1 && model.pageNumber != null)
+                    {
+                        var prevPage = (int)model.pageNumber - 1;
+                        var current = (int)model.pageNumber;
+                        int start = (prevPage * 6) - 1;
+                        int end = (current * 6) - 1;
+                        int indexOfLastElement = (solutionsModel.Count) - 1;
+                        mainlist = solutionsModel.Where((value, index) => index > start && index <= end).ToList();
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            SolutionData = mainlist,
+                            SolutionBindData = solutionsModel,
+                            IndustriesData = industrylistDetails.Distinct(),
+                            TotalCount = solutionsModel.Count(),
+                            PageCount = pagesCount
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status403Forbidden,
+                Message = "Something Went Wrong !!"
+
+            });
+
         }
 
 

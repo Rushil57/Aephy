@@ -21,11 +21,11 @@
     @*    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet">
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-   *@
+    *@
     @*<link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">*@
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/css/jquery.dataTables.min.css" rel="stylesheet" />
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js">
     </script>
     <!-- Template Main CSS File -->
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
@@ -53,7 +53,7 @@
                                         <ul class="dropdown-menu dropdown-menu-end w-100" id="landingPageSearch-list" style="align-items: flex-start;  margin-top: 200px; height:150px; overflow:hidden; overflow-y:scroll;">
                                             <li class="dropdown-item">
                                                 <div data-filter-item data-filter-name="service1" class="search-item">service1</div>
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                                     </form>
@@ -119,40 +119,52 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                                                                                                            <li class="nav-item">
-                                                                                                                                                <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                                                                                                            </li>
-                                                                                                                                            <li class="nav-item">
-                                                                                                                                                <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                                                                                                            </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                </li>
                                             }
                                             else
                                             {
                                                 <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                  <i class="bi bi-bell cls-navicon nav-link"></i>
+                                                    <i class="bi bi-bell cls-navicon nav-link"></i>
                                                 </li>
                                                 <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
                                                     <i class="ri-mail-line cls-navicon nav-link"></i>
                                                 </li>
-                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                   <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+
+                                                if (Context.Session.GetString("LoggedUserRole") != "Client")
+                                                {
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
                                                     </li>
-                    
-                                                    if (@Context.Session.GetString("UserProfileImage") != "")
-                                                    {
-                                                        <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
-                                                            <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
+                                                }
+                                                else
+                                                {
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <a href="/Home/Dashboard#ArchivesProject"><i class="bi bi-heart cls-navicon nav-link"></i></a>
+                                                    </li>
+                                                }
+
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                </li>
+
+                                                if (@Context.Session.GetString("UserProfileImage") != "")
+                                                {
+                                                    <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                        <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                    </div>
+                                                }
+                                                else
+                                                {
                                                     <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
-                                                    }
+                                                }
                                             }
-                                            
+
                                         }
 
                                     </ul>
@@ -169,7 +181,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="/LandingPage/BrowseSolutions?service=AI Data Science and Analytics">
-                                               AI Data Science and Analytics
+                                                AI Data Science and Analytics
                                             </a>
                                         </li>
                                         <li class="nav-item">
@@ -1067,7 +1079,7 @@
                     <div class="container-fluid">
                         <div id="ServicesForm" style="border-radius:10px;display:block;">
                             @*<div class="d-flex justify-content-end" style="padding:2%;">
-                                <a href="~/LandingPage/BrowseSolutions" class="cls-availableSolution" id="availableSolution" style="color:rgb(211 139 78);">See Available Solutions</a>
+                            <a href="~/LandingPage/BrowseSolutions" class="cls-availableSolution" id="availableSolution" style="color:rgb(211 139 78);">See Available Solutions</a>
                             </div>*@
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 first-col" style="text-align: center;border-right: 1px solid #000;">
@@ -1107,7 +1119,7 @@
                                             <label class="error required-error" id="industry-validate">This field is required.</label>
                                         </div>
                                         <div class="col d-flex justify-content-end">
-                                        <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
+                                            <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
                                         </div>
                                     </form>
                                 </div>
@@ -1229,8 +1241,8 @@
                         </div>
 
                         @* <div class="col d-flex justify-content-end">
-                            <a class="btn btn-brand my-3 mx-0" id="PreviousButton" style="display:none;" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
-                            <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
+                        <a class="btn btn-brand my-3 mx-0" id="PreviousButton" style="display:none;" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
+                        <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
                         </div> *@
                     </div>
                 </div>
@@ -1263,7 +1275,7 @@
                     preloader.remove();
                 });
             }
-        });        
+        });
 
         var items = document.querySelectorAll('.carousel .carousel-item')
 
@@ -1295,14 +1307,14 @@
                 rules: {
                     ProjectTitle: { required: true },
                     ProjectDescription: { required: true },
-                    projFile: {required: true},
+                    projFile: { required: true },
                     DeliveryTime: { required: true },
                     BudgetAmount: { required: true }
                 },
                 messages: {
                     ProjectTitle: { required: "Please enter title" },
                     ProjectDescription: { required: "Please enter description" },
-                    projFile: {required: "Please attach your project document"},
+                    projFile: { required: "Please attach your project document" },
                     DeliveryTime: { required: "Please select date to deliver project" },
                     BudgetAmount: { required: "Please enter BudgetAmount" }
                 }
@@ -1421,19 +1433,19 @@
                 }
             },
             messages: {
-                    service: {
-                        required: "Please select an option from the list..",
-                    },
+                service: {
+                    required: "Please select an option from the list..",
+                },
                 level: {
-                        required: "Please select an option from the list..",
-                    },
+                    required: "Please select an option from the list..",
+                },
                 solution: {
                     required: "Please select an option from the list..",
                 },
             }
-            });
+        });
 
-        function getBusinessDays(){
+        function getBusinessDays() {
             var firstDate = $('#start-date').val();
             var lastDate = $('#end-date').val();
             var totalBusinessDays = 0;
@@ -1451,8 +1463,8 @@
                                 var label = "Total business Days : " + totalBusinessDays;
                                 $('#labelWorkDays').text(label);
                                 $('#labelWorkDays').css('display', 'block');
-                                sessionStorage.setItem("BusinessDays", totalBusinessDays);                                
-                            }else{
+                                sessionStorage.setItem("BusinessDays", totalBusinessDays);
+                            } else {
                                 sessionStorage.setItem("BusinessDays", 0);
                             }
                         },
@@ -1467,7 +1479,7 @@
                     $('#labelWorkDays').css('display', 'none');
                     sessionStorage.setItem("BusinessDays", 0);
                 }
-            }else{
+            } else {
                 $('#labelWorkDays').text('');
                 //$('#labelWorkDays').css('display', 'none');
                 sessionStorage.setItem("BusinessDays", 0);
@@ -1503,19 +1515,19 @@
                 processData: false,
                 dataType: "json",
                 data: formData,
-                success: function (result) { 
+                success: function (result) {
                     $("#preloader").hide();
-                    if(result != null && result.StatusCode != 200){
+                    if (result != null && result.StatusCode != 200) {
                         showToaster("error", "Error !", result.Message);
-                    }else{
+                    } else {
                         showToaster("success", "Success !", result.Message);
                     }
                 },
                 error: function (result) {
                     $("#preloader").hide();
-                    if(result.Message != null || result.Message != ""){
+                    if (result.Message != null || result.Message != "") {
                         showToaster("error", "Error !", result.Message);
-                    }else{
+                    } else {
                         showToaster("error", "Error !", "Something went wrong !!");
                     }
                 }
@@ -1527,7 +1539,7 @@
             if (data.text == "Confirm") {
                 $("#confirmation").modal('hide')
                 var businessDaysCount = sessionStorage.getItem("BusinessDays");
-                if(businessDaysCount != null && businessDaysCount > 0){   
+                if (businessDaysCount != null && businessDaysCount > 0) {
                     $("#preloader").show();
                     var data = {
                         Id: 0,
@@ -1578,14 +1590,14 @@
                     if ($("#drp-popServices").val() == "All") {
                         serviceValidator.text('This field is required.');
                         serviceValidator.css('display', 'inline-block');
-                    }else{
+                    } else {
                         serviceValidator.text('');
                         serviceValidator.css('display', 'none');
                     }
                     if ($("#drp-popSolutions").val() == "All") {
                         solutionValidator.text('This field is required.');
                         solutionValidator.css('display', 'inline-block');
-                    }else{
+                    } else {
                         solutionValidator.text('');
                         solutionValidator.css('display', 'none');
                     }
@@ -1593,32 +1605,32 @@
                     if ($("#drp-popIndustries").val() == "All") {
                         industryalidator.text('This field is required.');
                         industryalidator.css('display', 'inline-block');
-                    }else{
+                    } else {
                         industryalidator.text('');
                         industryalidator.css('display', 'none');
                     }
 
                 }
-                    else {
+                else {
                     industryalidator.css('display', 'none');
                     solutionValidator.css('display', 'none');
                     serviceValidator.css('display', 'none');
-                        if ($("#ServicesForm").is(":visible")) {
-                            $("#ServicesForm").css("display", "none")
-                            $("#ClientForm").css("display", "block")
-                            $("#WorkingHourForm").css("display", "none")
-                            $("#PreviousButton").css("display", "block")
-                            $("#PostButton").text("Next")
-                            return
-                        }
-                        if ($("#ClientForm").is(":visible")) {
-                            $("#ServicesForm").css("display", "none")
-                            $("#ClientForm").css("display", "none")
-                            $("#WorkingHourForm").css("display", "block")
-                            $("#PreviousButton").css("display", "block")
-                            $("#PostButton").text("Confirm")
-                        }
+                    if ($("#ServicesForm").is(":visible")) {
+                        $("#ServicesForm").css("display", "none")
+                        $("#ClientForm").css("display", "block")
+                        $("#WorkingHourForm").css("display", "none")
+                        $("#PreviousButton").css("display", "block")
+                        $("#PostButton").text("Next")
+                        return
                     }
+                    if ($("#ClientForm").is(":visible")) {
+                        $("#ServicesForm").css("display", "none")
+                        $("#ClientForm").css("display", "none")
+                        $("#WorkingHourForm").css("display", "block")
+                        $("#PreviousButton").css("display", "block")
+                        $("#PostButton").text("Confirm")
+                    }
+                }
             }
 
         }
@@ -1666,7 +1678,7 @@
         }
 
         $(function () {
-             $(".solution-popover").popover();
+            $(".solution-popover").popover();
 
             $("form[name='GigOpeningApplyForm']").validate({
                 rules: {

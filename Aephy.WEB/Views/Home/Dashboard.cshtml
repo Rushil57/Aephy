@@ -70,7 +70,7 @@
     display: flex;
     align-items: center;
     justify-content: end;
-        padding-bottom: 8%;
+       /* padding-bottom: 8%;*/
 }
 
 </style>
@@ -258,6 +258,18 @@
                         </div>
                     </div>
 
+                      <div class="col-12" id="activeProjects">
+                        <div class="card">
+                            <div class="card-body pb-0">
+                                <h5 class="card-title">Active Projects</h5> 
+                                <div class="row gy-4 py-4" id="activeProjectdiv">
+                                       
+                                       
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="col-12" id="savedProjects">
                         <div class="card">
                             <div class="card-body pb-0">
@@ -292,20 +304,6 @@
 
                         </div>
                     </div>
-
-                     <div class="col-12" id="activeProjects">
-                        <div class="card">
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Active Projects</h5> 
-                                <div class="row gy-4 py-4" id="activeProjectdiv">
-                                       
-                                       
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
                      <div class="col-12" id="ActiveProjectInvoices">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
@@ -340,6 +338,9 @@
                                             <th scope="col">Solution Title</th>
                                             <th scope="col">Industry Name</th>
                                             <th scope="col">MilestoneName</th>
+                                            <th scope="col" class="cls-clientField"></th>
+                                            <th scope="col" class="cls-clientField"></th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -2010,18 +2011,19 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 GetSavedProjects();
                 GetClientActiveProjectList();
                 GetActiveProjectInvoices();
-                 GetClientArchivesProject();
+                GetClientArchivesProject();
+                $(".cls-clientField").show();
             }else{
                 GetFreelancerActiveProjectList();
                 $("#savedProjects").hide();
                 $("#ActiveProjectInvoices").hide();
                 GetFreelancerArchivesProject();
+                $(".cls-clientField").hide();
             }
 
             $('.news_card').hide();
             BindProjects();
-            InvokeOpenRoles();
-            InvokeApprovedList();
+            getOpenRoles();
             GetApprovedList();
            
      });
@@ -2180,14 +2182,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                     GetSolutionDefineDetails()
                 });
         }
-   
-   function InvokeOpenRoles() {
-	    getOpenRoles(); 
-   }
-    //Approved List
-    function InvokeApprovedList() {
-	    GetApprovedList();
-    }
+
     function CloseGigOpeningApplyModal() {
         $("#GigOpeningApplyModal").modal('hide')
     }
@@ -2996,33 +2991,14 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                             '<i class="bi bi-shop-window"></i>' +
                             '<label> ' + value.Industries + ' </label>' +
 
-                            '</div></div>';
-                            if(Activedata[data].ProjectStatus != "INITIATED"){
-                                 activeSection += '<div class="card-footer">'+
-                                 '<div class="d-flex justify-content-center py-2">'+
-                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                        '<a onclick="OpenSolutionTeamPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Freelancers Feedback</a>'+
-                                        '<a onclick="OpenSolutionPopup('+value.Id+','+value.ServiceId+','+value.SolutionId+','+value.IndustryId+');" class="feedback-link">Solution Feedback</a>'+
-                                '</div></div>'+
-                                '<div class="d-flex align-items-center">'+
-                                //'<div><div class="like" style="font-size: 16px;" onclick=OpenInvoiceModalPopUp('+value.ContractId+')>View Invoice</div>'+
-                                //'<div class="like" style="font-size: 16px;" onclick=OpenCreditMemoModalPopUp();>View Credit Memo</div></div>'+
-                                "<div class=\"chat-message-icon\"><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div></div></div>";
-                            }else{
-                                activeSection += '<div class="card-footer">' +
-                                    '<div class="d-flex justify-content-center py-2">' +
-                                    '<div class="d-flex flex-column justify-content-end align-items-center">' +
-                                    '<a onclick="OpenSolutionTeamPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Freelancers Feedback</a>' +
-                                    '<a onclick="OpenSolutionPopup(' + value.Id + ',' + value.ServiceId + ',' + value.SolutionId + ',' + value.IndustryId + ');" class="feedback-link">Solution Feedback</a>' +
-                                    '</div></div>' +
+                            '</div></div>' +
+                             '<div class="card-footer cls-active-footer">' +
                                     '<div class="d-flex align-items-center chat-message-icon position-static">'+
-                                    "<div><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div></div></div>";
-                                    '</div>';
-                            }
-                         
-                         //activeSection += '<i class="bi bi-chat" style="position: absolute;right: 0;padding-right: 1rem;padding-top: 2px;" onclick="openChatModal("'+ value.IndustryId + '","' + value.SolutionId + '","' + client + '");></i>';
-                         activeSection +='</div></div>';
-
+                                        "<div><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div>" +
+                                    '</div>' +
+                               '</div>' +
+                              '</div>' +
+                         '</div></div>';
 
                     })
                   
@@ -3690,10 +3666,11 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                 htm += '<td>' + subObj.Title + '</td>';
                                 htm += '<td>' + subObj.Industries + '</td>';
                                 htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                                htm += '<td><a class="feedback-link cls-clientField" onclick="OpenSolutionTeamPopup(' + subObj.Id + ',' + subObj.ServiceId + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ');">Freelancers Feedback</a></td>';
+                                htm += '<td><a class="feedback-link cls-clientField" onclick="OpenSolutionTeamPopup(' + subObj.Id + ',' + subObj.ServiceId + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ');">Solution Feedback</a></td>';
                                 htm += '</tr>';
                             }
                         }
-                        $("#ArchieveTable").find("tr:gt(0)").remove();
                         $("#ArchieveTable tbody").append(htm);
                         $(".cls-archive-temp").hide();
                     }

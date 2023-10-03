@@ -1870,6 +1870,10 @@ namespace Aephy.API.Controllers
                                         solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                                         solutionsdataStore.Title = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).Select(x => x.Title).FirstOrDefault();
                                         solutionsdataStore.ContractId = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.Id).FirstOrDefault();
+                                        solutionsdataStore.ServiceId = _db.SolutionServices.Where(x => x.SolutionId == data.solutionFunds.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                        solutionsdataStore.SolutionId = data.solutionFunds.SolutionId;
+                                        solutionsdataStore.IndustryId = data.solutionFunds.IndustryId;
+                                        solutionsdataStore.Id = data.solutionFunds.Id;
                                         if (data.solutionFunds.FundType.ToString() == "MilestoneFund")
                                         {
                                             solutionsdataStore.MileStoneTitle = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();

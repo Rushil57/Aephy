@@ -1520,9 +1520,10 @@ textarea.form-control {
 
 .cls-saveProject-description {
     padding: 0 0;
-    margin-bottom: 30px;
+   /* margin-bottom: 30px;*/
     color: var(--color-secondary);
     font-size: 15px;
+    height:102px;
 }
 
     .icon-image i {
@@ -1691,4 +1692,9 @@ textarea.form-control {
         flex-direction: column;
         align-items:center !important;
     }
+}
+
+.cls-active-footer {
+    padding-top: 0 !important;
+    padding-bottom: 0px !important;
 }

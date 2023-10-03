@@ -2025,6 +2025,12 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             BindProjects();
             getOpenRoles();
             GetApprovedList();
+            if(window.location.toString().includes("#savedProjects")){
+                window.scrollTo({ top:450, behavior: 'smooth' });
+            }
+            if(window.location.toString().includes("#activeProjects")){
+                window.scrollTo({ top:255, behavior: 'smooth' });
+            }
            
      });
     function SubmitFreelancerFeedback(){
@@ -3667,7 +3673,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                 htm += '<td>' + subObj.Industries + '</td>';
                                 htm += '<td>' + subObj.MileStoneTitle + '</td>';
                                 htm += '<td><a class="feedback-link cls-clientField" onclick="OpenSolutionTeamPopup(' + subObj.Id + ',' + subObj.ServiceId + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ');">Freelancers Feedback</a></td>';
-                                htm += '<td><a class="feedback-link cls-clientField" onclick="OpenSolutionTeamPopup(' + subObj.Id + ',' + subObj.ServiceId + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ');">Solution Feedback</a></td>';
+                                htm += '<td><a class="feedback-link cls-clientField" onclick="OpenSolutionPopup(' + subObj.Id + ',' + subObj.ServiceId + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ');">Solution Feedback</a></td>';
                                 htm += '</tr>';
                             }
                         }

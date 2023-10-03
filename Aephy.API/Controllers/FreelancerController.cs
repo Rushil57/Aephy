@@ -989,6 +989,15 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
+                    var saveprojectData = _db.SavedProjects.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.UserId == model.UserId).FirstOrDefault();
+                    if(saveprojectData != null)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Project is already saved!",
+                        });
+                    }
                     var data = new SavedProjects()
                     {
                         SavedDateTime = DateTime.Now,
@@ -1043,20 +1052,13 @@ namespace Aephy.API.Controllers
                             {
                                 SolutionsModel solutionsdataStore = new SolutionsModel();
                                 var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
-                                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
-                                if (industryIdlist.Count > 0)
-                                {
-                                    foreach (var industryId in industryIdlist)
-                                    {
-                                        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                        industrylist.Add(industryname);
-                                    }
-                                }
-                                solutionsdataStore.Industries = string.Join(",", industrylist);
+                                solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                solutionsdataStore.IndustryId = data.IndustryId;
                                 solutionsdataStore.Id = solutionData.Id;
                                 solutionsdataStore.Title = solutionData.Title;
                                 solutionsdataStore.Description = solutionData.Description;
                                 solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsdataStore.ServiceId = _db.SolutionServices.Where(x => x.SolutionId == solutionData.Id).Select(x => x.ServicesId).FirstOrDefault();
                                 solutionsModel.Add(solutionsdataStore);
                                 industrylist.Clear();
                             }
@@ -1098,7 +1100,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var projectData = await _db.SavedProjects.Where(x => x.SolutionId == model.SolutionId && x.UserId == x.UserId).FirstOrDefaultAsync();
+                        var projectData = await _db.SavedProjects.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.UserId == model.UserId).FirstOrDefaultAsync();
                         if (projectData != null)
                         {
                             _db.Remove(projectData);
@@ -1151,18 +1153,18 @@ namespace Aephy.API.Controllers
                                 var solutionData = _db.Solutions.Where(x => x.Id == data.SolutionId).FirstOrDefault();
                                 var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
                                 var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-                                var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
-                                if (industryIdlist.Count > 0)
-                                {
-                                    foreach (var industryId in industryIdlist)
-                                    {
-                                        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
-                                        industrylist.Add(industryname);
-                                    }
-                                }
+                                //var industryIdlist = _db.SolutionIndustry.Where(x => x.SolutionId == data.SolutionId).Select(x => x.IndustryId).ToList();
+                                //if (industryIdlist.Count > 0)
+                                //{
+                                //    foreach (var industryId in industryIdlist)
+                                //    {
+                                //        var industryname = _db.Industries.Where(x => x.Id == industryId).Select(x => x.IndustryName).FirstOrDefault();
+                                //        industrylist.Add(industryname);
+                                //    }
+                                //}
 
                                 solutionsdataStore.Services = serviceData;
-                                solutionsdataStore.Industries = string.Join(",", industrylist);
+                                solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault(); ;
                                 solutionsdataStore.Id = data.Id;
                                 solutionsdataStore.Title = solutionData.Title;
                                 solutionsdataStore.Description = solutionData.Description;

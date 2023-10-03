@@ -915,5 +915,13 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        //GetSolutionIndustry
+        [HttpPost]
+        public async Task<string> GetSolutionIndustry([FromBody] SolutionFundModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionIndustry", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

@@ -2745,6 +2745,57 @@ namespace Aephy.API.Controllers
 
         }
 
+        //GetSolutionIndustry
+        [HttpPost]
+        [Route("GetSolutionIndustry")]
+        public async Task<IActionResult> GetSolutionIndustry([FromBody] MileStoneDetailsViewModel model)
+        {
+            if (model!= null)
+            {
+                try
+                {
+                    List<SolutionsModel> industryList = new List<SolutionsModel>();
+                    var IndustryList = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IsActiveForClient == true).ToListAsync();
+                    if (IndustryList.Count > 0)
+                    {
+                        foreach(var data in IndustryList)
+                        {
+                            SolutionsModel solutionsModel = new SolutionsModel();
+                            solutionsModel.IndustryId = data.IndustryId;
+                            solutionsModel.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                            industryList.Add(solutionsModel);
+                        }
+                        
+
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = new
+                        {
+                            IndustriesData = industryList,
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = ex.Message + ex.InnerException
+                    });
+                }
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status403Forbidden,
+                Message = "Something Went Wrong !!"
+
+            });
+
+        }
+
 
     }
 }

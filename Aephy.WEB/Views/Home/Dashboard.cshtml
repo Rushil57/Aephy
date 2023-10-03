@@ -2822,12 +2822,12 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         $.each(projectData, function (data, value) {
             var title = value.Title.length > 30 ? value.Title.substring(0, 30) + "..." : value.Title;
             var description = value.Description.length > 100 ? value.Description.substring(0, 100) + "..." : value.Description;
-            var industryList = projectData[data].Industries.split(",")
+            //var industryList = projectData[data].Industries.split(",")
             var count = 0;
 
             savedSection += '<div class="col-md-6 col-xl-4 cls-projectdiv" style="width:300px;">' +
                 ' <div class="card shadow-lg cls-solutioncard">' +
-                '<div class="card-body">' +
+                '<div class="card-body" onclick=GotoProjectPage('+value.ServiceId+','+value.Id+','+value.IndustryId+') style=cursor:pointer;>' +
                 '<div class="card-img justify-content-lg-center">' +
                 '<img src=' + value.ImageUrlWithSas + ' alt = "SolutionImage" class="img-fluid" data-aos="zoom-out">' +
                 '</div>' +
@@ -2835,26 +2835,14 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
                 '</h3>' +
                 '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
-                '<div class="icon-image">';
-            if (industryList != "") {
-                var industry = industryList.slice(0, 2);
-                $.each(industry, function (industrydata, industryValue) {
-                   savedSection += '<i class="bi bi-shop-window"></i>' +
-                        '<label> ' + industryValue + ' </label>';
-                    count++;
-                })
-            }
-            if (industryList.length != 0) {
-                if (industryList.length > 2) {
-                    var industryLeft = industryList.length - count;
-                    savedSection += '<label class="pl-5"> + ' + industryLeft + ' more </label>'
-                }
-
-            }
-            savedSection += '</div></div>'+ 
+                '<div class="icon-image">' +
+                 '<i class="bi bi-shop-window"></i>' +
+                        '<label> ' + value.Industries + ' </label>' +
+            
+            '</div></div>'+ 
                    '<div class="card-footer">' +
                       '<div class="like cls-heart-icon">' +
-                        '<i class="bi bi-heart-fill solution-saved" onclick=UnSavedSolutionProject(' + value.Id + ') style="color: var(--brand);"> </i>' +
+                        '<i class="bi bi-heart-fill solution-saved" onclick=UnSavedSolutionProject(' + value.Id + ','+value.IndustryId+') style="color: var(--brand);"> </i>' +
                       '</div>' +
                  '</div>' +
             '</div></div>';
@@ -2864,9 +2852,10 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         $(savedSection).insertBefore("#favorites-card");
     }
 
-    function UnSavedSolutionProject(id){
+    function UnSavedSolutionProject(solutionId,industryId){
          var data = {
-            SolutionId: id,
+            SolutionId: solutionId,
+            IndustryId:industryId
         }
         $("#preloader").show();
         $.ajax({
@@ -3739,6 +3728,10 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 $("#preloader").hide();
             }
         });
+        }
+
+        function GotoProjectPage(serviceId,solutionId,industryId){
+            window.location.href = '/LandingPage/Project?Service=' + serviceId + '&Solution=' + solutionId + '&Industry=' + industryId;
         }
 
 </script>

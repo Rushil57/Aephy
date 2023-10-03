@@ -4,7 +4,7 @@
 }
 <link href="../assets/css/browsesolutionstylesheet.css" rel="stylesheet" />
 
-<main class="main" id="main">
+<main class="main" id="main"> 
     <!-- Browse Section -->
     <section id="browseSolutions" class="browseSolutions cls-fixed-common">
         <div class="container">
@@ -405,14 +405,9 @@
             }
             solutionSection += '</div></div>' +
                 '<div class="card-footer">' +
-                '<div class="like">';
-            if (solutiondata[data].IsProjectSaved) {
-                solutionSection += '<i class="bi bi-heart-fill solution-saved" onclick=UnSaveSolutionProject(' + value.Id + ') style="color: var(--brand);"> </i>';
-            } else {
-                solutionSection += '<i class="bi bi-heart solution-saved" onclick=SaveSolutionProject(' + value.Id + ')> </i>';
-            }
-
-            solutionSection += '</div>' +
+                '<div class="like team-popover" data-toggle="popover" id=industry_' + value.Id + ' onclick=GetSolutionIndustry(this,' + value.Id + ')>' +
+                '<i class="bi bi-heart solution-saved"></i>' +
+                '</div>' +
                 '</div>' +
                 '</div></div>';
         })
@@ -421,6 +416,12 @@
             $(".card-footer").hide()
             $(".icon-image").css("margin-bottom", "27px")
         }
+        $('.team-popover').popover('dispose');
+        var newContent = "<ul class='cls-industry-ul'><li>loading...</li></ul>";
+        $('.team-popover').popover({
+                    html:true,
+                    content:newContent
+                });
     }
 
     function GetSolutionValues(value, pageNumber, isPageChanged) {
@@ -764,11 +765,13 @@
         }
     }
 
-    function SaveSolutionProject(id) {
+    function SaveSolutionProject(id,indId) {
         var data = {
             SolutionId: id,
+            IndustryId: indId
         }
         $("#preloader").show();
+        $(".bs-popover-auto").hide();
         $.ajax({
             type: "POST",
             url: "@Url.Action("SaveProject", "Home")",
@@ -805,6 +808,38 @@
             },
             error: function (result) {
                 $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+    function GetSolutionIndustry(curitag, solutionId){
+        $(".bs-popover-auto").hide();
+          var data = {
+            SolutionId: solutionId,
+        }
+        $(curitag).addClass('cls-noevent');
+        $(".cls-industry-ul").empty();
+        $(".cls-industry-ul").append('<li>loading...</li>');
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetSolutionIndustry", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $(".cls-industry-ul").empty();
+                for (var i = 0; i < result.Result.IndustriesData.length; i++) {
+                    var name = result.Result.IndustriesData[i].Industries;
+                    var industryId = result.Result.IndustriesData[i].IndustryId;
+                    var spn = '<li class="cls-indistry-li"><span style="cursor:pointer;" onclick="SaveSolutionProject('+solutionId+','+industryId+')">' + name + '</span></li>';
+                    $(".cls-industry-ul").append(spn);
+                }
+                
+                $(curitag).removeClass('cls-noevent');
+            },
+            error: function (result) {
+                $(curitag).removeClass('cls-noevent');
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });

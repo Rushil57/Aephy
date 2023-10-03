@@ -2796,6 +2796,54 @@ namespace Aephy.API.Controllers
 
         }
 
+        //DeleteActiveSolutionDocument
+        [HttpPost]
+        [Route("DeleteActiveSolutionDocument")]
+        public async Task<IActionResult> DeleteActiveSolutionDocument([FromBody] ActiveProjectDocuments model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    if (model.Id != 0)
+                    {
+                        var documnetData =await  _db.ActiveProjectDocuments.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                        if(documnetData != null)
+                        {
+                            _db.ActiveProjectDocuments.Remove(documnetData);
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Data Delete Successfully!",
+                            });
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Not Found!",
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
+
 
     }
 }

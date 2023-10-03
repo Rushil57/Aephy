@@ -1813,3 +1813,9 @@ progress::-webkit-progress-value {
 #ActiveProjectDescription{
     resize: none;
 }
+
+.cls-document-deleteicon {
+    font-size: 20px;
+    color: var(--brand);
+    cursor: pointer;
+}

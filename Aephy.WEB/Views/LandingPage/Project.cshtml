@@ -1111,7 +1111,7 @@
                     newContent = "1 Project Manager + 1 Expert + 1 Associate";
                 }
                 else if(projecttype == "large"){
-                    newContent = "1 Project Leader + 2 Experts + 2 Associates";
+                    newContent = "1 Project Manager + 2 Experts + 2 Associates";
                 }
                 else if(projecttype == "small"){
                     newContent = "1 Project Manager + 1 Associate";
@@ -1280,15 +1280,15 @@
              var projectType = $("input[name='projSize']:checked").val();
              if(projectType == 'small'){
                 // Projectprice = 100;
-                Projectprice = $("#small-projectPrice").html();
+                Projectprice = $("#small-projectPrice").html().replace(',', '');
              }
              if(projectType == 'medium'){
                  //Projectprice = 200;
-                 Projectprice =  $("#medium-projectPrice").html();
+                 Projectprice =  $("#medium-projectPrice").html().replace(',', '');
              }
              if(projectType == 'large'){
                  //Projectprice = 500;
-                 Projectprice = $("#large-projectPrice").html();
+                 Projectprice = $("#large-projectPrice").html().replace(',', '');
              }
 
              var checkPayment =  $("#solutionfund-furtherprogress").text();
@@ -1362,8 +1362,9 @@
                              var HourlyRate = parseInt(value.HourlyRate);
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  TotalMilestoneDays;
                              countPricing += freelancerPriceCount
-                         });   
-                         $(".cls-smallProjectprice").html("$" + countPricing);
+                         });  
+                         var finalPrice = countPricing.toLocaleString('en-US');
+                         $(".cls-smallProjectprice").html("$" + finalPrice);
                     }
                     else{
                         $(".cls-smallProjectprice").html("$" + countPricing);
@@ -1382,8 +1383,9 @@
                              var HourlyRate = parseInt(value.HourlyRate);
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  MediumTotalMilestoneDays;
                              countPricing += freelancerPriceCount
-                         });   
-                         $(".cls-mediumProjectprice").html("$" + countPricing);
+                         }); 
+                           var finalPrice = countPricing.toLocaleString('en-US');
+                         $(".cls-mediumProjectprice").html("$" + finalPrice);
                     }
                     else{
                          $(".cls-mediumProjectprice").html("$" + countPricing);
@@ -1404,7 +1406,8 @@
                              var freelancerPriceCount = (HourlyRate * HoursPerDay) *  LargeTotalMilestoneDays;
                              countPricing += freelancerPriceCount
                          });
-                           $(".cls-largeProjectprice").html("$" + countPricing);
+                          var finalPrice = countPricing.toLocaleString('en-US');
+                           $(".cls-largeProjectprice").html("$" + finalPrice);
                     }
                     else{
                       $(".cls-largeProjectprice").html("$" + countPricing);

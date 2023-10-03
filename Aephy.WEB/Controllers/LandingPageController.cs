@@ -923,5 +923,13 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        //DeleteActiveSolutionDocument
+        [HttpPost]
+        public async Task<string> DeleteActiveSolutionDocument([FromBody] ActiveProjectDocumentViewModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/DeleteActiveSolutionDocument", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

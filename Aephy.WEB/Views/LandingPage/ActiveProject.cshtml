@@ -147,6 +147,7 @@
                                                     <tr>
                                                         <th scope="col">Document Name</th>
                                                         <th scope="col">File</th>
+                                                        <th scope="col">Delete</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -785,6 +786,7 @@
                                 htm += '<tr>';
                                 htm += '<td>' + subObj.DocumentName + '</td>';
                                 htm += "<td><a class='cls-dwld-document' onclick=DownloadDocument('"+subObj.DocumentPath+"') >Download File</a></td>";
+                                htm += "<td><a onclick=DeleteSolutionDocument('"+subObj.Id+"')><i class='ri-delete-bin-6-line cls-document-deleteicon'></i></a></td>";
                                 htm += '</tr>';
                             
                         }
@@ -914,7 +916,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : $("#projectfund-projectprice").html().replace("$", ""),
+                ProjectPrice : $("#projectfund-projectprice").html().replace("$", "").replace(",",""),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : mileStoneCheckOut,
                 GetNextMileStoneData : nextMilestoneData
@@ -1002,6 +1004,7 @@
 
    function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice){
 
+       var projectPrice = parseInt(data.ProjectPrice).toLocaleString('en-US');
           $("#solutionfund-popUp").css("display","block")
           $("#solution-fund-radio-check").prop("checked", true);
 
@@ -1009,7 +1012,7 @@
           projectType =  projectType.split(' ').map(projectType => projectType.charAt(0).toUpperCase() + projectType.slice(1).toLowerCase()).join(' ');
 
           $(".projectfund-projecttype").html(projectType)
-          $(".cls-projectPrice").html("$" + data.ProjectPrice)
+          $(".cls-projectPrice").html("$" + projectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
@@ -1028,13 +1031,14 @@
                    }
                }
                if(data.FundType == 0){
+                   
                      if(fundDecided > 0 ){
                          var total = fundDecided - 1
                           $(".cls-fundProgress").show();
                           $(".cls-fundPopOver").hide();
                           $(".cls-fundProgress").text("Fund Milestone " + fundDecided)
                           $(".project-progress").html("Milestone " + total + " is Completed")
-                          $(".cls-projectPrice").html("$" + NextMilestonePrice)
+                          $(".cls-projectPrice").html("$" + parseInt(NextMilestonePrice).toLocaleString('en-US'))
                       }else{
                           $(".cls-fundPopOver").show();
                           $(".cls-fundProgress").hide();
@@ -1496,4 +1500,39 @@
        $(".cls-solutionDetails").css("background-color", "var(--brand)");
        $(".cls-solutionDetails").css("color","black"); 
      }
+
+     function DeleteSolutionDocument(documentId){
+          Swal.fire({
+            title: 'Are you sure you want to delete document?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+          var data = {
+               Id: documentId,
+            };
+             $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteActiveSolutionDocument", "LandingPage")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    showToaster("success", "Success", result.Message);
+                    GetProjectTypeValue()
+                     $("#preloader").hide();
+                },
+                error: function (result) {
+                     $("#preloader").hide();
+                    showToaster("error", "Error !", result);
+                }
+            });
+        });
+      }
+     
 </script>

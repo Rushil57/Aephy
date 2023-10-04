@@ -823,10 +823,6 @@
 
                    if(data.SolutionFund != null)
                    {
-                      projecttype = data.SolutionFund.ProjectType;
-                      $("input[name=projSize][value='"+data.SolutionFund.ProjectType+"']").prop("checked",true);
-                      $('input:radio[name=projSize]').val(data.SolutionFund.ProjectType);
-                      $('input:radio[name=projSize]').attr('label',data.SolutionFund.ProjectType);
                       var teamsize = 0;
                        if(projecttype == "medium"){
                           teamsize = 3;
@@ -1012,6 +1008,9 @@
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
                        BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false);
+                       if(data.MilestoneList != ""){
+                           BindMileStoneSection(data.MilestoneList);
+                       }
                         $("#preloader").hide();
                        return;
                    }
@@ -1034,6 +1033,9 @@
                        DisabledSolutionFurtherProgressButton();
                        $(".project-progress").html("Project Completed");
                         DisabledSolutionDetailsButton();
+                         if(result.MilestoneList != ""){
+                           BindMileStoneSection(result.MilestoneList);
+                       }
                        $("#preloader").hide();
                        return;
                    }
@@ -1086,6 +1088,9 @@
 
           var projectType = data.ProjectType;
           projectType =  projectType.split(' ').map(projectType => projectType.charAt(0).toUpperCase() + projectType.slice(1).toLowerCase()).join(' ');
+           $("input[name=projSize][value='"+projectType+"']").prop("checked",true);
+           $('input:radio[name=projSize]').val(projectType);
+           $('input:radio[name=projSize]').attr('label',projectType);
 
           $(".projectfund-projecttype").html(projectType)
           $(".cls-projectPrice").html("$" + projectPrice)
@@ -1520,9 +1525,17 @@
          var milestoneSection = "";
          var milestonePopupsection = "";
            $.each(milestoneData, function (datas, values) {
-              milestoneSection +=  '<li class="progress__item">' +
-                  '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
-                  '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
+               // if(values.MilestoneStatus == null){
+               //     values.MilestoneStatus
+               // }
+
+               milestoneSection += '<li class="progress__item">' +
+                   '<p class="progress__title Project-title-size cls-milestoneTitle">' + values.Title + '</p>';
+                  if(values.MilestoneStatus != null){
+                      milestoneSection +='<span class="badge bg-primary cls-milestoneStatus">' + values.MilestoneStatus + '</span>';
+                  }
+                  
+                  milestoneSection +='<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
                '</li>'
 
               milestonePopupsection +=  '<li class="progress__item">' +

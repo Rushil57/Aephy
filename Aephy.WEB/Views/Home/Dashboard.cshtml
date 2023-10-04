@@ -2989,7 +2989,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                             '</div></div>' +
                              '<div class="card-footer cls-active-footer">' +
                                     '<div class="d-flex align-items-center chat-message-icon position-static">'+
-                                        "<div><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"');\"></i></div>" +
+                                        "<div><i class=\"bi bi-chat-left-dots cls-chat-icon\" onclick=\"openChatModal("+value.IndustryId+","+value.SolutionId+",'"+value.ClientId+"','"+value.Id+"');\"></i></div>" +
                                     '</div>' +
                                '</div>' +
                               '</div>' +
@@ -3369,7 +3369,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         InitFirebase(firebaseConfig);
     });
 
-    function openChatModal(IndustryId,SolutionID,ClietnId) {
+    function openChatModal(IndustryId,SolutionID,ClietnId,ID) {
         let model = {
             IndustryId : IndustryId,
             SolutionID : SolutionID,
@@ -3424,6 +3424,12 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                         "</div>";
                             }
                         }
+
+                        html += "<div class='chat_list' id='groupchat' onclick=\"onPeopleClick(" + ID + ",'groupchat');\">"
+                        + "<div class='chat_people'>"
+                        + "<div class='chat_no_img'>GRP</div>"
+                        + "<div class='chat_no_ib'><h5>Group Chat</h5></div>"
+                        + "</div>";
                     }
                     else{
                         html = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
@@ -3461,60 +3467,68 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
         let currentUser = "@Context.Session.GetString("LoggedUser")";
         let role = "@Context.Session.GetString("LoggedUserRole")";
 
-        if(role == "Client")
-        {
-            //username = name;
-            //chatroom = currentUser +"-join-"+ id ;
-            //bindMessage();
-            //console.log(chatroom);
-
-            var testchatroom = currentUser + "-join-" + id;
-            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
-            findRoom.on("value", function(data) {
-
-                if(data.val() != undefined)
-                {
-                    username = name;
-                    chatroom = testchatroom;
-                }
-                else
-                {
-                    username = name;
-                    chatroom = id + "-join-" + currentUser;
-                }
-
-                console.log(chatroom);
-
-                bindMessage();
-
-            }, function (error) {
-                return false;
-            });
+        if (name == "groupchat") {
+            $("#groupchat").addClass("active_chat");
+            username = name;
+            chatroom = "dynamic" + name + "-join-" + id;
+            bindMessage();
         }
-        else
-        {
-            var testchatroom = currentUser + "-join-" + id;
-            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
-            findRoom.on("value", function(data) {
+        else {
+            if(role == "Client")
+            {
+                //username = name;
+                //chatroom = currentUser +"-join-"+ id ;
+                //bindMessage();
+                //console.log(chatroom);
 
-                if(data.val() != undefined)
-                {
-                    username = name;
-                    chatroom = testchatroom;
-                }
-                else
-                {
-                    username = name;
-                    chatroom = id + "-join-" + currentUser;
-                }
+                var testchatroom = currentUser + "-join-" + id;
+                var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+                findRoom.on("value", function(data) {
 
-                console.log(chatroom);
+                    if(data.val() != undefined)
+                    {
+                        username = name;
+                        chatroom = testchatroom;
+                    }
+                    else
+                    {
+                        username = name;
+                        chatroom = id + "-join-" + currentUser;
+                    }
 
-                bindMessage();
+                    console.log(chatroom);
 
-            }, function (error) {
-                return false;
-            });
+                    bindMessage();
+
+                }, function (error) {
+                    return false;
+                });
+            }
+            else
+            {
+                var testchatroom = currentUser + "-join-" + id;
+                var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+                findRoom.on("value", function(data) {
+
+                    if(data.val() != undefined)
+                    {
+                        username = name;
+                        chatroom = testchatroom;
+                    }
+                    else
+                    {
+                        username = name;
+                        chatroom = id + "-join-" + currentUser;
+                    }
+
+                    console.log(chatroom);
+
+                    bindMessage();
+
+                }, function (error) {
+                    return false;
+                });
+            }
         }
     }
 

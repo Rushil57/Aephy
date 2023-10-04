@@ -233,6 +233,8 @@ namespace Aephy.API.Models
             public string? ProjectType { get; set; }
             public int Days { get; set; }
 
+            public string? MilestoneStatus {  get; set; }
+
         }
 
         public class SolutionIndustryDetailsModel

@@ -70,8 +70,9 @@ namespace Aephy.API.DBHelper
         public DbSet<Invoices> Invoices { get; set; }
 
         public DbSet<ActiveProjectDocuments> ActiveProjectDocuments { get; set; }
-        
 
+        
+        public DbSet<ActiveSolutionMilestoneStatus> ActiveSolutionMilestoneStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

@@ -637,6 +637,20 @@ namespace Aephy.API.Controllers
                     var data = _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId).FirstOrDefault();
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                    List<MileStoneModel> milestoneList = new List<MileStoneModel>();
+                    if(milestoneData.Count > 0)
+                    {
+                        foreach(var stonedata in milestoneData)
+                        {
+                            MileStoneModel milestonData = new MileStoneModel();
+                            milestonData.Id = stonedata.Id;
+                            milestonData.Days = stonedata.Days;
+                            milestonData.Title = stonedata.Title;
+                            milestonData.Description = stonedata.Description;
+                            milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.UserId).Select(x => x.MilestoneStatus).FirstOrDefault();
+                            milestoneList.Add(milestonData);
+                        }
+                    }
                     var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
                     var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
                     List<SolutionTeamViewModel> solutionteamList = new List<SolutionTeamViewModel>();
@@ -705,7 +719,7 @@ namespace Aephy.API.Controllers
                         Result = new
                         {
                             SolutionDefine = solutionDefine,
-                            MileStone = milestoneData,
+                            MileStone = milestoneList,
                             PointsData = pointsData,
                             SuccessfullProjects = successfullProjectList,
                             SolutionFund = fundProgress,
@@ -1912,6 +1926,22 @@ namespace Aephy.API.Controllers
                                     data.ProjectStatus = "COMPLETED";
                                     data.IsArchived = true;
                                     _db.SaveChanges();
+
+                                    if(data.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                    {
+                                        var storeMilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == data.MileStoneId && x.UserId == data.ClientId).FirstOrDefault();
+                                        if(storeMilestonestatus == null)
+                                        {
+                                            var milestoneStatus = new ActiveSolutionMilestoneStatus()
+                                            {
+                                                MilestoneId = data.MileStoneId,
+                                                UserId = data.ClientId,
+                                                MilestoneStatus = "Fund Completed Pay Inprogress"
+                                            };
+                                            _db.ActiveSolutionMilestoneStatus.Add(milestoneStatus);
+                                            _db.SaveChanges();
+                                        }
+                                    }
                                 }
                             }
 
@@ -1996,6 +2026,21 @@ namespace Aephy.API.Controllers
                 if (model.GetNextMileStoneData)
                 {
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
+                    var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                    List<MileStoneModel> milestoneList = new List<MileStoneModel>();
+                    if (milestoneData.Count > 0)
+                    {
+                        foreach (var stonedata in milestoneData)
+                        {
+                            MileStoneModel milestonData = new MileStoneModel();
+                            milestonData.Id = stonedata.Id;
+                            milestonData.Days = stonedata.Days;
+                            milestonData.Title = stonedata.Title;
+                            milestonData.Description = stonedata.Description;
+                            milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.ClientId).Select(x => x.MilestoneStatus).FirstOrDefault();
+                            milestoneList.Add(milestonData);
+                        }
+                    }
                     if (mileStoneData != null)
                     {
                         var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
@@ -2050,6 +2095,7 @@ namespace Aephy.API.Controllers
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
                         var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
+                        
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2060,7 +2106,8 @@ namespace Aephy.API.Controllers
                                 ProjectDetails = data,
                                 MileStoneData = mileStone,
                                 FundDecided = Funddecided,
-                                NextMileStonePrice = calculateProjectPrice
+                                NextMileStonePrice = calculateProjectPrice,
+                                MilestoneList = milestoneList,
                             }
                         });
                     }
@@ -2070,6 +2117,10 @@ namespace Aephy.API.Controllers
                         {
                             StatusCode = StatusCodes.Status200OK,
                             Message = "NoFurtherMileStone",
+                            Result = new
+                            {
+                                MilestoneList = milestoneList,
+                            }
                         });
                     }
                 }
@@ -2233,6 +2284,15 @@ namespace Aephy.API.Controllers
                                             }
                                         }
 
+                                        if(completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                        {
+                                            var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
+                                            if(updatemilestonestatus != null)
+                                            {
+                                                updatemilestonestatus.MilestoneStatus = "Milestone Completed";
+                                                _db.SaveChanges();
+                                            }
+                                        }
                                         var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
                                         var transfertoFreelancer = false;
                                         if (transferredcount == contract.ContractUsers.Count())

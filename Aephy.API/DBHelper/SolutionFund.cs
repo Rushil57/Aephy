@@ -90,5 +90,18 @@ namespace Aephy.API.DBHelper
 
         public DateTime? CreatedDateTime { get; set;  }
     }
+
+    public class ActiveSolutionMilestoneStatus
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int MilestoneId {  get; set; }
+
+        public string? UserId {  get; set; }
+
+        public string? MilestoneStatus { get; set; }
+    }
 }
 

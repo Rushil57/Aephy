@@ -1033,8 +1033,8 @@
                        DisabledSolutionFurtherProgressButton();
                        $(".project-progress").html("Project Completed");
                         DisabledSolutionDetailsButton();
-                         if(result.MilestoneList != ""){
-                           BindMileStoneSection(result.MilestoneList);
+                         if(result.Result.MilestoneList != ""){
+                           BindMileStoneSection(result.Result.MilestoneList);
                        }
                        $("#preloader").hide();
                        return;

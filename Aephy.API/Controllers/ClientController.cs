@@ -504,8 +504,9 @@ namespace Aephy.API.Controllers
                            Days = cl.Sum(c => c.Days),
                        }).ToList();
                     }
-                  
 
+                    var solutionFeedback = _db.ProjectReview.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
+                
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -519,7 +520,8 @@ namespace Aephy.API.Controllers
                             SuccessfullProjects = successfullProjectList,
                             SolutionFund = fundProgress,
                             FreelancerHourlyList = freelancerList,
-                            MileStoneToTalDays = mileStoneToTalDays
+                            MileStoneToTalDays = mileStoneToTalDays,
+                            SolutionFeedback = solutionFeedback
                         }
                     });
                 }

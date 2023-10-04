@@ -1830,5 +1830,5 @@ progress::-webkit-progress-value {
 
 .cls-milestoneStatus {
     font-size: 12px;
-    margin-left: 10%;
+    float:right;
 }

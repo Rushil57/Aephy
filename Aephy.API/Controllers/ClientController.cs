@@ -555,6 +555,7 @@ namespace Aephy.API.Controllers
                     SolutionFund fundProgress = new SolutionFund();
                     SolutionMilestone solutionMilesData = new SolutionMilestone();
                     bool fundCompleted = false;
+                    bool fundStopByClient = false;
                     if (model.UserId != "")
                     {
                         fundProgress = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
@@ -562,6 +563,10 @@ namespace Aephy.API.Controllers
                         if (checkfundCompleted == Contract.PaymentStatuses.Splitted)
                         {
                             fundCompleted = true;
+                        }
+                        if (fundProgress.IsStoppedProject)
+                        {
+                            fundStopByClient = true;
                         }
                     }
                     if (fundProgress != null && fundProgress.ProjectType != null)
@@ -640,6 +645,10 @@ namespace Aephy.API.Controllers
                         foreach (var soltiondata in solutionTeamData)
                         {
                             SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
+                            var solutionFunddata = _db.SolutionFund.Where(x => x.Id == soltiondata.SolutionFundId).FirstOrDefault();
+                            solutionTeam.SolutionId = solutionFunddata.SolutionId;
+                            solutionTeam.IndustryId = solutionFunddata.IndustryId;
+                            solutionTeam.ClientId = solutionFunddata.ClientId;
                             var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             solutionTeam.FreelancerId = soltiondata.FreelancerId;
                             solutionTeam.FreelancerName = fullname.FirstName + " " + fullname.LastName;
@@ -706,7 +715,8 @@ namespace Aephy.API.Controllers
                             FundCompleted = fundCompleted,
                             IsProjectStop = IsProjectstop,
                             DocumentDataList = DocumentList,
-                            FreelancerList = freelancerList
+                            FreelancerList = freelancerList,
+                            FundStopByClient = fundStopByClient
                         }
                     });
                 }
@@ -2825,6 +2835,62 @@ namespace Aephy.API.Controllers
                             Message = "Data Not Found!",
                         });
                     }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
+
+        //StopActiveProject
+        [HttpPost]
+        [Route("StopActiveProject")]
+        public async Task<IActionResult> StopActiveProject([FromBody] solutionFundViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var solutionfundData = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
+                    if (solutionfundData != null)
+                    {
+                        if(solutionfundData.FundType == SolutionFund.FundTypes.ProjectFund)
+                        {
+                            solutionfundData.IsStoppedProject = true;
+                            solutionfundData.StoppedProjectDateTime = DateTime.Now;
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            var solutionmilestonefundData = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType && x.MileStoneId == model.MileStoneId).FirstOrDefaultAsync();
+                            solutionmilestonefundData.IsStoppedProject = true;
+                            solutionmilestonefundData.StoppedProjectDateTime = DateTime.Now;
+                            _db.SaveChanges();
+                        }
+                        
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Project Stopped"
+                        });
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Not Found"
+                    });
                 }
                 catch (Exception ex)
                 {

@@ -931,5 +931,19 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        //StopActiveProject
+        [HttpPost]
+        public async Task<string> StopActiveProject([FromBody] SolutionFundModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.ClientId = userId;
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/StopActiveProject", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

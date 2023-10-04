@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231004055103_Stop_Field_Added_ContractTable")]
+    partial class Stop_Field_Added_ContractTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,6 +248,9 @@ namespace Aephy.API.Migrations
                     b.Property<bool>("IsClientRefund")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsStoppedProject")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsTaxRefund")
                         .HasColumnType("bit");
 
@@ -280,6 +286,9 @@ namespace Aephy.API.Migrations
 
                     b.Property<int>("SolutionId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("StoppedProjectDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TaxId")
                         .HasColumnType("nvarchar(max)");
@@ -990,9 +999,6 @@ namespace Aephy.API.Migrations
                     b.Property<bool>("IsDispute")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsStoppedProject")
-                        .HasColumnType("bit");
-
                     b.Property<int>("MileStoneId")
                         .HasColumnType("int");
 
@@ -1007,9 +1013,6 @@ namespace Aephy.API.Migrations
 
                     b.Property<int>("SolutionId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("StoppedProjectDateTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

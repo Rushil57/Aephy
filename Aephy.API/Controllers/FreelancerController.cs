@@ -1243,8 +1243,9 @@ namespace Aephy.API.Controllers
                                 List<string> industrylist = new List<string>();
                                 foreach (var data in finalFundList)
                                 {
+                                    var checkProjectStopByClient = _db.SolutionFund.Where(x => x.Id == data.solutionFunds.Id).FirstOrDefault();
                                     var checkContractCompleted = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                    if (checkContractCompleted != Contract.PaymentStatuses.Splitted)
+                                    if (checkContractCompleted != Contract.PaymentStatuses.Splitted &&  data.solutionFunds.IsStoppedProject == false)
                                     {
                                         SolutionsModel solutionsdataStore = new SolutionsModel();
                                         var solutionData = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).FirstOrDefault();
@@ -1615,6 +1616,8 @@ namespace Aephy.API.Controllers
                                     dataRestore.IndustryId = solutionFundData.IndustryId;
                                     dataRestore.ProjectPrice = solutionFundData.ProjectPrice;
                                     dataRestore.Id = solutionFundData.Id;
+                                    dataRestore.MileStoneId = solutionFundData.MileStoneId;
+                                    dataRestore.FundType = solutionFundData.FundType;
                                 }
                                 solutionList.Add(dataRestore);
 
@@ -1866,7 +1869,7 @@ namespace Aephy.API.Controllers
                                 foreach (var data in finalFundList)
                                 {
                                     var checkContractCompleted = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                    if (checkContractCompleted == Contract.PaymentStatuses.Splitted)
+                                    if (checkContractCompleted == Contract.PaymentStatuses.Splitted || data.solutionFunds.IsStoppedProject)
                                     {
                                         SolutionsModel solutionsdataStore = new SolutionsModel();
                                         solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();

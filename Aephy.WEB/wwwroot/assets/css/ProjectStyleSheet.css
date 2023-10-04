@@ -1819,3 +1819,7 @@ progress::-webkit-progress-value {
     color: var(--brand);
     cursor: pointer;
 }
+
+.swal2-title {
+    font-size: 1.40em !important;
+}

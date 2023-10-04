@@ -38,6 +38,10 @@ namespace Aephy.API.DBHelper
         public FundTypes FundType { get; set;}
 
         public bool IsCheckOutDone { get; set; }
+
+        public bool IsStoppedProject { get; set; }
+
+        public DateTime? StoppedProjectDateTime { get; set; }
     }
 
     public class SolutionDispute

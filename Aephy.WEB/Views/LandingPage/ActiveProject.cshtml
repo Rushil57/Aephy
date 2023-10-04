@@ -1,8 +1,23 @@
-﻿@{
+﻿@using Microsoft.Extensions.Configuration  
+@inject IConfiguration Configuration
+@using System
+
+@{
+
     ViewData["Title"] = "Active Project";
     Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+
+      string apiKey = Configuration.GetSection("FirebaseConfig:apiKey").Value.ToString();
+    string authDomain = Configuration.GetSection("FirebaseConfig:authDomain").Value.ToString();
+    string projectId = Configuration.GetSection("FirebaseConfig:projectId").Value.ToString();
+    string storageBucket = Configuration.GetSection("FirebaseConfig:storageBucket").Value.ToString();
+    string messagingSenderId = Configuration.GetSection("FirebaseConfig:messagingSenderId").Value.ToString();
+    string appId = Configuration.GetSection("FirebaseConfig:appId").Value.ToString();
+    string measurementId = Configuration.GetSection("FirebaseConfig:measurementId").Value.ToString();
 }
 <link href="../assets/css/projectstylesheet.css" rel="stylesheet" />
+<link href="~/assets/css/chat.css" rel="stylesheet" />
+
 <main class="main cls-fixed-common" id="main">
 
     <div class="container">
@@ -501,9 +516,70 @@
             </div>
         </div>
     </div>
-   
+
+    <div class="modal fade" id="chatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Chat</h5>
+            <a onclick="closeChatModal()">
+              <span aria-hidden="true">&times;</span>
+            </a>
+          </div>
+          <div class="modal-body">
+            <div class="messaging">
+              <div class="inbox_msg">
+                <div class="inbox_people">
+                  <div class="headind_srch">
+                    <div class="recent_heading">
+                      <h4 id="freelancer-name">Freelanceres</h4>
+                    </div>
+                   
+                  </div>
+                  <div class="inbox_chat" id="inboxPeople">
+                  </div>
+                </div>
+                <div class="mesgs">
+                  <div class="msg_history" id="chat_history">
+                    <div class="text-center">
+                        <img src="https://shorturl.at/bhou4"/>
+                    </div>
+                  </div>
+                  <div class="type_msg d-none" id="type-chat">
+                    <div class="input_msg_write">
+                      <input type="text" id="txt_message" class="write_msg" placeholder="Type a message" />
+                      <button class="msg_send_btn" type="button" id="btn_chat_send">
+                        <i class="bi bi-send" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+   <script src="~/assets/js/chat.js"></script>
 <script>
     $(document).ready(function () {
+
+         firebaseConfig = {
+            apiKey: "@apiKey",
+            authDomain: "@authDomain",
+            projectId: "@projectId",
+            storageBucket: "@storageBucket",
+            messagingSenderId: "@messagingSenderId",
+            appId: "@appId",
+            measurementId: "@measurementId"
+        };
+
+        InitFirebase(firebaseConfig);
+
         $('.close').on('click', function () {
             $('#milestonesModal').modal('hide');
 
@@ -772,7 +848,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient);
                    }
                 
                 if(data.DocumentDataList != ""){
@@ -935,7 +1011,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false);
                         $("#preloader").hide();
                        return;
                    }
@@ -1002,7 +1078,7 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice){
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice,FundStopByClient){
 
        var projectPrice = parseInt(data.ProjectPrice).toLocaleString('en-US');
           $("#solutionfund-popUp").css("display","block")
@@ -1018,7 +1094,6 @@
 
               $(".cls-solutionDetails").text('Stop Project');
               fundDecided = fundDecided + 1;
-
                if(data.FundType == 1){
                    $(".cls-fundProgress").text("Fund Project " + fundDecided);
 
@@ -1049,9 +1124,6 @@
                       }
 
                }
-             
-              
-              
            }
 
            if(data.ProjectStatus == "COMPLETED"){
@@ -1111,6 +1183,12 @@
                     $(".btn.disabled").css("color","black");
                }
            }
+
+            if(FundStopByClient){
+                   DisabledSolutionDetailsButton()
+	               DisabledFundButton()
+                   DisabledSolutionFurtherProgressButton()
+              }
    }
 
    function CheckEvent(){
@@ -1118,6 +1196,10 @@
         if(event == "Raise a Dispute"){
                 RaiseDispute();
                  return;
+        }
+        if(event == "Stop Project"){
+            StopActiveProject();
+            return
         }
    }
 
@@ -1477,7 +1559,7 @@
                           solutionTeam +='<div class="ps-3">' +
                           '<h6 style="margin-bottom: 0; !important">'+solutionValue.FreelancerName+'</h6>' +
                           '<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
-                          '<div style="padding-top: 5%;"><i class="bi bi-chat-left-dots cls-chat-icon"></i></div>' + 
+                          "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openChatModal("+solutionValue.IndustryId+","+solutionValue.SolutionId+",'"+solutionValue.ClientId+"')></i></div>" + 
                           '</div>' +
                         '</div>' +
                        '</div>' +
@@ -1534,5 +1616,229 @@
             });
         });
       }
+
+      function openChatModal(IndustryId,SolutionID,ClietnId) {
+        let model = {
+            IndustryId : IndustryId,
+            SolutionID : SolutionID,
+            UserId: ClietnId,
+            UserRole:''
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetChatResponse", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(model),
+            success: function (result) {
+                if(result.StatusCode == 200)
+                {
+                    var index = 0;
+                    var subObj = '';
+                    var html = '';
+                    var resultLength = result.Result.length;
+                    var profileHtml = '';
+                    if(resultLength > 0){
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = result.Result[index];
+                            if(subObj.ProfileUrl == null)
+                            {
+                                var splitName =  subObj.FreelancerName.split(" ");
+
+                                html += "<div class=\"chat_list\" id="+ subObj.FreelancerId +" onclick=\"onPeopleClick('"+subObj.FreelancerId+"','"+subObj.FreelancerName+"');\">"+
+                                            "<div class=\"chat_people\">"+
+                                                "<div class=\"chat_no_img\">"+
+	                                                splitName[0].charAt(0) +
+                                                    splitName[1].charAt(0) +
+	                                            "</div>"+
+	                                            "<div class=\"chat_no_ib\">"+
+	                                                "<h5>"+ subObj.FreelancerName +"</h5>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                            }
+                            else
+                            {
+                                html += "<div class=\"chat_list\" id="+ subObj.FreelancerId +" onclick=\"onPeopleClick('"+subObj.FreelancerId+"','"+subObj.FreelancerName+"');\">"+
+                                            "<div class=\"chat_people\">"+
+	                                            "<div class=\"chat_img\">"+
+	                                                "<img src=\""+subObj.ProfileUrl+"\">"+
+	                                            "</div>"+
+	                                            "<div class=\"chat_ib\">"+
+	                                                "<h5>"+ subObj.FreelancerName +"</h5>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                            }
+                        }
+                    }
+                    else{
+                        html = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+                    }
+                    $("#inboxPeople .chat_list").remove();
+                    $("#inboxPeople").append(html);
+                }
+                $('#chatModal').modal('show');
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+
+       function onPeopleClick(id,name)
+    {
+        reciverToken = null;
+
+        $('#chatModal').modal('show');
+        //$("#freelancer-name").html(name);
+        $("#type-chat").removeClass("d-none");
+        let currentUser = "@Context.Session.GetString("LoggedUser")";
+        let role = "@Context.Session.GetString("LoggedUserRole")";
+
+        if(role == "Client")
+        {
+            //username = name;
+            //chatroom = currentUser +"-join-"+ id ;
+            //bindMessage();
+            //console.log(chatroom);
+
+            var testchatroom = currentUser + "-join-" + id;
+            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+            findRoom.on("value", function(data) {
+
+                if(data.val() != undefined)
+                {
+                    username = name;
+                    chatroom = testchatroom;
+                }
+                else
+                {
+                    username = name;
+                    chatroom = id + "-join-" + currentUser;
+                }
+
+                console.log(chatroom);
+
+                bindMessage();
+
+            }, function (error) {
+                return false;
+            });
+        }
+        else
+        {
+            var testchatroom = currentUser + "-join-" + id;
+            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
+            findRoom.on("value", function(data) {
+
+                if(data.val() != undefined)
+                {
+                    username = name;
+                    chatroom = testchatroom;
+                }
+                else
+                {
+                    username = name;
+                    chatroom = id + "-join-" + currentUser;
+                }
+
+                console.log(chatroom);
+
+                bindMessage();
+
+            }, function (error) {
+                return false;
+            });
+        }
+    }
+
+        function closeChatModal(){
+        $("#inboxPeople .chat_list").removeClass("active_chat");
+        $("#type-chat").addClass("d-none");
+        $("#txt_message").val("");
+        $("#chat_history").empty();
+        $("#chat_history").append("<div class=\"text-center\"><img src=\"https://shorturl.at/bhou4\"/></div>")
+        $('#chatModal').modal('hide');
+    }
+
+     function bindMessage(){
+        offconn();
+        $("#chat_history").empty();
+
+        let senderName = "@Context.Session.GetString("FullName").ToString()";
+
+        fetchMessage(senderName);
+    }
+
+    $("#btn_chat_send").click(function(){
+        sendChatMessage();
+    });
+
+     function sendChatMessage(){
+        let msg = $("#txt_message").val();
+
+        if(msg == "")
+        {
+            return false;
+        }
+
+        let senderName = "@Context.Session.GetString("FullName").ToString()";
+
+        let model = {
+            sedername : senderName,
+            recivername : username,
+            message : msg,
+            timestamp : Date.now(),
+            image : ''
+        }
+
+        $("#txt_message").val("");
+        sendMessage(model);
+        model = null;
+    }
+
+    function StopActiveProject(){
+          var Industryid = @ViewData["Industry"]; 
+            var Solutionid = @ViewData["Solution"];
+
+            var data = {
+                IndustryId : Industryid,
+                SolutionId : Solutionid,
+                ProjectType :$("input[name='projSize']:checked").val(),
+                MileStoneId : $("#solutionFundMileStoneId").val(),
+            }
+           $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "@Url.Action("StopActiveProject", "LandingPage")",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if(result.Message == "Project Stopped"){
+                        showToaster("success", "Success", result.Message);
+                        DisabledSolutionDetailsButton()
+	                    DisabledFundButton()
+                        DisabledSolutionFurtherProgressButton();
+                    }else{
+                        showToaster("warning", "Warning!", result.Message);
+                    }
+
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", result);
+                }
+            });
+    }
+
+    function DisabledFundButton(){
+         $(".cls-fundPopOver").addClass('disabled');
+       $(".cls-fundPopOver").css("background-color", "var(--brand)");
+       $(".cls-fundPopOver").css("color","black"); 
+    }
      
 </script>

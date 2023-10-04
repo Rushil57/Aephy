@@ -478,6 +478,11 @@ namespace Aephy.API.Models
             public string? ImagePath { get; set; }
 
             public string? ImageUrlWithSas { get; set; }
+
+            public int SolutionId { get; set; }
+            public int IndustryId { get; set; }
+
+            public string? ClientId { get; set; }
         }
 
         public class UserDetailsModel

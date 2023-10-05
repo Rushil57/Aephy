@@ -2509,5 +2509,47 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        //GetFreelancerList
+        [HttpPost]
+        public async Task<string> GetFreelancerListSolutionWise([FromBody] SolutionFundModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.UserId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerListSolutionWise", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        //SaveFreelancerToFreelancerReview
+        [HttpPost]
+        public async Task<string> SaveFreelancerToFreelancerReview([FromBody] FreelancerToFreelancerReviewViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.FromFreelancerId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerToFreelancerReview", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
     }
 }

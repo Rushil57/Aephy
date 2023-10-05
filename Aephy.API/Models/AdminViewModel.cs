@@ -485,6 +485,10 @@ namespace Aephy.API.Models
             public int IndustryId { get; set; }
 
             public string? ClientId { get; set; }
+
+            public string? UserId { get; set; }
+
+            public int SolutionFundId { get; set; }
         }
 
         public class UserDetailsModel
@@ -570,6 +574,28 @@ namespace Aephy.API.Models
             public string? VatAmount { get; set; }
 
             public string? FundType { get; set; }
+        }
+
+        public class FreelancerToFreelancerReviewModel
+        {
+            public int Id { get; set; }
+            public string? ToFreelancerId { get; set; }
+
+            public string? FromFreelancerId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public int IndustryId { get; set; }
+
+            public string? Feedback_Message { get; set; }
+
+            public int CollaborationTeamWorkRating { get; set; }
+            public int CommunicationRating { get; set; }
+            public int ProfessionalismRating { get; set; }
+            public int TechnicalRating { get; set; }
+            public int ProjectManagementRating { get; set; }
+            public int ResponsivenessRating { get; set; }
+            public int WellDefinedProjectRating { get; set; }
         }
     }
 }

@@ -74,6 +74,8 @@ namespace Aephy.API.DBHelper
         
         public DbSet<ActiveSolutionMilestoneStatus> ActiveSolutionMilestoneStatus { get; set; }
 
+        public DbSet<FreelancerToFreelancerReview> FreelancerToFreelancerReview { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

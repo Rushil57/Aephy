@@ -29,4 +29,29 @@ namespace Aephy.API.DBHelper
 
         public DateTime CreateDateTime { get; set; }
     }
+
+    public class FreelancerToFreelancerReview
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string? ToFreelancerId { get; set; }
+
+        public string? FromFreelancerId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
+
+        public string? Feedback_Message { get; set; }
+
+        public int CollaborationAndTeamWork { get; set; }
+        public int Communication { get; set; }
+        public int Professionalism { get; set; }
+        public int TechnicalSkills { get; set; }
+        public int ProjectManagement { get; set; }
+        public int Responsiveness { get; set; }
+        public int WellDefinedProjectScope { get; set; }
+    }
 }

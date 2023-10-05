@@ -124,5 +124,28 @@
 
 
     }
-    
+
+    public class FreelancerToFreelancerReviewViewModel
+    {
+        public int Id { get; set; }
+        public string? ToFreelancerId { get; set; }
+
+        public string? FromFreelancerId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
+
+        public string? Feedback_Message { get; set; }
+
+        public int CollaborationTeamWorkRating { get; set; }
+        public int CommunicationRating { get; set; }
+        public int ProfessionalismRating { get; set; }
+        public int TechnicalRating { get; set; }
+        public int ProjectManagementRating { get; set; }
+        public int ResponsivenessRating { get; set; }
+        public int WellDefinedProjectRating { get; set; }
+
+    }
+
 }

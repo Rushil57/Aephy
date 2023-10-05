@@ -2003,6 +2003,7 @@ namespace Aephy.API.Controllers
                                         solutionsdataStore.MileStoneTitle = milestoneData;
                                     }
                                     solutionsdataStore.ContractId = contractid;
+                                    solutionsdataStore.Id = data.solutionFunds.Id;
                                     solutionsModel.Add(solutionsdataStore);
 
                                 }
@@ -2025,6 +2026,88 @@ namespace Aephy.API.Controllers
                         });
                     }
                 }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        //GetFreelancerListSolutionWise
+        [HttpPost]
+        [Route("GetFreelancerListSolutionWise")]
+        public async Task<IActionResult> GetFreelancerListSolutionWise([FromBody] SolutionTeamViewModel model)
+        {
+            if (model != null)
+            {
+                var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
+                List<SolutionTeamViewModel> TeamList = new List<SolutionTeamViewModel>();
+                if(solutionTeamData.Count > 0)
+                {
+                    var solutionFunddata = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
+                    foreach(var data in solutionTeamData)
+                    {
+                        SolutionTeamViewModel teamData = new SolutionTeamViewModel();
+                        if (data.FreelancerId != model.UserId)
+                        {
+                            var fullname = _db.Users.Where(x => x.Id == data.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            teamData.FreelancerName = fullname.FirstName + " " + fullname.LastName;
+                            teamData.FreelancerId = data.FreelancerId;
+                            teamData.IndustryId = solutionFunddata.IndustryId;
+                            teamData.SolutionId = solutionFunddata.SolutionId;
+                            TeamList.Add(teamData);
+                        }
+                        
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = TeamList
+                });
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        //SaveFreelancerToFreelancerReview
+        [HttpPost]
+        [Route("SaveFreelancerToFreelancerReview")]
+        public async Task<IActionResult> SaveFreelancerToFreelancerReview([FromBody] FreelancerToFreelancerReviewModel model)
+        {
+            if (model != null)
+            {
+                var reviewData = new FreelancerToFreelancerReview()
+                {
+                    ToFreelancerId = model.ToFreelancerId,
+                    FromFreelancerId = model.FromFreelancerId,
+                    Feedback_Message = model.Feedback_Message,
+                    SolutionId = model.SolutionId,
+                    IndustryId = model.IndustryId,
+                    CollaborationAndTeamWork = model.CollaborationTeamWorkRating,
+                    Responsiveness = model.ResponsivenessRating,
+                    Communication = model.CommunicationRating,
+                    Professionalism = model.ProfessionalismRating,
+                    TechnicalSkills = model.TechnicalRating,
+                    ProjectManagement = model.ProfessionalismRating,
+                    WellDefinedProjectScope = model.WellDefinedProjectRating
+                };
+                _db.FreelancerToFreelancerReview.Add(reviewData);
+                _db.SaveChanges();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Review Submitted Successfully!",
+                });
 
             }
 

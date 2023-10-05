@@ -1537,7 +1537,7 @@ namespace Aephy.API.Controllers
                     if (model.Id != 0)
                     {
                         Contract? contractSave;
-                        var trimmedPrice = model.ProjectPrice.Replace("$", "");
+                        var trimmedPrice = model.ProjectPrice.Replace("€", "");
                         var ProjectPrice = Convert.ToInt64(trimmedPrice);
                         if (model.MileStoneCheckout)
                         {

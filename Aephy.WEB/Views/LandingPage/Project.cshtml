@@ -110,7 +110,7 @@
                                 <div class="row m-lg-2 m-4 d-flex justify-content-center align-center align-items-center RButtons">
                                     <div class="section-header">
                                     <hr />
-                                    <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Projects</label></h2>
+                                    <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Project</label></h2>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
                                         <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked onchange="GetProjectTypeValue(this)"/>
@@ -1039,9 +1039,7 @@
                     BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays)
                 }
 
-                if(data.SolutionFeedback != ""){
-                    BindSolutionFeedback(data.SolutionFeedback);
-                }
+                 BindSolutionFeedback(data.SolutionFeedback);
 
                 if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
@@ -1230,15 +1228,15 @@
              var projectType = $("input[name='projSize']:checked").val();
              if(projectType == 'small'){
                 // Projectprice = 100;
-                Projectprice = $("#small-projectPrice").html().replace(',', '');
+                Projectprice = $("#small-projectPrice").html().replace(',', '').replace("€", "");
              }
              if(projectType == 'medium'){
                  //Projectprice = 200;
-                 Projectprice =  $("#medium-projectPrice").html().replace(',', '');
+                 Projectprice =  $("#medium-projectPrice").html().replace(',', '').replace("€", "");
              }
              if(projectType == 'large'){
                  //Projectprice = 500;
-                 Projectprice = $("#large-projectPrice").html().replace(',', '');
+                 Projectprice = $("#large-projectPrice").html().replace(',', '').replace("€", "");
              }
 
              var checkPayment =  $("#solutionfund-furtherprogress").text();
@@ -1259,7 +1257,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : Projectprice.toString().replace("$", ""),
+                ProjectPrice : Projectprice,
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : checkCheckoutType
             }
@@ -1314,10 +1312,10 @@
                              countPricing += freelancerPriceCount
                          });  
                          var finalPrice = countPricing.toLocaleString('en-US');
-                         $(".cls-smallProjectprice").html("$" + finalPrice);
+                         $(".cls-smallProjectprice").html("€" + finalPrice);
                     }
                     else{
-                        $(".cls-smallProjectprice").html("$" + countPricing);
+                        $(".cls-smallProjectprice").html("€" + countPricing);
                     }  
                 }
                 // small project price counting
@@ -1335,10 +1333,10 @@
                              countPricing += freelancerPriceCount
                          }); 
                            var finalPrice = countPricing.toLocaleString('en-US');
-                         $(".cls-mediumProjectprice").html("$" + finalPrice);
+                         $(".cls-mediumProjectprice").html("€" + finalPrice);
                     }
                     else{
-                         $(".cls-mediumProjectprice").html("$" + countPricing);
+                         $(".cls-mediumProjectprice").html("€" + countPricing);
                     }
                }
                // medium project price counting
@@ -1357,31 +1355,29 @@
                              countPricing += freelancerPriceCount
                          });
                           var finalPrice = countPricing.toLocaleString('en-US');
-                           $(".cls-largeProjectprice").html("$" + finalPrice);
+                           $(".cls-largeProjectprice").html("€" + finalPrice);
                     }
                     else{
-                      $(".cls-largeProjectprice").html("$" + countPricing);
+                      $(".cls-largeProjectprice").html("€" + countPricing);
                     }
                 }
                 // large project price counting
          })
 
          if(IsSmallPriceAvailable == false){
-             $(".cls-smallProjectprice").html("$0");
+             $(".cls-smallProjectprice").html("€0");
          }
          if(IsMeduimPriceAvailable == false){
-             $(".cls-mediumProjectprice").html("$0");
+             $(".cls-mediumProjectprice").html("€0");
          }
          if(IsLargePriceAvailable == false){
-              $(".cls-largeProjectprice").html("$0");
+              $(".cls-largeProjectprice").html("€0");
          }
 
     }
 
-    function BindSolutionFeedback(feedbackData){
+    function BindSolutionFeedback(feedbackData) {
         var totalfeedbackLength = feedbackData.length;
-        $(".lblTotalReviews").html(totalfeedbackLength)
-
         var totalwelldefinedprojectscope = 0;
         var totaladherenceprojectscope = 0;
         var totaldeliverablesquality = 0;
@@ -1394,39 +1390,41 @@
         var threestar = 0;
         var twostar = 0;
         var onestar = 0;
+        $(".lblTotalReviews").html(totalfeedbackLength)
+        if (totalfeedbackLength != 0) {
+            $.each(feedbackData, function (data, value) {
+                totalwelldefinedprojectscope += value.WellDefinedProjectScope;
+                totaladherenceprojectscope += value.AdherenceToProjectScope;
+                totaldeliverablesquality += value.DeliverablesQuality;
+                totalmeetingtimeliness += value.MeetingTimeliness;
+                totalclientsatisfaction += value.Clientsatisfaction;
+                totaladherencebudget += value.AdherenceToBudget
 
-        $.each(feedbackData, function (data, value) {
-            totalwelldefinedprojectscope += value.WellDefinedProjectScope;
-            totaladherenceprojectscope += value.AdherenceToProjectScope;
-            totaldeliverablesquality += value.DeliverablesQuality;
-            totalmeetingtimeliness += value.MeetingTimeliness;
-            totalclientsatisfaction += value.Clientsatisfaction;
-            totaladherencebudget += value.AdherenceToBudget
+                totalFeedback = Math.floor((value.WellDefinedProjectScope + value.AdherenceToProjectScope + value.DeliverablesQuality + value.MeetingTimeliness + value.Clientsatisfaction + value.AdherenceToBudget) / 6 / 2);
+                if(totalFeedback == 1.00){
+                    onestar += 1;
+                }
+                if(totalFeedback == 2.00){
+                    twostar += 1;
+                }
+                if(totalFeedback == 3.00){
+                    threestar += 1;
+                }
+                if(totalFeedback == 4.00){
+                    fourstar += 1;
+                }
+                if(totalFeedback == 5.00){
+                    fivestar += 1;
+                }
+            })
+            totalwelldefinedprojectscope = totalwelldefinedprojectscope / totalfeedbackLength;
+            totaladherenceprojectscope = totaladherenceprojectscope / totalfeedbackLength;
+            totaldeliverablesquality = totaldeliverablesquality / totalfeedbackLength;
+            totalmeetingtimeliness = totalmeetingtimeliness / totalfeedbackLength;
+            totalclientsatisfaction = totalclientsatisfaction / totalfeedbackLength;
+            totaladherencebudget = totaladherencebudget / totalfeedbackLength;
+        }
 
-            totalFeedback = Math.floor((value.WellDefinedProjectScope + value.AdherenceToProjectScope + value.DeliverablesQuality + value.MeetingTimeliness + value.Clientsatisfaction + value.AdherenceToBudget) / 6 / 2);
-            if(totalFeedback == 1.00){
-                onestar += 1;
-            }
-            if(totalFeedback == 2.00){
-                twostar += 1;
-            }
-            if(totalFeedback == 3.00){
-                threestar += 1;
-            }
-            if(totalFeedback == 4.00){
-                fourstar += 1;
-            }
-            if(totalFeedback == 5.00){
-                fivestar += 1;
-            }
-        })
-        totalwelldefinedprojectscope = totalwelldefinedprojectscope / totalfeedbackLength;
-        totaladherenceprojectscope = totaladherenceprojectscope / totalfeedbackLength;
-        totaldeliverablesquality = totaldeliverablesquality / totalfeedbackLength;
-        totalmeetingtimeliness = totalmeetingtimeliness / totalfeedbackLength;
-        totalclientsatisfaction = totalclientsatisfaction / totalfeedbackLength;
-        totaladherencebudget = totaladherencebudget / totalfeedbackLength;
-        
         $("#welldefined").html(totalwelldefinedprojectscope);
         $("#adherencescope").html(totaladherenceprojectscope);
         $("#qualitydeliverables").html(totaldeliverablesquality);

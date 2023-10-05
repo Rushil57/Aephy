@@ -61,8 +61,7 @@ namespace Aephy.API.Stripe
         
         public Session CreateCheckoutSession(SolutionMilestone mileStone, string projectPrice, string successUrl, string cancelUrl)
         {
-            var trimmedPrice = projectPrice.Replace("$", String.Empty);
-            var ProjectPrice = Convert.ToInt64(trimmedPrice);
+            var ProjectPrice = Convert.ToInt64(projectPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -76,7 +75,7 @@ namespace Aephy.API.Stripe
                             PriceData = new SessionLineItemPriceDataOptions
                             {
                                 UnitAmount = Convert.ToInt64(ProjectPrice * 100), // Amount in cents ($100)
-                                Currency = "usd",
+                                Currency = "EUR",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
                                     Name = mileStone.Title,
@@ -97,12 +96,13 @@ namespace Aephy.API.Stripe
                         { "freelancerId2", "123" },
                         { "Architect", "123" }
                     },
-                AutomaticTax = new SessionAutomaticTaxOptions
-                {
-                    Enabled = true
-                },
+                //AutomaticTax = new SessionAutomaticTaxOptions
+                //{
+                //    Enabled = true
+                //},
                 TaxIdCollection = new SessionTaxIdCollectionOptions
                 {
+                    
                     Enabled = true
                 }
             };
@@ -120,8 +120,7 @@ namespace Aephy.API.Stripe
 
         public Session CreateProjectCheckoutSession(string projectPrice,string successUrl, string cancelUrl)
         {
-            var trimmedPrice = projectPrice.Replace("$", String.Empty);
-            var ProjectPrice = Convert.ToInt64(trimmedPrice);
+            var ProjectPrice = Convert.ToInt64(projectPrice);
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -135,7 +134,7 @@ namespace Aephy.API.Stripe
                            PriceData = new SessionLineItemPriceDataOptions
                             {
                                 UnitAmount = Convert.ToInt64(ProjectPrice * 100), // Amount in cents ($100)
-                                Currency = "usd",
+                                Currency = "EUR",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
                                     Name = "test",
@@ -156,10 +155,10 @@ namespace Aephy.API.Stripe
                         { "freelancerId2", "123" },
                         { "Architect", "123" }
                     },
-                AutomaticTax = new SessionAutomaticTaxOptions
-                {
-                    Enabled = true
-                },
+                //AutomaticTax = new SessionAutomaticTaxOptions
+                //{
+                //    Enabled = true
+                //},
                 TaxIdCollection = new SessionTaxIdCollectionOptions
                 {
                     Enabled = true
@@ -288,6 +287,21 @@ namespace Aephy.API.Stripe
             {
                 return null;
             }
+        }
+
+        public Session GetStripeFeedetails(string paymentIntedId)
+        {
+            //
+            var options = new PaymentIntentGetOptions();
+            options.AddExpand("charges.data.balance_transaction");
+
+            var service = new PaymentIntentService();
+            PaymentIntent paymentIntent = service.Get(paymentIntedId, options);
+
+           // List<BalanceTransactionFeeDetail> feeDetails = paymentIntent.Charges.Data[0].BalanceTransaction.FeeDetails;
+
+            return null;
+            //
         }
     }
 }

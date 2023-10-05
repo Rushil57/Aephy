@@ -96,7 +96,7 @@
                                 <div class="row m-lg-2 m-4 d-flex justify-content-center align-center align-items-center RButtons">
                                     <div class="section-header">
                                     <hr />
-                                    <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Projects</label></h2>
+                                    <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Project</label></h2>
                                     </div>
                                     <div class="col-lg-4 col-md-4 d-flex justify-content-center">
                                         <input type="radio" id="projSize" name="projSize" checked/>
@@ -988,7 +988,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : $("#projectfund-projectprice").html().replace("$", "").replace(",",""),
+                ProjectPrice : $("#projectfund-projectprice").html().replace("€", "").replace(",",""),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : mileStoneCheckOut,
                 GetNextMileStoneData : nextMilestoneData
@@ -1093,7 +1093,7 @@
            $('input:radio[name=projSize]').attr('label',projectType);
 
           $(".projectfund-projecttype").html(projectType)
-          $(".cls-projectPrice").html("$" + projectPrice)
+          $(".cls-projectPrice").html("€" + projectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
@@ -1118,7 +1118,7 @@
                           $(".cls-fundPopOver").hide();
                           $(".cls-fundProgress").text("Fund Milestone " + fundDecided)
                           $(".project-progress").html("Milestone " + total + " is Completed")
-                          $(".cls-projectPrice").html("$" + parseInt(NextMilestonePrice).toLocaleString('en-US'))
+                          $(".cls-projectPrice").html("€" + parseInt(NextMilestonePrice).toLocaleString('en-US'))
                       }else{
                           $(".cls-fundPopOver").show();
                           $(".cls-fundProgress").hide();
@@ -1684,10 +1684,12 @@
                                             "</div>"+
                                         "</div>";
                             }
+                            $(".cls-temp-nodata").hide()
                         }
                     }
                     else{
-                        html = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+                        $(".cls-temp-nodata").hide()
+                        html = '<tr class="cls-temp-nodata"><td colspan="7"><center>No Data Available</center></td><tr>';
                     }
                     $("#inboxPeople .chat_list").remove();
                     $("#inboxPeople").append(html);

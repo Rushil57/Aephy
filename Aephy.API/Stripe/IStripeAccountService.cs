@@ -22,5 +22,6 @@ namespace Aephy.API.Stripe
         public Refund RefundAmountToClient(string lastChargeId, long amount);
 
         public Session GetTaxDetails(string sessionId);
+        public Session GetStripeFeedetails(string paymentIntedId);
     }
 }

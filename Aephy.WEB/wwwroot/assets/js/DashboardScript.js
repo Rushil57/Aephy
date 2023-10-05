@@ -101,4 +101,12 @@ function closeFreelancerToFreelacerFeedbackPopup() {
     $("#freelancer_activeId").val("");
     $("#freelancer_solutionId").val(0);
     $("#freelancer_industryId").val(0);
+    $('input[name=freelancercollaborationteamwork-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancercommunication-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancerProfessionalism-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancertechnical-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancerprojectmanagement-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancerresponsiveness-rating][value="0"]').prop('checked', true);
+    $('input[name=freelancerwelldefinedproject-rating][value="0"]').prop('checked', true);
+    $("#freelancerfeedbackMessage").val("")
 }

@@ -506,6 +506,29 @@ namespace Aephy.API.Controllers
                     }
 
                     var solutionFeedback = _db.ProjectReview.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
+                    List<ProjectReview> projectReviewList = new List<ProjectReview>();
+                    if (solutionFeedback.Count > 0)
+                    {
+                        foreach(var feedbackdata in solutionFeedback)
+                        {
+                            ProjectReview projectReview = new ProjectReview();
+                            var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            projectReview.ClientId = clientname.FirstName + " " + clientname.LastName;
+                            projectReview.AdherenceToBudget = feedbackdata.AdherenceToBudget;
+                            projectReview.WellDefinedProjectScope = feedbackdata.WellDefinedProjectScope;
+                            projectReview.AdherenceToProjectScope = feedbackdata.AdherenceToProjectScope;
+                            projectReview.DeliverablesQuality = feedbackdata.DeliverablesQuality;
+                            projectReview.MeetingTimeliness = feedbackdata.MeetingTimeliness;
+                            projectReview.Clientsatisfaction = feedbackdata.Clientsatisfaction;
+                            projectReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            projectReview.ID = feedbackdata.ID;
+                            projectReviewList.Add(projectReview);
+
+
+                        }
+                        
+
+                    }
                 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -521,7 +544,7 @@ namespace Aephy.API.Controllers
                             SolutionFund = fundProgress,
                             FreelancerHourlyList = freelancerList,
                             MileStoneToTalDays = mileStoneToTalDays,
-                            SolutionFeedback = solutionFeedback
+                            SolutionFeedback = projectReviewList
                         }
                     });
                 }
@@ -2965,6 +2988,53 @@ namespace Aephy.API.Controllers
 
             }
 
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
+
+        //GetAllFeedbacks
+        [HttpPost]
+        [Route("GetAllFeedbacks")]
+        public async Task<IActionResult> GetAllFeedbacks([FromBody] solutionFundViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var feedbackData = await _db.ProjectReview.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                    List<ProjectReview> projectReviewList = new List<ProjectReview>();
+                    if (feedbackData.Count > 0)
+                    {
+                        foreach (var feedbackdata in feedbackData)
+                        {
+                            ProjectReview projectReview = new ProjectReview();
+                            var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            projectReview.ClientId = clientname.FirstName + " " + clientname.LastName;
+                            projectReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            projectReview.ID = feedbackdata.ID;
+                            projectReviewList.Add(projectReview);
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = projectReviewList
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+
+            }
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status200OK,

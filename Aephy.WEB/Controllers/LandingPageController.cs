@@ -945,5 +945,13 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        //GetAllFeedbacks
+        [HttpPost]
+        public async Task<string> GetAllFeedbacks([FromBody] SolutionFundModel model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetAllFeedbacks", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

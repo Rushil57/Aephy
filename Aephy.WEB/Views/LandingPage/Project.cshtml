@@ -202,7 +202,7 @@
                                     <!--col 1-->
                                     <div class="col-6 left-content">
                                         <div class="row px-3">
-                                            <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill"></i><label class="lblTotalRatings">4.9</label><label class="lblTotalReviews">109</label><label>reviews</label></div>
+                                            <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill"></i><label class="lblTotalRatings"></label><label class="lblTotalReviews"></label><label>reviews</label></div>
                                         </div>
                                         <div class="row my-2">
                                             <div class="col ProgressTable">
@@ -210,28 +210,28 @@
                                                     <thead></thead>
                                                     <tbody style="color:#d49255">
                                                         <tr>
-                                                            <td>5 stars</td>
-                                                            <td><progress id="progress" value="101" max="109"></progress></td>
+                                                            <td>9 To 10 Stars</td>
+                                                            <td><progress id="fivestarprogress" value="101" max="100"></progress></td>
                                                             <td><label id="fivestar"></label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>4 stars</td>
-                                                            <td><progress id="progress" value="7" max="109"></progress></td>
+                                                            <td>7 To 8 Stars</td>
+                                                            <td><progress id="fourstarprogress" value="7" max="100"></progress></td>
                                                             <td><label id="fourstar"></label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>3 stars</td>
-                                                            <td><progress id="progress" value="1" max="109"></progress></td>
+                                                            <td>5 To 6 Stars</td>
+                                                            <td><progress id="threestarprogress" value="1" max="100"></progress></td>
                                                             <td><label id="threestar"></label></td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>2 stars</td>
-                                                            <td><progress id="progress" value="0" max="109"></progress></td>
+                                                        <tr> 
+                                                            <td>3 To 4 Stars</td>
+                                                            <td><progress id="progress" value="0" max="100"></progress></td>
                                                             <td><label id="twostar"></label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>1 stars</td>
-                                                            <td><progress id="progress" value="0" max="109"></progress></td>
+                                                            <td>1 To 2 Stars</td>
+                                                            <td><progress id="onestarprogress" value="0" max="100"></progress></td>
                                                             <td><label id="onestar"></label></td>
                                                         </tr>
                                                     </tbody>
@@ -285,7 +285,22 @@
                                     </div>
                                 </div>
                             </div>
-                         
+                            <div>
+                                <div class="pt-3" id="reviewDetails">
+                                    <h5 class="justify-content-start align-items-center label-title-size title-path"><label style="background-color:#fff; padding:0 0 0 0.5em;">Reviews Details</label></h5>
+                                </div>
+                                <div id="feedbackDiv">
+                                
+
+                                </div>
+                                <div class="view_action_Link d-flex" id="fullFeedbackShowButton">
+                                            <span style="background-color:#d38b4e; width:1rem;"></span>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                            <a onclick="OpenFeedbackProjectModalPop()">View All Feedbacks</a>
+                                        <img src="/assets/img/dashboard/icons-send.png">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!--Row 3 Personalize Project-->
                         <!-- Reviews row -->
@@ -740,6 +755,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="FeedbackModal" tabindex="-1" aria-labelledby="FeedbackPopModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Feedback List</h4>
+                    <a class="close" onclick="CloseFeedbackPopUp();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body" id="feedback-list-Details">
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
     $(document).ready(function () {
         $("input[name^='projSize']").change(function(){
@@ -1378,6 +1418,7 @@
 
     function BindSolutionFeedback(feedbackData) {
         var totalfeedbackLength = feedbackData.length;
+
         var totalwelldefinedprojectscope = 0;
         var totaladherenceprojectscope = 0;
         var totaldeliverablesquality = 0;
@@ -1390,8 +1431,13 @@
         var threestar = 0;
         var twostar = 0;
         var onestar = 0;
+        var feedbackShow = 1;
+        var totalFeedbackValues = 0;
+
         $(".lblTotalReviews").html(totalfeedbackLength)
         if (totalfeedbackLength != 0) {
+            $("#reviewDetails").show()
+            var reviewData = "";
             $.each(feedbackData, function (data, value) {
                 totalwelldefinedprojectscope += value.WellDefinedProjectScope;
                 totaladherenceprojectscope += value.AdherenceToProjectScope;
@@ -1400,42 +1446,134 @@
                 totalclientsatisfaction += value.Clientsatisfaction;
                 totaladherencebudget += value.AdherenceToBudget
 
-                totalFeedback = Math.floor((value.WellDefinedProjectScope + value.AdherenceToProjectScope + value.DeliverablesQuality + value.MeetingTimeliness + value.Clientsatisfaction + value.AdherenceToBudget) / 6 / 2);
-                if(totalFeedback == 1.00){
+                totalFeedbackValues += value.WellDefinedProjectScope + value.AdherenceToProjectScope + value.DeliverablesQuality + value.MeetingTimeliness + value.Clientsatisfaction + value.AdherenceToBudget;
+
+                totalFeedback = Math.floor((value.WellDefinedProjectScope + value.AdherenceToProjectScope + value.DeliverablesQuality + value.MeetingTimeliness + value.Clientsatisfaction + value.AdherenceToBudget) / 6);
+                if(totalFeedback == 1 || totalFeedback == 2){
                     onestar += 1;
                 }
-                if(totalFeedback == 2.00){
+                if(totalFeedback == 3 || totalFeedback == 4){
                     twostar += 1;
                 }
-                if(totalFeedback == 3.00){
+                if(totalFeedback == 5 || totalFeedback == 6){
                     threestar += 1;
                 }
-                if(totalFeedback == 4.00){
+                if(totalFeedback == 7 || totalFeedback == 8){
                     fourstar += 1;
                 }
-                if(totalFeedback == 5.00){
+                if(totalFeedback == 9 || totalFeedback == 10){
                     fivestar += 1;
                 }
+
+                if(feedbackShow >= 2){
+                    reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
+                    '<div class="cls-review-card">' +
+                    '<div class="d-flex align-items-center">' +
+                    '<div class="ps-3">' +
+                    '<h6 class="cls-feedback-clientname">'+value.ClientId +'</h6>' +
+                    '<div>' +
+                    '<p>'+value.Feedback_Message+'</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div></div>';
+                }
+                
+
+                feedbackShow++;
             })
+             $('#feedbackDiv').html(reviewData)
             totalwelldefinedprojectscope = totalwelldefinedprojectscope / totalfeedbackLength;
             totaladherenceprojectscope = totaladherenceprojectscope / totalfeedbackLength;
             totaldeliverablesquality = totaldeliverablesquality / totalfeedbackLength;
             totalmeetingtimeliness = totalmeetingtimeliness / totalfeedbackLength;
             totalclientsatisfaction = totalclientsatisfaction / totalfeedbackLength;
             totaladherencebudget = totaladherencebudget / totalfeedbackLength;
+            // $('#fullFeedbackShowButton').removeClass('HidefullFeedbackShowButton'); 
         }
+        $("#reviewDetails").hide()
+        //$('#fullFeedbackShowButton').addClass('HidefullFeedbackShowButton'); 
+      
+        // Binding Reviews for all
+        var finalReviews = totalFeedbackValues / (6 * totalfeedbackLength)
+        $(".lblTotalRatings").html(finalReviews.toFixed(1))
+        $("#welldefined").html(totalwelldefinedprojectscope.toFixed(1))
+        $("#adherencescope").html(totaladherenceprojectscope.toFixed(1));
+        $("#qualitydeliverables").html(totaldeliverablesquality.toFixed(1));
+        $("#mettingtimeliness").html(totalmeetingtimeliness.toFixed(1));
+        $("#clientsatisfaction").html(totalclientsatisfaction.toFixed(1));
+        $("#adherencebudget").html(totaladherencebudget.toFixed(1));
+        // Binding Reviews for all
 
-        $("#welldefined").html(totalwelldefinedprojectscope);
-        $("#adherencescope").html(totaladherenceprojectscope);
-        $("#qualitydeliverables").html(totaldeliverablesquality);
-        $("#mettingtimeliness").html(totalmeetingtimeliness);
-        $("#clientsatisfaction").html(totalclientsatisfaction);
-        $("#adherencebudget").html(totaladherencebudget);
-
+        // Binding stars for solutions
         $("#fivestar").html(fivestar)
         $("#fourstar").html(fourstar)
         $("#threestar").html(threestar)
         $("#twostar").html(twostar)
         $("#onestar").html(onestar)
+        // Binding stars for solutions
+
+        // Binding progress for solutions
+            var onestarProgress = (onestar / totalfeedbackLength) * 100;
+            $('#onestarprogress').attr('value',onestarProgress);
+
+            var twostarProgress = (twostar / totalfeedbackLength) * 100;
+            $('#twostarprogress').attr('value',twostarProgress);
+
+            var threeProgress = (threestar / totalfeedbackLength) * 100;
+            $('#threestarprogress').attr('value',threeProgress);
+
+            var fourProgress = (fourstar / totalfeedbackLength) * 100;
+            $('#fourstarprogress').attr('value',fourProgress);
+
+            var fivestarProgress = (fivestar / totalfeedbackLength) * 100;
+            $('#fivestarprogress').attr('value',fivestarProgress);
+        // Binding progress for solutions
+    }
+
+    function OpenFeedbackProjectModalPop(){
+      
+        var Industryid = @ViewData["Industry"]; 
+          var Solutionid = @ViewData["Solution"];
+
+          var data = {
+            IndustryId : Industryid,
+            SolutionId : Solutionid
+          }
+          $("#preloader").show();
+          $.ajax({
+             type: "POST",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             url: "@Url.Action("GetAllFeedbacks", "LandingPage")",
+             data: JSON.stringify(data),
+             success: function (result) {
+                 $("#FeedbackModal").modal('show');
+                 var reviewData = "";
+                 $.each(result.Result, function (data, value) {
+                     reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
+                         '<div class="cls-review-card">' +
+                         '<div class="d-flex align-items-center">' +
+                         '<div class="ps-3">' +
+                         '<h6 class="cls-feedback-clientname">' + value.ClientId + '</h6>' +
+                         '<div>' +
+                         '<p>' + value.Feedback_Message + '</p>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div></div>';
+                 });
+                 $('#feedback-list-Details').html(reviewData)
+                 $("#preloader").hide();
+             },
+             error: function (result) {
+               $("#preloader").hide();
+               showToaster("error", "Error !", "Something went wrong !!");
+             }
+          });
+    }
+
+    function CloseFeedbackPopUp(){
+        $("#FeedbackModal").modal('hide');
     }
 </script>

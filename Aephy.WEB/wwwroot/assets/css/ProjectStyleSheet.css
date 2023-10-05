@@ -58,7 +58,7 @@ section {
     .section-header h2 {
         font-size: 25px;
         font-weight: 700;
-       /* text-transform: uppercase;*/
+        /* text-transform: uppercase;*/
         margin-bottom: 18px;
         padding-bottom: 0;
         color: rgba(58,58,58,0.3);
@@ -351,12 +351,12 @@ h6 {
         color: var(--brand);
     }
 
-    .Project h3 {
-        font-weight: 700;
-        font-size: 32px;
-        font-family: var(--font-secondary);
-        color: var(--font-title);
-    }
+.Project h3 {
+    font-weight: 700;
+    font-size: 32px;
+    font-family: var(--font-secondary);
+    color: var(--font-title);
+}
 
 @media(max-width:640px){
     .Project h3 {
@@ -563,14 +563,14 @@ h6 {
 }
 
 .Project .info{
-   margin-left:5px;
-   padding:5px;
+    margin-left:5px;
+    padding:5px;
 }
 
-.Project .info .name {
-    font-weight: 600;
-    font-size: 17px;
-}
+    .Project .info .name {
+        font-weight: 600;
+        font-size: 17px;
+    }
 
 .Project .image i {
     flex-shrink: 0;
@@ -579,12 +579,12 @@ h6 {
     line-height: 0;
 }
 
-    .Project .content .stars i {
-        flex-shrink: 0;
-        color: var(--brand);
-        margin-right: 2px;
-        line-height: 0;
-    }
+.Project .content .stars i {
+    flex-shrink: 0;
+    color: var(--brand);
+    margin-right: 2px;
+    line-height: 0;
+}
 
 .Project .image-content {
     position: relative;
@@ -663,15 +663,15 @@ h6 {
     counter-increment: list;
     padding-left: 0.5rem;
 }
-.progress__item:before {
-    content: "";
-    position: absolute;
-    left: -1.7rem;
-    top: 40px;
-    height: 90%;
-    width: 1px;
-    border-left: 1px solid var(--gray);
-}
+    .progress__item:before {
+        content: "";
+        position: absolute;
+        left: -1.7rem;
+        top: 40px;
+        height: 90%;
+        width: 1px;
+        border-left: 1px solid var(--gray);
+    }
 
     .progress__item:after {
         content: counter(list);
@@ -690,34 +690,34 @@ h6 {
         border: 1px solid var(--brand);
     }
 
-    .progress__item:last-child::before {        
-            border: none;      
+    .progress__item:last-child::before {
+        border: none;
     }
 
     .progress__item .progress__item--completed {
         opacity: 0.6;
         color: var(--font-title);
     }
-        .progress__item--completed:after
-        {
-            content: "\2713";
-            font-weight: 400;
-            background: var(--brand);
-            color: #fff;
-        }
-        .progress__item--completed:before {
-            content: "";
-            position: absolute;
-            left: -1.7rem;
-            top: 40px;
-            height: 90%;
-            width: 1px;
-            border-left: 1px solid var(--brand);
-        }
-    .progress__item--active:after{
-            background: var(--aephy);
-            color: #fff;
-    }
+.progress__item--completed:after
+{
+    content: "\2713";
+    font-weight: 400;
+    background: var(--brand);
+    color: #fff;
+}
+.progress__item--completed:before {
+    content: "";
+    position: absolute;
+    left: -1.7rem;
+    top: 40px;
+    height: 90%;
+    width: 1px;
+    border-left: 1px solid var(--brand);
+}
+.progress__item--active:after{
+    background: var(--aephy);
+    color: #fff;
+}
 
 .progress__title {
     padding: 0.4rem 0 0.5rem;
@@ -734,9 +734,9 @@ h6 {
     display: block;
     opacity:0.6;
 }
-.progress__info__date i{
-    padding:0 10px 0 0;
-}
+    .progress__info__date i{
+        padding:0 10px 0 0;
+    }
 /*---------------------------------------------------------
         # Clients Short Reviews
      ----------------------------------------------------------
@@ -773,44 +773,44 @@ h6 {
     }
 }
 
-    #successfullProjects .box .content {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: left;
-        padding-top: 10px;
-    }
+#successfullProjects .box .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    padding-top: 10px;
+}
 
-    #successfullProjects .box .name {
-        font-weight: 600;
-        font-size: 18px !important;
-        color: #fff;
-    }
+#successfullProjects .box .name {
+    font-weight: 600;
+    font-size: 18px !important;
+    color: #fff;
+}
 
-    #successfullProjects .box .title {
-        font-size: 18px;
-        font-weight: 800;
-        color: #fff;
-        padding-bottom: 10px;
-    }
-    #successfullProjects .box .sub-title {
-        font-size: 16px !important;
-        font-weight: 500;
-        color: #fff;
-    }
+#successfullProjects .box .title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    padding-bottom: 10px;
+}
+#successfullProjects .box .sub-title {
+    font-size: 16px !important;
+    font-weight: 500;
+    color: #fff;
+}
 
-    #successfullProjects .box .sub div {
-        flex-shrink: 0;
-        color: #fff;
-        margin-right: 2px;
-        display: table-caption;
-    }
+#successfullProjects .box .sub div {
+    flex-shrink: 0;
+    color: #fff;
+    margin-right: 2px;
+    display: table-caption;
+}
 
-    #successfullProjects .box i {
-        color: #fff;
-        margin-right: 2px;
-        line-height: 1;
-    }
+#successfullProjects .box i {
+    color: #fff;
+    margin-right: 2px;
+    line-height: 1;
+}
 
 .child {
     padding-top: 10px;
@@ -941,62 +941,62 @@ h6 {
     padding:1rem;
 }
 
-.reviews .box {
-    background: #fff;
-    /*  margin: 10px !important;*/
-    margin-top: 0;
-    padding: 13px !important;
-    border-radius: 3px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
-    width: 97%;
-    height: 250px;
-}
+    .reviews .box {
+        background: #fff;
+        /*  margin: 10px !important;*/
+        margin-top: 0;
+        padding: 13px !important;
+        border-radius: 3px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.65);
+        width: 97%;
+        height: 250px;
+    }
 
-.reviews .content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: left;
-    padding-top: 10px;
-    margin-top: 1%;
-}
+    .reviews .content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        padding-top: 10px;
+        margin-top: 1%;
+    }
 
-.reviews .info .name {
-    font-weight: 600;
-    font-size: 18px;
-}
+    .reviews .info .name {
+        font-weight: 600;
+        font-size: 18px;
+    }
 
-.reviews .title {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--brand);
-    padding-bottom: 10px;
-}
+    .reviews .title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--brand);
+        padding-bottom: 10px;
+    }
 
-.reviews .content .image div {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    object-fit: cover;
-    font-size: 18px;
-    color: #fff;
-    background-color: var(--brand);
-    border-radius: 50%;
-    height: 65px;
-    width: 65px;
-    border: 2px solid #fff;
-    outline: 2px solid #fff;
-    outline-offset: -8px;
-    margin-right: 5px;
-}
+    .reviews .content .image div {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        object-fit: cover;
+        font-size: 18px;
+        color: #fff;
+        background-color: var(--brand);
+        border-radius: 50%;
+        height: 65px;
+        width: 65px;
+        border: 2px solid #fff;
+        outline: 2px solid #fff;
+        outline-offset: -8px;
+        margin-right: 5px;
+    }
 
-.reviews .content .stars i {
-    flex-shrink: 0;
-    color: var(--brand);
-    margin-right: 2px;
-    line-height: 0;
-}
+    .reviews .content .stars i {
+        flex-shrink: 0;
+        color: var(--brand);
+        margin-right: 2px;
+        line-height: 0;
+    }
 
 #reviews .float-child {
     float: left;
@@ -1114,13 +1114,13 @@ h6 {
     padding-left: 2rem;
 }
 
-.ratingProgress .ProgressTable progress {
-    position: relative;
-    height: 10px;
-    width: 115px;
-    border: 1px solid #fff;
-    border-radius:5px;
-}
+    .ratingProgress .ProgressTable progress {
+        position: relative;
+        height: 10px;
+        width: 115px;
+        border: 1px solid #fff;
+        border-radius:5px;
+    }
 
 @media(max-width:992px){
     .ratingProgress .ProgressTable progress {
@@ -1155,7 +1155,8 @@ h6 {
 }
 
 .ratingProgress .ProgressTable td {
-    padding: 0 10px 0 0;
+    padding-top: 0.5em;
+    padding-left: 0%;
 }
 
 progress::-webkit-progress-bar {
@@ -1182,10 +1183,10 @@ progress::-webkit-progress-value {
     font-size:14px !important;
 }
 
-.ratingBreakdown #tableRatingBreakdown .rating {
-    color: var(--font-title);
-    text-align: end;
-}
+    .ratingBreakdown #tableRatingBreakdown .rating {
+        color: var(--font-title);
+        text-align: end;
+    }
 
 .ratingBreakdown h4{
     color: var(--font-title);
@@ -1300,13 +1301,13 @@ progress::-webkit-progress-value {
     font-size: 16px;
     position: relative;
     color: var(--brand);
-    text-align: center; 
+    text-align: center;
     cursor:pointer;
 }
-.btn-show-more i{
-    font-size:16px;
-    color:var(--brand);
-}
+    .btn-show-more i{
+        font-size:16px;
+        color:var(--brand);
+    }
 
 
 @media (max-width: 767px) {
@@ -1543,9 +1544,9 @@ progress::-webkit-progress-value {
         max-height: 575px !important;
     }
 
-    
 
-   /* .carousel-control-prev, .carousel-control-next {
+
+    /* .carousel-control-prev, .carousel-control-next {
         margin-left: 8px !important;
         margin-right: 8px !important;
     }
@@ -1568,7 +1569,7 @@ progress::-webkit-progress-value {
 
 .carousel-control-prev, .carousel-control-next {
     height: 270px !important;
-/*    margin-left: -284px;
+    /*    margin-left: -284px;
     margin-right: -284px;
 */
 }
@@ -1626,6 +1627,7 @@ progress::-webkit-progress-value {
     height:55%;
     width:100%;
 }
+
 @media(max-width:992px){
     #project-image {
         height: 100% !important;
@@ -1830,5 +1832,54 @@ progress::-webkit-progress-value {
 
 .cls-milestoneStatus {
     font-size: 12px;
-    float:right;
+    float: right;
+}
+
+.lblTotalReviews {
+    margin-left: 10% !important;
+}
+
+.ratingBreakdown {
+    padding-left: 1% !important;
+}
+
+.cls-mainreviewdiv-card {
+    margin-top: 3%;
+    border: 1px solid #d38b4e;
+}
+
+.cls-review-card {
+    padding-top: 2%;
+}
+
+.cls-feedback-clientname {
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--brand);
+    padding-bottom: 10px;
+}
+
+.view_action_Link {
+    margin: 5px 5px 15px 5px;
+    padding: 5px;
+    text-align: center;
+}
+
+    .view_action_Link div {
+        position: relative;
+        transition: 0.5s;
+        background-color: rgba(211, 139, 78,0.5);
+        text-decoration: auto;
+        text-align: center;
+        cursor: pointer
+    }
+
+.HidefullFeedbackShowButton{
+    display:none !important;
+}
+
+#feedback-list-Details {
+    max-height: 500px;
+    overflow-y: auto;
 }

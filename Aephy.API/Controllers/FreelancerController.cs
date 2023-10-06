@@ -2117,5 +2117,98 @@ namespace Aephy.API.Controllers
                 Message = "Data not Found"
             });
         }
+
+        [HttpPost]
+        [Route("GetProjectsExpense")]
+        public async Task<IActionResult> GetProjectsExpense([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        int TotalExpense = 0;
+                        List<solutionFundViewModel> finalFundList = new List<solutionFundViewModel>();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
+                        if (projectData.Count > 0)
+                        {
+                            var grouped_teachers = projectData
+                             .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
+                             .Select(g => new
+                             {
+                                 FundList = g.ToList(),
+                             });
+
+                            foreach (var group in grouped_teachers)
+                            {
+                                var list = group.FundList;
+                                solutionFundViewModel grouping = new solutionFundViewModel();
+                                if (list.Count != 1)
+                                {
+                                    grouping.solutionFunds = list.Last();
+                                    finalFundList.Add(grouping);
+                                }
+                                else
+                                {
+                                    grouping.solutionFunds = list.FirstOrDefault();
+                                    finalFundList.Add(grouping);
+                                }
+
+                            }
+                            if (finalFundList.Count > 0)
+                            {
+                                List<string> industrylist = new List<string>();
+                                foreach (var data in finalFundList)
+                                {
+                                    var expense = "";
+                                    var record = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).FirstOrDefault();
+                                    if(record != null)
+                                    {
+                                        expense = record.Amount;
+                                        int exp = expense != "" ? Convert.ToInt32(expense) : 0;
+                                        TotalExpense += exp;
+                                        if (record.IsClientRefund != false)
+                                        {
+                                            var refuncAmount = record.RefundAmount;
+                                            int refund = refuncAmount != "" ? Convert.ToInt32(refuncAmount) : 0;
+                                            TotalExpense -= refund;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = new
+                            {
+                                Expense = TotalExpense,
+                                Projects = finalFundList.Count
+                            }
+                        });
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
     }
 }

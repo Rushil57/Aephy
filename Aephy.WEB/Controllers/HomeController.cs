@@ -2453,6 +2453,22 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        //GetArchivesProject
+        [HttpGet]
+        public async Task<string> GetClientProjectExpense()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetProjectsExpense", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
         [HttpPost]
         public async Task<string> filterSolutionBySolutionName([FromBody] MileStoneIdViewModel model)
         {

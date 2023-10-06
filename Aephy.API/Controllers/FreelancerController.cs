@@ -2101,7 +2101,7 @@ namespace Aephy.API.Controllers
                     ProjectManagement = model.ProfessionalismRating,
                     WellDefinedProjectScope = model.WellDefinedProjectRating
                 };
-                _db.FreelancerToFreelancerReview.Add(reviewData);
+               await _db.FreelancerToFreelancerReview.AddAsync(reviewData);
                 _db.SaveChanges();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -2209,6 +2209,43 @@ namespace Aephy.API.Controllers
                 Message = "Data not Found"
             });
         }
+
+        //CheckFreelancerToFreelancerReviewExits
+        [HttpPost]
+        [Route("CheckFreelancerToFreelancerReviewExits")]
+        public async Task<IActionResult> CheckFreelancerToFreelancerReviewExits([FromBody] FreelancerToFreelancerReviewModel model)
+        {
+            if (model != null)
+            {
+                var checkReviewExits = await _db.FreelancerToFreelancerReview.Where(x => x.ToFreelancerId == model.ToFreelancerId && x.FromFreelancerId == model.FromFreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
+                if (checkReviewExits != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Review Exists!",
+                        Result = checkReviewExits
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Review Not Exists!",
+                    });
+                }
+
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
 
     }
 }

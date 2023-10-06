@@ -2567,5 +2567,25 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        //CheckFreelancerToFreelancerReviewExits
+        [HttpPost]
+        public async Task<string> CheckFreelancerToFreelancerReviewExits([FromBody] FreelancerToFreelancerReviewViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.FromFreelancerId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/CheckFreelancerToFreelancerReviewExits", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
     }
 }

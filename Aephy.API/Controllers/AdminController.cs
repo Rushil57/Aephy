@@ -3778,7 +3778,7 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    ProjectReview checkExistance = _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    ProjectReview checkExistance = await _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
                     if (checkExistance != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Success", Result = checkExistance });

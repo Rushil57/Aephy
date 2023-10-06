@@ -1496,7 +1496,12 @@
       
         // Binding Reviews for all
         var finalReviews = totalFeedbackValues / (6 * totalfeedbackLength)
-        $(".lblTotalRatings").html(finalReviews.toFixed(1))
+        if(totalfeedbackLength != 0){
+            $(".lblTotalRatings").html(finalReviews.toFixed(1))
+        }else{
+            $(".lblTotalRatings").html("0.0")
+        }
+        
         $("#welldefined").html(totalwelldefinedprojectscope.toFixed(1))
         $("#adherencescope").html(totaladherenceprojectscope.toFixed(1));
         $("#qualitydeliverables").html(totaldeliverablesquality.toFixed(1));

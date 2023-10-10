@@ -399,13 +399,48 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <div class="col">
-                                    <div class="card">
-                                        <div class="card-body pb-0" style="height:303px;">
-                                           <p>Welcome!</p>
+                                <form class="row g-3 mt-3" name="RevolutOnBoardForm">
+                                    <div class="col-6">
+                                        <label for="backCountry" class="form-label">BankCountry</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="backCountry" class="form-control" name="BackCountry" readonly/>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-6">
+                                        <label for="currency" class="form-label">Currency</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="Currency" class="form-control" name="Currency" />
+                                        </div>
+                                    </div>
+                                     <div class="col-6">
+                                        <label for="accountNo" class="form-label">AccountNo</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="accountNo" class="form-control" name="AccountNo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 cls-Ibannot-mandatory">
+                                        <label for="routingNumber" class="form-label">RoutingNumber</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="routingNumber" class="form-control" name="RoutingNumber" />
+                                        </div>
+                                    </div>
+                                     <div class="col-6">
+                                        <label for="ibanNumber" class="form-label">IbanNumber</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="ibanNumber" class="form-control" name="IbanNumber" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="bicNumber" class="form-label">BIC</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="bicNumber" class="form-control" name="BicNumber" />
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button type="button" class="btn btn-secondary" onclick="CloseRevolutPopup();">Reset</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -467,6 +502,26 @@
                 ChangePassword()
             }
         });
+
+        $("form[name='RevolutOnBoardForm']").validate({
+            rules: {
+                Currency: { required: true },
+                AccountNo: { required: true },
+                RoutingNumber: { required: true },
+                IbanNumber: { required: true },
+                BicNumber: { required: true },
+            },
+            messages: {
+                Currency: { required: "Please enter Currency", },
+                AccountNo: {required: "Please enter Account Number"},
+                RoutingNumber: { required: "Please enter Routing Number" },
+                IbanNumber: { required: "Please enter Iban Number" },
+                BicNumber: { required: "Please enter Bic Number" }
+            },
+            submitHandler: function (form) {
+                OboardUserRevoultAccount()
+            }
+        });
         GetUserData()
     });
 
@@ -525,6 +580,11 @@
                     }else{
                         $(".RevolutPending").show();
                         $(".RevolutCompleted").hide();
+                        $("#backCountry").val(data.BackCountry)
+                    }
+
+                    if (data.IsIBanMandantory){
+                        $(".cls-Ibannot-mandatory").hide();
                     }
                 }
                 
@@ -782,6 +842,44 @@
     }
 
     function CloseRevolutPopup(){
+        $("#backCountry").val("");
+        $("#Currency").val("");
+        $("#accountNo").val("");
+        $("#routingNumber").val("");
+        $("#ibanNumber").val("");
+        $("#bicNumber").val("");
+        
         $("#RevolutOnBoardingFeildsModal").modal('hide');
+    }
+
+    function OboardUserRevoultAccount(){
+        var data = {
+            BankCountry: $("#backCountry").val()
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("OboardUserRevoultAccount", "Home")",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function (result) {
+                if(result.Message == "Account Created"){
+                    CloseRevolutPopup();
+                    GetUserData();
+                    showToaster("success", "Success !", result.Message);
+                }else{
+                    showToaster("error", "Error !", result.Message);
+                }
+
+                $("#preloader").hide();
+
+
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
     }
 </script>

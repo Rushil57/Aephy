@@ -52,11 +52,19 @@ namespace Aephy.API.Controllers
                 {
                     var user = await _userManager.FindByIdAsync(model.UserId.Trim());
                     var Countryname = string.Empty;
+                    var Countrycode = string.Empty;
+                    var IBANComplusory = false;
                     if (user != null)
                     {
                         if(user.CountryId != 0)
                         {
-                            Countryname = _db.Country.Where(x => x.Id == user.CountryId).Select(x => x.CountryName).FirstOrDefault();
+                            var CountryData = _db.Country.Where(x => x.Id == user.CountryId).FirstOrDefault();
+                            if(CountryData != null)
+                            {
+                                Countryname = CountryData.CountryName;
+                                Countrycode = CountryData.Code;
+                                IBANComplusory = CountryData.IsIBANMandatory;
+                            }
                         }
                         if (user.UserType == "Client")
                         {
@@ -87,6 +95,8 @@ namespace Aephy.API.Controllers
                         UserDetails.CountryId = user.CountryId;
                         UserDetails.CountryName = Countryname;
                         UserDetails.CompanyName = clientDetails.CompanyName;
+                        UserDetails.BackCountry = Countrycode;
+                        UserDetails.IsIBanMandantory = IBANComplusory;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

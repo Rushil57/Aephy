@@ -27,6 +27,7 @@ using System.Net.Mime;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Elfie.Serialization;
+using static Aephy.WEB.Models.AddNonRevolutCounterpartyReq;
 
 namespace Aephy.WEB.Controllers
 {
@@ -2578,6 +2579,26 @@ namespace Aephy.WEB.Controllers
                     var userId = HttpContext.Session.GetString("LoggedUser");
                     model.FromFreelancerId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/CheckFreelancerToFreelancerReviewExits", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        [HttpPost]
+        public async Task<string> OboardUserRevoultAccount([FromBody] AddNonRevolutCounterpartyReq addNonRevolutCounterpartyReq)
+        {
+            if (addNonRevolutCounterpartyReq != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    addNonRevolutCounterpartyReq.UserId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Revoult/OboardUserRevoultAccount", HttpMethod.Post, addNonRevolutCounterpartyReq);
                     return data;
                 }
                 catch (Exception ex)

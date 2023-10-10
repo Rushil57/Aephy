@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Aephy.API.Stripe;
 using Stripe;
+using Aephy.API.Revoult;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddScoped<IStripeAccountService, StripeAccountService>();
+builder.Services.AddScoped<IRevoultService, RevoultService>();
 
 var app = builder.Build();
 

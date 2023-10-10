@@ -1,5 +1,6 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.Revoult;
 using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using System.Reflection.Metadata;
 using System.Xml.Schema;
 using static Aephy.API.DBHelper.ApplicationUser;
 using static Aephy.API.Models.AdminViewModel;
+using static Aephy.API.Models.AdminViewModel.AddNonRevolutCounterpartyReq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
@@ -26,12 +28,14 @@ namespace Aephy.API.Controllers
         private readonly IStripeAccountService _stripeAccountService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        private readonly IRevoultService _revoultService;
+        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
         {
             _db = dbContext;
             _configuration = configuration;
             _stripeAccountService = stripeAccountService;
             _userManager = userManager;
+            _revoultService = revoultService;
         }
 
         [HttpPost]
@@ -3041,6 +3045,7 @@ namespace Aephy.API.Controllers
                 Message = "Data Not Found",
             });
         }
+
 
 
     }

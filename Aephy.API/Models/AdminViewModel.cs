@@ -532,6 +532,9 @@ namespace Aephy.API.Models
             public string? CompanyName { get; set; }
 
             public string? StripeAccountStatus { get; set; }
+            public string? BackCountry { get; set; }
+
+            public bool IsIBanMandantory { get; set; }
 
         }
 
@@ -596,6 +599,72 @@ namespace Aephy.API.Models
             public int ProjectManagementRating { get; set; }
             public int ResponsivenessRating { get; set; }
             public int WellDefinedProjectRating { get; set; }
+        }
+
+        public class AddNonRevolutCounterpartyReq
+        {
+            public class AddressData
+            {
+                public string? StreetLine1 { get; set; }
+                public string? StreetLine2 { get; set; }
+                public string? Region { get; set; }
+                public string? Postcode { get; set; }
+                public string? City { get; set; }
+                public string? Country { get; set; }
+            }
+
+            public class IndividualNameData
+            {
+                public string? FirstName { get; set; }
+                public string? LastName { get; set; }
+            }
+
+            public string? CompanyName { get; set; }
+            public IndividualNameData? IndividualName { get; set; }
+            public string? BankCountry { get; set; }
+            public string? Currency { get; set; }
+            public string? AccountNo { get; set; }
+            public string? SortCode { get; set; }
+            public string? RoutingNumber { get; set; }
+            public string? Iban { get; set; }
+            public string? Bic { get; set; }
+            public string? Email { get; set; }
+            public string? Phone { get; set; }
+            public AddressData? Address { get; set; }
+            public string? IFSC { get; set; }
+
+            public string? UserId { get; set; }
+        }
+
+        public class AddNonRevolutCounterpartyResp
+        {
+            public string? Id { get; set; }
+            public string? Name { get; set; }
+            public string? State { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public DateTime UpdatedAt { get; set; }
+            public List<CounterpartyAccountResp>? Accounts { get; set; }
+        }
+
+        public class CounterpartyAccountResp
+        {
+            public string? Id { get; set; }
+            public string? Currency { get; set; }
+            public string? Type { get; set; }
+            public string? AccountNo { get; set; }
+            public string? Iban { get; set; }
+            public string? SortCode { get; set; }
+            public string? RoutingNumber { get; set; }
+            public string? Bic { get; set; }
+            public string? RecipientCharges { get; set; }
+        }
+
+        public class AuthToken
+        {
+            public string? access_token { get; set; }
+            public string? token_type { get; set; }
+            public int expires_in { get; set; }
+            public string? refresh_token { get; set; }
         }
     }
 }

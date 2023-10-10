@@ -87,8 +87,7 @@ namespace Aephy.API.Controllers
                                         Role = user.UserType,
                                         Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none",
                                         ImagePath = freelancer.ImagePath,
-                                        ImageUrlWithSas = freelancer.ImageUrlWithSas,
-                                        StripeStatus = stripStatus
+                                        ImageUrlWithSas = freelancer.ImageUrlWithSas
                                     }
                                 });
                             }

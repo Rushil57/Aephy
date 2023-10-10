@@ -127,17 +127,24 @@
                                 <div class="FreelancerFields" style="display:none;">
                                     <input type="hidden" value="" id="CVPath-id" />
 
-                                    <div class="row StripePending" style="display:none;">
-                                        <div class="col-lg-3 col-md-4 label">Stripe Account Status</div>
+                                    <div class="row RevolutPending" style="display:none;">
+                                        <div class="col-lg-3 col-md-4 label">Revoult Account Status</div>
                                         <div class="col-md-8 col-lg-9">
                                             <span class="badge bg-danger">PENDING</span>
                                         </div>
                                     </div>
 
-                                    <div class="row StripeCompleted" style="display:none;">
-                                        <div class="col-lg-3 col-md-4 label">Stripe Account Status</div>
+                                    <div class="row RevolutCompleted" style="display:none;">
+                                        <div class="col-lg-3 col-md-4 label">Revoult Account Status</div>
                                         <div class="col-md-8 col-lg-9">
                                             <span class="badge bg-success">COMPLETED</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Country</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Country" type="text" class="form-control cls-country" readonly>
                                         </div>
                                     </div>
 
@@ -159,13 +166,6 @@
                                         <div class="col-lg-3 col-md-4 label">Professional Experience</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" readonly />
-                                        </div>
-                                    </div>
-
-                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4 label">Country</div>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="Country" type="text" class="form-control cls-country" readonly>
                                         </div>
                                     </div>
 
@@ -269,20 +269,29 @@
                                     </div>
 
                                     <div class="FreelancerFields" style="display:none;">
-                                         <div class="row mb-3 StripePending" style="display:none;">
-                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Stripe Account Status</label>
+                                        <div class="row mb-3 RevolutPending" style="display:none;">
+                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Revoult Account Status</label>
                                             <div class="col-md-8 col-lg-9">
                                               <span class="badge bg-danger">PENDING</span>
-                                              <span style="padding-left: 2%"><a onclick="StripeRegister()" class="cls-stripe-link">Click here to Register to stripe</a></span>
+                                              <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Click here to Register to Revolut</a></span>
                                             </div>
                                          </div>
 
-                                        <div class="row mb-3 StripeCompleted" style="display:none;">
-                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Stripe Account Status</label>
+                                        <div class="row mb-3 RevolutCompleted" style="display:none;">
+                                            <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Revoult Account Status</label>
                                               <div class="col-md-8 col-lg-9">
                                                 <span class="badge bg-success">COMPLETED</span>
                                               </div>
                                          </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="freelancer-country">
+                                                    <option value="0">Select Country</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                          
                                         <div class="row mb-3">
                                             <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate Per Day ($)</label>
@@ -302,15 +311,6 @@
                                             <label for="ProffessionalExperience" class="col-md-4 col-lg-3 col-form-label">Professional Experience</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="ProffessionalExperience" type="text" class="form-control proffessionalExperience" id="ProffessionalExperience" />
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                                            <div class="col-md-8 col-lg-9">
-                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="freelancer-country">
-                                                    <option value="0">Select Country</option>
-                                                </select>
                                             </div>
                                         </div>
 
@@ -385,6 +385,35 @@
     </section>
     @*<div id="preloader" style="display:none;"></div>*@
 </main><!-- End #main -->
+
+
+<div class="modal" id="RevolutOnBoardingFeildsModal" tabindex="-1" aria-labelledby="RevolutOnBoardingFeildsModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title cls-revoultonboarding-title">Please Fill out below Fields</h4>
+                <a class="close" onclick="CloseRevolutPopup();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body pb-0" style="height:303px;">
+                                           <p>Welcome!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(function () {
@@ -490,12 +519,12 @@
                         $("#profile-image").css("display", "none")
                          $("#profile-intial").css("display","flex")
                     }
-                    if(data.StripeAccountStatus == "Complete"){
-                        $(".StripePending").hide();
-                        $(".StripeCompleted").show();
+                    if (data.RevolutStatus) {
+                        $(".RevolutPending").hide();
+                        $(".RevolutCompleted").show();
                     }else{
-                        $(".StripePending").show();
-                        $(".StripeCompleted").hide();
+                        $(".RevolutPending").show();
+                        $(".RevolutCompleted").hide();
                     }
                 }
                 
@@ -714,10 +743,11 @@
         }
     }
 
-    function StripeRegister(){
-        $("#preloader").show();
-        window.location = "@Url.Action("RegisterStripeUser", "Home")";
-        $("#preloader").hide();
+    function RevolutRegister() {
+        // $("#preloader").show();
+        // window.location = "@Url.Action("RegisterStripeUser", "Home")";
+        // $("#preloader").hide();
+        $("#RevolutOnBoardingFeildsModal").modal('show');
     }
 
     function BindCountry(){
@@ -749,5 +779,9 @@
                 showToaster("error", "Error !", "Failure");
             }
         });
+    }
+
+    function CloseRevolutPopup(){
+        $("#RevolutOnBoardingFeildsModal").modal('hide');
     }
 </script>

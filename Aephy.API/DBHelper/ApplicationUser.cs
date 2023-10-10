@@ -25,6 +25,12 @@ namespace Aephy.API.DBHelper
 
         public int CountryId { get; set; }
 
+        public string? RevolutConnectId { get; set; }
+
+        public string? RevolutAccountId { get; set; }
+
+        public bool RevolutStatus { get; set; }
+
         /// <summary>
         /// StripeAccountStatus
         /// </summary>
@@ -51,5 +57,6 @@ namespace Aephy.API.DBHelper
         public string? Code { get; set; }
 
         public string? CountryName { get; set; }
+        public bool IsIBANMandatory { get; set; }
     }
 }

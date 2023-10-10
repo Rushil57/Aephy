@@ -87,7 +87,6 @@ namespace Aephy.API.Controllers
                         UserDetails.CountryId = user.CountryId;
                         UserDetails.CountryName = Countryname;
                         UserDetails.CompanyName = clientDetails.CompanyName;
-                        UserDetails.StripeAccountStatus = user.StripeAccountStatus.ToString();
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

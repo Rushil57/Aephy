@@ -48,7 +48,7 @@ namespace Aephy.API.DBHelper
     {
         public int Id { get; set; }
 
-        public int CountryCode { get; set; }
+        public string? Code { get; set; }
 
         public string? CountryName { get; set; }
     }

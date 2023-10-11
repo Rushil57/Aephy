@@ -2609,7 +2609,7 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
-        [HttpPost]
+
         public ActionResult RevoultCheckout()
         {
             // var revoultToken = HttpContext.Session.GetString("RevoultToken");

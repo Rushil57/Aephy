@@ -2207,7 +2207,7 @@ namespace Aephy.API.Controllers
                         {
                             //data.ProjectStatus = "COMPLETED";
                             //_db.SaveChanges();
-
+                            var getRevoultToken = await CheckOutUsingRevoult(data);
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -2216,7 +2216,9 @@ namespace Aephy.API.Controllers
                                 Result = new
                                 {
                                     ProjectDetails = data,
-                                    MileStoneData = mileStoneData
+                                    MileStoneData = mileStoneData,
+                                    RevoultToken = getRevoultToken,
+                                    SolutionFundId = data.Id
                                 }
                             });
                         }
@@ -2262,7 +2264,7 @@ namespace Aephy.API.Controllers
                                         var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
 
                                         
-                                       // var statetemp = "completed";
+                                        var statetemp = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
                                         if (CreatePaymentRsp.State == "completed")
                                         {

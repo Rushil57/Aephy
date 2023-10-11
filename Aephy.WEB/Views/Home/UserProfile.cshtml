@@ -529,7 +529,7 @@
                 BicNumber: { required: "Please enter Bic Number" }
             },
             submitHandler: function (form) {
-                OboardUserRevoultAccount()
+                OnboardUserRevoultAccount()
             }
         });
         GetUserData()
@@ -892,14 +892,14 @@
         $("#RevolutOnBoardingFeildsModal").modal('hide');
     }
 
-    function OboardUserRevoultAccount(){
+    function OnboardUserRevoultAccount() {
         var data = {
             BankCountry: $("#backCountry").val()
         }
         $("#preloader").show();
         $.ajax({
             type: "POST",
-            url: "@Url.Action("OboardUserRevoultAccount", "Home")",
+            url: "@Url.Action("OnboardUserRevoultAccount", "Home")",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             dataType: "json",

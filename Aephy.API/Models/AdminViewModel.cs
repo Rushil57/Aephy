@@ -383,6 +383,8 @@ namespace Aephy.API.Models
             public int SolutionFundId { get; set; }
 
             public string? UserId { get; set; }
+
+            public bool RevolutStatus { get; set; }
         }
 
         public class SolutionDisputeViewModel
@@ -673,6 +675,22 @@ namespace Aephy.API.Models
             public int expires_in { get; set; }
             public string? refresh_token { get; set; }
         }
+
+        public class ResponseDto
+        {
+            public string id { get; set; }
+            public string token { get; set; }
+            public string type { get; set; }
+            public string state { get; set; }
+            public DateTime created_at { get; set; }
+            public DateTime updated_at { get; set; }
+            public int amount { get; set; }
+            public string currency { get; set; }
+            public int outstanding_amount { get; set; }
+            public string capture_mode { get; set; }
+            public string checkout_url { get; set; }
+        }
+
     }
 }
 

@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var token = ViewData["Token"];
+}
+
+<main id="main" class="main">
+    <div class="text-center">
+        <button id="pay-button" class="btn btn-success">Pay Now</button>
+    </div>
+</main>
+
+    @section Scripts{
+        <script>
+            !function (e, o, t) {
+                var n = {
+                    sandbox: "https://sandbox-merchant.revolut.com/embed.js",
+                    prod: "https://sandbox-merchant.revolut.com/embed.js",
+                    dev: "https://sandbox-merchant.revolut.codes/embed.js"
+                }, r = {
+                    sandbox: "https://sandbox-merchant.revolut.com/upsell/embed.js",
+                    prod: "https://sandbox-merchant.revolut.com/upsell/embed.js",
+                    dev: "https://sandbox-merchant.revolut.codes/upsell/embed.js"
+                }, l = function (e) { var n = function (e) { var t = o.createElement("script"); return t.id = "revolut-checkout", t.src = e, t.async = !0, o.head.appendChild(t), t }(e); return new Promise((function (e, r) { n.onload = function () { return e() }, n.onerror = function () { o.head.removeChild(n), r(new Error(t + " failed to load")) } })) }, u = function () { if (window.RevolutCheckout === i || !window.RevolutCheckout) throw new Error(t + " failed to load") }, c = {}, d = {}, i = function o(r, d) { return c[d = d || "prod"] ? Promise.resolve(c[d](r)) : l(n[d]).then((function () { return u(), c[d] = window.RevolutCheckout, e[t] = o, c[d](r) })) }; i.payments = function (o) { var r = o.mode || "prod", d = { locale: o.locale || "auto", publicToken: o.publicToken || null }; return c[r] ? Promise.resolve(c[r].payments(d)) : l(n[r]).then((function () { return u(), c[r] = window.RevolutCheckout, e[t] = i, c[r].payments(d) })) }, i.upsell = function (e) { var o = e.mode || "prod", n = { locale: e.locale || "auto", publicToken: e.publicToken || null }; return d[o] ? Promise.resolve(d[o](n)) : l(r[o]).then((function () { if (!window.RevolutUpsell) throw new Error(t + " failed to load"); return d[o] = window.RevolutUpsell, delete window.RevolutUpsell, d[o](n) })) }, e[t] = i
+            }(window, document, "RevolutCheckout");</script>
+
+        <script>
+            let token = "@token";
+            console.log(token);
+            RevolutCheckout(token).then(function (RC) {
+                var payButton = document.getElementById("pay-button");
+                // On click open payment pop-up
+                payButton.addEventListener("click", function () {
+                    debugger;
+                    RC.payWithPopup({
+                        name: "First Last",  // (mandatory!) name of the cardholder
+                        email: "customer@example.com", // (optional) email of the customer
+                        phone: "+447950630319", // (optional) phone of the customer
+                        billingAddress: {    // (optional) billing address of the customer
+                            countryCode: "GB", // if sending billing address, this field is mandatory
+                            postcode: "EC2V 6DN", // if sending billing address, this field is mandatory
+                            region: "Greater London",
+                            city: "London",
+                            streetLine1: "Revolut",
+                            streetLine2: "1 Canada Square",
+                        },
+                        shippingAddress: {   // (optional) shipping address of the customer
+                            countryCode: "GB", // if sending shipping address, this field is mandatory
+                            postcode: "EC2V 6DN", // if sending shipping address, this field is mandatory
+                            region: "Greater London",
+                            city: "London",
+                            streetLine1: "Revolut",
+                            streetLine2: "1 Canada Square",
+                        },
+                        onSuccess() {  // Callback called when payment finished successfully
+                            window.alert('Payment Done.');
+                        },
+                        onError(message) {  // Callback in case some error happened
+                            console.log(message);
+                            window.alert(message);
+                        },
+                        onCancel() {  // (optional) Callback in case user cancelled a transaction
+                            window.alert("Payment cancelled!");
+                        },
+                    });
+                });
+            });
+        </script>
+    }

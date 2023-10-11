@@ -22,7 +22,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("OboardUserRevoultAccount")]
-        public async Task<IActionResult> OboardUserRevoultAccount([FromBody] AddNonRevolutCounterpartyReq addNonRevolutCounterpartyReq)
+        public async Task<IActionResult> OnboardUserRevoultAccount([FromBody] AddNonRevolutCounterpartyReq addNonRevolutCounterpartyReq)
         {
             if (addNonRevolutCounterpartyReq != null)
             {

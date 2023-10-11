@@ -2590,7 +2590,7 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<string> OboardUserRevoultAccount([FromBody] AddNonRevolutCounterpartyReq addNonRevolutCounterpartyReq)
+        public async Task<string> OnboardUserRevoultAccount([FromBody] AddNonRevolutCounterpartyReq addNonRevolutCounterpartyReq)
         {
             if (addNonRevolutCounterpartyReq != null)
             {
@@ -2598,7 +2598,7 @@ namespace Aephy.WEB.Controllers
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
                     addNonRevolutCounterpartyReq.UserId = userId;
-                    var data = await _apiRepository.MakeApiCallAsync("api/Revoult/OboardUserRevoultAccount", HttpMethod.Post, addNonRevolutCounterpartyReq);
+                    var data = await _apiRepository.MakeApiCallAsync("api/Revoult/OnboardUserRevoultAccount", HttpMethod.Post, addNonRevolutCounterpartyReq);
                     return data;
                 }
                 catch (Exception ex)
@@ -2607,6 +2607,15 @@ namespace Aephy.WEB.Controllers
                 }
             }
             return "";
+        }
+
+        [HttpPost]
+        public ActionResult RevoultCheckout()
+        {
+            // var revoultToken = HttpContext.Session.GetString("RevoultToken");
+            var revoultToken = HttpContext.Session.GetString("RevoultToken");
+             ViewData["Token"] = revoultToken;
+            return View();
         }
     }
 }

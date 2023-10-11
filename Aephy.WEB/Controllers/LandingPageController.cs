@@ -755,6 +755,20 @@ namespace Aephy.WEB.Controllers
             }
             model.ClientId = userId;
             var userData = await _apiRepository.MakeApiCallAsync("api/Client/SaveProjectInitiated", HttpMethod.Post, model);
+
+            dynamic data = JsonConvert.DeserializeObject(userData);
+            if (data.Message == "CompleteProcess")
+            {
+                if(data.Result.RevoultToken != "")
+                {
+                    var token = data.Result.RevoultToken;
+                    string stringToken = token.ToString();
+                    HttpContext.Session.SetString("RevoultToken", stringToken);
+                }
+                
+                //HttpContext.Session.SetString("RevoultToken", token);
+                //HttpContext.Session.SetString("RevoultToken", token);
+            }
             return userData;
         }
 

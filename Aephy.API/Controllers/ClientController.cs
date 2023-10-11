@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using RestSharp;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Identity;
@@ -498,7 +500,7 @@ namespace Aephy.API.Controllers
                     List<SolutionMilestone> mileStoneToTalDays = new List<SolutionMilestone>();
                     var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
                     var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
-                    if(MilestoneTotalDaysByProjectType.Count > 0)
+                    if (MilestoneTotalDaysByProjectType.Count > 0)
                     {
                         mileStoneToTalDays = MilestoneTotalDaysByProjectType
                        .GroupBy(l => l.ProjectType)
@@ -513,7 +515,7 @@ namespace Aephy.API.Controllers
                     List<ProjectReview> projectReviewList = new List<ProjectReview>();
                     if (solutionFeedback.Count > 0)
                     {
-                        foreach(var feedbackdata in solutionFeedback)
+                        foreach (var feedbackdata in solutionFeedback)
                         {
                             ProjectReview projectReview = new ProjectReview();
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
@@ -530,10 +532,10 @@ namespace Aephy.API.Controllers
 
 
                         }
-                        
+
 
                     }
-                
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -600,7 +602,7 @@ namespace Aephy.API.Controllers
                     }
                     if (fundProgress != null && fundProgress.ProjectType != null)
                     {
-                        model.ProjectType = fundProgress.ProjectType; 
+                        model.ProjectType = fundProgress.ProjectType;
                         solutionMilesData = _db.SolutionMilestone.Where(x => x.Id == fundProgress.MileStoneId).FirstOrDefault();
                     }
 
@@ -632,7 +634,7 @@ namespace Aephy.API.Controllers
                     //}
                     if (fundProgress.ProjectStatus == "INITIATED")
                     {
-                        if(solutionMilesData != null && fundProgress.FundType.ToString() == "MilestoneFund")
+                        if (solutionMilesData != null && fundProgress.FundType.ToString() == "MilestoneFund")
                         {
                             var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == solutionMilesData.SolutionId && x.IndustryId == solutionMilesData.IndustryId && x.ProjectType == solutionMilesData.ProjectType).ToList();
                             long calculateProjectPrice = 0;
@@ -659,7 +661,7 @@ namespace Aephy.API.Controllers
                     else
                     {
                         var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
-                         fundProgress.ProjectPrice = contractAmount; 
+                        fundProgress.ProjectPrice = contractAmount;
                     }
 
 
@@ -667,9 +669,9 @@ namespace Aephy.API.Controllers
                     var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
-                    if(milestoneData.Count > 0)
+                    if (milestoneData.Count > 0)
                     {
-                        foreach(var stonedata in milestoneData)
+                        foreach (var stonedata in milestoneData)
                         {
                             MileStoneModel milestonData = new MileStoneModel();
                             milestonData.Id = stonedata.Id;
@@ -1923,7 +1925,7 @@ namespace Aephy.API.Controllers
 
                                 //REFUND TAX TO CLIENT SECTION
 
-                                if(vatAmount > 0)
+                                if (vatAmount > 0)
                                 {
                                     var finalVatAmount = Convert.ToInt64(vatAmount);
                                     var clienttransfer = _stripeAccountService.RefundAmountToClient(paymentIntent.LatestChargeId, finalVatAmount);
@@ -1956,10 +1958,10 @@ namespace Aephy.API.Controllers
                                     data.IsArchived = true;
                                     _db.SaveChanges();
 
-                                    if(data.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                    if (data.FundType == SolutionFund.FundTypes.MilestoneFund)
                                     {
                                         var storeMilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == data.MileStoneId && x.UserId == data.ClientId).FirstOrDefault();
-                                        if(storeMilestonestatus == null)
+                                        if (storeMilestonestatus == null)
                                         {
                                             var milestoneStatus = new ActiveSolutionMilestoneStatus()
                                             {
@@ -2088,7 +2090,7 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
                         List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
-                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
                         && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
                         foreach (var item in fl)
                         {
@@ -2115,7 +2117,7 @@ namespace Aephy.API.Controllers
 
                             if (mileStoneToTalDays.Days > 0)
                             {
-                               // var trimmedPrice = model.ProjectPrice.Replace("$", "");
+                                // var trimmedPrice = model.ProjectPrice.Replace("$", "");
                                 var ProjectPrice = Convert.ToInt64(checkType.ProjectPrice);
                                 calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
                             }
@@ -2124,7 +2126,7 @@ namespace Aephy.API.Controllers
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
                         var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
-                        
+
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2182,7 +2184,7 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
                         List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
-                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
                         && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
                         foreach (var item in fl)
                         {
@@ -2239,6 +2241,7 @@ namespace Aephy.API.Controllers
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
 
+                            var getRevoultToken = await CheckOutUsingRevoult(data);
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -2246,7 +2249,8 @@ namespace Aephy.API.Controllers
                                 Result = new
                                 {
                                     ProjectDetails = data,
-                                    MileStoneData = mileStoneData
+                                    MileStoneData = mileStoneData,
+                                    RevoultToken = getRevoultToken
                                 }
                             });
                         }
@@ -2291,7 +2295,7 @@ namespace Aephy.API.Controllers
                                         {
                                             var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
 
-                                            if (user != null && user.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.Complete)
+                                            if (user != null && user.RevolutStatus == true)
                                             {
                                                 var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
 
@@ -2313,10 +2317,10 @@ namespace Aephy.API.Controllers
                                             }
                                         }
 
-                                        if(completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                        if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
                                         {
                                             var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
-                                            if(updatemilestonestatus != null)
+                                            if (updatemilestonestatus != null)
                                             {
                                                 updatemilestonestatus.MilestoneStatus = "Milestone Completed";
                                                 _db.SaveChanges();
@@ -2849,7 +2853,7 @@ namespace Aephy.API.Controllers
         [Route("GetSolutionIndustry")]
         public async Task<IActionResult> GetSolutionIndustry([FromBody] MileStoneDetailsViewModel model)
         {
-            if (model!= null)
+            if (model != null)
             {
                 try
                 {
@@ -2857,14 +2861,14 @@ namespace Aephy.API.Controllers
                     var IndustryList = await _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IsActiveForClient == true).ToListAsync();
                     if (IndustryList.Count > 0)
                     {
-                        foreach(var data in IndustryList)
+                        foreach (var data in IndustryList)
                         {
                             SolutionsModel solutionsModel = new SolutionsModel();
                             solutionsModel.IndustryId = data.IndustryId;
                             solutionsModel.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                             industryList.Add(solutionsModel);
                         }
-                        
+
 
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2906,8 +2910,8 @@ namespace Aephy.API.Controllers
                 {
                     if (model.Id != 0)
                     {
-                        var documnetData =await  _db.ActiveProjectDocuments.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                        if(documnetData != null)
+                        var documnetData = await _db.ActiveProjectDocuments.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                        if (documnetData != null)
                         {
                             _db.ActiveProjectDocuments.Remove(documnetData);
                             _db.SaveChanges();
@@ -2955,7 +2959,7 @@ namespace Aephy.API.Controllers
                     var solutionfundData = await _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
                     if (solutionfundData != null)
                     {
-                        if(solutionfundData.FundType == SolutionFund.FundTypes.ProjectFund)
+                        if (solutionfundData.FundType == SolutionFund.FundTypes.ProjectFund)
                         {
                             solutionfundData.IsStoppedProject = true;
                             solutionfundData.StoppedProjectDateTime = DateTime.Now;
@@ -2968,7 +2972,7 @@ namespace Aephy.API.Controllers
                             solutionmilestonefundData.StoppedProjectDateTime = DateTime.Now;
                             _db.SaveChanges();
                         }
-                        
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -3046,8 +3050,46 @@ namespace Aephy.API.Controllers
             });
         }
 
+        //CheckOutUsingRevoult
+        [HttpPost]
+        [Route("CheckOutUsingRevoult")]
+        public async Task<string> CheckOutUsingRevoult([FromBody] SolutionFund model)
+        {
 
+            try
+            {
+                var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var request = new RestRequest("https://sandbox-merchant.revolut.com/api/orders", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Accept", "application/json");
+                request.AddHeader("Authorization", "Bearer sk_WgL5ngJ2GLrX6g96Ax8_PNphLn25P55im_4LOqwSfLRvHtmANO3iYTwptJ_QWGvF");
+                request.AddHeader("Revolut-Api-Version", "2023-09-01");
+                var body = @"{" + "\n" +
+                @"  ""amount"": 50000," + "\n" +
+                @"  ""currency"": ""EUR""" + "\n" +
+                @"}";
+                request.AddStringBody(body, DataFormat.Json);
+                RestResponse response = await client.ExecuteAsync(request);
+                var responseDto = JsonConvert.DeserializeObject<ResponseDto>(response.Content);
+                //ViewData["Token"] = responseDto.token;
+                //return View();
+                return responseDto.token;
+                //return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                //{
+                //    StatusCode = StatusCodes.Status200OK,
+                //    Result = responseDto.token,
+                //});
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
 
+        }
     }
 }
 

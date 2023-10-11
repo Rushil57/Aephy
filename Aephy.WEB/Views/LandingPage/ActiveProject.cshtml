@@ -1020,11 +1020,15 @@
                    }
                    if(result.Message == "CompleteProcess"){
                        var ProjectData = result.Result.ProjectDetails;
-                       if(ProjectData.FundType == 1){
-                           CheckoutSolution(false,ProjectData.ProjectPrice);
-                       }else{
-                           CheckoutSolution(true,ProjectData.ProjectPrice);
-                       } 
+                       var TokenData = result.Result.RevoultToken;
+                       if (TokenData != null) {
+                           window.location.href = '/Home/RevoultCheckout'
+                       }
+                       // if(ProjectData.FundType == 1){
+                       //     CheckoutSolution(false,ProjectData.ProjectPrice);
+                       // }else{
+                       //     CheckoutSolution(true,ProjectData.ProjectPrice);
+                       // } 
                        $("#preloader").hide();
                        return;
                    }             

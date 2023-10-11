@@ -609,51 +609,7 @@ namespace Aephy.API.Models
             public int ResponsivenessRating { get; set; }
             public int WellDefinedProjectRating { get; set; }
         }
-
-        public class AddNonRevolutCounterpartyReq
-        {
-            public class AddressData
-            {
-                public string? StreetLine1 { get; set; }
-                public string? StreetLine2 { get; set; }
-                public string? Region { get; set; }
-                public string? Postcode { get; set; }
-                public string? City { get; set; }
-                public string? Country { get; set; }
-            }
-
-            public class IndividualNameData
-            {
-                public string? FirstName { get; set; }
-                public string? LastName { get; set; }
-            }
-
-            public string? CompanyName { get; set; }
-            public IndividualNameData? IndividualName { get; set; }
-            public string? BankCountry { get; set; }
-            public string? Currency { get; set; }
-            public string? AccountNo { get; set; }
-            public string? SortCode { get; set; }
-            public string? RoutingNumber { get; set; }
-            public string? Iban { get; set; }
-            public string? Bic { get; set; }
-            public string? Email { get; set; }
-            public string? Phone { get; set; }
-            public AddressData? Address { get; set; }
-            public string? IFSC { get; set; }
-
-            public string? UserId { get; set; }
-        }
-
-        public class AddNonRevolutCounterpartyResp
-        {
-            public string? Id { get; set; }
-            public string? Name { get; set; }
-            public string? State { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public DateTime UpdatedAt { get; set; }
-            public List<CounterpartyAccountResp>? Accounts { get; set; }
-        }
+      
 
         public class CounterpartyAccountResp
         {
@@ -711,6 +667,29 @@ namespace Aephy.API.Models
 
         }
 
+        //public class CreatePaymentReq
+        //{
+        //    public class ReceiverData
+        //    {
+        //        [Required(AllowEmptyStrings = false)]
+        //        public string CounterpartyId { get; set; }
+        //        [Required(AllowEmptyStrings = false)]
+        //        public string AccountId { get; set; }
+        //    }
+
+        //    [Required(AllowEmptyStrings = false)]
+        //    public string RequestId { get; set; }
+        //    [Required(AllowEmptyStrings = false)]
+        //    public string AccountId { get; set; }
+        //    [Required]
+        //    public ReceiverData Receiver { get; set; }
+        //    [Required]
+        //    public double Amount { get; set; }
+        //    [Required(AllowEmptyStrings = false)]
+        //    public string Currency { get; set; }
+        //    [Required(AllowEmptyStrings = false)]
+        //    public string Reference { get; set; }
+        //}
     }
 }
 

@@ -4,6 +4,9 @@ using static Aephy.API.Models.AdminViewModel;
 using Stripe;
 using System.Net;
 using RestSharp;
+using RevolutAPI.Models.BusinessApi.Counterparties;
+using RevolutAPI.Models.BusinessApi.Payment;
+//using RevolutAPI.Models.BusinessApi.Counterparties;
 
 namespace Aephy.API.Revoult
 {
@@ -27,11 +30,7 @@ namespace Aephy.API.Revoult
             }
         }
 
-        //        public string GetToken()
-        //        {
-        //            throw new NotImplementedException();
-        //        }
-
+      
         public async Task<bool> RefreshToken()
         {
             try
@@ -73,81 +72,6 @@ namespace Aephy.API.Revoult
 
             return true;
         }
-
-        //        public async Task<GetAccountResp> RetrieveAccount(string accountId)
-        //        {
-        //            try
-        //            {
-        //            RequestAgain:
-        //                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
-        //                {
-        //                    MaxTimeout = -1,
-        //                };
-        //                var client = new RestClient(options);
-        //                var request = new RestRequest($"/api/1.0/accounts/{accountId}", Method.Get);
-        //                request.AddHeader("Accept", "application/json");
-        //                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
-        //                RestResponse response = await client.ExecuteAsync(request);
-
-        //                if (response.ResponseStatus != ResponseStatus.Error)
-        //                {
-        //                    return JsonConvert.DeserializeObject<GetAccountResp>(response.Content);
-        //                }
-        //                else
-        //                {
-        //                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-        //                    {
-        //                        await RefreshToken();
-        //                        goto RequestAgain;
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-
-        //            }
-
-        //            return null;
-        //        }
-
-        //        public async Task<List<GetAccountResp>> RetrieveAllAccounts()
-        //        {
-        //            try
-        //            {
-        //            RequestAgain:
-        //                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
-        //                {
-        //                    MaxTimeout = -1,
-        //                };
-        //                var client = new RestClient(options);
-        //                var request = new RestRequest("/api/1.0/accounts", Method.Get);
-        //                request.AddHeader("Accept", "application/json");
-        //                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
-        //                RestResponse response = await client.ExecuteAsync(request);
-
-        //                if (response.ResponseStatus != ResponseStatus.Error)
-        //                {
-        //                    return JsonConvert.DeserializeObject<List<GetAccountResp>>(response.Content);
-        //                }
-        //                else
-        //                {
-        //                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-        //                    {
-        //                        await RefreshToken();
-        //                        goto RequestAgain;
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                throw ex;
-        //            }
-
-        //            return null;
-        //        }
-
-
-
         public async Task<AddNonRevolutCounterpartyResp> AddInternationalCounterParty(AddNonRevolutCounterpartyReq addCounterpartyReq)
         {
             try
@@ -264,100 +188,99 @@ namespace Aephy.API.Revoult
             return null;
         }
 
-        //        public async Task<List<GetCounterpartyResp>> GetCounterparties()
-        //        {
-        //            try
-        //            {
-        //            RequestAgain:
-        //                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
-        //                {
-        //                    MaxTimeout = -1,
-        //                };
-        //                var client = new RestClient(options);
-        //                var request = new RestRequest("/api/1.0/counterparties", Method.Get);
-        //                request.AddHeader("Accept", "application/json");
-        //                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
-        //                RestResponse response = await client.ExecuteAsync(request);
+        public async Task<List<GetCounterpartyResp>> GetCounterparties()
+        {
+            try
+            {
+            RequestAgain:
+                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var request = new RestRequest("/api/1.0/counterparties", Method.Get);
+                request.AddHeader("Accept", "application/json");
+                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
+                RestResponse response = await client.ExecuteAsync(request);
 
-        //                if (response.ResponseStatus != ResponseStatus.Error)
-        //                {
-        //                    return JsonConvert.DeserializeObject<List<GetCounterpartyResp>>(response.Content);
-        //                }
-        //                else
-        //                {
-        //                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-        //                    {
-        //                        await RefreshToken();
-        //                        goto RequestAgain;
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                throw ex;
-        //            }
+                if (response.ResponseStatus != ResponseStatus.Error)
+                {
+                    return JsonConvert.DeserializeObject<List<GetCounterpartyResp>>(response.Content);
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await RefreshToken();
+                        goto RequestAgain;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-        //            return null;
-        //        }
+            return null;
+        }
 
-        //        public async Task<CreatePaymentResp> CreatePayment(CreatePaymentReq createPaymentReq)
-        //        {
-        //            try
-        //            {
-        //            RequestAgain:
-        //                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
-        //                {
-        //                    MaxTimeout = -1,
-        //                };
-        //                var client = new RestClient(options);
-        //                var request = new RestRequest("/api/1.0/pay", Method.Post);
-        //                request.AddHeader("Content-Type", "application/json");
-        //                request.AddHeader("Accept", "application/json");
-        //                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
-        //                var body = @"{" + "\n" +
-        //                @"  ""request_id"": ""##RequestId##""," + "\n" +
-        //                @"  ""account_id"": ""##SenderAccountId##""," + "\n" +
-        //                @"  ""receiver"": {" + "\n" +
-        //                @"    ""counterparty_id"": ""##ReceiverCounterPrtyId##""," + "\n" +
-        //                @"    ""account_id"": ""##ReceiverAccountId##""" + "\n" +
-        //                @"  }," + "\n" +
-        //                @"  ""amount"": ##amount##," + "\n" +
-        //                @"  ""charge_bearer"": ""shared""," + "\n" +
-        //                @"  ""currency"": ""##currency##""," + "\n" +
-        //                @"  ""reference"": ""##reference##""" + "\n" +
-        //                @"}";
+        public async Task<CreatePaymentResp> CreatePayment(CreatePaymentReq createPaymentReq)
+        {
+            try
+            {
+            RequestAgain:
+                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var request = new RestRequest("/api/1.0/pay", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Accept", "application/json");
+                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
+                var body = @"{" + "\n" +
+                @"  ""request_id"": ""##RequestId##""," + "\n" +
+                @"  ""account_id"": ""##SenderAccountId##""," + "\n" +
+                @"  ""receiver"": {" + "\n" +
+                @"    ""counterparty_id"": ""##ReceiverCounterPrtyId##""," + "\n" +
+                @"    ""account_id"": ""##ReceiverAccountId##""" + "\n" +
+                @"  }," + "\n" +
+                @"  ""amount"": ##amount##," + "\n" +
+                @"  ""charge_bearer"": ""shared""," + "\n" +
+                @"  ""currency"": ""##currency##""," + "\n" +
+                @"  ""reference"": ""##reference##""" + "\n" +
+                @"}";
 
-        //                body = body.Replace("##RequestId##", createPaymentReq.RequestId);
-        //                body = body.Replace("##SenderAccountId##", createPaymentReq.AccountId);
-        //                body = body.Replace("##ReceiverCounterPrtyId##", createPaymentReq.Receiver.CounterpartyId);
-        //                body = body.Replace("##ReceiverAccountId##", createPaymentReq.Receiver.AccountId);
-        //                body = body.Replace("##amount##", createPaymentReq.Amount.ToString());
-        //                body = body.Replace("##currency##", createPaymentReq.Currency);
-        //                body = body.Replace("##reference##", createPaymentReq.Reference);
+                body = body.Replace("##RequestId##", createPaymentReq.RequestId);
+                body = body.Replace("##SenderAccountId##", createPaymentReq.AccountId);
+                body = body.Replace("##ReceiverCounterPrtyId##", createPaymentReq.Receiver.CounterpartyId);
+                body = body.Replace("##ReceiverAccountId##", createPaymentReq.Receiver.AccountId);
+                body = body.Replace("##amount##", createPaymentReq.Amount.ToString());
+                body = body.Replace("##currency##", createPaymentReq.Currency);
+                body = body.Replace("##reference##", createPaymentReq.Reference);
 
-        //                request.AddStringBody(body, DataFormat.Json);
-        //                RestResponse response = await client.ExecuteAsync(request);
+                request.AddStringBody(body, DataFormat.Json);
+                RestResponse response = await client.ExecuteAsync(request);
 
-        //                if (response.ResponseStatus != ResponseStatus.Error)
-        //                {
-        //                    return JsonConvert.DeserializeObject<CreatePaymentResp>(response.Content);
-        //                }
-        //                else
-        //                {
-        //                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-        //                    {
-        //                        await RefreshToken();
-        //                        goto RequestAgain;
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
+                if (response.ResponseStatus != ResponseStatus.Error)
+                {
+                    return JsonConvert.DeserializeObject<CreatePaymentResp>(response.Content);
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await RefreshToken();
+                        goto RequestAgain;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
 
-        //            }
+            }
 
-        //            return null;
-        //        }
-        //    }
+            return null;
+        }
     }
 }

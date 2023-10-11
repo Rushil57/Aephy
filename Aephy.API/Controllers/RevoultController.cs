@@ -1,10 +1,11 @@
 ﻿using Aephy.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Aephy.API.Models.AdminViewModel.AddNonRevolutCounterpartyReq;
 using static Aephy.API.Models.AdminViewModel;
+using RevolutAPI.Models.BusinessApi.Counterparties;
 using Aephy.API.DBHelper;
 using Aephy.API.Revoult;
+using static RevolutAPI.Models.BusinessApi.Counterparties.AddNonRevolutCounterpartyReq;
 
 namespace Aephy.API.Controllers
 {

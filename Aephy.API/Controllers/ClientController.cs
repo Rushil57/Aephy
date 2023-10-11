@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RestSharp;
+using RevolutAPI.Models.BusinessApi.Payment;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Identity;
@@ -17,7 +18,6 @@ using System.Reflection.Metadata;
 using System.Xml.Schema;
 using static Aephy.API.DBHelper.ApplicationUser;
 using static Aephy.API.Models.AdminViewModel;
-using static Aephy.API.Models.AdminViewModel.AddNonRevolutCounterpartyReq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
@@ -1891,6 +1891,25 @@ namespace Aephy.API.Controllers
                     _db.Contract.Add(contractSave);
                     _db.SaveChanges();
 
+
+                    // save to contract user table
+                    List<ContractUser> contractUsers = new List<ContractUser>();
+                    var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
+                    && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                    foreach (var item in fl)
+                    {
+                        contractUsers.Add(new ContractUser()
+                        {
+                            Percentage = 10,
+                            StripeTranferId = string.Empty,
+                            IsTransfered = false,
+                            ApplicationUserId = item.Id,
+                            ContractId = contractSave.Id
+                        });
+                    }
+                    _db.ContractUser.AddRange(contractUsers);
+                    _db.SaveChanges();
+
                     // Save to SolutionFund Table
                     solutionFundData.IsCheckOutDone = true;
                     solutionFundData.ProjectStatus = "COMPLETED";
@@ -1932,7 +1951,7 @@ namespace Aephy.API.Controllers
             {
 
             }
-           
+
 
 
 
@@ -2213,104 +2232,120 @@ namespace Aephy.API.Controllers
                             if (contract != null)
                             {
                                 var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
-                                var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+                                //var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
 
-                                if (checkoutSession != null)
+
+                                foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
                                 {
-                                    contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
+                                    var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
 
-                                    if (_stripeAccountService.GetPaymentStatus(checkoutSession) == Contract.PaymentStatuses.Paid)
+                                    if (user != null && user.RevolutStatus == true)
                                     {
-                                        foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
+                                        //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
+
+                                        var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
+                                        var getCounterParties = await _revoultService.GetCounterparties();
+                                        CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
-
-                                            if (user != null && user.RevolutStatus == true)
+                                            AccountId = "1d2c76af-f8bb-497a-b9db-1c47eb2a9ce0",
+                                            RequestId = Guid.NewGuid().ToString(),
+                                            Amount = priceToTransfer,
+                                            Currency = "EUR",
+                                            Reference = "To Micheal Heart",
+                                            Receiver = new CreatePaymentReq.ReceiverData()
                                             {
-                                                var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-
-                                                var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                                //var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "usd", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
-                                                var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "eur", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
-
-                                                if (transferId != null)
-                                                {
-                                                    contractUser.StripeTranferId = transferId;
-                                                    contractUser.IsTransfered = true;
-                                                    _db.ContractUser.Update(contractUser);
-                                                    _db.SaveChanges();
-                                                }
+                                                CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
+                                                AccountId = user.RevolutAccountId // freelancer RevolutAccountId
                                             }
-                                            else
-                                            {
-                                                // this User(freelabncer or architect) has not completed his Stripe account please 
-                                            }
-                                        }
+                                        };
 
-                                        if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                        var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
+
+                                        
+                                       // var statetemp = "completed";
+                                        //Possible values: [created, pending, completed, declined, failed, reverted]
+                                        if (CreatePaymentRsp.State == "completed")
                                         {
-                                            var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
-                                            if (updatemilestonestatus != null)
-                                            {
-                                                updatemilestonestatus.MilestoneStatus = "Milestone Completed";
-                                                _db.SaveChanges();
-                                            }
-                                        }
-                                        var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
-                                        var transfertoFreelancer = false;
-                                        if (transferredcount == contract.ContractUsers.Count())
-                                        {
-                                            contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
-                                            _db.Contract.Update(contract);
+                                            //contractUser.StripeTranferId = transferId;
+                                            contractUser.IsTransfered = true;
+                                            _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
-                                            var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
-                                            transfertoFreelancer = true;
-                                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                            {
-                                                StatusCode = StatusCodes.Status200OK,
-                                                Message = message,
-                                                Result = new
-                                                {
-                                                    IsTransfer = transfertoFreelancer,
-                                                    FundType = completedData.FundType
-                                                }
-
-                                            });
-                                        }
-                                        else if (transferredcount > 0)
-                                        {
-                                            contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
-                                            _db.Contract.Update(contract);
-                                            _db.SaveChanges();
-                                            var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
-                                            transfertoFreelancer = true;
-                                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                            {
-                                                StatusCode = StatusCodes.Status200OK,
-                                                Message = message,
-                                                Result = new
-                                                {
-                                                    IsTransfer = transfertoFreelancer
-                                                }
-
-                                            });
                                         }
                                         else
                                         {
-                                            var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(stripe)", transferredcount);
-                                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                            {
-                                                StatusCode = StatusCodes.Status200OK,
-                                                Message = message,
-                                                Result = new
-                                                {
-                                                    IsTransfer = transfertoFreelancer
-                                                }
-
-                                            });
+                                            //Please check the status and place logic accordingly.
                                         }
                                     }
+                                    else
+                                    {
+                                        // this User(freelabncer or architect) has not completed his Stripe account please 
+                                    }
                                 }
+
+                                if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                {
+                                    var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
+                                    if (updatemilestonestatus != null)
+                                    {
+                                        updatemilestonestatus.MilestoneStatus = "Milestone Completed";
+                                        _db.SaveChanges();
+                                    }
+                                }
+                                var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
+                                var transfertoFreelancer = false;
+                                if (transferredcount == contract.ContractUsers.Count())
+                                {
+                                    contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
+                                    _db.Contract.Update(contract);
+                                    _db.SaveChanges();
+                                    var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
+                                    transfertoFreelancer = true;
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = message,
+                                        Result = new
+                                        {
+                                            IsTransfer = transfertoFreelancer,
+                                            FundType = completedData.FundType
+                                        }
+
+                                    });
+                                }
+                                else if (transferredcount > 0)
+                                {
+                                    contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
+                                    _db.Contract.Update(contract);
+                                    _db.SaveChanges();
+                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
+                                    transfertoFreelancer = true;
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = message,
+                                        Result = new
+                                        {
+                                            IsTransfer = transfertoFreelancer
+                                        }
+
+                                    });
+                                }
+                                else
+                                {
+                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(stripe)", transferredcount);
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = message,
+                                        Result = new
+                                        {
+                                            IsTransfer = transfertoFreelancer
+                                        }
+
+                                    });
+                                }
+
+
 
                             }
                         }

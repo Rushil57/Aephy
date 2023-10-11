@@ -812,7 +812,12 @@
         // $("#preloader").show();
         // window.location = "@Url.Action("RegisterStripeUser", "Home")";
         // $("#preloader").hide();
-        $("#RevolutOnBoardingFeildsModal").modal('show');
+        var countrtExists = $("#freelancer-country").val();
+        if(countrtExists != 0){
+            $("#RevolutOnBoardingFeildsModal").modal('show');
+        }else{
+            showToaster("error", "Error !", "Please select valid country");
+        }
     }
 
     function BindCountry(){

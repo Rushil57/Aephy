@@ -399,6 +399,10 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
+                                <div class="col-6">
+                                    <input type="checkbox" id="InbanCheck" name="InbanCheck" value="InbanCheck" onclick="return false">
+                                    <label for="InbanCheck"> IBAN</label><br>
+                                </div>
                                 <form class="row g-3 mt-3" name="RevolutOnBoardForm">
                                     <div class="col-6">
                                         <label for="backCountry" class="form-label">Bank Country</label>
@@ -412,28 +416,34 @@
                                             <input type="text" id="Currency" class="form-control" name="Currency" />
                                         </div>
                                     </div>
-                                     <div class="col-6">
+                                    <div class="col-6 cls-non-mexican-field cls-aus-field cls-us-field cls-indian-field">
                                         <label for="accountNo" class="form-label">Account No.</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="accountNo" class="form-control" name="AccountNo" />
                                         </div>
                                     </div>
-                                    <div class="col-6 cls-Ibannot-mandatory">
+                                    <div class="col-6 cls-Ibannot-mandatory non-indian-field cls-non-mexican-field cls-us-field cls-non-aus-field">
                                         <label for="routingNumber" class="form-label">Routing Number</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="routingNumber" class="form-control" name="RoutingNumber" />
                                         </div>
                                     </div>
-                                     <div class="col-6">
+                                    <div class="col-6 non-indian-field cls-non-us-field cls-non-mexican-field cls-Ibannot-mandatory cls-non-aus-field">
                                         <label for="ibanNumber" class="form-label">Iban Number</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="ibanNumber" class="form-control" name="IbanNumber" />
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 cls-non-us-field cls-iban-mandantory cls-indian-field cls-mexican-field cls-aus-field">
                                         <label for="bicNumber" class="form-label">BIC</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="bicNumber" class="form-control" name="BicNumber" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 cls-non-us-field cls-Ibannot-mandatory cls-mexican-field non-indian-field cls-non-aus-field">
+                                        <label for="clabeNumber" class="form-label">Clabe</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="clabeNumber" class="form-control" name="clabeNumber" />
                                         </div>
                                     </div>
                                     <div class="text-center">
@@ -585,11 +595,32 @@
 
                     if (data.IsIBanMandantory){
                         $(".cls-Ibannot-mandatory").hide();
-                    }
-                    if (data.IbanMandantoryWithExceptCountry){
-                        $(".cls-Ibannot-mandatory").show();
+                        $(".cls-iban-mandantory").show();
+                        $('#InbanCheck').prop('checked', true);
                     }else{
-                        $(".cls-Ibannot-mandatory").hide();
+                        $('#InbanCheck').prop('checked', false);
+
+                    }
+                    // if (data.IbanMandantoryWithExceptCountry){
+                    //     $(".cls-Ibannot-mandatory").show();
+                    // }else{
+                    //     $(".cls-Ibannot-mandatory").hide();
+                    // }
+                    if(data.ShowIndiaField){
+                        $(".non-indian-field").hide();
+                        $(".cls-indian-field").show();
+                    }
+                    if (data.ShowUsField) {
+                        $(".cls-us-field").show();
+                        $(".cls-non-us-field").hide();
+                    }
+                    if (data.ShowMexicanField) {
+                        $(".cls-non-mexican-field").hide();
+                        $(".cls-mexican-field").show();
+                    }
+                    if (data.ShowAustraliaField) {
+                        $(".cls-aus-field").show();
+                        $(".cls-non-aus-field").hide();
                     }
                 }
                 
@@ -857,6 +888,7 @@
         $("#routingNumber").val("");
         $("#ibanNumber").val("");
         $("#bicNumber").val("");
+        $('#InbanCheck').prop('checked', false);
         $("#RevolutOnBoardingFeildsModal").modal('hide');
     }
 

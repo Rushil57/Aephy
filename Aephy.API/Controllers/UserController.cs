@@ -54,7 +54,10 @@ namespace Aephy.API.Controllers
                     var Countryname = string.Empty;
                     var Countrycode = string.Empty;
                     var IBANComplusory = false;
-                    var CountryExceptGiven = false;
+                    var IsIndiaField = false;
+                    var IsAustraliaField = false;
+                    var IsMexicanField = false;
+                    var IsUsField = false;
                     if (user != null)
                     {
                         if(user.CountryId != 0)
@@ -66,9 +69,21 @@ namespace Aephy.API.Controllers
                                 Countrycode = CountryData.Code;
                                 IBANComplusory = CountryData.IsIBANMandatory;
 
-                                if (Countrycode == "IN" || Countrycode == "US" || Countrycode == "MX" || Countrycode == "AU")
+                                if (Countrycode == "IN")
                                 {
-                                    CountryExceptGiven = true;
+                                    IsIndiaField = true;
+                                }
+                                if (Countrycode == "AU")
+                                {
+                                    IsAustraliaField = true;
+                                }
+                                if (Countrycode == "MX")
+                                {
+                                    IsMexicanField = true;
+                                }
+                                if (Countrycode == "US")
+                                {
+                                    IsUsField = true;
                                 }
                             }
                         }
@@ -104,7 +119,11 @@ namespace Aephy.API.Controllers
                         UserDetails.BackCountry = Countrycode;
                         UserDetails.IsIBanMandantory = IBANComplusory;
                         UserDetails.RevoultStatus = user.RevolutStatus;
-                        UserDetails.IbanMandantoryWithExceptCountry = CountryExceptGiven;
+                        UserDetails.ShowIndiaField = IsIndiaField;
+                        UserDetails.ShowAustraliaField = IsAustraliaField;
+                        UserDetails.ShowMexicanField = IsMexicanField;
+                        UserDetails.ShowUsField = IsUsField;
+
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

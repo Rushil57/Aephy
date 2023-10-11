@@ -538,7 +538,10 @@ namespace Aephy.API.Models
 
             public bool RevoultStatus { get; set; }
 
-            public bool IbanMandantoryWithExceptCountry { get; set; }
+            public bool ShowIndiaField { get; set; }
+            public bool ShowAustraliaField { get; set; }
+            public bool ShowMexicanField { get; set; }
+            public bool ShowUsField { get; set; }
 
         }
 

@@ -54,6 +54,7 @@ namespace Aephy.API.Controllers
                     var Countryname = string.Empty;
                     var Countrycode = string.Empty;
                     var IBANComplusory = false;
+                    var CountryExceptGiven = false;
                     if (user != null)
                     {
                         if(user.CountryId != 0)
@@ -64,6 +65,11 @@ namespace Aephy.API.Controllers
                                 Countryname = CountryData.CountryName;
                                 Countrycode = CountryData.Code;
                                 IBANComplusory = CountryData.IsIBANMandatory;
+
+                                if (Countrycode == "IN" || Countrycode == "US" || Countrycode == "MX" || Countrycode == "AU")
+                                {
+                                    CountryExceptGiven = true;
+                                }
                             }
                         }
                         if (user.UserType == "Client")
@@ -97,6 +103,8 @@ namespace Aephy.API.Controllers
                         UserDetails.CompanyName = clientDetails.CompanyName;
                         UserDetails.BackCountry = Countrycode;
                         UserDetails.IsIBanMandantory = IBANComplusory;
+                        UserDetails.RevoultStatus = user.RevolutStatus;
+                        UserDetails.IbanMandantoryWithExceptCountry = CountryExceptGiven;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -195,7 +203,7 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
-                    
+
                     //if(model.freelancerDetail != null)
                     //{
                     //    user.CountryId = model.freelancerDetail.CountryId;
@@ -389,9 +397,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var dbFreeLancerIds = await _db.FreelancerDetails.Where(x => x.FreelancerLevel == freeLancerLavel).Select(x=>x.UserId).ToListAsync();
-                var dbUsers = await _db.Users.Where(x=>dbFreeLancerIds.Contains(x.Id)).ToListAsync();
-                
+                var dbFreeLancerIds = await _db.FreelancerDetails.Where(x => x.FreelancerLevel == freeLancerLavel).Select(x => x.UserId).ToListAsync();
+                var dbUsers = await _db.Users.Where(x => dbFreeLancerIds.Contains(x.Id)).ToListAsync();
+
                 if (dbUsers != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Found.", Result = dbUsers });
@@ -414,7 +422,7 @@ namespace Aephy.API.Controllers
             try
             {
                 List<UserWiseLavelDetail> userlevelDetails = new List<UserWiseLavelDetail>();
-                foreach(var id in userIdsModel.Ids)
+                foreach (var id in userIdsModel.Ids)
                 {
                     UserWiseLavelDetail data = new UserWiseLavelDetail();
                     var userData = _db.Users.Where(x => x.Id == id).FirstOrDefault();
@@ -438,9 +446,10 @@ namespace Aephy.API.Controllers
 
                 if (userlevelDetails.Count > 0)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { 
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Data Found.", 
+                        Message = "Data Found.",
                         Result = userlevelDetails
                     });
                 }

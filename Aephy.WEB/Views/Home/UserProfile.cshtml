@@ -127,6 +127,13 @@
                                 <div class="FreelancerFields" style="display:none;">
                                     <input type="hidden" value="" id="CVPath-id" />
 
+                                     <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Country</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="Country" type="text" class="form-control cls-country" readonly>
+                                        </div>
+                                    </div>
+
                                     <div class="row RevolutPending" style="display:none;">
                                         <div class="col-lg-3 col-md-4 label">Revoult Account Status</div>
                                         <div class="col-md-8 col-lg-9">
@@ -138,13 +145,6 @@
                                         <div class="col-lg-3 col-md-4 label">Revoult Account Status</div>
                                         <div class="col-md-8 col-lg-9">
                                             <span class="badge bg-success">COMPLETED</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-4 label">Country</div>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="Country" type="text" class="form-control cls-country" readonly>
                                         </div>
                                     </div>
 
@@ -269,6 +269,15 @@
                                     </div>
 
                                     <div class="FreelancerFields" style="display:none;">
+                                        <div class="row mb-3">
+                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="freelancer-country">
+                                                    <option value="0">Select Country</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div class="row mb-3 RevolutPending" style="display:none;">
                                             <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Revoult Account Status</label>
                                             <div class="col-md-8 col-lg-9">
@@ -283,15 +292,6 @@
                                                 <span class="badge bg-success">COMPLETED</span>
                                               </div>
                                          </div>
-
-                                        <div class="row mb-3">
-                                            <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                                            <div class="col-md-8 col-lg-9">
-                                                <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="freelancer-country">
-                                                    <option value="0">Select Country</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                          
                                         <div class="row mb-3">
                                             <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate Per Day ($)</label>
@@ -391,7 +391,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title main-title cls-revoultonboarding-title">Please Fill out below Fields</h4>
+                <h4 class="modal-title main-title cls-revoultonboarding-title">Details</h4>
                 <a class="close" onclick="CloseRevolutPopup();"><i class="bi bi-x-circle"></i></a>
             </div>
             <div class="modal-body p-0">
@@ -401,7 +401,7 @@
                             <div class="card-body">
                                 <form class="row g-3 mt-3" name="RevolutOnBoardForm">
                                     <div class="col-6">
-                                        <label for="backCountry" class="form-label">BankCountry</label>
+                                        <label for="backCountry" class="form-label">Bank Country</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="backCountry" class="form-control" name="BackCountry" readonly/>
                                         </div>
@@ -413,19 +413,19 @@
                                         </div>
                                     </div>
                                      <div class="col-6">
-                                        <label for="accountNo" class="form-label">AccountNo</label>
+                                        <label for="accountNo" class="form-label">Account No.</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="accountNo" class="form-control" name="AccountNo" />
                                         </div>
                                     </div>
                                     <div class="col-6 cls-Ibannot-mandatory">
-                                        <label for="routingNumber" class="form-label">RoutingNumber</label>
+                                        <label for="routingNumber" class="form-label">Routing Number</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="routingNumber" class="form-control" name="RoutingNumber" />
                                         </div>
                                     </div>
                                      <div class="col-6">
-                                        <label for="ibanNumber" class="form-label">IbanNumber</label>
+                                        <label for="ibanNumber" class="form-label">Iban Number</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="ibanNumber" class="form-control" name="IbanNumber" />
                                         </div>
@@ -553,6 +553,7 @@
                     $(".drp-freelancer-level").val(data.FreelancerLevel)
                     //$("#country").val(data.CountryId)                    
                     $(".cls-client-companyname").val(data.CompanyName)
+                    $("#backCountry").val(data.BackCountry)
                     setTimeout(function () {
                         $("#client-country").val(data.CountryId)
                         $("#freelancer-country").val(data.CountryId)
@@ -574,16 +575,20 @@
                         $("#profile-image").css("display", "none")
                          $("#profile-intial").css("display","flex")
                     }
-                    if (data.RevolutStatus) {
+                    if (data.RevoultStatus) {
                         $(".RevolutPending").hide();
                         $(".RevolutCompleted").show();
                     }else{
                         $(".RevolutPending").show();
                         $(".RevolutCompleted").hide();
-                        $("#backCountry").val(data.BackCountry)
                     }
 
                     if (data.IsIBanMandantory){
+                        $(".cls-Ibannot-mandatory").hide();
+                    }
+                    if (data.IbanMandantoryWithExceptCountry){
+                        $(".cls-Ibannot-mandatory").show();
+                    }else{
                         $(".cls-Ibannot-mandatory").hide();
                     }
                 }
@@ -842,13 +847,11 @@
     }
 
     function CloseRevolutPopup(){
-        $("#backCountry").val("");
         $("#Currency").val("");
         $("#accountNo").val("");
         $("#routingNumber").val("");
         $("#ibanNumber").val("");
         $("#bicNumber").val("");
-        
         $("#RevolutOnBoardingFeildsModal").modal('hide');
     }
 

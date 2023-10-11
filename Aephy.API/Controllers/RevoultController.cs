@@ -49,29 +49,32 @@ namespace Aephy.API.Controllers
                     }
 
                     var resp = await _revoultService.AddInternationalCounterParty(addNonRevolutCounterpartyReq);
-                    if (resp.State == "created")
+                    if(resp != null)
                     {
-                        var UserData = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
-                        if (UserData != null)
+                        if (resp.State == "created")
                         {
-                            UserData.RevolutConnectId = UserData.Id;
-                            UserData.RevolutStatus = true;
-                            if(resp.Accounts != null)
+                            var UserData = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
+                            if (UserData != null)
                             {
-                                UserData.RevolutAccountId = resp.Accounts[0].Id;
+                                UserData.RevolutConnectId = UserData.Id;
+                                UserData.RevolutStatus = true;
+                                if(resp.Accounts != null)
+                                {
+                                    UserData.RevolutAccountId = resp.Accounts[0].Id;
+                                }
+                                _db.SaveChanges();
                             }
-                            _db.SaveChanges();
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Account Created",
+                            });
                         }
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Account Created",
-                        });
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Something Went Wrong",
+                        Message = "Error Occur while registering please try later",
 
                     });
                 }

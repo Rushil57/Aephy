@@ -536,6 +536,10 @@ namespace Aephy.API.Models
 
             public bool IsIBanMandantory { get; set; }
 
+            public bool RevoultStatus { get; set; }
+
+            public bool IbanMandantoryWithExceptCountry { get; set; }
+
         }
 
         public class InvoiceViewModel
@@ -668,3 +672,5 @@ namespace Aephy.API.Models
         }
     }
 }
+
+

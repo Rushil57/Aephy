@@ -1866,146 +1866,75 @@ namespace Aephy.API.Controllers
         //GetUserSuccessCheckoutDetails
         [HttpPost]
         [Route("GetUserSuccessCheckoutDetails")]
-        public async Task<IActionResult> GetUserSuccessCheckoutDetails([FromBody] MileStoneIdViewModel model)
+        public async Task<IActionResult> GetUserSuccessCheckoutDetails([FromBody] RevoultCheckOutModel model)
         {
-            var user = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+            //var userData = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
 
-            if (user != null)
+            try
             {
-                // Please note that this logic is verification of the encrypted string that is set for specific contract and logged in user is owner of the contract.
-                var contract = _db.Contract.FirstOrDefault(x => x.Id == model.Id && x.ClientUserId == user.Id);
-
-
-                if (contract != null)
+                var solutionFundData = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
+                if (solutionFundData != null)
                 {
-                    var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
-
-                    if (checkoutSession != null)
+                    // Save to contract Table
+                    var contractSave = new Contract()
                     {
-                        contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
-                        contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(checkoutSession);
+                        ClientUserId = model.UserId,
+                        SolutionId = solutionFundData.SolutionId,
+                        IndustryId = solutionFundData.IndustryId,
+                        PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+                        PaymentIntentId = model.RevoultOrderId,
+                        SolutionFundId = model.SolutionFundId,
+                        CreatedDateTime = DateTime.Now,
+                        MilestoneDataId = solutionFundData.MileStoneId,
+                        Amount = solutionFundData.ProjectPrice.ToString(),
+                    };
+                    _db.Contract.Add(contractSave);
+                    _db.SaveChanges();
 
-                        if (contract.PaymentStatus == Contract.PaymentStatuses.Paid && contract.SessionStatus == Contract.SessionStatuses.Complete)
+                    // Save to SolutionFund Table
+                    solutionFundData.IsCheckOutDone = true;
+                    solutionFundData.ProjectStatus = "COMPLETED";
+                    solutionFundData.IsArchived = true;
+                    _db.SaveChanges();
+
+                    // Save to MilestoneStatus Table
+                    if (solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                    {
+                        var storeMilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == solutionFundData.MileStoneId && x.UserId == model.UserId).FirstOrDefault();
+                        if (storeMilestonestatus == null)
                         {
-                            contract.PaymentIntentId = checkoutSession.PaymentIntentId;
-
-                            var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-
-                            if (paymentIntent != null && !string.IsNullOrEmpty(paymentIntent.LatestChargeId))
+                            var milestoneStatus = new ActiveSolutionMilestoneStatus()
                             {
-                                var taxIdType = string.Empty;
-                                var taxIdValue = string.Empty;
-                                decimal vatPercentage = 0;
-                                decimal vatAmount = 0;
-                                bool Istaxrefund = false;
-                                long taxtransferamount = 0;
-
-                                //TAX DETAILS SECTION
-                                var taxDetails = _stripeAccountService.GetTaxDetails(contract.SessionId);
-                                if (taxDetails != null)
-                                {
-                                    var Subtotal = (decimal)taxDetails.AmountSubtotal / 100; // AmountSubtotal = Original Project Price (20000 / 100) = 200
-                                    var Total = (decimal)taxDetails.AmountTotal / 100;  // AmountTotal = Original Project Price + Tax Price (24800 / 100) = 248
-                                    vatAmount = Total - Subtotal;
-                                    var calculateVatPercentage = Math.Abs((Subtotal - Total)) / Subtotal; // 0.24
-                                    vatPercentage = (calculateVatPercentage * 100); // (0.24 * 100) = 24.00%
-                                    var customerDetails = taxDetails.CustomerDetails;
-                                    var CustomerBussinessname = customerDetails.Name; // name of bussiness = test
-                                    if (customerDetails.TaxIds.Count > 0)
-                                    {
-                                        for (int i = 0; i < customerDetails.TaxIds.Count(); i++)
-                                        {
-                                            taxIdType = customerDetails.TaxIds[i].Type;
-                                            taxIdValue = customerDetails.TaxIds[i].Value;
-                                        }
-
-                                    }
-                                }
-                                //TAX DETAILS SECTION
-
-                                //REFUND TAX TO CLIENT SECTION
-
-                                if (vatAmount > 0)
-                                {
-                                    var finalVatAmount = Convert.ToInt64(vatAmount);
-                                    var clienttransfer = _stripeAccountService.RefundAmountToClient(paymentIntent.LatestChargeId, finalVatAmount);
-                                    if (clienttransfer.Status == "succeeded")
-                                    {
-                                        Istaxrefund = true;
-                                        taxtransferamount = clienttransfer.Amount;
-                                    }
-                                }
-                                //REFUND TAX TO CLIENT SECTION
-
-                                //CALCULATE STRIPE FEE SECTION
-                                //var stripeFeeDetails = _stripeAccountService.GetStripeFeedetails(contract.PaymentIntentId);
-                                //CALCULATE STRIPE FEE SECTION
-                                contract.LatestChargeId = paymentIntent.LatestChargeId;
-                                contract.PaymentStatus = Contract.PaymentStatuses.Paid;
-                                contract.TaxId = taxIdValue;
-                                contract.TaxType = taxIdType;
-                                contract.VATPercentage = vatPercentage.ToString();
-                                contract.VATAmount = vatAmount.ToString();
-                                contract.IsTaxRefund = Istaxrefund;
-                                contract.TaxRefundAmount = taxtransferamount.ToString();
-                                _db.SaveChanges();
-
-                                var data = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();
-                                if (data != null)
-                                {
-                                    data.IsCheckOutDone = true;
-                                    data.ProjectStatus = "COMPLETED";
-                                    data.IsArchived = true;
-                                    _db.SaveChanges();
-
-                                    if (data.FundType == SolutionFund.FundTypes.MilestoneFund)
-                                    {
-                                        var storeMilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == data.MileStoneId && x.UserId == data.ClientId).FirstOrDefault();
-                                        if (storeMilestonestatus == null)
-                                        {
-                                            var milestoneStatus = new ActiveSolutionMilestoneStatus()
-                                            {
-                                                MilestoneId = data.MileStoneId,
-                                                UserId = data.ClientId,
-                                                MilestoneStatus = "Fund Completed Pay Inprogress"
-                                            };
-                                            _db.ActiveSolutionMilestoneStatus.Add(milestoneStatus);
-                                            _db.SaveChanges();
-                                        }
-                                    }
-                                }
-                            }
-
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.",
-                            });
-                        }
-                        else if (contract.PaymentStatus == Contract.PaymentStatuses.NoPaymentRequired)
-                        {
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Your payment is in no payment required state. The payment is delayed to a future date, or the Checkout Session is in setup mode and doesn’t require a payment at this time.",
-                            });
-                            //ViewData["Message"] = "Your payment is in no payment required state. The payment is delayed to a future date, or the Checkout Session is in setup mode and doesn’t require a payment at this time.";
-                        }
-                        else if (contract.PaymentStatus == Contract.PaymentStatuses.UnPaid)
-                        {
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Your payment is in upaid state yet.We have not received the payment.",
-                            });
-                            //ViewData["Message"] = "Your payment is in upaid state yet.We have not received the payment.";
+                                MilestoneId = solutionFundData.MileStoneId,
+                                UserId = model.UserId,
+                                MilestoneStatus = "Fund Completed Pay Inprogress"
+                            };
+                            _db.ActiveSolutionMilestoneStatus.Add(milestoneStatus);
+                            _db.SaveChanges();
                         }
                     }
 
-                    _db.Contract.Update(contract);
-                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.",
+                    });
                 }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Not Found",
+                });
+
             }
+            catch (Exception ex)
+            {
+
+            }
+           
+
+
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -2250,7 +2179,8 @@ namespace Aephy.API.Controllers
                                 {
                                     ProjectDetails = data,
                                     MileStoneData = mileStoneData,
-                                    RevoultToken = getRevoultToken
+                                    RevoultToken = getRevoultToken,
+                                    SolutionFundId = data.Id
                                 }
                             });
                         }
@@ -3077,12 +3007,8 @@ namespace Aephy.API.Controllers
                 var responseDto = JsonConvert.DeserializeObject<ResponseDto>(response.Content);
                 //ViewData["Token"] = responseDto.token;
                 //return View();
-                return responseDto.token;
-                //return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                //{
-                //    StatusCode = StatusCodes.Status200OK,
-                //    Result = responseDto.token,
-                //});
+                var tokenandOrerId = responseDto.token + "|" + responseDto.id;
+                return tokenandOrerId;
             }
             catch (Exception ex)
             {

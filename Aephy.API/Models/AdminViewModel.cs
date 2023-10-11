@@ -691,6 +691,26 @@ namespace Aephy.API.Models
             public string checkout_url { get; set; }
         }
 
+        public class RevoultCheckOutModel
+        {
+            public int Id { get; set; }
+
+            public string? RevoultOrderId { get; set; }
+
+            public string? Token { get; set; }
+
+            public string? UserId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public int IndustryId { get; set; }
+
+            public int SolutionFundId { get; set; }
+
+            public string? ProjectPrice { get; set; }
+
+        }
+
     }
 }
 

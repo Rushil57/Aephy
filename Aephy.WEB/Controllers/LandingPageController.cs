@@ -718,7 +718,7 @@ namespace Aephy.WEB.Controllers
 
         //GetUserSuccessCheckoutDetails
         [HttpPost]
-        public async Task<string> GetUserSuccessCheckoutDetails([FromBody] MileStoneIdViewModel model)
+        public async Task<string> GetUserSuccessCheckoutDetails([FromBody] RevoultCheckOutViewModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId == null)
@@ -759,13 +759,19 @@ namespace Aephy.WEB.Controllers
             dynamic data = JsonConvert.DeserializeObject(userData);
             if (data.Message == "CompleteProcess")
             {
-                if(data.Result.RevoultToken != "")
+                if (data.Result.RevoultToken != "")
                 {
+                    string SolutionFundId = data.Result.SolutionFundId;
                     var token = data.Result.RevoultToken;
                     string stringToken = token.ToString();
-                    HttpContext.Session.SetString("RevoultToken", stringToken);
+                    string[] SplittokenandOrderId = stringToken.Split('|');
+                    var revoulttoken = SplittokenandOrderId[0];
+                    var OrderId = SplittokenandOrderId[1];
+                    HttpContext.Session.SetString("RevoultToken", revoulttoken);
+                    HttpContext.Session.SetString("RevoultOrderId", OrderId);
+                    HttpContext.Session.SetString("SolutionFundId", SolutionFundId);
                 }
-                
+
                 //HttpContext.Session.SetString("RevoultToken", token);
                 //HttpContext.Session.SetString("RevoultToken", token);
             }

@@ -2614,7 +2614,11 @@ namespace Aephy.WEB.Controllers
         {
             // var revoultToken = HttpContext.Session.GetString("RevoultToken");
             var revoultToken = HttpContext.Session.GetString("RevoultToken");
-             ViewData["Token"] = revoultToken;
+            var orderId = HttpContext.Session.GetString("RevoultOrderId");
+            var solutionFundId = HttpContext.Session.GetString("SolutionFundId");
+            ViewData["Token"] = revoultToken;
+            ViewData["OrderId"] = orderId;
+            ViewData["SolutionFundId"] = solutionFundId;
             return View();
         }
     }

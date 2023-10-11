@@ -38,4 +38,18 @@
 
         public string? UserId { get; set; }
     }
+
+    public class RevoultCheckOutViewModel
+    {
+        public int Id { get; set; }
+
+        public string? RevoultOrderId { get; set; }
+
+        public string? Token { get; set; }
+
+        public string? UserId { get; set; }
+
+        public int SolutionFundId { get; set; }
+
+    }
 }

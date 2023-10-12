@@ -88,6 +88,7 @@
                 success: function (result) {
                    // $("#sucess-msg").html(result.Message)
                     showToaster("success", "Success !", result.Message);
+                    window.location.href = '/Home/Dashboard'
                     $("#preloader").hide();
                 },
                 error: function (result) {

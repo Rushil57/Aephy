@@ -2294,7 +2294,8 @@ namespace Aephy.API.Controllers
 
                                         var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
 
-                                        
+
+                                        //Remove below variable after succesfully implemented create payment method and replace it with a "CreatePaymentRsp" varibale.
                                         var statetemp = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
                                         if (statetemp == "completed")
@@ -3073,7 +3074,7 @@ namespace Aephy.API.Controllers
                         if (mileStoneToTalDays.Days > 0)
                         {
                             var ProjectPrice = Convert.ToInt32(model.ProjectPrice);
-                            var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
+                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100 ;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
                     }

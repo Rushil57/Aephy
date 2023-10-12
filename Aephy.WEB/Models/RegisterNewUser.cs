@@ -47,6 +47,10 @@
         public string? City { get; set; }
 
         public string? PostCode { get; set; }
+
+        public bool IsRevoultBankAccount { get; set; }
+
+        public string? RevTag { get; set; }
     }
 
     public class ClientDetail

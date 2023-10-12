@@ -130,6 +130,8 @@ namespace Aephy.API.Controllers
                         UserDetails.PreferredCurrency = user.PreferredCurrency;
                         UserDetails.TaxType = user.TaxType;
                         UserDetails.TaxNumber = user.TaxNumber;
+                        UserDetails.IsRevoultBankAccount = freelancerDetails.IsRevoultBankAccount;
+                        UserDetails.RevTag = freelancerDetails.RevTag;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -253,6 +255,15 @@ namespace Aephy.API.Controllers
                             freelancerDetails.ProffessionalExperience = model.freelancerDetail.ProffessionalExperience;
                             freelancerDetails.City = model.freelancerDetail.City;
                             freelancerDetails.PostCode = model.freelancerDetail.PostCode;
+                            freelancerDetails.IsRevoultBankAccount = model.freelancerDetail.IsRevoultBankAccount;
+                            if (model.freelancerDetail.IsRevoultBankAccount)
+                            {
+                                freelancerDetails.RevTag = model.freelancerDetail.RevTag;
+                            }
+                            else
+                            {
+                                freelancerDetails.RevTag = "";
+                            }
                             _db.SaveChanges();
 
                             var userData = _db.Users.Where(x => x.Id == freelancerDetails.UserId).FirstOrDefault();

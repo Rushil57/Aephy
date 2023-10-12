@@ -559,6 +559,9 @@ namespace Aephy.API.Models
 
             public string? TaxNumber { get; set; }
 
+            public bool IsRevoultBankAccount { get; set; }
+
+            public string? RevTag { get; set; }
         }
 
         public class InvoiceViewModel

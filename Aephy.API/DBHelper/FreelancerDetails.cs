@@ -27,5 +27,9 @@ namespace Aephy.API.DBHelper
         public string? ImagePath { get; set; }
         public string? ImageBlobStorageBaseUrl { get; set; }
         public string? ImageUrlWithSas { get; set; }
+
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
     }
 }

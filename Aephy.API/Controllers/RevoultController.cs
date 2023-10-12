@@ -29,47 +29,54 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    if (addNonRevolutCounterpartyReq.Address is null)
+                    var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
+                    if(freelancerDetails != null)
                     {
-                        addNonRevolutCounterpartyReq.Address = new AddressData
-                        {
-                            Postcode = "380006",
-                            Country = "FR",
-                            City = "Ahmedabad",
-                            StreetLine1 = "Steert No 1 House 2"
-                        };
-                    }
+                        var UserDetails = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
+                        var CountryCode = _db.Country.Where(x => x.Id == UserDetails.CountryId).Select(x => x.Code).FirstOrDefault();
 
-                    if (addNonRevolutCounterpartyReq.IndividualName is null)
-                    {
-                        addNonRevolutCounterpartyReq.IndividualName = new IndividualNameData
+                        if (addNonRevolutCounterpartyReq.Address is null)
                         {
-                            FirstName = "Name",
-                            LastName = "Coo"
-                        };
-                    }
-
-                    var resp = await _revoultService.AddInternationalCounterParty(addNonRevolutCounterpartyReq);
-                    if(resp != null)
-                    {
-                        if (resp.State == "created")
-                        {
-                            var UserData = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
-                            if (UserData != null)
+                            addNonRevolutCounterpartyReq.Address = new AddressData
                             {
-                                UserData.RevolutConnectId = UserData.Id;
-                                UserData.RevolutStatus = true;
-                                if(resp.Accounts != null)
+                                Postcode = freelancerDetails.PostCode,
+                                Country = CountryCode,
+                                City = freelancerDetails.City,
+                                StreetLine1 = freelancerDetails.Address
+                            };
+                        }
+
+                        if (addNonRevolutCounterpartyReq.IndividualName is null)
+                        {
+                            addNonRevolutCounterpartyReq.IndividualName = new IndividualNameData
+                            {
+                                FirstName = UserDetails.FirstName,
+                                LastName = UserDetails.LastName
+                            };
+                        }
+
+                        var resp = await _revoultService.AddInternationalCounterParty(addNonRevolutCounterpartyReq);
+                        if(resp != null)
+                        {
+                            if (resp.State == "created")
+                            {
+                                var UserData = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
+                                if (UserData != null)
                                 {
-                                    UserData.RevolutAccountId = resp.Accounts[0].Id;
+                                    UserData.RevolutConnectId = UserData.Id;
+                                    UserData.RevolutStatus = true;
+                                    if(resp.Accounts != null)
+                                    {
+                                        UserData.RevolutAccountId = resp.Accounts[0].Id;
+                                    }
+                                    _db.SaveChanges();
                                 }
-                                _db.SaveChanges();
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "Account Created",
+                                });
                             }
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Account Created",
-                            });
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel

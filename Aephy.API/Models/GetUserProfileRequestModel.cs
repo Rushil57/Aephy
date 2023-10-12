@@ -25,7 +25,15 @@ namespace Aephy.API.Models
 
         public string? UserName { get; set; }
 
-       
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
+
+        public string? PreferredCurrency { get; set; }
+
+        public string? TaxType { get; set; }
+
+        public string? TaxNumber { get; set; }
     }
 
     public class ChangePasswordModel
@@ -48,6 +56,10 @@ namespace Aephy.API.Models
         public string? FreelancerAddress { get; set; }
 
         public int CountryId { get; set; }
+
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
     }
 
     public class ClientDetail
@@ -58,6 +70,10 @@ namespace Aephy.API.Models
 
         public int CountryId { get; set; }
         public string? CompanyName { get; set; }
+
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
 
     }
 }

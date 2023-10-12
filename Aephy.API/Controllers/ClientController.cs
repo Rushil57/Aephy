@@ -1875,6 +1875,37 @@ namespace Aephy.API.Controllers
                 var solutionFundData = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
                 if (solutionFundData != null)
                 {
+                    var ContractProjectPrice = string.Empty;
+                    if(solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                    {
+                        var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).FirstOrDefault();
+                        var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == solutionFundData.ProjectType).ToList();
+                        if (MilestoneTotalDaysByProjectType.Count > 0)
+                        {
+                            SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                           .GroupBy(l => l.ProjectType)
+                           .Select(cl => new SolutionMilestone
+                           {
+                               ProjectType = cl.First().ProjectType,
+                               Days = cl.Sum(c => c.Days),
+                           }).FirstOrDefault();
+
+                            if (mileStoneToTalDays.Days > 0)
+                            {
+                                var ProjectPrice = Convert.ToInt32(solutionFundData.ProjectPrice);
+                                var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
+                                ContractProjectPrice = calculateProjectPrice.ToString();
+                            }
+                            else
+                            {
+                                ContractProjectPrice = solutionFundData.ProjectPrice;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ContractProjectPrice = solutionFundData.ProjectPrice;
+                    }
                     // Save to contract Table
                     var contractSave = new Contract()
                     {
@@ -1886,7 +1917,7 @@ namespace Aephy.API.Controllers
                         SolutionFundId = model.SolutionFundId,
                         CreatedDateTime = DateTime.Now,
                         MilestoneDataId = solutionFundData.MileStoneId,
-                        Amount = solutionFundData.ProjectPrice.ToString(),
+                        Amount = ContractProjectPrice.ToString(),
                     };
                     _db.Contract.Add(contractSave);
                     _db.SaveChanges();
@@ -2266,7 +2297,7 @@ namespace Aephy.API.Controllers
                                         
                                         var statetemp = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
-                                        if (CreatePaymentRsp.State == "completed")
+                                        if (statetemp == "completed")
                                         {
                                             //contractUser.StripeTranferId = transferId;
                                             contractUser.IsTransfered = true;
@@ -3025,7 +3056,30 @@ namespace Aephy.API.Controllers
 
             try
             {
-                var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
+                if (model.FundType == SolutionFund.FundTypes.MilestoneFund)
+                {
+                    var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+                    var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                    if (MilestoneTotalDaysByProjectType.Count > 0)
+                    {
+                        SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                       .GroupBy(l => l.ProjectType)
+                       .Select(cl => new SolutionMilestone
+                       {
+                           ProjectType = cl.First().ProjectType,
+                           Days = cl.Sum(c => c.Days),
+                       }).FirstOrDefault();
+
+                        if (mileStoneToTalDays.Days > 0)
+                        {
+                            var ProjectPrice = Convert.ToInt32(model.ProjectPrice);
+                            var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
+                            model.ProjectPrice = calculateProjectPrice.ToString();
+                        }
+                    }
+                }
+
+                    var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
                 {
                     MaxTimeout = -1,
                 };
@@ -3036,7 +3090,7 @@ namespace Aephy.API.Controllers
                 request.AddHeader("Authorization", "Bearer sk_WgL5ngJ2GLrX6g96Ax8_PNphLn25P55im_4LOqwSfLRvHtmANO3iYTwptJ_QWGvF");
                 request.AddHeader("Revolut-Api-Version", "2023-09-01");
                 var body = @"{" + "\n" +
-                @"  ""amount"": 50000," + "\n" +
+                @"  ""amount"": "+model.ProjectPrice+"," + "\n" +
                 @"  ""currency"": ""EUR""" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);

@@ -31,6 +31,12 @@ namespace Aephy.API.DBHelper
 
         public bool RevolutStatus { get; set; }
 
+        public string? PreferredCurrency { get; set; }
+
+        public string? TaxType { get; set; }
+
+        public string? TaxNumber { get; set; }
+
         /// <summary>
         /// StripeAccountStatus
         /// </summary>

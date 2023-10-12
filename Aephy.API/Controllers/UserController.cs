@@ -123,7 +123,13 @@ namespace Aephy.API.Controllers
                         UserDetails.ShowAustraliaField = IsAustraliaField;
                         UserDetails.ShowMexicanField = IsMexicanField;
                         UserDetails.ShowUsField = IsUsField;
-
+                        UserDetails.FreelancerCity = freelancerDetails.City;
+                        UserDetails.FreelancerPostCode = freelancerDetails.PostCode;
+                        UserDetails.ClientCity = clientDetails.City;
+                        UserDetails.ClientPostCode = clientDetails.PostCode;
+                        UserDetails.PreferredCurrency = user.PreferredCurrency;
+                        UserDetails.TaxType = user.TaxType;
+                        UserDetails.TaxNumber = user.TaxNumber;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -222,6 +228,9 @@ namespace Aephy.API.Controllers
                 {
                     user.FirstName = model.FirstName.Trim();
                     user.LastName = model.LastName.Trim();
+                    user.PreferredCurrency = model.PreferredCurrency;
+                    user.TaxNumber = model.TaxNumber;
+                    user.TaxType = model.TaxType;
 
                     //if(model.freelancerDetail != null)
                     //{
@@ -242,6 +251,8 @@ namespace Aephy.API.Controllers
                             freelancerDetails.Address = model.freelancerDetail.FreelancerAddress;
                             freelancerDetails.Education = model.freelancerDetail.Education;
                             freelancerDetails.ProffessionalExperience = model.freelancerDetail.ProffessionalExperience;
+                            freelancerDetails.City = model.freelancerDetail.City;
+                            freelancerDetails.PostCode = model.freelancerDetail.PostCode;
                             _db.SaveChanges();
 
                             var userData = _db.Users.Where(x => x.Id == freelancerDetails.UserId).FirstOrDefault();
@@ -258,6 +269,8 @@ namespace Aephy.API.Controllers
                             clientDetails.Description = model.clientDetail.Description;
                             clientDetails.Address = model.clientDetail.ClientAddress;
                             clientDetails.CompanyName = model.clientDetail.CompanyName;
+                            clientDetails.City = model.clientDetail.City;
+                            clientDetails.PostCode = model.clientDetail.PostCode;
                             _db.SaveChanges();
 
                             var userData = _db.Users.Where(x => x.Id == clientDetails.UserId).FirstOrDefault();
@@ -444,7 +457,7 @@ namespace Aephy.API.Controllers
                 foreach (var id in userIdsModel.Ids)
                 {
                     UserWiseLavelDetail data = new UserWiseLavelDetail();
-                    var userData = _db.Users.Where(x => x.Id == id).FirstOrDefault();
+                    var userData = await _db.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
                     if (userData != null)
                     {
                         data.Id = userData.Id;

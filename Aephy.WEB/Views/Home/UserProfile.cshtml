@@ -109,7 +109,7 @@
                                             <input name="CompanyName" type="text" class="form-control cls-client-companyname" id="txtCompanyName" readonly>
                                         </div>
                                     </div>
-                                     <div class="row">
+                                    <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Country</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="Country" type="text" class="form-control cls-country" readonly>
@@ -122,12 +122,26 @@
                                             <textarea name="Address" type="text" class="form-control cls-client-address" rows="4" cols="50" readonly></textarea>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">City</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="City" type="text" class="form-control cls-client-city" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Post Code</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="PostCode" type="text" class="form-control cls-client-postcode" readonly />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="FreelancerFields" style="display:none;">
                                     <input type="hidden" value="" id="CVPath-id" />
 
-                                     <div class="row">
+                                    <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Country</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="Country" type="text" class="form-control cls-country" readonly>
@@ -177,6 +191,20 @@
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">City</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="City" type="text" class="form-control cls-freelancer-city" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Post Code</div>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="PostCode" type="text" class="form-control cls-freelancer-postcode" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Freelancer Level</div>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="freelancerLevel" type="text" class="form-control drp-freelancer-level" readonly />
@@ -188,6 +216,27 @@
                                         <div class="col-md-8 col-lg-9">
                                             <a onclick="DownloadCv()" class="cls-resume-dwld" style="cursor:pointer">Download Resume</a>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Preferred Currency</div>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="preferredCurrency" type="text" class="form-control cls-preferredCurrency" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Tax Type</div>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="taxType" type="text" class="form-control cls-taxType" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Tax Number</div>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="taxNumber" type="text" class="form-control cls-taxNumber" readonly>
                                     </div>
                                 </div>
 
@@ -248,10 +297,10 @@
                                         <div class="row mb-3">
                                             <label for="CompanyName" class="col-md-4 col-lg-3 col-form-label">Company Name</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="CompanyName" type="text" class="form-control cls-client-companyname" id="Client-CompanyName" >
+                                                <input name="CompanyName" type="text" class="form-control cls-client-companyname" id="Client-CompanyName">
                                             </div>
                                         </div>
-                                         <div class="row mb-3">
+                                        <div class="row mb-3">
                                             <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <select class="form-select cls-Usercountry" aria-label="Default select example" name="country" id="client-country">
@@ -266,6 +315,21 @@
                                                 <textarea name="Address" type="text" class="form-control cls-client-address" id="Client-Address" rows="4" cols="50"></textarea>
                                             </div>
                                         </div>
+
+                                        <div class="row mb-3">
+                                            <label for="City" class="col-md-4 col-lg-3 col-form-label">City</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="City" type="text" class="form-control cls-client-city" id="Client-City" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="PostCode" class="col-md-4 col-lg-3 col-form-label">Post Code</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="PostCode" type="text" class="form-control cls-client-postcode" id="Client-postcode" />
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="FreelancerFields" style="display:none;">
@@ -281,18 +345,18 @@
                                         <div class="row mb-3 RevolutPending" style="display:none;">
                                             <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Revoult Account Status</label>
                                             <div class="col-md-8 col-lg-9">
-                                              <span class="badge bg-danger">PENDING</span>
-                                              <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Click here to Register to Revolut</a></span>
+                                                <span class="badge bg-danger">PENDING</span>
+                                                <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Click here to Register to Revolut</a></span>
                                             </div>
-                                         </div>
+                                        </div>
 
                                         <div class="row mb-3 RevolutCompleted" style="display:none;">
                                             <label for="StripeStatus" class="col-md-4 col-lg-3 col-form-label">Revoult Account Status</label>
-                                              <div class="col-md-8 col-lg-9">
+                                            <div class="col-md-8 col-lg-9">
                                                 <span class="badge bg-success">COMPLETED</span>
-                                              </div>
-                                         </div>
-                                         
+                                            </div>
+                                        </div>
+
                                         <div class="row mb-3">
                                             <label for="HourlyRate" class="col-md-4 col-lg-3 col-form-label">Hourly Rate Per Day ($)</label>
                                             <div class="col-md-8 col-lg-9">
@@ -322,6 +386,20 @@
                                         </div>
 
                                         <div class="row mb-3">
+                                            <label for="City" class="col-md-4 col-lg-3 col-form-label">City</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="City" type="text" class="form-control cls-freelancer-city" id="Freelancer-City" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="PostCode" class="col-md-4 col-lg-3 col-form-label">Post Code</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="PostCode" type="text" class="form-control cls-freelancer-postcode" id="Freelancer-postcode" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
                                             <label for="Level" class="col-md-4 col-lg-3 col-form-label">Freelancer Level</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <select class="form-select drp-freelancer-level" aria-label="Default select example" name="level" id="level" disabled="true">
@@ -339,6 +417,34 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="row mb-3">
+                                        <label for="PreferredCurrency" class="col-md-4 col-lg-3 col-form-label">Preferred Currency</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select cls-preferredCurrency" aria-label="Default select example" name="preferredCurrency" id="PreferredCurrency">
+                                                <option value="">Select Currency</option>
+                                                <option value="USD">USD</option>
+                                                <option value="GBP">GBP</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="TaxType" class="col-md-4 col-lg-3 col-form-label">Tax Type</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="TaxType" class="form-control cls-taxType" name="taxType" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="TaxNumber" class="col-md-4 col-lg-3 col-form-label">Tax Number</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" id="TaxNumber" class="form-control cls-taxNumber" name="taxNumber" />
+                                        </div>
+                                    </div>
+
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
@@ -400,14 +506,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="col-6">
-                                    <input type="checkbox" id="InbanCheck" name="InbanCheck" value="InbanCheck" onclick="return false">
-                                    <label for="InbanCheck"> IBAN</label><br>
+                                    <input type="checkbox" id="IbanCheck" name="IbanCheck" value="IbanCheck" onclick="return false">
+                                    <label for="IbanCheck"> IBAN</label><br>
                                 </div>
                                 <form class="row g-3 mt-3" name="RevolutOnBoardForm">
                                     <div class="col-6">
                                         <label for="backCountry" class="form-label">Bank Country</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input type="text" id="backCountry" class="form-control" name="BackCountry" readonly/>
+                                            <input type="text" id="backCountry" class="form-control" name="BackCountry" readonly />
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -482,12 +588,12 @@
                 role: { required: "Select valid role" },
             },
             submitHandler: function (form) {
-                if('@ViewData["Role"]' != 'Freelancer'){
+                if ('@ViewData["Role"]' != 'Freelancer') {
                     UpdateUserData();
-                }else{
+                } else {
                     validateFreelancerRate();
                 }
-                
+
             }
         });
 
@@ -523,7 +629,7 @@
             },
             messages: {
                 Currency: { required: "Please enter Currency", },
-                AccountNo: {required: "Please enter Account Number"},
+                AccountNo: { required: "Please enter Account Number" },
                 RoutingNumber: { required: "Please enter Routing Number" },
                 IbanNumber: { required: "Please enter Iban Number" },
                 BicNumber: { required: "Please enter Bic Number" }
@@ -536,7 +642,7 @@
     });
 
     function GetUserData() {
-         $('#preloader').show();
+        $('#preloader').show();
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -553,7 +659,7 @@
                     $(".emailId").val(data.Email)
                     var Fullname = data.FirstName + " " + data.LastName
                     $("#fullName").text(Fullname)
-                    $("#userRole").text(data.Role)                    
+                    $("#userRole").text(data.Role)
                     $(".hourlyRate").val(data.HourlyRate)
                     $(".education").val(data.Education)
                     $(".proffessionalExperience").val(data.ProffessionalExperience)
@@ -561,52 +667,54 @@
                     $(".cls-client-address").val(data.ClientAddress)
                     $(".description").val(data.Description)
                     $(".drp-freelancer-level").val(data.FreelancerLevel)
-                    //$("#country").val(data.CountryId)                    
+                    $(".cls-freelancer-city").val(data.FreelancerCity)
+                    $(".cls-freelancer-postcode").val(data.FreelancerPostCode)
+                    $(".cls-client-city").val(data.ClientCity)
+                    $(".cls-client-postcode").val(data.ClientPostCode)
                     $(".cls-client-companyname").val(data.CompanyName)
                     $("#backCountry").val(data.BackCountry)
+                    $(".cls-preferredCurrency").val(data.PreferredCurrency)
+                    $(".cls-taxType").val(data.TaxType)
+                    $(".cls-taxNumber").val(data.TaxNumber)
+
                     setTimeout(function () {
                         $("#client-country").val(data.CountryId)
                         $("#freelancer-country").val(data.CountryId)
                     }, 2500);
                     $(".cls-country").val(data.CountryName)
                     $("#CVPath-id").val(data.CVPath)
-                    if(data.CVPath != null){
+                    if (data.CVPath != null) {
                         addNameToFile(data.CVPath.split("/")[4])
                     }
-                    if (data.ImageUrlWithSas != null){
-                        $("#profile-intial").css("display","none")
+                    if (data.ImageUrlWithSas != null) {
+                        $("#profile-intial").css("display", "none")
                         $("#profile-image").attr("src", data.ImageUrlWithSas);
                         $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#Freelancer-profile").val("");
 
-                    }else{
+                    } else {
                         $("#Freelancer-profile").val("");
                         $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#profile-image").css("display", "none")
-                         $("#profile-intial").css("display","flex")
+                        $("#profile-intial").css("display", "flex")
                     }
                     if (data.RevoultStatus) {
                         $(".RevolutPending").hide();
                         $(".RevolutCompleted").show();
-                    }else{
+                    } else {
                         $(".RevolutPending").show();
                         $(".RevolutCompleted").hide();
                     }
 
-                    if (data.IsIBanMandantory){
+                    if (data.IsIBanMandantory) {
                         $(".cls-Ibannot-mandatory").hide();
                         $(".cls-iban-mandantory").show();
-                        $('#InbanCheck').prop('checked', true);
-                    }else{
-                        $('#InbanCheck').prop('checked', false);
+                        $('#IbanCheck').prop('checked', true);
+                    } else {
+                        $('#IbanCheck').prop('checked', false);
 
                     }
-                    // if (data.IbanMandantoryWithExceptCountry){
-                    //     $(".cls-Ibannot-mandatory").show();
-                    // }else{
-                    //     $(".cls-Ibannot-mandatory").hide();
-                    // }
-                    if(data.ShowIndiaField){
+                    if (data.ShowIndiaField) {
                         $(".non-indian-field").hide();
                         $(".cls-indian-field").show();
                     }
@@ -623,8 +731,8 @@
                         $(".cls-non-aus-field").hide();
                     }
                 }
-                
-                 $('#preloader').hide();
+
+                $('#preloader').hide();
 
             },
             error: function (result) {
@@ -634,7 +742,7 @@
         });
     }
 
-     function addNameToFile(url) {
+    function addNameToFile(url) {
         getImgURL(url, (imgBlob) => {
             let file = new File([imgBlob], url, { type: "pdf/application", lastModified: new Date().getTime() }, 'utf-8');
             let container = new DataTransfer();
@@ -683,63 +791,70 @@
             }
         }
 
-            var fileUpload = $("#CVPath").get(0);
-            var files = fileUpload.files;
+        var fileUpload = $("#CVPath").get(0);
+        var files = fileUpload.files;
 
-            var profile = $("#Freelancer-profile").get(0);
-            var profileFiles = profile.files;
+        var profile = $("#Freelancer-profile").get(0);
+        var profileFiles = profile.files;
 
-            var FreelancerDetail = {
-                HourlyRate: $("#HourlyRate").val(),
-                Education: $("#Education").val(),
-                ProffessionalExperience: $("#ProffessionalExperience").val(),
-                FreelancerAddress: $("#Freelancer-Address").val(),
-                CountryId: $("#freelancer-country").val(),
-            }
+        var FreelancerDetail = {
+            HourlyRate: $("#HourlyRate").val(),
+            Education: $("#Education").val(),
+            ProffessionalExperience: $("#ProffessionalExperience").val(),
+            FreelancerAddress: $("#Freelancer-Address").val(),
+            CountryId: $("#freelancer-country").val(),
+            City: $("#Freelancer-City").val(),
+            PostCode: $("#Freelancer-postcode").val()
+        }
 
-            var ClientDetail = {
-                Description: $("#Description").val(),
-                ClientAddress: $("#Client-Address").val(),
-                CountryId: $("#client-country").val(),
-                CompanyName: $("#Client-CompanyName").val()
-            }
+        var ClientDetail = {
+            Description: $("#Description").val(),
+            ClientAddress: $("#Client-Address").val(),
+            CountryId: $("#client-country").val(),
+            CompanyName: $("#Client-CompanyName").val(),
+            City: $("#Client-City").val(),
+            PostCode: $("#Client-postcode").val()
+        }
 
-            var Userdata = {
-                Id: $(".UserId").val(),
-                FirstName: $("#firstname").val(),
-                LastName: $("#lastName").val(),
-                UserType: $("#userType").val(),
-                Email: $("#emailId").val(),
-                freelancerDetail: FreelancerDetail,
-                clientDetail: ClientDetail
+        var Userdata = {
+            Id: $(".UserId").val(),
+            FirstName: $("#firstname").val(),
+            LastName: $("#lastName").val(),
+            UserType: $("#userType").val(),
+            Email: $("#emailId").val(),
+            freelancerDetail: FreelancerDetail,
+            clientDetail: ClientDetail,
+            PreferredCurrency: $("#PreferredCurrency").val(),
+            TaxType: $("#TaxType").val(),
+            TaxNumber: $("#TaxNumber").val(),
+        }
+
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append("httpPostedFileBase", files[i]);
+        }
+        for (var i = 0; i < profileFiles.length; i++) {
+            formData.append("httpPostedFileBaseProfile", profileFiles[i]);
+        }
+        formData.append("Userdata", JSON.stringify(Userdata));
+        $('#preloader').show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditUserData", "Home")",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                var test = result.split(",")[1].split(":")[1]
+                showToaster("success", "Success", test.replace(/\"/g, ""));
+                $('#preloader').hide();
+                GetUserData()
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                showToaster("error", "Error !", "Failure");
             }
-           
-            var formData = new FormData();
-            for (var i = 0; i < files.length; i++) {
-                formData.append("httpPostedFileBase", files[i]);
-            }
-            for (var i = 0; i < profileFiles.length; i++) {
-                formData.append("httpPostedFileBaseProfile", profileFiles[i]);
-            }
-            formData.append("Userdata", JSON.stringify(Userdata));
-              $('#preloader').show();
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("EditUserData", "Home")",
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (result) {
-                    var test = result.split(",")[1].split(":")[1]
-                    showToaster("success", "Success", test.replace(/\"/g, ""));
-                    $('#preloader').hide();
-                    GetUserData()
-                },
-                error: function (result) {
-                    $('#preloader').hide();
-                    showToaster("error", "Error !", "Failure");
-                }
-            });        
+        });
     }
 
     function ChangePassword() {
@@ -768,7 +883,7 @@
 
     function validateFreelancerRate() {
         var range = {
-            ID:0,
+            ID: 0,
             Level: $('#level').val(),
         }
         var hourlyRate = parseFloat($("#HourlyRate").val()).toFixed(2);
@@ -781,17 +896,17 @@
             data: JSON.stringify(range),
             success: function (result) {
                 $('#preloader').hide();
-                if(result.Result != null){
-                    if(result.Result.ID != 0){
+                if (result.Result != null) {
+                    if (result.Result.ID != 0) {
                         if (result.Result.minLevel <= hourlyRate && result.Result.maxLevel >= hourlyRate) {
                             UpdateUserData();
-                        }else{
+                        } else {
                             showToaster("error", "Error !", "Hourly rate must be between $" + parseFloat(result.Result.minLevel).toFixed(2) + " to $" + parseFloat(result.Result.maxLevel).toFixed(2));
                             return false;
                         }
                     }
                 }
-                
+
             },
             error: function (result) {
                 $('#preloader').hide();
@@ -840,18 +955,19 @@
     }
 
     function RevolutRegister() {
-        // $("#preloader").show();
-        // window.location = "@Url.Action("RegisterStripeUser", "Home")";
-        // $("#preloader").hide();
-        var countrtExists = $("#freelancer-country").val();
-        if(countrtExists != 0){
+        var countryExists = $("#freelancer-country").val();
+        var addressExists = $("#Freelancer-Address").val();
+        var cityExists = $("#Freelancer-City").val();
+        var postcodeExists = $("#Freelancer-postcode").val();
+
+        if (countryExists != 0 && addressExists != "" && cityExists != "" && postcodeExists != "") {
             $("#RevolutOnBoardingFeildsModal").modal('show');
-        }else{
-            showToaster("error", "Error !", "Please select valid country");
+        } else {
+            showToaster("error", "Error !", "Please fill all address fields");
         }
     }
 
-    function BindCountry(){
+    function BindCountry() {
         $("#preloader").show();
         $.ajax({
             type: "Get",
@@ -859,11 +975,11 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                if(result.Message == "success"){
+                if (result.Message == "success") {
                     $("#client-country option:not(:first)").remove()
-                        $.each(result.Result, function (data, value) {
+                    $.each(result.Result, function (data, value) {
                         $("#client-country").append($("<option     />").val(value.Id).text(value.CountryName));
-                        })
+                    })
 
                     $("#freelancer-country option:not(:first)").remove()
                     $.each(result.Result, function (data, value) {
@@ -882,13 +998,13 @@
         });
     }
 
-    function CloseRevolutPopup(){
+    function CloseRevolutPopup() {
         $("#Currency").val("");
         $("#accountNo").val("");
         $("#routingNumber").val("");
         $("#ibanNumber").val("");
         $("#bicNumber").val("");
-        $('#InbanCheck').prop('checked', false);
+        $('#IbanCheck').prop('checked', false);
         $("#RevolutOnBoardingFeildsModal").modal('hide');
     }
 
@@ -904,11 +1020,11 @@
             data: JSON.stringify(data),
             dataType: "json",
             success: function (result) {
-                if(result.Message == "Account Created"){
+                if (result.Message == "Account Created") {
                     CloseRevolutPopup();
                     GetUserData();
                     showToaster("success", "Success !", result.Message);
-                }else{
+                } else {
                     showToaster("error", "Error !", result.Message);
                 }
 

@@ -545,6 +545,20 @@ namespace Aephy.API.Models
             public bool ShowMexicanField { get; set; }
             public bool ShowUsField { get; set; }
 
+            public string? FreelancerCity { get; set; }
+
+            public string? FreelancerPostCode { get; set; }
+
+            public string? ClientCity { get; set; }
+
+            public string? ClientPostCode { get; set; }
+
+            public string? PreferredCurrency { get; set; }
+
+            public string? TaxType { get; set; }
+
+            public string? TaxNumber { get; set; }
+
         }
 
         public class InvoiceViewModel

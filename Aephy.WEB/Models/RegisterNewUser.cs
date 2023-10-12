@@ -20,8 +20,14 @@
         public ClientDetail clientDetail { get; set; }
         public string? FreelancerLevel { get; set; }
         public IFormFile? ProfileImage { get; set; }
-        public string IsInvited { get; set; }
+        public string? IsInvited { get; set; }
         public bool IsInvitedRemoved { get; set; }
+
+        public string? PreferredCurrency { get; set; }
+
+        public string? TaxType { get; set; }
+
+        public string? TaxNumber { get; set; }
 
     }
 
@@ -37,6 +43,10 @@
         public string? FreelancerLevel { get; set; }
 
         public int CountryId { get; set; }
+
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
     }
 
     public class ClientDetail
@@ -45,6 +55,10 @@
         public string? Description { get; set; }
         public string? CompanyName { get; set; }
         public int CountryId { get; set; }
+
+        public string? City { get; set; }
+
+        public string? PostCode { get; set; }
     }
 
     public class UserCvFile

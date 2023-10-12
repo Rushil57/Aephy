@@ -3057,6 +3057,7 @@ namespace Aephy.API.Controllers
 
             try
             {
+                var ProjectPrice = Convert.ToInt32(model.ProjectPrice);
                 if (model.FundType == SolutionFund.FundTypes.MilestoneFund)
                 {
                     var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
@@ -3073,11 +3074,14 @@ namespace Aephy.API.Controllers
 
                         if (mileStoneToTalDays.Days > 0)
                         {
-                            var ProjectPrice = Convert.ToInt32(model.ProjectPrice);
                             var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100 ;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
                     }
+                }
+                else
+                {
+                    model.ProjectPrice = (ProjectPrice * 100).ToString();
                 }
 
                     var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
@@ -3091,7 +3095,7 @@ namespace Aephy.API.Controllers
                 request.AddHeader("Authorization", "Bearer sk_WgL5ngJ2GLrX6g96Ax8_PNphLn25P55im_4LOqwSfLRvHtmANO3iYTwptJ_QWGvF");
                 request.AddHeader("Revolut-Api-Version", "2023-09-01");
                 var body = @"{" + "\n" +
-                @"  ""amount"": "+model.ProjectPrice+"," + "\n" +
+                @"  ""amount"": "+ model.ProjectPrice + "," + "\n" +
                 @"  ""currency"": ""EUR""" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);

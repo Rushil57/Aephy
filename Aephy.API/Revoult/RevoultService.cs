@@ -87,6 +87,7 @@ namespace Aephy.API.Revoult
                 request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
 
                 //var body = JsonConvert.SerializeObject(addCounterpartyReq);
+                var FreelancerName = addCounterpartyReq.IndividualName.FirstName + " " + addCounterpartyReq.IndividualName.LastName;
 
                 var address = @"{" +
                 @"  ""street_line1"": ""##street_line1##""," + "\n" +
@@ -120,7 +121,7 @@ namespace Aephy.API.Revoult
                 @"}";
 
                 body = body.Replace("##profile_type##", "personal");
-                body = body.Replace("##company_name##", addCounterpartyReq.CompanyName);
+                body = body.Replace("##company_name##", FreelancerName);
                 body = body.Replace("##name##", addCounterpartyReq.IndividualName.FirstName + " " + addCounterpartyReq.IndividualName.LastName);
                 //body = body.Replace("##revtag##", string.Empty);
                 body = body.Replace("##bank_country##", addCounterpartyReq.BankCountry);
@@ -158,23 +159,23 @@ namespace Aephy.API.Revoult
                 //body += address + " }";
                 if(addCounterpartyReq.BankCountry == "IN")
                 {
-                    body = "{\n\t\"company_name\": \"John Smith India\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    " + address + " }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    " + address + " }";
                 }
                 else if (addCounterpartyReq.BankCountry == "US")
                 {
-                    body = "{\n\t\"company_name\": \"John Smith US\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"routing_number\": \""+addCounterpartyReq.RoutingNumber+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    " + address + " }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"routing_number\": \""+addCounterpartyReq.RoutingNumber+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    " + address + " }";
                 }
                 else if (addCounterpartyReq.BankCountry == "MX")
                 {
-                    body = "{\n\t\"company_name\": \"John Smith MX\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"clabe\": \""+addCounterpartyReq.Clabe+"\",\n\t\"address\":    "+ address + " }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"clabe\": \""+addCounterpartyReq.Clabe+"\",\n\t\"address\":    "+ address + " }";
                 }
                 else if (addCounterpartyReq.BankCountry == "AU")
                 {
-                    body = "{\n\t\"company_name\": \"John Smith AU\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    "+ address + " }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \""+addCounterpartyReq.BankCountry+"\",\n\t\"currency\": \""+addCounterpartyReq.Currency+"\",\n\t\"bic\": \""+addCounterpartyReq.Bic+"\",\n\t\"account_no\": \""+addCounterpartyReq.AccountNo+"\",\n\t\"address\":    "+ address + " }";
                 }
                 else if(addCounterpartyReq.IbanMandantory)
                 {
-                    body = "{\n\t\"company_name\": \"John Smith AU\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"iban\": \"" + addCounterpartyReq.Iban + "\",\n\t\"address\":    "+ address + "  }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"iban\": \"" + addCounterpartyReq.Iban + "\",\n\t\"address\":    "+ address + "  }";
                 }
                 else
                 {

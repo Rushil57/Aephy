@@ -606,32 +606,22 @@ namespace Aephy.API.Controllers
                         solutionMilesData = _db.SolutionMilestone.Where(x => x.Id == fundProgress.MileStoneId).FirstOrDefault();
                     }
 
-                    var CheckInCompeleteFund = _db.Contract.Where(x => x.ClientUserId == model.UserId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.PaymentStatus == Contract.PaymentStatuses.UnPaid && x.PaymentIntentId == "").FirstOrDefault();
+                    var CheckInCompeleteFund = _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.Id == model.SolutionFundId && x.ProjectStatus == "INPROGRESS").FirstOrDefault();
                     if (CheckInCompeleteFund != null)
                     {
-                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == CheckInCompeleteFund.SolutionFundId).FirstOrDefault();
-                        if (solutionFundData != null)
-                        {
-                            solutionFundData.ProjectStatus = "INITIATED";
+                        //var solutionFundData = _db.SolutionFund.Where(x => x.Id == CheckInCompeleteFund.SolutionFundId).FirstOrDefault();
+                        //if (solutionFundData != null)
+                        //{
+                            CheckInCompeleteFund.ProjectStatus = "INITIATED";
                             var milestoneFundCompleted = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
                             if (milestoneFundCompleted == 0)
                             {
-                                solutionFundData.FundType = SolutionFund.FundTypes.ProjectFund;
+                            CheckInCompeleteFund.FundType = SolutionFund.FundTypes.ProjectFund;
                             }
 
                             _db.SaveChanges();
-                        }
-                        _db.Contract.Remove(CheckInCompeleteFund);
-                        _db.SaveChanges();
+                        //}
                     }
-                    //else
-                    //{
-                    //    if (fundProgress.ProjectStatus != "INITIATED")
-                    //    {
-                    //        var contractAmount = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Amount).FirstOrDefault();
-                    //        fundProgress.ProjectPrice = contractAmount;
-                    //    }
-                    //}
                     if (fundProgress.ProjectStatus == "INITIATED")
                     {
                         if (solutionMilesData != null && fundProgress.FundType.ToString() == "MilestoneFund")

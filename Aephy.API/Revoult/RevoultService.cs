@@ -179,7 +179,7 @@ namespace Aephy.API.Revoult
                 }
                 else
                 {
-                    body = "{\n\t\"company_name\": \"John Smith AU\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"account_no\": \"" + addCounterpartyReq.AccountNo + "\",\n\t\"address\":    " + address + "  }";
+                    body = "{\n\t\"company_name\": \""+FreelancerName+"\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"account_no\": \"" + addCounterpartyReq.AccountNo + "\",\n\t\"address\":    " + address + "  }";
                 }
 
 

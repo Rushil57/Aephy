@@ -14,5 +14,6 @@ namespace Aephy.API.Revoult
         public Task<CreatePaymentResp> CreatePayment(CreatePaymentReq createPaymentReq);
         public Task<List<GetAccountResp>> RetrieveAllAccounts();
         public Task GetOrderDetails(string id);
+        public Task RefundToClient(string orderId, string amount, string description);
     }
 }

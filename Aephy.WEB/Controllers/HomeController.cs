@@ -2050,6 +2050,11 @@ namespace Aephy.WEB.Controllers
             table.AddCell(amount1Cell);
 
             // Row 2: VAT
+            if(data.VatPercentage == null)
+            {
+                data.VatPercentage = "0%";
+                data.VatAmount = "0";
+            }
             PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT ("+ data.VatPercentage + ")", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
             vatDescCell.Border = PdfPCell.BOX;
             vatDescCell.PaddingBottom = 10;

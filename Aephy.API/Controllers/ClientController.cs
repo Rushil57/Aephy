@@ -2049,7 +2049,7 @@ namespace Aephy.API.Controllers
                             SolutionId = model.SolutionId,
                             IndustryId = model.IndustryId,
                             ClientId = model.ClientId,
-                            ProjectType = model.ProjectType,
+                            ProjectType = model.ProjectType.ToLower(),
                             ProjectPrice = checkType.ProjectPrice,
                             ProjectStatus = "INITIATED",
                             FundType = checkType.FundType,
@@ -2144,7 +2144,7 @@ namespace Aephy.API.Controllers
                             SolutionId = model.SolutionId,
                             IndustryId = model.IndustryId,
                             ClientId = model.ClientId,
-                            ProjectType = model.ProjectType,
+                            ProjectType = model.ProjectType.ToLower(),
                             ProjectPrice = model.ProjectPrice,
                             ProjectStatus = "INITIATED",
                             FundType = model.FundType
@@ -2250,14 +2250,24 @@ namespace Aephy.API.Controllers
                     {
                         if (completedData.ProjectStatus == "COMPLETED")
                         {
+                            var SolutionTitle = string.Empty;
                             var contract = _db.Contract.Where(x => x.SolutionFundId == model.Id).Include("ContractUsers").FirstOrDefault();
+
+                            if(completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                            {
+                                SolutionTitle = _db.SolutionMilestone.Where(x => x.Id == completedData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                            }
+                            else
+                            {
+                                SolutionTitle = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            }
 
                             if (contract != null)
                             {
                                 var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
                                 //var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
 
-
+                                var allAccounts = await _revoultService.RetrieveAllAccounts();
                                 foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
                                 {
                                     var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
@@ -2268,14 +2278,14 @@ namespace Aephy.API.Controllers
 
                                         var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
                                         var getCounterParties = await _revoultService.GetCounterparties();
-                                        var allAccounts = await _revoultService.RetrieveAllAccounts();
+                                       
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = allAccounts.First().Id,
+                                            AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(),
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = priceToTransfer,
                                             Currency = "EUR",
-                                            Reference = "To Micheal Heart",
+                                            Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
                                                 CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
@@ -2284,14 +2294,10 @@ namespace Aephy.API.Controllers
                                         };
 
                                         var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
-
-
-                                        //Remove below variable after succesfully implemented create payment method and replace it with a "CreatePaymentRsp" varibale.
-                                        var statetemp = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
-                                        if (statetemp == "completed")
+                                        if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
                                         {
-                                            //contractUser.StripeTranferId = transferId;
+                                            contractUser.StripeTranferId = CreatePaymentRsp.Id;
                                             contractUser.IsTransfered = true;
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();

@@ -1485,7 +1485,7 @@ namespace Aephy.API.Controllers
                                 }
                                 var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                                 //var totalAmount = decimal.Parse(solutionFundData.ProjectPrice) + decimal.Parse(contarctData.VATAmount);
-                                Decimal totalAmount = Decimal.Add(decimal.Parse(contarctData.Amount), decimal.Parse(contarctData.VATAmount));
+                                //Decimal totalAmount = Decimal.Add(decimal.Parse(contarctData.Amount), decimal.Parse(contarctData.VATAmount));
                                 var InvoiceData = new Invoices()
                                 {
                                     SolutionId = contarctData.SolutionId,
@@ -1494,8 +1494,8 @@ namespace Aephy.API.Controllers
                                     InvoiceNumber = InvoiceNumber.ToString(),
                                     Date = contarctData.CreatedDateTime,
                                     DueDate = contarctData.CreatedDateTime,
-                                    TotalAmount = totalAmount.ToString(),
-                                    DueAmount = totalAmount.ToString(),
+                                    TotalAmount = contarctData.Amount.ToString(),
+                                    DueAmount = contarctData.Amount.ToString(),
                                     ClientId = contarctData.ClientUserId,
                                     ClientName = fullname.FirstName + " " + fullname.LastName,
                                     ClientAddress = _db.FreelancerDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault(),

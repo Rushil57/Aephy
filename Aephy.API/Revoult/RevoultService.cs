@@ -6,6 +6,7 @@ using System.Net;
 using RestSharp;
 using RevolutAPI.Models.BusinessApi.Counterparties;
 using RevolutAPI.Models.BusinessApi.Payment;
+using RevolutAPI.Models.BusinessApi.Account;
 //using RevolutAPI.Models.BusinessApi.Counterparties;
 
 namespace Aephy.API.Revoult

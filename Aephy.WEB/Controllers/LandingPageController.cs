@@ -771,9 +771,6 @@ namespace Aephy.WEB.Controllers
                     HttpContext.Session.SetString("RevoultOrderId", OrderId);
                     HttpContext.Session.SetString("SolutionFundId", SolutionFundId);
                 }
-
-                //HttpContext.Session.SetString("RevoultToken", token);
-                //HttpContext.Session.SetString("RevoultToken", token);
             }
             return userData;
         }

@@ -11,5 +11,7 @@ namespace Aephy.API.Revoult
         public Task<List<GetCounterpartyResp>> GetCounterparties();
 
         public Task<CreatePaymentResp> CreatePayment(CreatePaymentReq createPaymentReq);
+        public Task<List<GetAccountResp>> RetrieveAllAccounts();
+        public Task GetOrderDetails(string id);
     }
 }

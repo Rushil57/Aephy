@@ -63,7 +63,7 @@ namespace Aephy.API.Controllers
                                 var UserData = _db.Users.Where(x => x.Id == addNonRevolutCounterpartyReq.UserId).FirstOrDefault();
                                 if (UserData != null)
                                 {
-                                    UserData.RevolutConnectId = UserData.Id;
+                                    UserData.RevolutConnectId = resp.Id;
                                     UserData.RevolutStatus = true;
                                     if(resp.Accounts != null)
                                     {

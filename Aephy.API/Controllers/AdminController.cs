@@ -41,7 +41,22 @@ namespace Aephy.API.Controllers
             _userManager = userManager;
             _stripeAccountService = stripeAccountService;
         }
+        //[HttpPost]
+        //[Route("OrderWebhookTest")]
+        //public async Task<IActionResult> OrderWebhookTest([FromBody] WebhookModel model)
+        //{
+        //    var services = new Services()
+        //    {
+        //        ServicesName = "WebhookCalled_"+model.order_id,
+        //        Active = false,
+        //        IsActiveFreelancer = false,
+        //        IsActiveClient = false
+        //    };
+        //    await _db.Services.AddAsync(services);
+        //    await _db.SaveChangesAsync();
 
+        //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Saved Succesfully!." });
+        //}
         [HttpPost]
         [Route("AddorEditServices")]
         public async Task<IActionResult> AddorEditServices([FromBody] ServicesModel model)

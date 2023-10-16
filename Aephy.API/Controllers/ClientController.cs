@@ -2268,9 +2268,10 @@ namespace Aephy.API.Controllers
 
                                         var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
                                         var getCounterParties = await _revoultService.GetCounterparties();
+                                        var allAccounts = await _revoultService.RetrieveAllAccounts();
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = "1d2c76af-f8bb-497a-b9db-1c47eb2a9ce0",
+                                            AccountId = allAccounts.First().Id,
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = priceToTransfer,
                                             Currency = "EUR",
@@ -3082,7 +3083,7 @@ namespace Aephy.API.Controllers
                 var request = new RestRequest("https://sandbox-merchant.revolut.com/api/orders", Method.Post);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Accept", "application/json");
-                request.AddHeader("Authorization", "Bearer sk_WgL5ngJ2GLrX6g96Ax8_PNphLn25P55im_4LOqwSfLRvHtmANO3iYTwptJ_QWGvF");
+                request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
                 request.AddHeader("Revolut-Api-Version", "2023-09-01");
                 var body = @"{" + "\n" +
                 @"  ""amount"": "+ model.ProjectPrice + "," + "\n" +
@@ -3094,6 +3095,9 @@ namespace Aephy.API.Controllers
                 //ViewData["Token"] = responseDto.token;
                 //return View();
                 var tokenandOrerId = responseDto.token + "|" + responseDto.id;
+
+                //await _revoultService.GetOrderDetails("65294f62-be93-a6e5-b590-d55366e4fb28");
+
                 return tokenandOrerId;
             }
             catch (Exception ex)

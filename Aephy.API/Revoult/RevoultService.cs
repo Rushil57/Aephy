@@ -179,7 +179,7 @@ namespace Aephy.API.Revoult
                 }
                 else
                 {
-                    body = "{\n\t\"company_name\": \""+FreelancerName+"\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"account_no\": \"" + addCounterpartyReq.AccountNo + "\",\n\t\"address\":    " + address + "  }";
+                    body = "{\n\t\"company_name\": \""+ FreelancerName + "\",\n\t\"bank_country\": \"" + addCounterpartyReq.BankCountry + "\",\n\t\"currency\": \"" + addCounterpartyReq.Currency + "\",\n\t\"bic\": \"" + addCounterpartyReq.Bic + "\",\n\t\"account_no\": \"" + addCounterpartyReq.AccountNo + "\",\n\t\"address\":    " + address + "  }";
                 }
 
 
@@ -283,10 +283,104 @@ namespace Aephy.API.Revoult
 
                 request.AddStringBody(body, DataFormat.Json);
                 RestResponse response = await client.ExecuteAsync(request);
+                var createPaymentResp = new CreatePaymentResp();
+                if (response.ResponseStatus != ResponseStatus.Error)
+                {
+                    createPaymentResp = JsonConvert.DeserializeObject<CreatePaymentResp>(response.Content);
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await RefreshToken();
+                        goto RequestAgain;
+                    }
+                }
+
+
+                //var id = test.Id;
+                ////
+                //var options1 = new RestClientOptions("https://sandbox-b2b.revolut.com")
+                //{
+                //    MaxTimeout = -1,
+                //};
+                //var client1 = new RestClient(options1);
+                //var request1 = new RestRequest(string.Format("https://sandbox-b2b.revolut.com/api/1.0/transaction/{0}", id), Method.Get);
+                //request1.AddHeader("Accept", "application/json");
+                //request1.AddHeader("Authorization", "Bearer " + _authToken.access_token);
+                //RestResponse response1 = await client1.ExecuteAsync(request1);
+                //Console.WriteLine(response1.Content);
+
+
+                //var options2 = new RestClientOptions("https://sandbox-merchant.revolut.com")
+                //{
+                //    MaxTimeout = -1,
+                //};
+                //var client2 = new RestClient(options2);
+                //var request2 = new RestRequest("https://sandbox-merchant.revolut.com/api/orders/652949b3-fa7b-a334-9eff-64a8dae96fcb", Method.Get);
+                //request2.AddHeader("Accept", "application/json");
+                //request2.AddHeader("Revolut-Api-Version", "2023-09-01");
+                //request2.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
+                //RestResponse response2 = await client2.ExecuteAsync(request2);
+                //Console.WriteLine(response2.Content);
+
+
+                return createPaymentResp;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return null;
+        }
+        public async Task GetOrderDetails(string id)
+        {
+            var options2 = new RestClientOptions("https://sandbox-merchant.revolut.com")
+            {
+                MaxTimeout = -1,
+            };
+            var client2 = new RestClient(options2);
+            var request2 = new RestRequest("https://sandbox-merchant.revolut.com/api/orders/"+id, Method.Get);
+            request2.AddHeader("Accept", "application/json");
+            request2.AddHeader("Revolut-Api-Version", "2023-09-01");
+            request2.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
+            RestResponse response2 = await client2.ExecuteAsync(request2);
+            Console.WriteLine(response2.Content);
+
+
+            var options = new RestClientOptions("https://sandbox-merchant.revolut.com")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var request = new RestRequest("https://sandbox-merchant.revolut.com/api/1.0/orders", Method.Get);
+            request.AddHeader("Accept", "application/json");
+            request.AddHeader("Revolut-Api-Version", "2023-09-01");
+            request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
+            RestResponse response = await client.ExecuteAsync(request);
+            Console.WriteLine(response.Content);
+        }
+
+        public async Task<List<GetAccountResp>> RetrieveAllAccounts()
+        {
+            try
+            {
+            RequestAgain:
+                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var request = new RestRequest("/api/1.0/accounts", Method.Get);
+                request.AddHeader("Accept", "application/json");
+                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
+                RestResponse response = await client.ExecuteAsync(request);
 
                 if (response.ResponseStatus != ResponseStatus.Error)
                 {
-                    return JsonConvert.DeserializeObject<CreatePaymentResp>(response.Content);
+                    var list = JsonConvert.DeserializeObject<List<GetAccountResp>>(response.Content);
+                    return list;
                 }
                 else
                 {
@@ -299,7 +393,7 @@ namespace Aephy.API.Revoult
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
 
             return null;

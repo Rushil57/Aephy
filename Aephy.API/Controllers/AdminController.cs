@@ -25,6 +25,8 @@ using static Azure.Core.HttpHeader;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Aephy.API.Stripe;
+using RevolutAPI.Models.BusinessApi.Payment;
+using Aephy.API.Revoult;
 
 namespace Aephy.API.Controllers
 {
@@ -35,11 +37,13 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStripeAccountService _stripeAccountService;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IStripeAccountService stripeAccountService)
+        private readonly IRevoultService _revoultService;
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IStripeAccountService stripeAccountService, IRevoultService revoultService)
         {
             _db = dbContext;
             _userManager = userManager;
             _stripeAccountService = stripeAccountService;
+            _revoultService = revoultService;
         }
         //[HttpPost]
         //[Route("OrderWebhookTest")]
@@ -2997,7 +3001,7 @@ namespace Aephy.API.Controllers
                     //var disputeData = await _db.SolutionDispute.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     //if (disputeData != null)
                     //{
-                    var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToList();
+                    var contractUserData = await _db.ContractUser.Where(x => x.ContractId == model.ContractId).ToListAsync();
                     List<SolutionDisputeViewModel> freelancerList = new List<SolutionDisputeViewModel>();
                     if (contractUserData.Count > 0)
                     {
@@ -3009,7 +3013,8 @@ namespace Aephy.API.Controllers
                             solutionDisputeView.FreelancerName = fullname;
                             solutionDisputeView.FreelancerId = freelancerDetails.Id;
                             solutionDisputeView.ContractId = model.ContractId;
-                            solutionDisputeView.LatestChargeId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.LatestChargeId).FirstOrDefault();
+                            //solutionDisputeView.LatestChargeId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.LatestChargeId).FirstOrDefault();
+                            solutionDisputeView.RevoultOrderId = _db.Contract.Where(x => x.Id == data.ContractId).Select(x => x.PaymentIntentId).FirstOrDefault();
                             freelancerList.Add(solutionDisputeView);
                         }
 
@@ -3108,29 +3113,59 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var transferId = _stripeAccountService.CreateTransferonCharge(long.Parse(model.TransferAmount), model.Currency, model.StripeConnectedId, model.LatestChargeId, model.ContractId.ToString());
-                    var contract = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
-                    var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId && x.ApplicationUserId == model.FreelancerId).FirstOrDefault();
-                    if (transferId != null)
+                    var checkTransferAlreadyDone = _db.ContractUser.Where(x => x.ContractId == model.ContractId && x.ApplicationUserId == model.FreelancerId).Select(x => x.IsRefund).FirstOrDefault();
+                    if (checkTransferAlreadyDone)
                     {
-
-                        contractUserData.StripeTranferId = transferId;
-                        contractUserData.IsTransfered = true;
-                        contractUserData.IsRefund = true;
-                        contractUserData.Amount = model.TransferAmount;
-                        contractUserData.RefundDateTime = DateTime.Now;
-
-                        _db.ContractUser.Update(contractUserData);
-                        _db.SaveChanges();
-
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Refund Succesfully !"
+                            Message = "Refund is already done for this user!"
                         });
-
                     }
+                    else
+                    {
+                        var user = _db.Users.Where(x => x.Id == model.FreelancerId).FirstOrDefault();
 
+                        var allAccounts = await _revoultService.RetrieveAllAccounts();
+                        CreatePaymentReq createPaymentReq = new CreatePaymentReq
+                        {
+                            AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(),
+                            RequestId = Guid.NewGuid().ToString(),
+                            Amount = Convert.ToDouble(model.TransferAmount),
+                            Currency = "EUR",
+                            Reference = "Payment For - ",
+                            Receiver = new CreatePaymentReq.ReceiverData()
+                            {
+                                CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
+                                AccountId = user.RevolutAccountId // freelancer RevolutAccountId
+                            }
+                        };
+
+                        var transferId = await _revoultService.CreatePayment(createPaymentReq);
+
+                        var contract = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
+                        var contractUserData = _db.ContractUser.Where(x => x.ContractId == model.ContractId && x.ApplicationUserId == model.FreelancerId).FirstOrDefault();
+                        if (transferId != null)
+                        {
+
+                            contractUserData.StripeTranferId = transferId.Id;
+                            contractUserData.IsTransfered = true;
+                            contractUserData.IsRefund = true;
+                            contractUserData.Amount = model.TransferAmount;
+                            contractUserData.RefundDateTime = DateTime.Now;
+
+                            _db.ContractUser.Update(contractUserData);
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Refund Succesfully !"
+                            });
+
+                        }
+                       
+                    }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -3582,9 +3617,10 @@ namespace Aephy.API.Controllers
                         SolutionDisputeViewModel solutionDetails = new SolutionDisputeViewModel();
                         var clientName = _db.Users.Where(x => x.Id == contractData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                         solutionDetails.ClientName = clientName.FirstName + " " + clientName.LastName;
-                        solutionDetails.LatestChargeId = contractData.LatestChargeId;
+                        //solutionDetails.LatestChargeId = contractData.LatestChargeId;
                         solutionDetails.ContractId = contractData.Id;
-                        
+                        solutionDetails.RevoultOrderId = contractData.PaymentIntentId;
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -3629,24 +3665,43 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    var clienttransfer = _stripeAccountService.RefundAmountToClient(model.LatestChargeId, long.Parse(model.TransferAmount));
-                    if (clienttransfer.Status == "succeeded")
+                    var clientTransfer = _db.Contract.Where(x => x.Id == model.ContractId).Select(x => x.IsClientRefund).FirstOrDefault();
+                    if (clientTransfer)
                     {
-                        var contractDetails = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
-                        if (contractDetails != null)
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
-                            contractDetails.IsClientRefund = true;
-                            contractDetails.RefundAmount = model.TransferAmount;
-                            contractDetails.RefundDateTime = DateTime.Now;
-                            _db.SaveChanges();
-
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Refund is already done for this user!.",
+                        });
+                    }
+                    else
+                    {
+                        RefundPaymentRequest refundPaymentRequest = new RefundPaymentRequest
+                        {
+                            Amount = model.TransferAmount,
+                            OrderId = model.RevoultOrderId,
+                            Description = ""
+                        };
+                        var clienttransfer = await _revoultService.RefundToClient(refundPaymentRequest);
+                        if (clienttransfer.state.ToString() == "PROCESSING")
+                        {
+                            var contractDetails = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
+                            if (contractDetails != null)
                             {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Refund Succesfully !",
-                            });
+                                contractDetails.IsClientRefund = true;
+                                contractDetails.RefundAmount = model.TransferAmount;
+                                contractDetails.RefundDateTime = DateTime.Now;
+                                _db.SaveChanges();
+
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "Refund Succesfully !",
+                                });
+                            }
                         }
                     }
+                    
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,

@@ -233,7 +233,7 @@ namespace Aephy.API.Models
             public string? ProjectType { get; set; }
             public int Days { get; set; }
 
-            public string? MilestoneStatus {  get; set; }
+            public string? MilestoneStatus { get; set; }
 
         }
 
@@ -428,6 +428,7 @@ namespace Aephy.API.Models
 
             public string? Address { get; set; }
 
+            public string? RevoultOrderId { get; set; }
         }
         public class CustomSolutionsModel
         {
@@ -499,11 +500,11 @@ namespace Aephy.API.Models
 
             public string? FirstName { get; set; }
 
-            public string? LastName { get; set;}
+            public string? LastName { get; set; }
 
             public string? Email { get; set; }
 
-            public string? ProfileUrl { get; set;}
+            public string? ProfileUrl { get; set; }
 
             public string? Role { get; set; }
 
@@ -511,25 +512,25 @@ namespace Aephy.API.Models
 
             public string? ClientAddress { get; set; }
 
-            public string? HourlyRate { get; set;}
+            public string? HourlyRate { get; set; }
 
-            public string? Education { get; set;}
+            public string? Education { get; set; }
 
-            public string? ProffessionalExperience { get; set;}
+            public string? ProffessionalExperience { get; set; }
 
             public string? FreelancerAddress { get; set; }
 
-            public string? FreelancerLevel { get; set;}
+            public string? FreelancerLevel { get; set; }
 
             public string? CVPath { get; set; }
 
-            public string? ImagePath { get; set;}
+            public string? ImagePath { get; set; }
 
-            public string? ImageUrlWithSas { get; set;}
+            public string? ImageUrlWithSas { get; set; }
 
             public int CountryId { get; set; }
 
-            public string? CountryName { get; set;}
+            public string? CountryName { get; set; }
 
             public string? CompanyName { get; set; }
 
@@ -626,7 +627,7 @@ namespace Aephy.API.Models
             public int ResponsivenessRating { get; set; }
             public int WellDefinedProjectRating { get; set; }
         }
-      
+
 
         public class CounterpartyAccountResp
         {
@@ -684,29 +685,22 @@ namespace Aephy.API.Models
 
         }
 
-        //public class CreatePaymentReq
-        //{
-        //    public class ReceiverData
-        //    {
-        //        [Required(AllowEmptyStrings = false)]
-        //        public string CounterpartyId { get; set; }
-        //        [Required(AllowEmptyStrings = false)]
-        //        public string AccountId { get; set; }
-        //    }
+        public class RefundPaymentRequest
+        {
+            public string? id { get; set; }
 
-        //    [Required(AllowEmptyStrings = false)]
-        //    public string RequestId { get; set; }
-        //    [Required(AllowEmptyStrings = false)]
-        //    public string AccountId { get; set; }
-        //    [Required]
-        //    public ReceiverData Receiver { get; set; }
-        //    [Required]
-        //    public double Amount { get; set; }
-        //    [Required(AllowEmptyStrings = false)]
-        //    public string Currency { get; set; }
-        //    [Required(AllowEmptyStrings = false)]
-        //    public string Reference { get; set; }
-        //}
+            public string? OrderId { get; set; }
+
+            public string? Amount { get; set; }
+
+            public string? Description { get; set; }
+
+            public string? state { get; set; }
+
+            public DateTime? created_at { get; set; }
+
+            public DateTime? updated_at { get; set; }
+        }
     }
 }
 

@@ -50,7 +50,7 @@
                                         <div class="col-12">
                                             <label for="FreelancerName" class="form-label">Freelancer Name</label>
                                             <div class="input-group">
-                                                <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer" onchange="GetFreelancerConnectedId()">
+                                                <select class="form-select" aria-label="Default select example" name="drpfreelancer" id="drp-FreeLancer">
                                                     <option value="">Select Freelancer</option>
                                                 </select>
                                             </div>
@@ -64,7 +64,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="ChargedId" class="form-label">Last Charged Id</label>
+                                            <label for="ChargedId" class="form-label">Order Id</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="ChargedId" name="chargedId" readonly>
                                             </div>
@@ -72,7 +72,7 @@
 
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-brand">Transfer</button>
-                                            <button type="reset" class="btn btn-secondary" onclick="ResetForm();">Reset</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetFreelancerRefundForm();">Reset</button>
                                         </div>
                                     </form>
                                 </div>
@@ -148,7 +148,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="ChargedId" class="form-label">Last Charged Id</label>
+                                            <label for="ChargedId" class="form-label">Order Id</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="ClientChargedId" name="clientchargedId" readonly>
                                             </div>
@@ -320,7 +320,7 @@
                 });
 
                 $("#ContractId").val(result.Result[0].ContractId);
-                $("#ChargedId").val(result.Result[0].LatestChargeId);
+                $("#ChargedId").val(result.Result[0].RevoultOrderId);
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -331,34 +331,34 @@
 
     }
 
-    function GetFreelancerConnectedId() {
-        var freelancerId = $("#drp-FreeLancer").val();
-        if (freelancerId != '') {
-            var data = {
-                FreelancerId: freelancerId
-            };
-            $("#preloader").show();
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("GetFreelancerConnectedId", "Solutions")",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(data),
-                success: function (result) {
-                    if (result.Message == "Data Available") {
-                        $("#FreelancerStripeConnectedId").val(result.Result);
-                    } else {
-                        showToaster("warning", "Warning !", "Something went wrong !!");
-                    }
-                    $("#preloader").hide();
-                },
-                error: function (result) {
-                    $("#preloader").hide();
-                    showToaster("error", "Error !", "Something went wrong !!");
-                }
-            });
-        }
-    }
+    // function GetFreelancerConnectedId() {
+    //     var freelancerId = $("#drp-FreeLancer").val();
+    //     if (freelancerId != '') {
+    //         var data = {
+    //             FreelancerId: freelancerId
+    //         };
+    //         $("#preloader").show();
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "@Url.Action("GetFreelancerConnectedId", "Solutions")",
+    //             contentType: "application/json; charset=utf-8",
+    //             dataType: "json",
+    //             data: JSON.stringify(data),
+    //             success: function (result) {
+    //                 if (result.Message == "Data Available") {
+    //                     $("#FreelancerStripeConnectedId").val(result.Result);
+    //                 } else {
+    //                     showToaster("warning", "Warning !", "Something went wrong !!");
+    //                 }
+    //                 $("#preloader").hide();
+    //             },
+    //             error: function (result) {
+    //                 $("#preloader").hide();
+    //                 showToaster("error", "Error !", "Something went wrong !!");
+    //             }
+    //         });
+    //     }
+    // }
 
     function ClosePopUpModel() {
         $("#drp-FreeLancer").val('');
@@ -369,7 +369,7 @@
         $("#ContractId").val(0);
     }
 
-    function ResetForm() {
+    function ResetFreelancerRefundForm() {
         $("#drp-FreeLancer").val('');
         $("#Amount").val(0);
         $("#ChargedId").val("");
@@ -379,8 +379,8 @@
         var data = {
             TransferAmount: $("#Amount").val(),
             Currency: "eur",
-            StripeConnectedId: $("#FreelancerStripeConnectedId").val(),
-            LatestChargeId: $("#ChargedId").val(),
+            //StripeConnectedId: $("#FreelancerStripeConnectedId").val(),
+            RevoultOrderId: $("#ChargedId").val(),
             ContractId: $("#ContractId").val(),
             FreelancerId: $("#drp-FreeLancer").val(),
         };
@@ -393,12 +393,11 @@
             data: JSON.stringify(data),
             success: function (result) {
                 if (result.Message == "Refund Succesfully !") {
-                    ResetForm()
                     showToaster("success", "Success !", result.Message);
+                    ResetFreelancerRefundForm();
                 } else {
                     showToaster("error", "Error !", result.Message);
                 }
-
                 $("#preloader").hide();
             },
             error: function (result) {
@@ -504,7 +503,7 @@
                     var data = result.Result;
                     $("#ClientRefundPopup").modal('show')
                     $("#ClientName").val(data.ClientName);
-                    $("#ClientChargedId").val(data.LatestChargeId);
+                    $("#ClientChargedId").val(data.RevoultOrderId);
                     $("#ClientContractId").val(data.ContractId);
                 }
                 else {
@@ -523,9 +522,9 @@
         var data = {
             ClientName: $("#ClientName").val(),
             TransferAmount: $("#ClientAmount").val(),
-            LatestChargeId: $("#ClientChargedId").val(),
+            RevoultOrderId: $("#ClientChargedId").val(),
             ContractId: $("#ClientContractId").val(),
-            Currency: "eur"
+            Currency: "EUR"
         };
         $("#preloader").show();
         $.ajax({
@@ -536,12 +535,11 @@
             data: JSON.stringify(data),
             success: function (result) {
                 if (result.Message == "Refund Succesfully !") {
-                    CloseClientRefundPopUpModel()
                     showToaster("success", "Success !", result.Message);
+                    CloseClientRefundPopUpModel();
                 } else {
                     showToaster("error", "Error !", result.Message);
                 }
-
                 $("#preloader").hide();
             },
             error: function (result) {

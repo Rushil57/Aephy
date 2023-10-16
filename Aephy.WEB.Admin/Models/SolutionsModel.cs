@@ -188,5 +188,7 @@ namespace Aephy.WEB.Admin.Models
 
         public string? ClientName { get; set; }
 
+        public string? RevoultOrderId { get; set; }
+
     }
 }

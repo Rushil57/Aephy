@@ -400,7 +400,7 @@ namespace Aephy.API.Revoult
             return null;
         }
 
-        public async Task RefundToClient(string orderId, string amount, string description)
+        public async Task<RefundPaymentRequest> RefundToClient(RefundPaymentRequest model)
         {
             try
             {
@@ -409,17 +409,24 @@ namespace Aephy.API.Revoult
                     MaxTimeout = -1,
                 };
                 var client = new RestClient(options);
-                var request = new RestRequest("https://merchant.revolut.com/api/1.0/orders/{order_id}/refund", Method.Post);
+                var request = new RestRequest("https://sandbox-merchant.revolut.com/api/1.0/orders/" + model.OrderId+"/refund", Method.Post);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Accept", "application/json");
                 request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
+               // request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
                 var body = @"{" + "\n" +
-                @"  ""amount"": 40," + "\n" +
+                @"  ""amount"": "+ model.Amount + "," + "\n" +
                 @"  ""description"": ""Refund for damaged goods""" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);
                 RestResponse response = await client.ExecuteAsync(request);
-                Console.WriteLine(response.Content);
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    var data = JsonConvert.DeserializeObject<RefundPaymentRequest>(response.Content);
+                    return data;
+                }
+                return null;
+                //Console.WriteLine(response.Content);
             }
             catch (Exception ex)
             {

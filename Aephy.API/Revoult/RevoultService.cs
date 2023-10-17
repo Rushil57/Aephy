@@ -416,7 +416,7 @@ namespace Aephy.API.Revoult
                // request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
                 var body = @"{" + "\n" +
                 @"  ""amount"": "+ model.Amount + "," + "\n" +
-                @"  ""description"": ""Refund for damaged goods""" + "\n" +
+                @"  ""description"": ""Test Data""" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);
                 RestResponse response = await client.ExecuteAsync(request);

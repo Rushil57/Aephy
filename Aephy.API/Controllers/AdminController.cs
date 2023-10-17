@@ -3126,6 +3126,24 @@ namespace Aephy.API.Controllers
                     {
                         var user = _db.Users.Where(x => x.Id == model.FreelancerId).FirstOrDefault();
 
+                        var solutionTitle = string.Empty;
+                        var getsolutionFundId = _db.Contract.Where(x => x.Id == model.ContractId).Select(x => x.SolutionFundId).FirstOrDefault();
+                        if(getsolutionFundId != 0)
+                        {
+                            var solutionFundData = _db.SolutionFund.Where(x => x.Id == getsolutionFundId).FirstOrDefault();
+                            if(solutionFundData != null)
+                            {
+                                if(solutionFundData.FundType == SolutionFund.FundTypes.ProjectFund)
+                                {
+                                    solutionTitle = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    solutionTitle = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                }
+                            }
+                        }
+
                         var allAccounts = await _revoultService.RetrieveAllAccounts();
                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                         {
@@ -3133,7 +3151,7 @@ namespace Aephy.API.Controllers
                             RequestId = Guid.NewGuid().ToString(),
                             Amount = Convert.ToDouble(model.TransferAmount),
                             Currency = "EUR",
-                            Reference = "Payment For - ",
+                            Reference = "Payment For - " + solutionTitle,
                             Receiver = new CreatePaymentReq.ReceiverData()
                             {
                                 CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
@@ -3316,7 +3334,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var successPaymentList = await _db.Contract.Where(x => x.PaymentStatus == Contract.PaymentStatuses.Paid).ToListAsync();
+                var successPaymentList = await _db.Contract.Where(x => x.PaymentStatus != Contract.PaymentStatuses.Splitted).ToListAsync();
                 List<SolutionDisputeViewModel> successProjectList = new List<SolutionDisputeViewModel>();
                 if (successPaymentList.Count > 0)
                 {
@@ -3333,6 +3351,7 @@ namespace Aephy.API.Controllers
                             disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
                             disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IsClientRefund = data.IsClientRefund;
+                            disputeViewModel.IsFreelancerRefund = _db.ContractUser.Where(x => x.ContractId == data.Id).Select(x => x.IsRefund).FirstOrDefault();
                             bool PaymentStopped = false;
                             var IsPaymentStopped = _db.SolutionStopPayment.Where(x => x.ContractId == data.Id).FirstOrDefault();
                             if (IsPaymentStopped != null)
@@ -3680,7 +3699,7 @@ namespace Aephy.API.Controllers
                         {
                             Amount = model.TransferAmount,
                             OrderId = model.RevoultOrderId,
-                            Description = ""
+                            Description = "Test"
                         };
                         var clienttransfer = await _revoultService.RefundToClient(refundPaymentRequest);
                         if (clienttransfer.state.ToString() == "PROCESSING")

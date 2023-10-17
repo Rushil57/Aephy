@@ -1186,10 +1186,13 @@
               }
                $(".cls-solutionDetails").text('Raise a Dispute');
                if(data.IsDispute){
-                    $(".cls-fundProgress").addClass('disabled');
-                    $("#solutionfund-projectPay").addClass('disabled');
-                    $(".btn.disabled").css("background-color", "var(--brand)");
-                    $(".btn.disabled").css("color","black");
+                    // $(".cls-fundProgress").addClass('disabled');
+                    // $("#solutionfund-projectPay").addClass('disabled');
+                    // $(".btn.disabled").css("background-color", "var(--brand)");
+                    // $(".btn.disabled").css("color","black");
+                   DisabledSolutionDetailsButton()
+	               DisabledFundButton()
+                   DisabledSolutionFurtherProgressButton()
                }
            }
 
@@ -1231,12 +1234,9 @@
                 success: function (result) {
                     if(result.Message == "Dispute Raised"){
                         showToaster("success", "Success", result.Message);
-                        $(".cls-fundProgress").css("cursor","not-allowed");    
-                        
-                            $(".cls-fundProgress").addClass('disabled');
-                           
-                            $(".btn.disabled").css("background-color", "var(--brand)");
-                             $(".btn.disabled").css("color","black");
+                        DisabledSolutionDetailsButton();
+                        DisabledFundButton();
+                        DisabledSolutionFurtherProgressButton();
                     }else{
                         showToaster("warning", "Warning!", result.Message);
                     }

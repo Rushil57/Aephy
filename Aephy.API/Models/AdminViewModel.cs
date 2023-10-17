@@ -423,6 +423,7 @@ namespace Aephy.API.Models
             public bool IsPaymentStop { get; set; }
 
             public bool IsClientRefund { get; set; }
+            public bool IsFreelancerRefund { get; set; }
 
             public string? ProjectPrice { get; set; }
 

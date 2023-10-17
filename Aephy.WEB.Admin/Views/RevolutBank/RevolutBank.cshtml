@@ -1,0 +1,212 @@
+﻿@{
+    ViewData["Title"] = "Revoult Bank";
+}
+
+<main id="main" class="main">
+    <div class="row">
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">Bank Revoult</h5>
+
+                    <form class="row g-3 mt-3" name="RevolutOnBoardForm">
+                        
+                        <input type="hidden" id="AccountDetailsId" value="0"/>
+
+                        <div class="col-6">
+                            <label for="bankCountry" class="form-label">Bank Country</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="bankCountry" class="form-control" name="BankCountry" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="currency" class="form-label">Currency</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="Currency" class="form-control" name="Currency" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="ibanNumber" class="form-label">IBAN Number</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="ibanNumber" class="form-control" name="IbanNumber" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="bicNumber" class="form-label">BIC</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="bicNumber" class="form-control" name="BicNumber" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="Address" class="form-label">Address</label>
+                            <div class="col-md-8 col-lg-9">
+                                <textarea name="Address" type="text" id="Address" class="form-control cls-ephylinkAddress" rows="4" cols="50"></textarea>
+                                @* <input type="text" id="Address" class="form-control" name="Address" /> *@
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="City" class="form-label">City</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="City" class="form-control" name="City" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="country" class="form-label">Country</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="Country" class="form-control" name="Country" value="GR" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="PostCode" class="form-label">PostCode</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" id="PostCode" class="form-control" name="PostCode" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="IsEnable" name="Isenable" /> &nbsp;
+                            <label for="bicNumber" class="form-label">IsEnable</label>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-brand">Submit</button>
+                            <button type="button" class="btn btn-secondary" onclick="ResetregisterData();">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    $(function () {
+
+        GetEphylinkRevoultDetails();
+
+        $("form[name='RevolutOnBoardForm']").validate({
+            rules: {
+                Currency: { required: true },
+                BankCountry: { required: true },
+                IbanNumber: { required: true },
+                BicNumber: { required: true },
+                Address: { required: true },
+                City: { required: true },
+                Country: { required: true },
+                PostCode: { required: true },
+            },
+            messages: {
+                Currency: { required: "Please enter Currency", },
+                BankCountry: { required: "Please enter Bank Country" },
+                IbanNumber: { required: "Please enter Iban Number" },
+                BicNumber: { required: "Please enter Bic Number" },
+                Address: { required: "Please enter address" },
+                City: { required: "Please enter city" },
+                Country: { required: "Please enter country" },
+                PostCode: { required: "Please enter postcode" },
+            },
+            submitHandler: function (form) {
+                OnboardUserRevoultAccount()
+            }
+        });
+    })
+
+    function OnboardUserRevoultAccount() {
+
+        var addressData = {
+            StreetLine1 : $("#Address").val(),
+            Postcode: $("#PostCode").val(),
+            City: $("#City").val(),
+            Country: $("#Country").val(),
+        }
+
+        var data = {
+            EphylinkId: $("#AccountDetailsId").val(),
+            BankCountry: $("#bankCountry").val(),
+            Currency: $("#Currency").val(),
+            Iban: $("#ibanNumber").val(),
+            Bic: $("#bicNumber").val(),
+            IsEnable: $("#IsEnable").is(":checked"),
+            IbanMandantory : true,
+            Address: addressData
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("OnboardAdminRevoultAccount", "RevolutBank")",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function (result) {
+                if (result.Message == "Account Created") {
+                    showToaster("success", "Success !", result.Message);
+                    $("#AccountDetailsId").val(result.Result)
+                }
+                else if (result.Message == "Account Updated Successfully") {
+                    showToaster("success", "Success !", result.Message);
+                }
+                else {
+                    showToaster("error", "Error !", result.Message);
+                }
+
+                $("#preloader").hide();
+
+
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+
+    function ResetregisterData() {
+        $("#bankCountry").val("");
+        $("#Currency").val("");
+        $("#ibanNumber").val("");
+        $("#bicNumber").val("");
+        $("#bankCountry").val("");
+        $("#IsEnable").prop("checked", false);
+        $("#Address").val("");
+        $("#PostCode").val("");
+        $("#City").val("");
+        // $("#Country").val("");
+    }
+
+    function GetEphylinkRevoultDetails(){
+        $('#preloader').show();
+        $.ajax({
+            type: "Get",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "@Url.Action("GetEphylinkRevoultDetails", "RevolutBank")",
+            success: function (result) {
+                if (result.Message != "Empty Data") {
+                    var data = result.Result;
+                    $("#AccountDetailsId").val(data.Id);
+                    $("#bankCountry").val(data.BankCountry);
+                    $("#Currency").val(data.Currency);
+                    $("#ibanNumber").val(data.Iban);
+                    $("#bicNumber").val(data.Bic);
+                    $("#Address").val(data.Address);
+                    $("#PostCode").val(data.PostCode);
+                    $("#City").val(data.City);
+                    $("#Country").val(data.Country);
+                    if (data.IsEnable){
+                        $("#IsEnable").prop("checked", true);
+                    }else{
+                        $("#IsEnable").prop("checked", false);
+                    }
+                    
+                } else {
+                    ResetregisterData();
+                }
+
+                $('#preloader').hide();
+
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+    }
+</script>

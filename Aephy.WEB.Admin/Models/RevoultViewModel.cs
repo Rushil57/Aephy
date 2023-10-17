@@ -1,5 +1,9 @@
-﻿namespace RevolutAPI.Models.BusinessApi.Counterparties
+﻿namespace Aephy.WEB.Admin.Models
 {
+    public class RevoultViewModel
+    {
+    }
+
     public class AddNonRevolutCounterpartyReq
     {
         public class AddressData
@@ -34,10 +38,13 @@
         public string? Clabe { get; set; }
 
         public bool IbanMandantory { get; set; }
+
+        public bool IsEnable { get; set; }
+
         public string? UserId { get; set; }
 
         public int EphylinkId { get; set; }
 
-        public bool IsEnable { get; set; }
+        
     }
 }

@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231017091301_Remove_Field_table_EphylinkRevoultAccount")]
+    partial class Remove_Field_table_EphylinkRevoultAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -508,19 +511,10 @@ namespace Aephy.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("BankCountry")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Bic")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Currency")
@@ -532,17 +526,11 @@ namespace Aephy.API.Migrations
                     b.Property<bool>("IsEnable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PostCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("RevolutAccountId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RevolutConnectId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("RevolutStatus")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

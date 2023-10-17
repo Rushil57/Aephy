@@ -2297,8 +2297,17 @@ namespace Aephy.API.Controllers
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
                                         if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
                                         {
+                                            var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
+                                            if(TranscationFeesDetails.IsSuccessStatusCode)
+                                            {
+                                                var content = TranscationFeesDetails.Content;
+                                                dynamic json = JsonConvert.DeserializeObject(content);
+                                                // var test1 = json["legs"];
+                                                contractUser.PaymentFees = "3.46"; // need to remove
+                                            }
                                             contractUser.StripeTranferId = CreatePaymentRsp.Id;
                                             contractUser.IsTransfered = true;
+                                            contractUser.PaymentAmount = priceToTransfer.ToString();
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
                                         }
@@ -3115,3 +3124,11 @@ namespace Aephy.API.Controllers
     }
 }
 
+public class a
+{
+    public object counterparty { get; set; }
+}
+public class FeeViewModel
+{
+    public string counterparty { get; set; }
+}

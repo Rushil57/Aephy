@@ -93,5 +93,9 @@ namespace Aephy.API.DBHelper
         public DateTime RefundDateTime { get; set; }
 
         public string? Amount { get; set; }
+
+        public string? PaymentAmount { get; set; }
+
+        public string? PaymentFees { get; set; }
     }
 }

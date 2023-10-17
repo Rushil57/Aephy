@@ -7,6 +7,8 @@ using RestSharp;
 using RevolutAPI.Models.BusinessApi.Counterparties;
 using RevolutAPI.Models.BusinessApi.Payment;
 using RevolutAPI.Models.BusinessApi.Account;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 //using RevolutAPI.Models.BusinessApi.Counterparties;
 
 namespace Aephy.API.Revoult
@@ -434,6 +436,22 @@ namespace Aephy.API.Revoult
                 throw;
             }
             
+        }
+
+        public async Task<RestResponse> GetTranscationFeesDetails(string transferId)
+        {
+            var options1 = new RestClientOptions("https://sandbox-b2b.revolut.com")
+            {
+                MaxTimeout = -1,
+            };
+            var client1 = new RestClient(options1);
+            var request1 = new RestRequest(string.Format("https://sandbox-b2b.revolut.com/api/1.0/transaction/{0}", transferId), Method.Get);
+            request1.AddHeader("Accept", "application/json");
+            request1.AddHeader("Authorization", "Bearer " + _authToken.access_token);
+            RestResponse response1 = await client1.ExecuteAsync(request1);
+            return response1;
+            //Console.WriteLine(response1);
+            //return OK(new { data = response1.Content });
         }
     }
 }

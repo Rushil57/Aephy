@@ -702,6 +702,8 @@ namespace Aephy.API.Models
 
             public DateTime? updated_at { get; set; }
         }
+
+        
     }
 }
 

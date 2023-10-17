@@ -1729,21 +1729,6 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        //ApproveFreelancerPayment
-        [HttpPost]
-        public async Task<string> ApproveFreelancerPayment([FromBody] MileStoneIdViewModel model)
-        {
-            var userId = HttpContext.Session.GetString("LoggedUser");
-            if (userId == null)
-            {
-                return "No Data Found";
-            }
-            model.UserId = userId;
-            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/ApproveFreelancerPayment", HttpMethod.Post, model);
-            return projectData;
-
-        }
-
         //GetCountryList
         [HttpGet]
         public async Task<string> GetCountryList()

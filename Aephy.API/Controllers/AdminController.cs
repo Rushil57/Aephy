@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using Newtonsoft.Json;
-using Stripe.Checkout;
-using Stripe;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -24,7 +22,6 @@ using static Aephy.API.Models.AdminViewModel;
 using static Azure.Core.HttpHeader;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using Aephy.API.Stripe;
 using RevolutAPI.Models.BusinessApi.Payment;
 using Aephy.API.Revoult;
 
@@ -36,13 +33,11 @@ namespace Aephy.API.Controllers
     {
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IStripeAccountService _stripeAccountService;
         private readonly IRevoultService _revoultService;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IStripeAccountService stripeAccountService, IRevoultService revoultService)
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager,  IRevoultService revoultService)
         {
             _db = dbContext;
             _userManager = userManager;
-            _stripeAccountService = stripeAccountService;
             _revoultService = revoultService;
         }
         //[HttpPost]
@@ -1921,105 +1916,6 @@ namespace Aephy.API.Controllers
             }
         }
 
-
-        [HttpPost]
-        [Route("checkOut")]
-        public async Task<IActionResult> checkOut([FromBody] MileStoneDetailsViewModel model)
-        {
-            try
-            {
-                StripeConfiguration.ApiKey = "sk_test_51NcndQSEtmOn47Zj9wmGZXP6MxXu66bdakmxiFLTqmI3lUliPyEBKsW1WLfGuPe7jVcy4XTYIDgDZOV5szLT8S7X00SjdYZtWp";
-
-                // For showing solutions data dynamically into the checkout page
-                /*var usermail = string.Empty;
-                var sessionLineItems = new SessionLineItemOptions();
-                var solutionName = string.Empty;
-                var solutionDescription = string.Empty;
-                var solutionsList = _db.Solutions.ToList();
-                var industruCheck = _db.SolutionIndustry.Where(i => i.IndustryId == model.IndustryId && i.SolutionId == model.SolutionId).FirstOrDefault();
-                if (industruCheck != null)
-                {
-                    var SolutionData = solutionsList.Where(s => s.Id == model.SolutionId).FirstOrDefault();
-                    if (SolutionData != null)
-                    {
-                        solutionName = SolutionData.Title;
-                        solutionDescription = SolutionData.Description;
-                        sessionLineItems = new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                                UnitAmount = Convert.ToInt64(200 * 100),
-                                Currency = "usd",
-                                ProductData = new SessionLineItemPriceDataProductDataOptions
-                                {
-                                    Name = "AI Roadmap Development",
-                                    Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
-                                }
-                            },
-                            Quantity = 1,
-                        };
-                    }
-                }
-
-                var userDetails = _db.Users.Where(user => user.Id == model.FreelancerId).FirstOrDefault();
-                if (userDetails != null)
-                {
-                    usermail = userDetails.Email;
-                }*/
-
-                var options = new SessionCreateOptions
-                {
-                    SuccessUrl = "https://example.com/success",
-                    CancelUrl = "https://example.com/success",
-                    PaymentMethodTypes = new List<string>
-                    {
-                        "card"
-                    },
-                    LineItems = new List<SessionLineItemOptions>
-                    {
-                        new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                                UnitAmount = Convert.ToInt64(200 * 100),
-                                Currency = "usd",
-                                ProductData = new SessionLineItemPriceDataProductDataOptions
-                                {
-                                    Name = "AI Roadmap Development",
-                                    Description = "Enable your organization to make informed decisions about AI investments and implement AI solutions that align with your business objectives."
-                                }
-                            },
-                            Quantity = 1,
-                        },
-                    },
-                    Mode = "payment",
-                    //Add Privacy policy to checkout page : https://dashboard.stripe.com/settings/public
-                    //ConsentCollection = new SessionConsentCollectionOptions { TermsOfService = "required" }
-                };
-                var service = new SessionService();
-                Session session = service.Create(options);
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Success",
-                    Result = new
-                    {
-                        checkoutLink = session.Url
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status403Forbidden,
-                    Message = ex.Message + ex.InnerException
-
-                });
-            }
-        }
-
         [HttpPost]
         [Route("SaveSolutionAssignedFreelancer")]
         public async Task<IActionResult> SaveSolutionAssignedFreelancer([FromBody] SolutionDefineRequestViewModel model)
@@ -3057,52 +2953,52 @@ namespace Aephy.API.Controllers
 
         }
 
-        //GetFreelancerConnectedId
-        [HttpPost]
-        [Route("GetFreelancerConnectedId")]
-        public async Task<IActionResult> GetFreelancerConnectedId([FromBody] SolutionDisputeViewModel model)
-        {
-            try
-            {
-                if (model != null)
-                {
-                    var freelancerDetail = await _db.Users.Where(x => x.Id == model.FreelancerId).Select(x => x.StripeConnectedId).FirstOrDefaultAsync();
-                    if (freelancerDetail != null)
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Data Available",
-                            Result = freelancerDetail
-                        });
-                    }
+        ////GetFreelancerConnectedId
+        //[HttpPost]
+        //[Route("GetFreelancerConnectedId")]
+        //public async Task<IActionResult> GetFreelancerConnectedId([FromBody] SolutionDisputeViewModel model)
+        //{
+        //    try
+        //    {
+        //        if (model != null)
+        //        {
+        //            var freelancerDetail = await _db.Users.Where(x => x.Id == model.FreelancerId).Select(x => x.StripeConnectedId).FirstOrDefaultAsync();
+        //            if (freelancerDetail != null)
+        //            {
+        //                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                {
+        //                    StatusCode = StatusCodes.Status200OK,
+        //                    Message = "Data Available",
+        //                    Result = freelancerDetail
+        //                });
+        //            }
 
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Freelancer has no active stripe account"
-                    });
+        //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //            {
+        //                StatusCode = StatusCodes.Status200OK,
+        //                Message = "Freelancer has no active stripe account"
+        //            });
 
-                }
+        //        }
 
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status200OK,
+        //            Message = "Data not found!",
+        //        });
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status200OK,
+        //            Message = ex.Message + ex.InnerException,
+        //        });
+        //    }
 
 
-        }
+        //}
 
         //RefundUserAmount
         [HttpPost]

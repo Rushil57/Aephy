@@ -1,6 +1,6 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
-using Aephy.API.Stripe;
+//using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +25,9 @@ namespace Aephy.API.Controllers
     public class FreelancerController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        private readonly IStripeAccountService _stripeAccountService;
-        public FreelancerController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService)
+        public FreelancerController(AephyAppDbContext dbContext)
         {
             _db = dbContext;
-            _stripeAccountService = stripeAccountService;
         }
 
         [HttpPost]
@@ -1315,122 +1313,6 @@ namespace Aephy.API.Controllers
             });
         }
 
-        //ApproveFreelancerPayment
-        [HttpPost]
-        [Route("ApproveFreelancerPayment")]
-        public async Task<IActionResult> ApproveFreelancerPayment([FromBody] MileStoneIdViewModel model)
-        {
-            if (model != null)
-            {
-                if (model.UserId != null)
-                {
-                    try
-                    {
-                        var contract = await _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Include("ContractUsers").FirstOrDefaultAsync();
-
-                        if (contract != null)
-                        {
-                            var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
-                            var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
-
-                            if (checkoutSession != null)
-                            {
-                                contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
-
-                                if (_stripeAccountService.GetPaymentStatus(checkoutSession) == Contract.PaymentStatuses.Paid)
-                                {
-                                    foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
-                                    {
-                                        var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
-
-                                        if (user != null && user.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.Complete)
-                                        {
-                                            var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-
-                                            var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                            //var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "usd", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
-                                            var transferId = _stripeAccountService.CreateTransferonCharge(priceToTransfer, "eur", user.StripeConnectedId, contract.LatestChargeId, contract.Id.ToString());
-
-                                            if (transferId != null)
-                                            {
-                                                contractUser.StripeTranferId = transferId;
-                                                contractUser.IsTransfered = true;
-                                                _db.ContractUser.Update(contractUser);
-                                                _db.SaveChanges();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // this User(freelabncer or architect) has not completed his Stripe account please 
-                                        }
-                                    }
-
-                                    var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
-
-                                    if (transferredcount == contract.ContractUsers.Count())
-                                    {
-                                        contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
-                                        _db.Contract.Update(contract);
-                                        _db.SaveChanges();
-                                        var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
-                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                        {
-                                            StatusCode = StatusCodes.Status200OK,
-                                            Message = message,
-                                        });
-                                    }
-                                    else if (transferredcount > 0)
-                                    {
-                                        contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
-                                        _db.Contract.Update(contract);
-                                        _db.SaveChanges();
-                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
-                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                        {
-                                            StatusCode = StatusCodes.Status200OK,
-                                            Message = message,
-                                        });
-                                    }
-                                    else
-                                    {
-                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(stripe)", transferredcount);
-                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                        {
-                                            StatusCode = StatusCodes.Status200OK,
-                                            Message = message,
-                                        });
-                                    }
-                                }
-                            }
-
-                        }
-
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Contract Details Not Found",
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status403Forbidden,
-                            Message = ex.Message + ex.InnerException
-                        });
-                    }
-                }
-
-            }
-
-            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Data not Found"
-            });
-        }
-
-        //GetCountryList
         [HttpGet]
         [Route("GetCountryList")]
         public async Task<IActionResult> GetCountryList()

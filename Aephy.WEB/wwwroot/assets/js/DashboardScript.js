@@ -1647,30 +1647,6 @@ function clearApplyForm() {
     $('#filePreview').css("display", "none");
 }
 
-
-function ApproveFreelancerPayment(Id) {
-    var data = {
-        SolutionFundId: Id,
-    }
-    $("#preloader").show();
-    $.ajax({
-        type: "POST",
-        url: "/Home/ApproveFreelancerPayment",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        data: JSON.stringify(data),
-        success: function (result) {
-            showToaster("success", "Success !", result.Message);
-            GetClientActiveProjectList();
-            $("#preloader").hide();
-        },
-        error: function (result) {
-            $("#preloader").hide();
-            showToaster("error", "Error !", result);
-        }
-    });
-}
-
 function getOpenRoles() {
     $("#preloader").show();
     $.ajax({

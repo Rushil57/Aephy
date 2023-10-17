@@ -10,9 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RestSharp;
 using RevolutAPI.Models.BusinessApi.Payment;
-using Stripe;
-using Stripe.Checkout;
-using Stripe.Identity;
+//using Stripe;
+//using Stripe.Checkout;
+//using Stripe.Identity;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
 using System.Xml.Schema;
@@ -27,15 +27,15 @@ namespace Aephy.API.Controllers
     public class ClientController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        private readonly IStripeAccountService _stripeAccountService;
+       // private readonly IStripeAccountService _stripeAccountService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRevoultService _revoultService;
-        public ClientController(AephyAppDbContext dbContext, IStripeAccountService stripeAccountService, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
+        public ClientController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
         {
             _db = dbContext;
             _configuration = configuration;
-            _stripeAccountService = stripeAccountService;
+           // _stripeAccountService = stripeAccountService;
             _userManager = userManager;
             _revoultService = revoultService;
         }
@@ -1440,387 +1440,387 @@ namespace Aephy.API.Controllers
 
 
         //CreateUserStripeAccount
-        [HttpPost]
-        [Route("CreateUserStripeAccount")]
-        public async Task<IActionResult> CreateUserStripeAccount([FromBody] MileStoneIdViewModel model)
-        {
-            var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
-            if (userDetails != null)
-            {
-                StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
-                // Connected Account creation.
-                if (userDetails.StripeAccountStatus != ApplicationUser.StripeAccountStatuses.Complete)
-                {
-                    userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
+        //[HttpPost]
+        //[Route("CreateUserStripeAccount")]
+        //public async Task<IActionResult> CreateUserStripeAccount([FromBody] MileStoneIdViewModel model)
+        //{
+        //    var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+        //    if (userDetails != null)
+        //    {
+        //        StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+        //        // Connected Account creation.
+        //        if (userDetails.StripeAccountStatus != ApplicationUser.StripeAccountStatuses.Complete)
+        //        {
+        //            userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
 
-                    if (!string.IsNullOrEmpty(userDetails.StripeConnectedId))
-                    {
-                        userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
-                        _db.Users.Update(userDetails);
-                        _db.SaveChanges();
+        //            if (!string.IsNullOrEmpty(userDetails.StripeConnectedId))
+        //            {
+        //                userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
+        //                _db.Users.Update(userDetails);
+        //                _db.SaveChanges();
 
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "User Stripe Account Created",
-                            Result = userDetails
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Something Went Wrong",
-                        });
-                    }
-                }
-            }
+        //                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                {
+        //                    StatusCode = StatusCodes.Status200OK,
+        //                    Message = "User Stripe Account Created",
+        //                    Result = userDetails
+        //                });
+        //            }
+        //            else
+        //            {
+        //                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                {
+        //                    StatusCode = StatusCodes.Status200OK,
+        //                    Message = "Something Went Wrong",
+        //                });
+        //            }
+        //        }
+        //    }
 
-            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Something Went Wrong",
-            });
-        }
+        //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //    {
+        //        StatusCode = StatusCodes.Status200OK,
+        //        Message = "Something Went Wrong",
+        //    });
+        //}
 
-        //GetUserStripeDetails
-        [HttpPost]
-        [Route("GetUserStripeDetails")]
-        public async Task<IActionResult> GetUserStripeDetails([FromBody] MileStoneIdViewModel model)
-        {
-            var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
-            if (userDetails != null)
-            {
+        ////GetUserStripeDetails
+        //[HttpPost]
+        //[Route("GetUserStripeDetails")]
+        //public async Task<IActionResult> GetUserStripeDetails([FromBody] MileStoneIdViewModel model)
+        //{
+        //    var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+        //    if (userDetails != null)
+        //    {
 
-                StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
+        //        StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKUZvuY36xCSfp99bdrH5Td65cXkJ5FgDdMFVbmAao6xfm8Wje00pAJrWOjf";
 
-                // checking Status of the account
-                if (_stripeAccountService.IsComplete(userDetails.StripeConnectedId))
-                {
-                    userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Complete;
-                    _db.Users.Update(userDetails);
-                    _db.SaveChanges();
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "User Updated Successsfully",
-                        Result = new
-                        {
-                            UserDetails = userDetails,
-                            IsCompleted = true
-                        }
-                    });
-                }
-                // incase account is not complete 
+        //        // checking Status of the account
+        //        if (_stripeAccountService.IsComplete(userDetails.StripeConnectedId))
+        //        {
+        //            userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Complete;
+        //            _db.Users.Update(userDetails);
+        //            _db.SaveChanges();
+        //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //            {
+        //                StatusCode = StatusCodes.Status200OK,
+        //                Message = "User Updated Successsfully",
+        //                Result = new
+        //                {
+        //                    UserDetails = userDetails,
+        //                    IsCompleted = true
+        //                }
+        //            });
+        //        }
+        //        // incase account is not complete 
 
-                // check if accidently landed user has not created the account.
-                if (userDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.NotCreated)
-                {
-                    userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
-                    userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
-                    _db.Users.Update(userDetails);
-                    _db.SaveChanges();
+        //        // check if accidently landed user has not created the account.
+        //        if (userDetails.StripeAccountStatus == ApplicationUser.StripeAccountStatuses.NotCreated)
+        //        {
+        //            userDetails.StripeConnectedId = _stripeAccountService.CreateStripeAccount(StripeConfiguration.ApiKey);
+        //            userDetails.StripeAccountStatus = ApplicationUser.StripeAccountStatuses.Initiated;
+        //            _db.Users.Update(userDetails);
+        //            _db.SaveChanges();
 
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "User Created Successsfully",
-                        Result = new
-                        {
-                            UserDetails = userDetails,
-                            IsCompleted = false
-                        }
-                    });
-                }
-            }
+        //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //            {
+        //                StatusCode = StatusCodes.Status200OK,
+        //                Message = "User Created Successsfully",
+        //                Result = new
+        //                {
+        //                    UserDetails = userDetails,
+        //                    IsCompleted = false
+        //                }
+        //            });
+        //        }
+        //    }
 
-            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Something Went Wrong",
-            });
-        }
+        //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //    {
+        //        StatusCode = StatusCodes.Status200OK,
+        //        Message = "Something Went Wrong",
+        //    });
+        //}
 
-        [HttpPost]
-        [Route("CheckOut")]
-        public async Task<IActionResult> CheckOut([FromBody] solutionFundViewModel model)
-        {
-            try
-            {
-                var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
-                var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId).FirstOrDefaultAsync();
+        //[HttpPost]
+        //[Route("CheckOut")]
+        //public async Task<IActionResult> CheckOut([FromBody] solutionFundViewModel model)
+        //{
+        //    try
+        //    {
+        //        var mileStone = _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefault();
+        //        var contractData = await _db.Contract.Where(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId).FirstOrDefaultAsync();
 
-                if (contractData == null)
-                {
-                    if (model.Id != 0)
-                    {
-                        Contract? contractSave;
-                        var trimmedPrice = model.ProjectPrice.Replace("€", "");
-                        var ProjectPrice = Convert.ToInt64(trimmedPrice);
-                        if (model.MileStoneCheckout)
-                        {
-                            var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == mileStone.ProjectType).ToList();
-                            if (MilestoneTotalDaysByProjectType.Count > 0)
-                            {
-                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
-                               .GroupBy(l => l.ProjectType)
-                               .Select(cl => new SolutionMilestone
-                               {
-                                   ProjectType = cl.First().ProjectType,
-                                   Days = cl.Sum(c => c.Days),
-                               }).FirstOrDefault();
+        //        if (contractData == null)
+        //        {
+        //            if (model.Id != 0)
+        //            {
+        //                Contract? contractSave;
+        //                var trimmedPrice = model.ProjectPrice.Replace("€", "");
+        //                var ProjectPrice = Convert.ToInt64(trimmedPrice);
+        //                if (model.MileStoneCheckout)
+        //                {
+        //                    var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == mileStone.ProjectType).ToList();
+        //                    if (MilestoneTotalDaysByProjectType.Count > 0)
+        //                    {
+        //                        SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+        //                       .GroupBy(l => l.ProjectType)
+        //                       .Select(cl => new SolutionMilestone
+        //                       {
+        //                           ProjectType = cl.First().ProjectType,
+        //                           Days = cl.Sum(c => c.Days),
+        //                       }).FirstOrDefault();
 
-                                if (mileStoneToTalDays.Days > 0)
-                                {
-                                    var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStone.Days;
-                                    model.ProjectPrice = calculateProjectPrice.ToString();
-                                }
-                            }
+        //                        if (mileStoneToTalDays.Days > 0)
+        //                        {
+        //                            var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStone.Days;
+        //                            model.ProjectPrice = calculateProjectPrice.ToString();
+        //                        }
+        //                    }
 
-                            contractSave = new Contract()
-                            {
-                                ClientUserId = model.UserId,
-                                MilestoneDataId = mileStone.Id,
-                                //MileStone = mileStone,
-                                PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                                PaymentIntentId = string.Empty,
-                                SolutionFundId = model.SolutionFundId,
-                                SolutionId = model.SolutionId,
-                                IndustryId = model.IndustryId,
-                                CreatedDateTime = DateTime.Now,
-                                Amount = model.ProjectPrice,
+        //                    contractSave = new Contract()
+        //                    {
+        //                        ClientUserId = model.UserId,
+        //                        MilestoneDataId = mileStone.Id,
+        //                        //MileStone = mileStone,
+        //                        PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+        //                        PaymentIntentId = string.Empty,
+        //                        SolutionFundId = model.SolutionFundId,
+        //                        SolutionId = model.SolutionId,
+        //                        IndustryId = model.IndustryId,
+        //                        CreatedDateTime = DateTime.Now,
+        //                        Amount = model.ProjectPrice,
 
-                            };
-                            _db.Contract.Add(contractSave);
-                            _db.SaveChanges();
+        //                    };
+        //                    _db.Contract.Add(contractSave);
+        //                    _db.SaveChanges();
 
-                            List<ContractUser> contractUsers = new List<ContractUser>();
-                            var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
-                            && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
-                            foreach (var item in fl)
-                            {
-                                contractUsers.Add(new ContractUser()
-                                {
-                                    Percentage = 10,
-                                    StripeTranferId = string.Empty,
-                                    IsTransfered = false,
-                                    ApplicationUserId = item.Id,
-                                    ContractId = contractSave.Id
-                                });
-                            }
-                            _db.ContractUser.AddRange(contractUsers);
-                            _db.SaveChanges();
-                        }
-                        else
-                        {
-                            var contractDetails = _db.Contract.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId).FirstOrDefault();
-                            if (contractDetails == null)
-                            {
-                                contractSave = new Contract()
-                                {
-                                    ClientUserId = model.UserId,
-                                    SolutionId = model.SolutionId,
-                                    IndustryId = model.IndustryId,
-                                    //MileStone = mileStone,
-                                    PaymentStatus = Contract.PaymentStatuses.ContractCreated,
-                                    PaymentIntentId = string.Empty,
-                                    SolutionFundId = model.SolutionFundId,
-                                    CreatedDateTime = DateTime.Now,
-                                    Amount = ProjectPrice.ToString(),
+        //                    List<ContractUser> contractUsers = new List<ContractUser>();
+        //                    var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+        //                    && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+        //                    foreach (var item in fl)
+        //                    {
+        //                        contractUsers.Add(new ContractUser()
+        //                        {
+        //                            Percentage = 10,
+        //                            StripeTranferId = string.Empty,
+        //                            IsTransfered = false,
+        //                            ApplicationUserId = item.Id,
+        //                            ContractId = contractSave.Id
+        //                        });
+        //                    }
+        //                    _db.ContractUser.AddRange(contractUsers);
+        //                    _db.SaveChanges();
+        //                }
+        //                else
+        //                {
+        //                    var contractDetails = _db.Contract.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId).FirstOrDefault();
+        //                    if (contractDetails == null)
+        //                    {
+        //                        contractSave = new Contract()
+        //                        {
+        //                            ClientUserId = model.UserId,
+        //                            SolutionId = model.SolutionId,
+        //                            IndustryId = model.IndustryId,
+        //                            //MileStone = mileStone,
+        //                            PaymentStatus = Contract.PaymentStatuses.ContractCreated,
+        //                            PaymentIntentId = string.Empty,
+        //                            SolutionFundId = model.SolutionFundId,
+        //                            CreatedDateTime = DateTime.Now,
+        //                            Amount = ProjectPrice.ToString(),
 
-                                };
-                                _db.Contract.Add(contractSave);
-                                _db.SaveChanges();
+        //                        };
+        //                        _db.Contract.Add(contractSave);
+        //                        _db.SaveChanges();
 
-                                List<ContractUser> contractUsers = new List<ContractUser>();
-                                var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
-                                && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
-                                foreach (var item in fl)
-                                {
-                                    contractUsers.Add(new ContractUser()
-                                    {
-                                        Percentage = 10,
-                                        StripeTranferId = string.Empty,
-                                        IsTransfered = false,
-                                        ApplicationUserId = item.Id,
-                                        ContractId = contractSave.Id
-                                    });
-
-
-                                }
-                                _db.ContractUser.AddRange(contractUsers);
-                                _db.SaveChanges();
-                            }
-                            else
-                            {
-                                var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
-                                if (solutionFundData != null)
-                                {
-                                    if (solutionFundData.ProjectStatus == "COMPLETED")
-                                    {
-                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                        {
-                                            StatusCode = StatusCodes.Status200OK,
-                                            Message = "Payment is already done for this project",
-                                        });
-                                    }
-                                }
-                            }
-
-                        }
-
-                    }
-
-                }
-                //var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
-                var contract = new Contract();
-                if (model.MileStoneCheckout)
-                {
-                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId);
-                }
-                else
-                {
-                    contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId);
-                }
+        //                        List<ContractUser> contractUsers = new List<ContractUser>();
+        //                        var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.StripeAccountStatus == StripeAccountStatuses.Complete
+        //                        && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+        //                        foreach (var item in fl)
+        //                        {
+        //                            contractUsers.Add(new ContractUser()
+        //                            {
+        //                                Percentage = 10,
+        //                                StripeTranferId = string.Empty,
+        //                                IsTransfered = false,
+        //                                ApplicationUserId = item.Id,
+        //                                ContractId = contractSave.Id
+        //                            });
 
 
-                var domain = _configuration.GetValue<string>("DomainUrl:Domain");
-                var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
-                var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
+        //                        }
+        //                        _db.ContractUser.AddRange(contractUsers);
+        //                        _db.SaveChanges();
+        //                    }
+        //                    else
+        //                    {
+        //                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
+        //                        if (solutionFundData != null)
+        //                        {
+        //                            if (solutionFundData.ProjectStatus == "COMPLETED")
+        //                            {
+        //                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                                {
+        //                                    StatusCode = StatusCodes.Status200OK,
+        //                                    Message = "Payment is already done for this project",
+        //                                });
+        //                            }
+        //                        }
+        //                    }
 
-                Contract.PaymentStatuses payment = contract.PaymentStatus;
-                if (payment == Contract.PaymentStatuses.ContractCreated)
-                {
-                    Session session = new Session();
-                    if (model.MileStoneCheckout)
-                    {
-                        session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
-                    }
-                    else
-                    {
-                        session = _stripeAccountService.CreateProjectCheckoutSession(model.ProjectPrice, successUrl, cancelUrl);
-                    }
+        //                }
 
-                    if (session == null || string.IsNullOrEmpty(session.Id))
-                    {
-                        //Response.Headers.Add("Location", domain + "/LandingPage/Project");
-                        //return new StatusCodeResult(303);
-                        var emptyStringUrl = domain + "/LandingPage/Project";
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Result = emptyStringUrl
-                        });
-                    }
+        //            }
 
-                    //checkout initiated successful
-                    contract.SessionId = session.Id;
-                    contract.SessionExpiry = session.ExpiresAt;
-                    contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                    contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+        //        }
+        //        //var contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MileStone.Id == model.Id);
+        //        var contract = new Contract();
+        //        if (model.MileStoneCheckout)
+        //        {
+        //            contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.MilestoneDataId == model.Id && x.ClientUserId == model.UserId);
+        //        }
+        //        else
+        //        {
+        //            contract = _db.Contract.Include("ContractUsers").FirstOrDefault(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientUserId == model.UserId);
+        //        }
 
-                    _db.Update(contract);
-                    _db.SaveChanges();
 
-                    //Response.Headers.Add("Location", session.Url);
-                    //return new StatusCodeResult(303);
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "success",
-                        Result = session.Url
-                    });
-                }
-                else if (contract.PaymentStatus == Contract.PaymentStatuses.UnPaid)
-                {
-                    var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+        //        var domain = _configuration.GetValue<string>("DomainUrl:Domain");
+        //        var successUrl = string.Format("{0}/LandingPage/CheckoutSuccess?cntId={1}", domain, contract.Id);
+        //        var cancelUrl = string.Format("{0}/LandingPage/CheckoutCancel?cntId={1}", domain, contract.Id);
 
-                    if (checkoutSession != null)
-                    {
-                        contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
+        //        Contract.PaymentStatuses payment = contract.PaymentStatus;
+        //        if (payment == Contract.PaymentStatuses.ContractCreated)
+        //        {
+        //            Session session = new Session();
+        //            if (model.MileStoneCheckout)
+        //            {
+        //                session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
+        //            }
+        //            else
+        //            {
+        //                session = _stripeAccountService.CreateProjectCheckoutSession(model.ProjectPrice, successUrl, cancelUrl);
+        //            }
 
-                        if (contract.SessionStatus == Contract.SessionStatuses.Open)
-                        {
-                            //Response.Headers.Add("Location", checkoutSession.Url);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = checkoutSession.Url
-                            });
-                        }
-                        else
-                        {
-                            Session session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
+        //            if (session == null || string.IsNullOrEmpty(session.Id))
+        //            {
+        //                //Response.Headers.Add("Location", domain + "/LandingPage/Project");
+        //                //return new StatusCodeResult(303);
+        //                var emptyStringUrl = domain + "/LandingPage/Project";
+        //                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                {
+        //                    StatusCode = StatusCodes.Status200OK,
+        //                    Result = emptyStringUrl
+        //                });
+        //            }
 
-                            if (session == null || string.IsNullOrEmpty(session.Id))
-                            {
-                                //Response.Headers.Add("Location", domain + "/Checkout");
-                                //return new StatusCodeResult(303);
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Message = "success",
-                                    Result = domain + "/LandingPage/Project"
-                                });
-                            }
+        //            //checkout initiated successful
+        //            contract.SessionId = session.Id;
+        //            contract.SessionExpiry = session.ExpiresAt;
+        //            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+        //            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
 
-                            //checkout initiated successful
-                            contract.SessionId = session.Id;
-                            contract.SessionExpiry = session.ExpiresAt;
-                            contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
-                            contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+        //            _db.Update(contract);
+        //            _db.SaveChanges();
 
-                            _db.Update(contract);
-                            _db.SaveChanges();
+        //            //Response.Headers.Add("Location", session.Url);
+        //            //return new StatusCodeResult(303);
+        //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //            {
+        //                StatusCode = StatusCodes.Status200OK,
+        //                Message = "success",
+        //                Result = session.Url
+        //            });
+        //        }
+        //        else if (contract.PaymentStatus == Contract.PaymentStatuses.UnPaid)
+        //        {
+        //            var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
 
-                            //Response.Headers.Add("Location", session.Url);
-                            //return new StatusCodeResult(303);
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "success",
-                                Result = session.Url
-                            });
-                        }
-                    }
-                    else
-                    {
-                        //Response.Headers.Add("Location", successUrl);
-                        //return new StatusCodeResult(303);
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "success",
-                            Result = successUrl
-                        });
-                    }
-                }
-                else
-                {
-                    //Response.Headers.Add("Location", successUrl);
-                    //return new StatusCodeResult(303);
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "success",
-                        Result = successUrl
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
+        //            if (checkoutSession != null)
+        //            {
+        //                contract.SessionStatus = _stripeAccountService.GetSesssionStatus(checkoutSession);
 
-            }
+        //                if (contract.SessionStatus == Contract.SessionStatuses.Open)
+        //                {
+        //                    //Response.Headers.Add("Location", checkoutSession.Url);
+        //                    //return new StatusCodeResult(303);
+        //                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                    {
+        //                        StatusCode = StatusCodes.Status200OK,
+        //                        Message = "success",
+        //                        Result = checkoutSession.Url
+        //                    });
+        //                }
+        //                else
+        //                {
+        //                    Session session = _stripeAccountService.CreateCheckoutSession(mileStone, model.ProjectPrice, successUrl, cancelUrl);
 
-            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Something Went Wrong",
-            });
-        }
+        //                    if (session == null || string.IsNullOrEmpty(session.Id))
+        //                    {
+        //                        //Response.Headers.Add("Location", domain + "/Checkout");
+        //                        //return new StatusCodeResult(303);
+        //                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                        {
+        //                            StatusCode = StatusCodes.Status200OK,
+        //                            Message = "success",
+        //                            Result = domain + "/LandingPage/Project"
+        //                        });
+        //                    }
+
+        //                    //checkout initiated successful
+        //                    contract.SessionId = session.Id;
+        //                    contract.SessionExpiry = session.ExpiresAt;
+        //                    contract.SessionStatus = _stripeAccountService.GetSesssionStatus(session);
+        //                    contract.PaymentStatus = _stripeAccountService.GetPaymentStatus(session);
+
+        //                    _db.Update(contract);
+        //                    _db.SaveChanges();
+
+        //                    //Response.Headers.Add("Location", session.Url);
+        //                    //return new StatusCodeResult(303);
+        //                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                    {
+        //                        StatusCode = StatusCodes.Status200OK,
+        //                        Message = "success",
+        //                        Result = session.Url
+        //                    });
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //Response.Headers.Add("Location", successUrl);
+        //                //return new StatusCodeResult(303);
+        //                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //                {
+        //                    StatusCode = StatusCodes.Status200OK,
+        //                    Message = "success",
+        //                    Result = successUrl
+        //                });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //Response.Headers.Add("Location", successUrl);
+        //            //return new StatusCodeResult(303);
+        //            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //            {
+        //                StatusCode = StatusCodes.Status200OK,
+        //                Message = "success",
+        //                Result = successUrl
+        //            });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+
+        //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //    {
+        //        StatusCode = StatusCodes.Status200OK,
+        //        Message = "Something Went Wrong",
+        //    });
+        //}
 
         //GetCheckoutMileStoneData
         [HttpPost]
@@ -1957,7 +1957,7 @@ namespace Aephy.API.Controllers
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.",
+                        Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.Relavant Invoices will be generated after 2 days.",
                     });
                 }
 
@@ -2060,7 +2060,7 @@ namespace Aephy.API.Controllers
 
                         List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
                         var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
-                        && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+                        && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
                         foreach (var item in fl)
                         {
                             solutionTeam.Add(new SolutionTeam()
@@ -2154,7 +2154,7 @@ namespace Aephy.API.Controllers
 
                         List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
                         var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
-                        && !string.IsNullOrEmpty(x.StripeConnectedId)).ToList();
+                        && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
                         foreach (var item in fl)
                         {
                             solutionTeam.Add(new SolutionTeam()
@@ -2348,7 +2348,7 @@ namespace Aephy.API.Controllers
                                     contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
                                     _db.Contract.Update(contract);
                                     _db.SaveChanges();
-                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(stripe)", transferredcount);
+                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(revoult)", transferredcount);
                                     transfertoFreelancer = true;
                                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                     {
@@ -2363,7 +2363,7 @@ namespace Aephy.API.Controllers
                                 }
                                 else
                                 {
-                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(stripe)", transferredcount);
+                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(revoult)", transferredcount);
                                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                     {
                                         StatusCode = StatusCodes.Status200OK,

@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                    <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                    <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -559,7 +559,7 @@
                                     <div class="col-6">
                                         <label for="currency" class="form-label">Currency</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input type="text" id="Currency" class="form-control" name="Currency" />
+                                            <input type="text" id="Currency" class="form-control" name="Currency" readonly/>
                                         </div>
                                     </div>
                                     <div class="col-6 cls-non-mexican-field cls-aus-field cls-us-field cls-indian-field cls-Ibannot-mandatory">
@@ -1028,6 +1028,12 @@
 
         if (countryExists != 0 && addressExists != "" && cityExists != "" && postcodeExists != "") {
             $("#RevolutOnBoardingFeildsModal").modal('show');
+            var prefreedCurrency = $("#PreferredCurrency").val();
+            if(prefreedCurrency != ""){
+                $("#Currency").val(prefreedCurrency)
+            }else{
+                $("#Currency").val("EUR")
+            }
         } else {
             showToaster("error", "Error !", "Please fill all address fields");
         }

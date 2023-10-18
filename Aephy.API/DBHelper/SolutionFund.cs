@@ -68,6 +68,12 @@ namespace Aephy.API.DBHelper
         public string? FreelancerId { get; set; }
 
         public int SolutionFundId { get; set; }
+
+        public decimal Amount {  get; set; }
+
+        public bool IsProjectManager {  get; set; }
+
+        public decimal PlatformFees { get; set; }
     }
 
     public class ActiveProjectDocuments

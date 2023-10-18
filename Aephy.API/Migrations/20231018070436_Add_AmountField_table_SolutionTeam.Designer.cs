@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231018070436_Add_AmountField_table_SolutionTeam")]
+    partial class Add_AmountField_table_SolutionTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1486,9 +1489,6 @@ namespace Aephy.API.Migrations
 
                     b.Property<bool>("IsProjectManager")
                         .HasColumnType("bit");
-
-                    b.Property<decimal>("PlatformFees")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SolutionFundId")
                         .HasColumnType("int");

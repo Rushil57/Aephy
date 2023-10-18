@@ -575,12 +575,12 @@
                                         </div>
                                     </div>
                                     <div class="col-6 non-indian-field cls-non-us-field cls-non-mexican-field cls-iban-mandantory cls-non-aus-field">
-                                        <label for="ibanNumber" class="form-label">IBAN Number</label>
+                                        <label for="ibanNumber" class="form-label">IBAN</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="ibanNumber" class="form-control" name="IbanNumber" />
                                         </div>
                                     </div>
-                                    <div class="col-6 cls-non-us-field cls-indian-field cls-mexican-field cls-aus-field">
+                                    <div class="col-6 cls-non-us-field cls-indian-field cls-mexican-field cls-aus-field cls-both-iban">
                                         <label for="bicNumber" class="form-label">BIC</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" id="bicNumber" class="form-control" name="BicNumber" />
@@ -759,6 +759,7 @@
                     if (data.IsIBanMandantory) {
                         $(".cls-Ibannot-mandatory").hide();
                         $(".cls-iban-mandantory").show();
+                        $(".cls-both-iban").show();
                         $(".cls-no-Iban").hide();
                         $('#IbanCheck').prop('checked', true);
                     } else {
@@ -766,6 +767,7 @@
                         $(".cls-Ibannot-mandatory").show();
                         $(".cls-iban-mandantory").hide();
                         $(".cls-no-Iban").hide();
+                        $(".cls-both-iban").show();
                     }
                     if (data.ShowIndiaField) {
                         $(".non-indian-field").hide();

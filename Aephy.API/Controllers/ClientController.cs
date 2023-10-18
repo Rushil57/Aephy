@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RevolutAPI.Models.BusinessApi.Payment;
 //using Stripe;
@@ -27,7 +28,7 @@ namespace Aephy.API.Controllers
     public class ClientController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-       // private readonly IStripeAccountService _stripeAccountService;
+        // private readonly IStripeAccountService _stripeAccountService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRevoultService _revoultService;
@@ -35,7 +36,7 @@ namespace Aephy.API.Controllers
         {
             _db = dbContext;
             _configuration = configuration;
-           // _stripeAccountService = stripeAccountService;
+            // _stripeAccountService = stripeAccountService;
             _userManager = userManager;
             _revoultService = revoultService;
         }
@@ -612,14 +613,14 @@ namespace Aephy.API.Controllers
                         //var solutionFundData = _db.SolutionFund.Where(x => x.Id == CheckInCompeleteFund.SolutionFundId).FirstOrDefault();
                         //if (solutionFundData != null)
                         //{
-                            CheckInCompeleteFund.ProjectStatus = "INITIATED";
-                            var milestoneFundCompleted = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
-                            if (milestoneFundCompleted == 0)
-                            {
+                        CheckInCompeleteFund.ProjectStatus = "INITIATED";
+                        var milestoneFundCompleted = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
+                        if (milestoneFundCompleted == 0)
+                        {
                             CheckInCompeleteFund.FundType = SolutionFund.FundTypes.ProjectFund;
-                            }
+                        }
 
-                            _db.SaveChanges();
+                        _db.SaveChanges();
                         //}
                     }
                     if (fundProgress.ProjectStatus == "INITIATED")
@@ -2278,7 +2279,7 @@ namespace Aephy.API.Controllers
 
                                         var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
                                         var getCounterParties = await _revoultService.GetCounterparties();
-                                       
+
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
                                             AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(),
@@ -2298,12 +2299,17 @@ namespace Aephy.API.Controllers
                                         if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
                                         {
                                             var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
-                                            if(TranscationFeesDetails.IsSuccessStatusCode)
+                                            if (TranscationFeesDetails.IsSuccessStatusCode)
                                             {
+                                                decimal paymentFee = 0;
                                                 var content = TranscationFeesDetails.Content;
-                                                dynamic json = JsonConvert.DeserializeObject(content);
-                                                // var test1 = json["legs"];
-                                                contractUser.PaymentFees = "3.46"; // need to remove
+                                                dynamic parseContent = JObject.Parse(content);
+                                                JArray legsArray = (JArray)parseContent["legs"];
+                                                foreach (JObject item in legsArray)
+                                                {
+                                                    paymentFee = (decimal)item["fee"];
+                                                }
+                                                contractUser.PaymentFees = paymentFee.ToString();
                                             }
                                             contractUser.StripeTranferId = CreatePaymentRsp.Id;
                                             contractUser.IsTransfered = true;
@@ -3080,7 +3086,7 @@ namespace Aephy.API.Controllers
 
                         if (mileStoneToTalDays.Days > 0)
                         {
-                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100 ;
+                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
                     }
@@ -3090,7 +3096,7 @@ namespace Aephy.API.Controllers
                     model.ProjectPrice = (ProjectPrice * 100).ToString();
                 }
 
-                    var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
+                var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")
                 {
                     MaxTimeout = -1,
                 };
@@ -3101,7 +3107,7 @@ namespace Aephy.API.Controllers
                 request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
                 request.AddHeader("Revolut-Api-Version", "2023-09-01");
                 var body = @"{" + "\n" +
-                @"  ""amount"": "+ model.ProjectPrice + "," + "\n" +
+                @"  ""amount"": " + model.ProjectPrice + "," + "\n" +
                 @"  ""currency"": ""EUR""" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);

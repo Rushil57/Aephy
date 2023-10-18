@@ -77,7 +77,11 @@ namespace Aephy.API.DBHelper
         public DbSet<FreelancerToFreelancerReview> FreelancerToFreelancerReview { get; set; }
 
         public DbSet<EphylinkRevolutAccount> EphylinkRevolutAccount { get; set; }
-        
+
+        public DbSet<InvoiceList> InvoiceList { get; set; }
+
+        public DbSet<InvoiceListDetails> InvoiceListDetails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

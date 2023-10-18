@@ -2058,18 +2058,36 @@ namespace Aephy.API.Controllers
                         };
                         _db.SolutionFund.Add(solutionfund);
                         _db.SaveChanges();
-
+                        
                         List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
                         var fl = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true
                         && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                        // Below loop will only for Freelancer(EXCLUDE PM) 
                         foreach (var item in fl)
                         {
                             solutionTeam.Add(new SolutionTeam()
                             {
                                 FreelancerId = item.Id,
                                 SolutionFundId = solutionfund.Id,
+                                IsProjectManager = false,
+                                //Amount = // Milestone day * 8 * hourly rate  
+                                //PlatformFees =  Amount* PLATFORM_COMM_FROM_FREELANCER_SMALL / 100
+                                /*
+                                 * IF FREELANCER TYPE != PM
+                                 * PlatformFees =  Amount* PLATFORM_COMM_FROM_FREELANCER_SMALL / 100
+                                 * 
+                                 * IF FREELANCER TYPE == PM
+                                 * PlatformFees =  (SUM OF ALL FREELANCER(EXCLUDE PM) AMOUNT )* PROJECT_MANAGER_SMALL 
+                                 */
+
                             });
                         }
+
+                        // Add code for adding PM in variable - solutionTeam
+                        // PM.Amount = 0
+                        // PM.PlatformFees = (solutionTeam.Sum(x => x.Amount) )* PROJECT_MANAGER_SMALL / 100
+                        // IsProjectManager = true,
+                        // SAME LOGIC FOR CONTRACT USER ##########
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
 

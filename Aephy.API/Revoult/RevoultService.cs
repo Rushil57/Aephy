@@ -337,27 +337,14 @@ namespace Aephy.API.Revoult
 
             return null;
         }
-        public async Task GetOrderDetails(string id)
+        public async Task GetOrderDetails(string orderId)
         {
-            var options2 = new RestClientOptions("https://sandbox-merchant.revolut.com")
-            {
-                MaxTimeout = -1,
-            };
-            var client2 = new RestClient(options2);
-            var request2 = new RestRequest("https://sandbox-merchant.revolut.com/api/orders/"+id, Method.Get);
-            request2.AddHeader("Accept", "application/json");
-            request2.AddHeader("Revolut-Api-Version", "2023-09-01");
-            request2.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
-            RestResponse response2 = await client2.ExecuteAsync(request2);
-            Console.WriteLine(response2.Content);
-
-
             var options = new RestClientOptions("https://sandbox-merchant.revolut.com")
             {
                 MaxTimeout = -1,
             };
             var client = new RestClient(options);
-            var request = new RestRequest("https://sandbox-merchant.revolut.com/api/1.0/orders", Method.Get);
+            var request = new RestRequest("https://sandbox-merchant.revolut.com/api/orders/" + orderId, Method.Get);
             request.AddHeader("Accept", "application/json");
             request.AddHeader("Revolut-Api-Version", "2023-09-01");
             request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");

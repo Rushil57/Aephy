@@ -1924,7 +1924,7 @@ namespace Aephy.API.Controllers
                         {
                             contractUsers.Add(new ContractUser()
                             {
-                                Percentage = 10,
+                                Percentage = 0, // this field is not in use
                                 StripeTranferId = string.Empty,
                                 IsTransfered = false,
                                 ApplicationUserId = freelancerDetails.UserId,
@@ -1933,7 +1933,7 @@ namespace Aephy.API.Controllers
                             var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                             if (projectManager != null)
                             {
-                                contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                                contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
                             }
                             _db.ContractUser.AddRange(contractUsers);
                             _db.SaveChanges();
@@ -1957,7 +1957,7 @@ namespace Aephy.API.Controllers
                         {
                             contractUsers.Add(new ContractUser()
                             {
-                                Percentage = 10,
+                                Percentage = 0, // this field is not in use
                                 StripeTranferId = string.Empty,
                                 IsTransfered = false,
                                 ApplicationUserId = item.UserId,
@@ -1967,7 +1967,7 @@ namespace Aephy.API.Controllers
                         var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                         if (projectManager != null)
                         {
-                            contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                            contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
                         }
                         _db.ContractUser.AddRange(contractUsers);
                         _db.SaveChanges();
@@ -1997,7 +1997,7 @@ namespace Aephy.API.Controllers
                         {
                             contractUsers.Add(new ContractUser()
                             {
-                                Percentage = 10,
+                                Percentage = 0, // this field is not in use
                                 StripeTranferId = string.Empty,
                                 IsTransfered = false,
                                 ApplicationUserId = item.UserId,
@@ -2007,7 +2007,7 @@ namespace Aephy.API.Controllers
                         var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                         if (projectManager != null)
                         {
-                            contractUsers.Add(new ContractUser() { Percentage = 10, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                            contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
                         }
                         _db.ContractUser.AddRange(contractUsers);
                         _db.SaveChanges();
@@ -2038,10 +2038,109 @@ namespace Aephy.API.Controllers
                         }
                     }
 
+                    // Invoice Generate
+                    string invoiceErr = "";
+                    try
+                    {
+                        #region Invoice 1 Funding for Milestone or Project
+                        // Invoice 1 - Funding for Milestone or Project
+                        var invoiceFunding = new InvoiceList();
+                        invoiceFunding.BillToClientId = model.UserId;
+                        invoiceFunding.InvoiceNumber = "INV-00101"; // ######
+                        invoiceFunding.InvoiceDate = DateTime.Now;
+                        invoiceFunding.TransactionType = "Invoice1 - portal to client";
+                        invoiceFunding.TotalAmount = contractSave.Amount;
+                        invoiceFunding.InvoiceType = "Invoice";
+                        _db.InvoiceList.Add(invoiceFunding);
+                        _db.SaveChanges();
+
+                        // Invoice 1 (Details 1) - Funding for Milestone or Project
+                        var invoiceFundingDetail = new InvoiceListDetails();
+                        invoiceFundingDetail.InvoiceListId = invoiceFunding.Id;
+                        decimal clientAndFLfees = 0;
+                        decimal flFees = 0;
+                        decimal clientFees = 0;
+
+                        var teamList = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId &&
+                        !x.IsProjectManager).ToList();
+                        flFees = teamList.Sum(y => y.PlatformFees); // need to add client platform fee
+
+                        if (solutionFundData.ProjectType == "large")
+                        {
+                            clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
+                        }
+                        else if (solutionFundData.ProjectType == "small")
+                        {
+                            clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
+                        }
+                        else if (solutionFundData.ProjectType == "medium")
+                        {
+                            clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
+                        }
+                        clientAndFLfees = flFees + clientFees;
+                        invoiceFundingDetail.Amount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
+                        invoiceFundingDetail.Description = "Funding for \"Title of Milestone\""; // ###### - this will be either project or milestone tile
+                        _db.InvoiceListDetails.Add(invoiceFundingDetail);
+                        _db.SaveChanges();
+
+                        // Invoice 1 (Details 2) - Funding for Milestone or Project
+                        var invoiceFundingDetail_vat = new InvoiceListDetails();
+                        invoiceFundingDetail_vat.InvoiceListId = invoiceFunding.Id;
+                        invoiceFundingDetail_vat.Amount = "0";
+                        invoiceFundingDetail_vat.Description = "VAT (0%)";
+                        _db.InvoiceListDetails.Add(invoiceFundingDetail_vat);
+                        _db.SaveChanges();
+
+                        // Invoice 1 (Details 3) - Funding for Milestone or Project
+                        var invoiceFundingDetail_total = new InvoiceListDetails();
+                        invoiceFundingDetail_total.InvoiceListId = invoiceFunding.Id;
+                        invoiceFundingDetail_total.Amount = invoiceFundingDetail.Amount;
+                        invoiceFundingDetail_total.Description = "Total amount";
+                        _db.InvoiceListDetails.Add(invoiceFundingDetail_total);
+                        _db.SaveChanges();
+                        #endregion
+
+
+                        #region Invoice 3 Total platform fees
+                        // Invoice 3 - Total platform fees for Milestone or Project
+                        var invoiceTotalPlatformFees = new InvoiceList();
+                        invoiceTotalPlatformFees.BillToClientId = model.UserId;
+                        invoiceTotalPlatformFees.InvoiceNumber = "INV-00103"; // ######
+                        invoiceTotalPlatformFees.InvoiceDate = DateTime.Now;
+                        invoiceTotalPlatformFees.TransactionType = "Invoice3 - Total platform fees";
+                        invoiceTotalPlatformFees.TotalAmount = Convert.ToString(clientAndFLfees);
+                        invoiceTotalPlatformFees.InvoiceType = "Invoice";
+                        _db.InvoiceList.Add(invoiceTotalPlatformFees);
+                        _db.SaveChanges();
+
+                        // Invoice 3 (Details 1) - Total platform fees for Milestone or Project
+                        var invoiceTotalPlatformFeesDetail_total = new InvoiceListDetails();
+                        invoiceTotalPlatformFeesDetail_total.InvoiceListId = invoiceTotalPlatformFees.Id;
+                        invoiceTotalPlatformFeesDetail_total.Amount = invoiceTotalPlatformFees.TotalAmount;
+                        invoiceTotalPlatformFeesDetail_total.Description = "Total platform fees for \"Title of Milestone\""; //######
+                        _db.InvoiceListDetails.Add(invoiceTotalPlatformFeesDetail_total);
+                        _db.SaveChanges();
+
+                        // Invoice 3 (Details 2) - Total platform fees for Milestone or Project
+                        var invoiceTotalPlatformFeesDetail_vat = new InvoiceListDetails();
+                        invoiceTotalPlatformFeesDetail_vat.InvoiceListId = invoiceTotalPlatformFees.Id;
+                        invoiceTotalPlatformFeesDetail_vat.Amount = "0";
+                        invoiceTotalPlatformFeesDetail_vat.Description = "VAT (0%)";
+                        _db.InvoiceListDetails.Add(invoiceTotalPlatformFeesDetail_vat);
+                        _db.SaveChanges();
+                        #endregion
+                    }
+                    catch (Exception ex)
+                    {
+                        invoiceErr = ex.Message;
+                    }
+                    
+
+                    
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.Relavant Invoices will be generated after 2 days.",
+                        Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.Relavant Invoices will be generated after 2 days. " + invoiceErr,
                     });
                 }
 
@@ -2683,7 +2782,10 @@ namespace Aephy.API.Controllers
                                     {
                                         //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
 
-                                        var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
+                                        
+                                        var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
+                                        //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
+                                        long priceToTransfer = teamMember.IsProjectManager == true ? (long)(Convert.ToDecimal(teamMember?.PlatformFees)) : (long)(Convert.ToDecimal(teamMember?.Amount));
                                         var getCounterParties = await _revoultService.GetCounterparties();
 
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq

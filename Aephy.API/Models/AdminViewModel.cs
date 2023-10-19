@@ -493,6 +493,10 @@ namespace Aephy.API.Models
             public string? UserId { get; set; }
 
             public int SolutionFundId { get; set; }
+
+            public decimal ProjectManagerPlatformFees { get; set; }
+
+            public string? ClientFees { get; set; }
         }
 
         public class UserDetailsModel

@@ -73,6 +73,10 @@ namespace Aephy.API.DBHelper
 
         public string? OrderResponse { get; set; }
 
+        public string? OrderResponseRemarks { get; set; }
+
+        public decimal RevolutFee { get; set; }
+
         // Stripe fields above
 
     }

@@ -719,11 +719,11 @@ namespace Aephy.API.Controllers
                     }
                     var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
 
-                    var contractId = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.Id).FirstOrDefault();
+                    var contractData = _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).FirstOrDefault();
                     bool IsProjectstop = false;
-                    if (contractId != 0)
+                    if (contractData != null)
                     {
-                        var solutionStopData = _db.SolutionStopPayment.Where(x => x.ContractId == contractId).FirstOrDefault();
+                        var solutionStopData = _db.SolutionStopPayment.Where(x => x.ContractId == contractData.Id).FirstOrDefault();
                         if (solutionStopData != null)
                         {
                             IsProjectstop = true;
@@ -752,7 +752,8 @@ namespace Aephy.API.Controllers
                             IsProjectStop = IsProjectstop,
                             DocumentDataList = DocumentList,
                             FreelancerList = freelancerList,
-                            FundStopByClient = fundStopByClient
+                            FundStopByClient = fundStopByClient,
+                            ContractData = contractData
                         }
                     });
                 }
@@ -1914,34 +1915,19 @@ namespace Aephy.API.Controllers
                     _db.SaveChanges();
 
 
-                    // save to contract user table // need to optimised this code
-
+                    // save to contract user table
                     List<ContractUser> contractUsers = new List<ContractUser>();
+                    List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
                     if (solutionFundData.ProjectType == "small")
                     {
                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                        if (freelancerDetails != null)
+                        if(freelancerDetails != null)
                         {
-                            contractUsers.Add(new ContractUser()
-                            {
-                                Percentage = 0, // this field is not in use
-                                StripeTranferId = string.Empty,
-                                IsTransfered = false,
-                                ApplicationUserId = freelancerDetails.UserId,
-                                ContractId = contractSave.Id
-                            });
-                            var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                            if (projectManager != null)
-                            {
-                                contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
-                            }
-                            _db.ContractUser.AddRange(contractUsers);
-                            _db.SaveChanges();
+                            freelancerList.Add(freelancerDetails);
                         }
                     }
                     if (solutionFundData.ProjectType == "medium")
                     {
-                        List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
                         var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").FirstOrDefault();
                         if (expertDetails != null)
                         {
@@ -1952,30 +1938,10 @@ namespace Aephy.API.Controllers
                         {
                             freelancerList.Add(associateDetails);
                         }
-
-                        foreach (var item in freelancerList)
-                        {
-                            contractUsers.Add(new ContractUser()
-                            {
-                                Percentage = 0, // this field is not in use
-                                StripeTranferId = string.Empty,
-                                IsTransfered = false,
-                                ApplicationUserId = item.UserId,
-                                ContractId = contractSave.Id
-                            });
-                        }
-                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                        if (projectManager != null)
-                        {
-                            contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
-                        }
-                        _db.ContractUser.AddRange(contractUsers);
-                        _db.SaveChanges();
-
                     }
                     if (solutionFundData.ProjectType == "large")
                     {
-                        List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
+                        //List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
                         var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").ToList().Take(2);
                         if (expertsDetails != null)
                         {
@@ -1993,26 +1959,26 @@ namespace Aephy.API.Controllers
                             }
                         }
 
-                        foreach (var item in freelancerList)
-                        {
-                            contractUsers.Add(new ContractUser()
-                            {
-                                Percentage = 0, // this field is not in use
-                                StripeTranferId = string.Empty,
-                                IsTransfered = false,
-                                ApplicationUserId = item.UserId,
-                                ContractId = contractSave.Id
-                            });
-                        }
-                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                        if (projectManager != null)
-                        {
-                            contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
-                        }
-                        _db.ContractUser.AddRange(contractUsers);
-                        _db.SaveChanges();
-
                     }
+
+                    foreach (var item in freelancerList)
+                    {
+                        contractUsers.Add(new ContractUser()
+                        {
+                            Percentage = 0, // this field is not in use
+                            StripeTranferId = string.Empty,
+                            IsTransfered = false,
+                            ApplicationUserId = item.UserId,
+                            ContractId = contractSave.Id
+                        });
+                    }
+                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
+                    if (projectManager != null)
+                    {
+                        contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                    }
+                    _db.ContractUser.AddRange(contractUsers);
+                    _db.SaveChanges();
 
 
                     // Save to SolutionFund Table
@@ -2485,140 +2451,8 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
 
-                        List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
-
-                        var projectType = model.ProjectType.ToLower();
-                        var totalMileStoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == projectType).ToList();
-                        var totalMilestoneDays = totalMileStoneData.Sum(x => x.Days);
-                        try
-                        {
-                            var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                            if (Userslist.Count > 0)
-                            {
-                                if (projectType == "small")
-                                {
-                                    //var teamSize = "1 Project Manager + 1 Associate";
-                                    var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                                    if (freelancerDetails != null)
-                                    {
-                                        var hourlyRate = Convert.ToInt32(freelancerDetails.HourlyRate);
-                                        var contractAmount = (totalMilestoneDays * 8 * hourlyRate);
-                                        var freelancerPlatformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
-                                        solutionTeam.Add(new SolutionTeam()
-                                        {
-                                            FreelancerId = freelancerDetails.UserId,
-                                            SolutionFundId = solutionfund.Id,
-                                            IsProjectManager = false,
-                                            Amount = contractAmount,
-                                            PlatformFees = freelancerPlatformfees
-                                        });
-
-                                        var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_SMALL / 100;
-                                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                                        if (projectManager != null)
-                                        {
-                                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
-                                        }
-                                        _db.SolutionTeam.AddRange(solutionTeam);
-                                        _db.SaveChanges();
-                                    }
-
-                                }
-                                if (projectType == "medium")
-                                {
-
-                                    List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                                    //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
-                                    var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").FirstOrDefault();
-                                    if (expertDetails != null)
-                                    {
-                                        freelancerList.Add(expertDetails);
-                                    }
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                                    if (associateDetails != null)
-                                    {
-                                        freelancerList.Add(associateDetails);
-                                    }
-
-                                    foreach (var item in freelancerList)
-                                    {
-                                        var contractUserAmount = totalMilestoneDays * 8 * Convert.ToInt32(item.HourlyRate);
-                                        var userPlatformFees = (contractUserAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
-
-                                        solutionTeam.Add(new SolutionTeam()
-                                        {
-                                            FreelancerId = item.UserId,
-                                            SolutionFundId = solutionfund.Id,
-                                            IsProjectManager = false,
-                                            Amount = contractUserAmount,
-                                            PlatformFees = userPlatformFees
-                                        });
-                                    }
-
-                                    var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_MEDIUM / 100;
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                                    if (projectManager != null)
-                                    {
-                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
-                                    }
-                                    _db.SolutionTeam.AddRange(solutionTeam);
-                                    _db.SaveChanges();
-
-                                }
-                                if (projectType == "large")
-                                {
-                                    List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                                    //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-                                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").ToList().Take(2);
-                                    if (expertsDetails != null)
-                                    {
-                                        foreach (var data in expertsDetails)
-                                        {
-                                            freelancerList.Add(data);
-                                        }
-                                    }
-
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").ToList().Take(2);
-                                    if (associateDetails != null)
-                                    {
-                                        foreach (var associatedata in associateDetails)
-                                        {
-                                            freelancerList.Add(associatedata);
-                                        }
-                                    }
-
-                                    foreach (var item in freelancerList)
-                                    {
-                                        var contractUserAmount = totalMilestoneDays * 8 * Convert.ToInt32(item.HourlyRate);
-                                        var userPlatformFees = (contractUserAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
-
-                                        solutionTeam.Add(new SolutionTeam()
-                                        {
-                                            FreelancerId = item.UserId,
-                                            SolutionFundId = solutionfund.Id,
-                                            IsProjectManager = false,
-                                            Amount = contractUserAmount,
-                                            PlatformFees = userPlatformFees
-                                        });
-                                    }
-
-                                    var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_LARGE / 100;
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                                    if (projectManager != null)
-                                    {
-                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
-                                    }
-                                    _db.SolutionTeam.AddRange(solutionTeam);
-                                    _db.SaveChanges();
-                                }
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-
+                        await SaveSolutionTeamData(solutionfund);
+                       
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -3665,14 +3499,149 @@ namespace Aephy.API.Controllers
             }
 
         }
-    }
-}
 
-public class a
-{
-    public object counterparty { get; set; }
-}
-public class FeeViewModel
-{
-    public string counterparty { get; set; }
+        //SaveSolutionTeamData
+        [HttpPost]
+        [Route("SaveSolutionTeamData")]
+        public async Task<string> SaveSolutionTeamData([FromBody] SolutionFund model)
+        {
+            List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
+
+            var projectType = model.ProjectType.ToLower();
+            var totalMileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == projectType).ToListAsync();
+            var totalMilestoneDays = totalMileStoneData.Sum(x => x.Days);
+            try
+            {
+                var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                if (Userslist.Count > 0)
+                {
+                    if (projectType == "small")
+                    {
+                        //var teamSize = "1 Project Manager + 1 Associate";
+                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
+                        if (freelancerDetails != null)
+                        {
+                            var hourlyRate = Convert.ToInt32(freelancerDetails.HourlyRate);
+                            var contractAmount = (totalMilestoneDays * 8 * hourlyRate);
+                            var freelancerPlatformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                            solutionTeam.Add(new SolutionTeam()
+                            {
+                                FreelancerId = freelancerDetails.UserId,
+                                SolutionFundId = model.Id,
+                                IsProjectManager = false,
+                                Amount = contractAmount,
+                                PlatformFees = freelancerPlatformfees
+                            });
+
+                            var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_SMALL / 100;
+                            var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
+                            if (projectManager != null)
+                            {
+                                solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                            }
+                            _db.SolutionTeam.AddRange(solutionTeam);
+                            _db.SaveChanges();
+                        }
+
+                    }
+                    if (projectType == "medium")
+                    {
+
+                        List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
+                        //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
+                        var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").FirstOrDefault();
+                        if (expertDetails != null)
+                        {
+                            freelancerList.Add(expertDetails);
+                        }
+                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
+                        if (associateDetails != null)
+                        {
+                            freelancerList.Add(associateDetails);
+                        }
+
+                        foreach (var item in freelancerList)
+                        {
+                            var contractUserAmount = totalMilestoneDays * 8 * Convert.ToInt32(item.HourlyRate);
+                            var userPlatformFees = (contractUserAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
+
+                            solutionTeam.Add(new SolutionTeam()
+                            {
+                                FreelancerId = item.UserId,
+                                SolutionFundId = model.Id,
+                                IsProjectManager = false,
+                                Amount = contractUserAmount,
+                                PlatformFees = userPlatformFees
+                            });
+                        }
+
+                        var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_MEDIUM / 100;
+                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
+                        if (projectManager != null)
+                        {
+                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                        }
+                        _db.SolutionTeam.AddRange(solutionTeam);
+                        _db.SaveChanges();
+
+                    }
+                    if (projectType == "large")
+                    {
+                        List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
+                        //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
+                        var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").ToList().Take(2);
+                        if (expertsDetails != null)
+                        {
+                            foreach (var data in expertsDetails)
+                            {
+                                freelancerList.Add(data);
+                            }
+                        }
+
+                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").ToList().Take(2);
+                        if (associateDetails != null)
+                        {
+                            foreach (var associatedata in associateDetails)
+                            {
+                                freelancerList.Add(associatedata);
+                            }
+                        }
+
+                        foreach (var item in freelancerList)
+                        {
+                            var contractUserAmount = totalMilestoneDays * 8 * Convert.ToInt32(item.HourlyRate);
+                            var userPlatformFees = (contractUserAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+
+                            solutionTeam.Add(new SolutionTeam()
+                            {
+                                FreelancerId = item.UserId,
+                                SolutionFundId = model.Id,
+                                IsProjectManager = false,
+                                Amount = contractUserAmount,
+                                PlatformFees = userPlatformFees
+                            });
+                        }
+
+                        var projectmanagerPlatformFees = (solutionTeam.Sum(x => x.Amount)) * AppConst.Commission.PROJECT_MANAGER_LARGE / 100;
+                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
+                        if (projectManager != null)
+                        {
+                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                        }
+                        _db.SolutionTeam.AddRange(solutionTeam);
+                        _db.SaveChanges();
+                    }
+                }
+
+                return "success";
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "Something went wrong";
+        }
+    }
 }

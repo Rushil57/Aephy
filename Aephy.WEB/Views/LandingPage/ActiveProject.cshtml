@@ -844,7 +844,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient,data.ContractData);
                    }
                 
                 if(data.DocumentDataList != ""){
@@ -1007,7 +1007,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false,null);
                        if(data.MilestoneList != ""){
                            BindMileStoneSection(data.MilestoneList);
                        }
@@ -1084,7 +1084,7 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice,FundStopByClient){
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice,FundStopByClient,ContractData){
 
        var projectPrice = parseInt(data.ProjectPrice).toLocaleString('en-US');
           $("#solutionfund-popUp").css("display","block")
@@ -1186,13 +1186,25 @@
               }
                $(".cls-solutionDetails").text('Raise a Dispute');
                if(data.IsDispute){
-                    // $(".cls-fundProgress").addClass('disabled');
-                    // $("#solutionfund-projectPay").addClass('disabled');
-                    // $(".btn.disabled").css("background-color", "var(--brand)");
-                    // $(".btn.disabled").css("color","black");
                    DisabledSolutionDetailsButton()
 	               DisabledFundButton()
                    DisabledSolutionFurtherProgressButton()
+               }
+               if (ContractData!= null) {
+                    var ContractDate = new Date(ContractData.CreatedDateTime);
+                    var today = new Date();
+                    var currentDateTimestamp = today.getTime();
+                    var selectedDateTimestamp = ContractDate.getTime();
+
+                    //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
+                    if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
+	                   DisabledFundButton()
+                       DisabledSolutionFurtherProgressButton()
+                    }
+                    else{
+                        $("#solutionfund-furtherprogress").css("color","white"); 
+                        $("#solutionfund-furtherprogress").removeClass("disabled")
+                    }
                }
            }
 
@@ -1200,7 +1212,7 @@
                    DisabledSolutionDetailsButton()
 	               DisabledFundButton()
                    DisabledSolutionFurtherProgressButton()
-              }
+            }
    }
 
    function CheckEvent(){

@@ -2117,7 +2117,7 @@ namespace Aephy.API.Controllers
                         // Payment Receipt (Details 1) - 
                         var invoicePaymentReceiptDetail_amtDue = new InvoiceListDetails();
                         invoicePaymentReceiptDetail_amtDue.InvoiceListId = invoicePaymentReceipt.Id;
-                        invoicePaymentReceiptDetail_amtDue.Amount = invoiceFunding.TotalAmount;
+                        invoicePaymentReceiptDetail_amtDue.Amount = invoicePaymentReceipt.TotalAmount;
                         invoicePaymentReceiptDetail_amtDue.Description = "Amount due";
                         _db.InvoiceListDetails.Add(invoicePaymentReceiptDetail_amtDue);
                         _db.SaveChanges();
@@ -2125,7 +2125,7 @@ namespace Aephy.API.Controllers
                         // Payment Receipt (Details 2) - 
                         var invoicePaymentReceiptDetail_ttlAmt = new InvoiceListDetails();
                         invoicePaymentReceiptDetail_ttlAmt.InvoiceListId = invoicePaymentReceipt.Id;
-                        invoicePaymentReceiptDetail_ttlAmt.Amount = invoiceFunding.TotalAmount;
+                        invoicePaymentReceiptDetail_ttlAmt.Amount = invoicePaymentReceipt.TotalAmount;
                         invoicePaymentReceiptDetail_ttlAmt.Description = "Total amount";
                         _db.InvoiceListDetails.Add(invoicePaymentReceiptDetail_ttlAmt);
                         _db.SaveChanges();

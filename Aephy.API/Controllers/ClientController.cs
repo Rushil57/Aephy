@@ -2081,6 +2081,7 @@ namespace Aephy.API.Controllers
                         invoiceFunding.TransactionType = "Invoice1 - portal to client";
                         invoiceFunding.TotalAmount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
                         invoiceFunding.InvoiceType = "Invoice";
+                        invoiceFunding.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoiceFunding);
                         _db.SaveChanges();
 
@@ -2118,6 +2119,7 @@ namespace Aephy.API.Controllers
                         invoicePaymentReceipt.TransactionType = "Payment Receipt - Amount Due";
                         invoicePaymentReceipt.TotalAmount = Convert.ToString(contractSave.Amount);
                         invoicePaymentReceipt.InvoiceType = "Payment Receipt";
+                        invoicePaymentReceipt.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoicePaymentReceipt);
                         _db.SaveChanges();
 
@@ -2147,6 +2149,7 @@ namespace Aephy.API.Controllers
                         invoiceTotalPlatformFees.TransactionType = "Invoice3 - Total platform fees";
                         invoiceTotalPlatformFees.TotalAmount = Convert.ToString(clientAndFLfees);
                         invoiceTotalPlatformFees.InvoiceType = "Invoice";
+                        invoiceTotalPlatformFees.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoiceTotalPlatformFees);
                         _db.SaveChanges();
 
@@ -3716,6 +3719,75 @@ namespace Aephy.API.Controllers
             }
 
             return "Something went wrong";
+        }
+
+        [HttpGet]
+        [Route("CheckRevolutOrderStatus")]
+        public async Task<IActionResult> CheckRevolutOrderStatus()
+        {
+            try
+            {
+               //OrderResponse = "SKIP", "DONE", ""
+                var contractList = await _db.Contract.Where(x =>
+                x.OrderResponse != "SKIP" &&
+                x.OrderResponse != "DONE").ToListAsync();
+
+                foreach (var item in contractList)
+                {
+                    try
+                    {
+                        var content = await _revoultService.GetOrderDetails(item.PaymentIntentId);
+                        dynamic parseContent = JObject.Parse(content);
+                        JArray payments = (JArray)parseContent["payments"];
+                        if (payments != null && payments.Count > 0)
+                        {
+                            JArray fees = (JArray)payments[0]["fees"];
+                            if (fees != null && fees.Count > 0)
+                            {
+                                decimal totalFee = 0;
+                                foreach (JObject fee in fees)
+                                {
+                                    totalFee += (decimal)fee["amount"];
+                                }
+                                item.RevolutFee = totalFee;
+                                item.OrderResponse = "DONE";
+                                _db.Contract.Update(item);
+                                _db.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        item.OrderResponseRemarks = ex.Message;
+                        _db.Contract.Update(item);
+                        _db.SaveChanges();
+                    }
+
+                }
+
+                // Mark "SKIP" for Where code will not be trying to communicate with revolut for "skip" records
+                var skipRecords = await _db.Contract.Where(x => (DateTime.Now - x.CreatedDateTime).TotalDays >= 8).ToListAsync();
+                foreach (var contract in skipRecords)
+                {
+                    contract.OrderResponse = "SKIP";
+                    _db.Contract.Update(contract);
+                    _db.SaveChanges();
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + " || " + ex.StackTrace
+                });
+
+            }
         }
     }
 }

@@ -337,7 +337,7 @@ namespace Aephy.API.Revoult
 
             return null;
         }
-        public async Task GetOrderDetails(string orderId)
+        public async Task<string> GetOrderDetails(string orderId)
         {
             var options = new RestClientOptions("https://sandbox-merchant.revolut.com")
             {
@@ -349,7 +349,7 @@ namespace Aephy.API.Revoult
             request.AddHeader("Revolut-Api-Version", "2023-09-01");
             request.AddHeader("Authorization", "Bearer sk_u8VvFPDvr2eor1R-Ti_4fXa1J2G7jeVEyB8AXndKu7yaT20UkLlLsBDM3naKRzY4");
             RestResponse response = await client.ExecuteAsync(request);
-            Console.WriteLine(response.Content);
+            return response.Content;
         }
 
         public async Task<List<GetAccountResp>> RetrieveAllAccounts()

@@ -15,6 +15,7 @@ using RevolutAPI.Models.BusinessApi.Payment;
 //using Stripe.Checkout;
 //using Stripe.Identity;
 using System.Collections.Generic;
+using System.Net;
 using System.Reflection.Metadata;
 using System.Xml.Schema;
 using static Aephy.API.DBHelper.ApplicationUser;
@@ -628,7 +629,7 @@ namespace Aephy.API.Controllers
                         if (solutionMilesData != null && fundProgress.FundType.ToString() == "MilestoneFund")
                         {
                             var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == solutionMilesData.SolutionId && x.IndustryId == solutionMilesData.IndustryId && x.ProjectType == solutionMilesData.ProjectType).ToList();
-                            long calculateProjectPrice = 0;
+                            decimal calculateProjectPrice = 0;
                             if (MilestoneTotalDaysByProjectType.Count > 0)
                             {
                                 SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
@@ -641,9 +642,25 @@ namespace Aephy.API.Controllers
 
                                 if (mileStoneToTalDays.Days > 0)
                                 {
-                                    // var trimmedPrice = model.ProjectPrice.Replace("$", "");
-                                    var ProjectPrice = Convert.ToInt64(fundProgress.ProjectPrice);
-                                    calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * solutionMilesData.Days;
+                                    decimal clientFees = 0;
+                                    var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                                    var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && !x.IsProjectManager).ToList();
+                                    if (fundProgress.ProjectType == "small")
+                                    {
+                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                                    }
+                                    if (fundProgress.ProjectType == "medium")
+                                    {
+                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                                    }
+                                    if (fundProgress.ProjectType == "large")
+                                    {
+                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                                    }
+                                    var finalPrice = Convert.ToInt64(fundProgress.ProjectPrice) + projectManagerPlatformFees + clientFees;
+
+                                    //var ProjectPrice = Convert.ToInt64(fundProgress.ProjectPrice);
+                                    calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * solutionMilesData.Days;
                                     fundProgress.ProjectPrice = calculateProjectPrice.ToString();
                                 }
                             }
@@ -738,22 +755,24 @@ namespace Aephy.API.Controllers
                     var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
 
                     if(fundProgress.ProjectStatus != "COMPLETED") {
-                        long clientFees = 0;
+
+                        decimal clientFees = 0;
                         var Projectmanagerfees = solutionteamList.Sum(x => x.ProjectManagerPlatformFees);
+                        var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && !x.IsProjectManager).ToList();
                         if (model.ProjectType == "small")
                         {
-                            clientFees = (Convert.ToInt64(fundProgress.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
                         }
                         if (model.ProjectType == "medium")
                         {
-                            clientFees = (Convert.ToInt64(fundProgress.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
                         }
                         if (model.ProjectType == "large")
                         {
-                            clientFees = (Convert.ToInt64(fundProgress.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
                         }
 
-                        var finalPrice = Convert.ToInt64(fundProgress.ProjectPrice) + Projectmanagerfees + clientFees;
+                        var finalPrice = Convert.ToDecimal(fundProgress.ProjectPrice) + Projectmanagerfees + clientFees;
                         fundProgress.ProjectPrice = finalPrice.ToString();
 
                     }
@@ -1892,7 +1911,8 @@ namespace Aephy.API.Controllers
                 if (solutionFundData != null)
                 {
                     var ContractProjectPrice = string.Empty;
-                    if(solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                    decimal ContractclientFees = 0;
+                    if (solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
                     {
                         var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).FirstOrDefault();
                         var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == solutionFundData.ProjectType).ToList();
@@ -1908,25 +1928,26 @@ namespace Aephy.API.Controllers
 
                             if (mileStoneToTalDays.Days > 0)
                             {
-                                long clientFees= 0;
+                                
                                 var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id &&  x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && !x.IsProjectManager).ToList();
                                 if (solutionFundData.ProjectType == "small")
                                 {
-                                    clientFees = (Convert.ToInt64(solutionFundData.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                                    ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
                                 }
                                 if (solutionFundData.ProjectType == "medium")
                                 {
-                                    clientFees = (Convert.ToInt64(solutionFundData.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                                    ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
                                 }
                                 if (solutionFundData.ProjectType == "large")
                                 {
-                                    clientFees = (Convert.ToInt64(solutionFundData.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                                    ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
                                 }
-                                var finalPrice = Convert.ToInt64(solutionFundData.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                                var finalPrice = Convert.ToDecimal(solutionFundData.ProjectPrice) + projectManagerPlatformFees + ContractclientFees;
                                 //fundProgress.ProjectPrice = finalPrice.ToString();
 
-                                var ProjectPrice = Convert.ToInt64(finalPrice);
-                                var calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
+                                //var ProjectPrice = Convert.ToInt64(finalPrice);
+                                var calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
                                 ContractProjectPrice = calculateProjectPrice.ToString();
                             }
                             else
@@ -1937,8 +1958,24 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-                        ContractProjectPrice = solutionFundData.ProjectPrice;
+                        var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                        var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && !x.IsProjectManager).ToList();
+                        if (solutionFundData.ProjectType == "small")
+                        {
+                            ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                        }
+                        if (solutionFundData.ProjectType == "medium")
+                        {
+                            ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                        }
+                        if (solutionFundData.ProjectType == "large")
+                        {
+                            ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                        }
+                        var finalPrice = Convert.ToDecimal(solutionFundData.ProjectPrice) + projectManagerPlatformFees + ContractclientFees;
+                        ContractProjectPrice = finalPrice.ToString();
                     }
+
                     // Save to contract Table
                     var contractSave = new Contract()
                     {
@@ -2046,6 +2083,15 @@ namespace Aephy.API.Controllers
                     }
 
                     // Invoice Generate
+                    var SolutionTitle = string.Empty;
+                    if(solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                    {
+                        SolutionTitle = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                    }
+                    else
+                    {
+                        SolutionTitle = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                    }
                     string invoiceErr = "";
                     try
                     {
@@ -2089,7 +2135,7 @@ namespace Aephy.API.Controllers
                         var invoiceFundingDetail = new InvoiceListDetails();
                         invoiceFundingDetail.InvoiceListId = invoiceFunding.Id;
                         invoiceFundingDetail.Amount = invoiceFunding.TotalAmount;
-                        invoiceFundingDetail.Description = "Funding for \"Title of Milestone\""; // ###### - this will be either project or milestone tile
+                        invoiceFundingDetail.Description = "Funding for \""+ SolutionTitle + "\""; // ###### - this will be either project or milestone tile
                         _db.InvoiceListDetails.Add(invoiceFundingDetail);
                         _db.SaveChanges();
 
@@ -2157,7 +2203,7 @@ namespace Aephy.API.Controllers
                         var invoiceTotalPlatformFeesDetail_total = new InvoiceListDetails();
                         invoiceTotalPlatformFeesDetail_total.InvoiceListId = invoiceTotalPlatformFees.Id;
                         invoiceTotalPlatformFeesDetail_total.Amount = invoiceTotalPlatformFees.TotalAmount;
-                        invoiceTotalPlatformFeesDetail_total.Description = "Total platform fees for \"Title of Milestone\""; //######
+                        invoiceTotalPlatformFeesDetail_total.Description = "Total platform fees for \""+ SolutionTitle + "\""; //######
                         _db.InvoiceListDetails.Add(invoiceTotalPlatformFeesDetail_total);
                         _db.SaveChanges();
 
@@ -2415,7 +2461,7 @@ namespace Aephy.API.Controllers
 
 
                         var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
-                        long calculateProjectPrice = 0;
+                        decimal calculateProjectPrice = 0;
                         if (MilestoneTotalDaysByProjectType.Count > 0)
                         {
                             SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
@@ -2428,26 +2474,27 @@ namespace Aephy.API.Controllers
 
                             if (mileStoneToTalDays.Days > 0)
                             {
-                                long clientFees = 0;
+                                decimal clientFees = 0;
                                 //var projectType = model.ProjectType.ToLower();
                                 var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfund.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfund.Id && !x.IsProjectManager).ToList();
                                 if (projectType == "small")
                                 {
-                                    clientFees = (Convert.ToInt64(checkType.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
                                 }
                                 if (projectType == "medium")
                                 {
-                                    clientFees = (Convert.ToInt64(checkType.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
                                 }
                                 if (projectType == "large")
                                 {
-                                    clientFees = (Convert.ToInt64(checkType.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
                                 }
                                 var finalPrice = Convert.ToInt64(checkType.ProjectPrice) + projectManagerPlatformFees + clientFees;
                                 //fundProgress.ProjectPrice = finalPrice.ToString();
                                 // var trimmedPrice = model.ProjectPrice.Replace("$", "");
-                                var ProjectPrice = Convert.ToInt64(finalPrice);
-                                calculateProjectPrice = (ProjectPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
+                               // var ProjectPrice = Convert.ToInt64(finalPrice);
+                                calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
                             }
                         }
 
@@ -3503,6 +3550,7 @@ namespace Aephy.API.Controllers
             try
             {
                 var ProjectPrice = Convert.ToInt64(model.ProjectPrice);
+                decimal clientFees = 0;
                 if (model.FundType == SolutionFund.FundTypes.MilestoneFund)
                 {
                     var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
@@ -3519,21 +3567,22 @@ namespace Aephy.API.Controllers
 
                         if (mileStoneToTalDays.Days > 0)
                         {
-                            long clientFees = 0;
+                            //decimal clientFees = 0;
                             var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                            var projectFrelancerlist = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
                             if (model.ProjectType == "small")
                             {
-                                clientFees = (Convert.ToInt64(model.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
                             }
                             if (model.ProjectType == "medium")
                             {
-                                clientFees = (Convert.ToInt64(model.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
                             }
                             if (model.ProjectType == "large")
                             {
-                                clientFees = (Convert.ToInt64(model.ProjectPrice) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
                             }
-                            var finalPrice = Convert.ToInt64(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                            var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
                             
                             var calculateProjectPrice = ((finalPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
                             model.ProjectPrice = calculateProjectPrice.ToString();
@@ -3542,7 +3591,22 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    model.ProjectPrice = (ProjectPrice * 100).ToString();
+                    var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                    var projectFrelancerlist = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
+                    if (model.ProjectType == "small")
+                    {
+                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                    }
+                    if (model.ProjectType == "medium")
+                    {
+                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                    }
+                    if (model.ProjectType == "large")
+                    {
+                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                    }
+                    var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                    model.ProjectPrice = (finalPrice * 100).ToString();
                 }
 
                 var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")

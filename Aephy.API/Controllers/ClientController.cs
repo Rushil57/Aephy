@@ -2044,19 +2044,7 @@ namespace Aephy.API.Controllers
                     {
                         #region Invoice 1 Funding for Milestone or Project
                         // Invoice 1 - Funding for Milestone or Project
-                        var invoiceFunding = new InvoiceList();
-                        invoiceFunding.BillToClientId = model.UserId;
-                        invoiceFunding.InvoiceNumber = "INV-00101"; // ######
-                        invoiceFunding.InvoiceDate = DateTime.Now;
-                        invoiceFunding.TransactionType = "Invoice1 - portal to client";
-                        invoiceFunding.TotalAmount = contractSave.Amount;
-                        invoiceFunding.InvoiceType = "Invoice";
-                        _db.InvoiceList.Add(invoiceFunding);
-                        _db.SaveChanges();
 
-                        // Invoice 1 (Details 1) - Funding for Milestone or Project
-                        var invoiceFundingDetail = new InvoiceListDetails();
-                        invoiceFundingDetail.InvoiceListId = invoiceFunding.Id;
                         decimal clientAndFLfees = 0;
                         decimal flFees = 0;
                         decimal clientFees = 0;
@@ -2078,7 +2066,21 @@ namespace Aephy.API.Controllers
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                         }
                         clientAndFLfees = flFees + clientFees;
-                        invoiceFundingDetail.Amount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
+
+                        var invoiceFunding = new InvoiceList();
+                        invoiceFunding.BillToClientId = model.UserId;
+                        invoiceFunding.InvoiceNumber = "INV-00101"; // ######
+                        invoiceFunding.InvoiceDate = DateTime.Now;
+                        invoiceFunding.TransactionType = "Invoice1 - portal to client";
+                        invoiceFunding.TotalAmount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
+                        invoiceFunding.InvoiceType = "Invoice";
+                        _db.InvoiceList.Add(invoiceFunding);
+                        _db.SaveChanges();
+
+                        // Invoice 1 (Details 1) - Funding for Milestone or Project
+                        var invoiceFundingDetail = new InvoiceListDetails();
+                        invoiceFundingDetail.InvoiceListId = invoiceFunding.Id;
+                        invoiceFundingDetail.Amount = invoiceFunding.TotalAmount;
                         invoiceFundingDetail.Description = "Funding for \"Title of Milestone\""; // ###### - this will be either project or milestone tile
                         _db.InvoiceListDetails.Add(invoiceFundingDetail);
                         _db.SaveChanges();
@@ -2100,6 +2102,34 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
                         #endregion
 
+                        #region Payment Receipt
+                        // Payment Receipt
+                        var invoicePaymentReceipt = new InvoiceList();
+                        invoicePaymentReceipt.BillToClientId = model.UserId;
+                        invoicePaymentReceipt.InvoiceNumber = "INV-00102"; // ######
+                        invoicePaymentReceipt.InvoiceDate = DateTime.Now;
+                        invoicePaymentReceipt.TransactionType = "Payment Receipt - Amount Due";
+                        invoicePaymentReceipt.TotalAmount = Convert.ToString(contractSave.Amount);
+                        invoicePaymentReceipt.InvoiceType = "Payment Receipt";
+                        _db.InvoiceList.Add(invoicePaymentReceipt);
+                        _db.SaveChanges();
+
+                        // Payment Receipt (Details 1) - 
+                        var invoicePaymentReceiptDetail_amtDue = new InvoiceListDetails();
+                        invoicePaymentReceiptDetail_amtDue.InvoiceListId = invoicePaymentReceipt.Id;
+                        invoicePaymentReceiptDetail_amtDue.Amount = invoiceFunding.TotalAmount;
+                        invoicePaymentReceiptDetail_amtDue.Description = "Amount due";
+                        _db.InvoiceListDetails.Add(invoicePaymentReceiptDetail_amtDue);
+                        _db.SaveChanges();
+
+                        // Payment Receipt (Details 2) - 
+                        var invoicePaymentReceiptDetail_ttlAmt = new InvoiceListDetails();
+                        invoicePaymentReceiptDetail_ttlAmt.InvoiceListId = invoicePaymentReceipt.Id;
+                        invoicePaymentReceiptDetail_ttlAmt.Amount = invoiceFunding.TotalAmount;
+                        invoicePaymentReceiptDetail_ttlAmt.Description = "Total amount";
+                        _db.InvoiceListDetails.Add(invoicePaymentReceiptDetail_ttlAmt);
+                        _db.SaveChanges();
+                        #endregion
 
                         #region Invoice 3 Total platform fees
                         // Invoice 3 - Total platform fees for Milestone or Project

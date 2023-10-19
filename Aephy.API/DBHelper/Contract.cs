@@ -71,6 +71,8 @@ namespace Aephy.API.DBHelper
 
         public string? Amount { get; set; }
 
+        public string? OrderResponse { get; set; }
+
         // Stripe fields above
 
     }

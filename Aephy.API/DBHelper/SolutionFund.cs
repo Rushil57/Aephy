@@ -76,6 +76,9 @@ namespace Aephy.API.DBHelper
         public decimal PlatformFees { get; set; }
 
         public decimal TransferAmount { get; set; }
+
+        public decimal ProjectManagerPlatformFees { get; set; }
+        
     }
 
     public class ActiveProjectDocuments

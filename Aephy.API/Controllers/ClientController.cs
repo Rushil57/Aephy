@@ -1895,8 +1895,9 @@ namespace Aephy.API.Controllers
                             if (mileStoneToTalDays.Days > 0)
                             {
                                 
-                                var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id &&  x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && !x.IsProjectManager).ToList();
+                                
+                                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id).ToList();
+                                var projectManagerPlatformFees = projectFreelancers.Where(x => x.SolutionFundId == solutionFundData.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
                                 if (solutionFundData.ProjectType == "small")
                                 {
                                     ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
@@ -1924,8 +1925,9 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-                        var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                        var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id && !x.IsProjectManager).ToList();
+                        
+                        var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionFundData.Id).ToList();
+                        var projectManagerPlatformFees = projectFreelancers.Where(x =>  x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
                         if (solutionFundData.ProjectType == "small")
                         {
                             ContractclientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
@@ -2323,7 +2325,9 @@ namespace Aephy.API.Controllers
                                         var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                                         if (projectManager != null)
                                         {
-                                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                                            var hourlyRatepm = Convert.ToDecimal(projectManager.HourlyRate);
+                                            var contractAmountpm = (mileStoneData.Days * 8 * hourlyRatepm);
+                                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = contractAmountpm, PlatformFees = projectmanagerPlatformFees });
                                         }
                                         _db.SolutionTeam.AddRange(solutionTeam);
                                         _db.SaveChanges();
@@ -2365,7 +2369,8 @@ namespace Aephy.API.Controllers
                                     var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                                     if (projectManager != null)
                                     {
-                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                                        var contractUserAmount = mileStoneData.Days * 8 * Convert.ToDecimal(projectManager.HourlyRate);
+                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = contractUserAmount, PlatformFees = projectmanagerPlatformFees });
                                     }
                                     _db.SolutionTeam.AddRange(solutionTeam);
                                     _db.SaveChanges();
@@ -2412,7 +2417,8 @@ namespace Aephy.API.Controllers
                                     var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                                     if (projectManager != null)
                                     {
-                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                                        var contractUserAmount = mileStoneData.Days * 8 * Convert.ToDecimal(projectManager.HourlyRate);
+                                        solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = solutionfund.Id, IsProjectManager = true, Amount = contractUserAmount, PlatformFees = projectmanagerPlatformFees });
                                     }
                                     _db.SolutionTeam.AddRange(solutionTeam);
                                     _db.SaveChanges();
@@ -3595,7 +3601,8 @@ namespace Aephy.API.Controllers
                             var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                             if (projectManager != null)
                             {
-                                solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                                var contractAmountpm = (totalMilestoneDays * 8 * Convert.ToDecimal(projectManager.HourlyRate));
+                                solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = contractAmountpm, PlatformFees = projectmanagerPlatformFees });
                             }
                             _db.SolutionTeam.AddRange(solutionTeam);
                             _db.SaveChanges();
@@ -3637,7 +3644,8 @@ namespace Aephy.API.Controllers
                         var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                         if (projectManager != null)
                         {
-                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                            var contractAmountpm = (totalMilestoneDays * 8 * Convert.ToDecimal(projectManager.HourlyRate));
+                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = contractAmountpm, PlatformFees = projectmanagerPlatformFees });
                         }
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
@@ -3684,7 +3692,8 @@ namespace Aephy.API.Controllers
                         var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
                         if (projectManager != null)
                         {
-                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = 0, PlatformFees = projectmanagerPlatformFees });
+                            var contractAmountpm = (totalMilestoneDays * 8 * Convert.ToDecimal(projectManager.HourlyRate));
+                            solutionTeam.Add(new SolutionTeam() { FreelancerId = projectManager.UserId, SolutionFundId = model.Id, IsProjectManager = true, Amount = contractAmountpm, PlatformFees = projectmanagerPlatformFees });
                         }
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
@@ -3780,8 +3789,9 @@ namespace Aephy.API.Controllers
             try
             {
                 decimal clientFees = 0;
-                var projectManagerPlatformFees = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefaultAsync();
-                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
+                
+                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToList();
+                var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
                 if (model.ProjectType == "small")
                 {
                     clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;

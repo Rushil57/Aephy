@@ -642,24 +642,7 @@ namespace Aephy.API.Controllers
 
                                 if (mileStoneToTalDays.Days > 0)
                                 {
-                                    decimal clientFees = 0;
-                                    var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                                    var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && !x.IsProjectManager).ToList();
-                                    if (fundProgress.ProjectType == "small")
-                                    {
-                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
-                                    }
-                                    if (fundProgress.ProjectType == "medium")
-                                    {
-                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
-                                    }
-                                    if (fundProgress.ProjectType == "large")
-                                    {
-                                        clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
-                                    }
-                                    var finalPrice = Convert.ToInt64(fundProgress.ProjectPrice) + projectManagerPlatformFees + clientFees;
-
-                                    //var ProjectPrice = Convert.ToInt64(fundProgress.ProjectPrice);
+                                    var finalPrice = await CountFinalProjectPricing(fundProgress);
                                     calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * solutionMilesData.Days;
                                     fundProgress.ProjectPrice = calculateProjectPrice.ToString();
                                 }
@@ -756,25 +739,8 @@ namespace Aephy.API.Controllers
 
                     if(fundProgress.ProjectStatus != "COMPLETED") {
 
-                        decimal clientFees = 0;
-                        var Projectmanagerfees = solutionteamList.Sum(x => x.ProjectManagerPlatformFees);
-                        var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == fundProgress.Id && !x.IsProjectManager).ToList();
-                        if (model.ProjectType == "small")
-                        {
-                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
-                        }
-                        if (model.ProjectType == "medium")
-                        {
-                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
-                        }
-                        if (model.ProjectType == "large")
-                        {
-                            clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
-                        }
-
-                        var finalPrice = Convert.ToDecimal(fundProgress.ProjectPrice) + Projectmanagerfees + clientFees;
+                        var finalPrice = await CountFinalProjectPricing(fundProgress);
                         fundProgress.ProjectPrice = finalPrice.ToString();
-
                     }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -828,7 +794,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var industryname = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                    var industryname = await _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefaultAsync();
                     var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
                     var services = _db.SolutionServices.Where(x => x.SolutionId == model.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
                     var serviceName = _db.Services.Where(x => x.Id == services).Select(x => x.ServicesName).FirstOrDefault();
@@ -2474,26 +2440,8 @@ namespace Aephy.API.Controllers
 
                             if (mileStoneToTalDays.Days > 0)
                             {
-                                decimal clientFees = 0;
-                                //var projectType = model.ProjectType.ToLower();
-                                var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfund.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfund.Id && !x.IsProjectManager).ToList();
-                                if (projectType == "small")
-                                {
-                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
-                                }
-                                if (projectType == "medium")
-                                {
-                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
-                                }
-                                if (projectType == "large")
-                                {
-                                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
-                                }
-                                var finalPrice = Convert.ToInt64(checkType.ProjectPrice) + projectManagerPlatformFees + clientFees;
-                                //fundProgress.ProjectPrice = finalPrice.ToString();
-                                // var trimmedPrice = model.ProjectPrice.Replace("$", "");
-                               // var ProjectPrice = Convert.ToInt64(finalPrice);
+                                
+                               var finalPrice = await CountFinalProjectPricing(solutionfund);
                                 calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
                             }
                         }
@@ -3550,7 +3498,6 @@ namespace Aephy.API.Controllers
             try
             {
                 var ProjectPrice = Convert.ToInt64(model.ProjectPrice);
-                decimal clientFees = 0;
                 if (model.FundType == SolutionFund.FundTypes.MilestoneFund)
                 {
                     var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
@@ -3567,23 +3514,7 @@ namespace Aephy.API.Controllers
 
                         if (mileStoneToTalDays.Days > 0)
                         {
-                            //decimal clientFees = 0;
-                            var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                            var projectFrelancerlist = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
-                            if (model.ProjectType == "small")
-                            {
-                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
-                            }
-                            if (model.ProjectType == "medium")
-                            {
-                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
-                            }
-                            if (model.ProjectType == "large")
-                            {
-                                clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
-                            }
-                            var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
-                            
+                            var finalPrice = await CountFinalProjectPricing(model);
                             var calculateProjectPrice = ((finalPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
@@ -3591,21 +3522,7 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    var projectManagerPlatformFees = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
-                    var projectFrelancerlist = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
-                    if (model.ProjectType == "small")
-                    {
-                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
-                    }
-                    if (model.ProjectType == "medium")
-                    {
-                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
-                    }
-                    if (model.ProjectType == "large")
-                    {
-                        clientFees = (projectFrelancerlist.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
-                    }
-                    var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                    var finalPrice = await CountFinalProjectPricing(model);
                     model.ProjectPrice = (finalPrice * 100).ToString();
                 }
 
@@ -3852,6 +3769,40 @@ namespace Aephy.API.Controllers
                 });
 
             }
+        }
+
+        //CountFinalProjectPricing
+        [HttpPost]
+        [Route("CountFinalProjectPricing")]
+        public async Task<decimal> CountFinalProjectPricing([FromBody] SolutionFund model)
+        {
+           
+            try
+            {
+                decimal clientFees = 0;
+                var projectManagerPlatformFees = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefaultAsync();
+                var projectFreelancers = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id && !x.IsProjectManager).ToList();
+                if (model.ProjectType == "small")
+                {
+                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                }
+                if (model.ProjectType == "medium")
+                {
+                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                }
+                if (model.ProjectType == "large")
+                {
+                    clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToInt64(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                }
+                var finalPrice = Convert.ToInt64(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                return finalPrice;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return 0;
         }
     }
 }

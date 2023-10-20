@@ -592,7 +592,7 @@ function getProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.Projects);
-                $('#expense_amount').html('€ ' + Data.Expense);
+                $('#expense_amount').html('€ ' + Data.Expense.toFixed(2));
             }
             $("#preloader").hide();
         },

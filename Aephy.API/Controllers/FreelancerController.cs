@@ -2010,7 +2010,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        int TotalExpense = 0;
+                        decimal TotalExpense = 0;
                         List<solutionFundViewModel> finalFundList = new List<solutionFundViewModel>();
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                         var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
@@ -2049,7 +2049,7 @@ namespace Aephy.API.Controllers
                                     if(record != null)
                                     {
                                         expense = record.Amount;
-                                        int exp = expense != "" ? Convert.ToInt32(expense) : 0;
+                                        decimal exp = expense != "" ? Convert.ToDecimal(expense) : 0;
                                         TotalExpense += exp;
                                         if (record.IsClientRefund != false)
                                         {

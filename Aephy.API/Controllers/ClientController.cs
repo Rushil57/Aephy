@@ -2418,21 +2418,8 @@ namespace Aephy.API.Controllers
                                         var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
                                         decimal contractAmount = (singlemilestoneDay * 8 * hourlyRate);
                                         var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
-
-                                        if (item.IsProjectManager)
-                                        {
-                                            //var hourlyRatepm = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                            //decimal contractAmount = (singlemilestoneDay * 8 * hourlyRatepm);
-
-                                            //var projectmanagerPlatformFees = (solutionTeamData.Sum(x => x.Amount)) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL / 100;
-                                            item.PlatformFees = Platformfees;
-                                            item.Amount = contractAmount;
-                                        }
-                                        else
-                                        {
-                                            item.PlatformFees = Platformfees;
-                                            item.Amount = contractAmount;
-                                        }
+                                        item.Amount = contractAmount;
+                                        item.PlatformFees = Platformfees;
                                         _db.SaveChanges();
                                     }
 
@@ -2450,17 +2437,8 @@ namespace Aephy.API.Controllers
                                             var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
                                             decimal contractAmount = (singlemilestoneDay * 8 * hourlyRate);
                                             var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
-
-                                            if (teamData.IsProjectManager)
-                                            {
-                                                teamData.PlatformFees = Platformfees;
-                                                teamData.Amount = contractAmount;
-                                            }
-                                            else
-                                            {
-                                                teamData.Amount = contractAmount;
-                                                teamData.PlatformFees = Platformfees;
-                                            }
+                                            teamData.Amount = contractAmount;
+                                            teamData.PlatformFees = Platformfees;
                                             _db.SaveChanges();
                                         }
                                     }
@@ -2476,20 +2454,8 @@ namespace Aephy.API.Controllers
 
                                             var contractAmount = singlemilestoneDay * 8 * Convert.ToInt32(freelancerDetails.HourlyRate);
                                             var PlatformFees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
-
-
-                                            if (teamData.IsProjectManager)
-                                            {
-                                               // var contractpmAmount = singlemilestoneDay * 8 * Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                                //var projectmanagerPlatformFees = (solutionTeamData.Sum(x => x.Amount)) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE / 100;
-                                                teamData.PlatformFees = PlatformFees;
-                                                teamData.Amount = contractAmount;
-                                            }
-                                            else
-                                            {
-                                                teamData.Amount = contractAmount;
-                                                teamData.PlatformFees = PlatformFees;
-                                            }
+                                            teamData.Amount = contractAmount;
+                                            teamData.PlatformFees = PlatformFees;
                                             _db.SaveChanges();
                                         }
                                     }
@@ -3647,7 +3613,7 @@ namespace Aephy.API.Controllers
                 decimal clientFees = 0;
 
                 var projectFreelancers = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToListAsync();
-                var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.PlatformFees).FirstOrDefault();
+                var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).FirstOrDefault();
                 if (model.ProjectType == "small")
                 {
                     clientFees = (projectFreelancers.Sum(x => x.Amount) * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;

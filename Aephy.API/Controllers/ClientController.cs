@@ -1938,48 +1938,71 @@ namespace Aephy.API.Controllers
                     // save to contract user table
                     List<ContractUser> contractUsers = new List<ContractUser>();
                     List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                    if (solutionFundData.ProjectType == "small")
+                    var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                    if(Userslist.Count > 0)
                     {
-                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                        if(freelancerDetails != null)
+                        foreach (var user in Userslist) 
                         {
-                            freelancerList.Add(freelancerDetails);
-                        }
-                    }
-                    if (solutionFundData.ProjectType == "medium")
-                    {
-                        var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").FirstOrDefault();
-                        if (expertDetails != null)
-                        {
-                            freelancerList.Add(expertDetails);
-                        }
-                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                        if (associateDetails != null)
-                        {
-                            freelancerList.Add(associateDetails);
-                        }
-                    }
-                    if (solutionFundData.ProjectType == "large")
-                    {
-                        //List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                        var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").ToList().Take(2);
-                        if (expertsDetails != null)
-                        {
-                            foreach (var data in expertsDetails)
+                            if (solutionFundData.ProjectType == "small")
                             {
-                                freelancerList.Add(data);
+                                var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == user.Id).FirstOrDefault();
+                                if (freelancerDetails != null)
+                                {
+                                    freelancerList.Add(freelancerDetails);
+                                }
+                                var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == user.Id).FirstOrDefault();
+                                if (projectManagerDetails != null)
+                                {
+                                    freelancerList.Add(projectManagerDetails);
+                                }
                             }
-                        }
-                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").ToList().Take(2);
-                        if (associateDetails != null)
-                        {
-                            foreach (var associatedata in associateDetails)
+                            if (solutionFundData.ProjectType == "medium")
                             {
-                                freelancerList.Add(associatedata);
+                                var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == user.Id).FirstOrDefault();
+                                if (expertDetails != null)
+                                {
+                                    freelancerList.Add(expertDetails);
+                                }
+                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == user.Id).FirstOrDefault();
+                                if (associateDetails != null)
+                                {
+                                    freelancerList.Add(associateDetails);
+                                }
+                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == user.Id).FirstOrDefault();
+                                if (projectManager != null)
+                                {
+                                    freelancerList.Add(projectManager);
+                                }
                             }
-                        }
+                            if (solutionFundData.ProjectType == "large")
+                            {
+                                //List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
+                                var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == user.Id).ToList().Take(2);
+                                if (expertsDetails != null)
+                                {
+                                    foreach (var data in expertsDetails)
+                                    {
+                                        freelancerList.Add(data);
+                                    }
+                                }
+                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == user.Id).ToList().Take(2);
+                                if (associateDetails != null)
+                                {
+                                    foreach (var associatedata in associateDetails)
+                                    {
+                                        freelancerList.Add(associatedata);
+                                    }
+                                }
+                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == user.Id).FirstOrDefault();
+                                if (projectManager != null)
+                                {
+                                    freelancerList.Add(projectManager);
+                                }
 
+                            }
+                        }
                     }
+                   
 
                     foreach (var item in freelancerList)
                     {
@@ -1992,11 +2015,11 @@ namespace Aephy.API.Controllers
                             ContractId = contractSave.Id
                         });
                     }
-                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                    if (projectManager != null)
-                    {
-                        contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
-                    }
+                    //var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" ).FirstOrDefault();
+                    //if (projectManager != null)
+                    //{
+                    //    contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                    //}
                     _db.ContractUser.AddRange(contractUsers);
                     _db.SaveChanges();
 
@@ -3410,66 +3433,71 @@ namespace Aephy.API.Controllers
                 if (Userslist.Count > 0)
                 {
                     List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                    if (projectType == "small")
+                    foreach (var data in Userslist)
                     {
-                        //var teamSize = "1 Project Manager + 1 Associate";
-                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                        if (freelancerDetails != null)
+                        if (projectType == "small")
                         {
-                            freelancerList.Add(freelancerDetails);
-                        }
-                        var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                        if (projectManagerDetails != null)
-                        {
-                            freelancerList.Add(projectManagerDetails);
-                        }
-                    }
-                    if (projectType == "medium")
-                    {
-                        //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
-                        var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").FirstOrDefault();
-                        if (expertDetails != null)
-                        {
-                            freelancerList.Add(expertDetails);
-                        }
-                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").FirstOrDefault();
-                        if (associateDetails != null)
-                        {
-                            freelancerList.Add(associateDetails);
-                        }
-                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                        if(projectManager  != null)
-                        {
-                            freelancerList.Add(projectManager);
-                        }
-                    }
-                    if (projectType == "large")
-                    {
-                        //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-                        var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert").ToList().Take(2);
-                        if (expertsDetails != null)
-                        {
-                            foreach (var data in expertsDetails)
+                            //var teamSize = "1 Project Manager + 1 Associate";
+                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                            if (freelancerDetails != null)
                             {
-                                freelancerList.Add(data);
+                                freelancerList.Add(freelancerDetails);
+                            }
+                            var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                            if (projectManagerDetails != null)
+                            {
+                                freelancerList.Add(projectManagerDetails);
                             }
                         }
-
-                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate").ToList().Take(2);
-                        if (associateDetails != null)
+                        if (projectType == "medium")
                         {
-                            foreach (var associatedata in associateDetails)
+                            //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
+                            var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                            if (expertDetails != null)
                             {
-                                freelancerList.Add(associatedata);
+                                freelancerList.Add(expertDetails);
+                            }
+                            var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                            if (associateDetails != null)
+                            {
+                                freelancerList.Add(associateDetails);
+                            }
+                            var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                            if (projectManager != null)
+                            {
+                                freelancerList.Add(projectManager);
                             }
                         }
-
-                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager").FirstOrDefault();
-                        if(projectManager != null)
+                        if (projectType == "large")
                         {
-                            freelancerList.Add(projectManager);
+                            //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
+                            var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).ToList().Take(2);
+                            if (expertsDetails != null)
+                            {
+                                foreach (var expertdata in expertsDetails)
+                                {
+                                    freelancerList.Add(expertdata);
+                                }
+                            }
+
+                            var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).ToList().Take(2);
+                            if (associateDetails != null)
+                            {
+                                foreach (var associatedata in associateDetails)
+                                {
+                                    freelancerList.Add(associatedata);
+                                }
+                            }
+
+                            var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                            if (projectManager != null)
+                            {
+                                freelancerList.Add(projectManager);
+                            }
                         }
                     }
+                    
+                    
 
                     if (freelancerList.Count > 0)
                     {

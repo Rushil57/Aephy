@@ -649,11 +649,11 @@ namespace Aephy.API.Controllers
                         }
                         else
                         {
-                            decimal finalPrice = 0;
-                            if (CheckInCompeleteFund == null)
+                            if (!fundProgress.IsProjectPriceAlreadyCount)
                             {
-                                finalPrice = await CountFinalProjectPricing(fundProgress);
+                                var finalPrice = await CountFinalProjectPricing(fundProgress);
                                 fundProgress.ProjectPrice = finalPrice.ToString();
+                                fundProgress.IsProjectPriceAlreadyCount = true;
                                 _db.SaveChanges();
                             }
                         }

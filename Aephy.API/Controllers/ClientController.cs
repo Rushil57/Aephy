@@ -642,16 +642,20 @@ namespace Aephy.API.Controllers
 
                                 if (mileStoneToTalDays.Days > 0)
                                 {
-                                    var finalPrice = await CountFinalProjectPricing(fundProgress);
-                                    calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * solutionMilesData.Days;
+                                    calculateProjectPrice = (Convert.ToDecimal(fundProgress.ProjectPrice) / mileStoneToTalDays.Days) * solutionMilesData.Days;
                                     fundProgress.ProjectPrice = calculateProjectPrice.ToString();
                                 }
                             }
                         }
                         else
                         {
-                            var finalPrice = await CountFinalProjectPricing(fundProgress);
-                            fundProgress.ProjectPrice = finalPrice.ToString();
+                            decimal finalPrice = 0;
+                            if (CheckInCompeleteFund == null)
+                            {
+                                finalPrice = await CountFinalProjectPricing(fundProgress);
+                                fundProgress.ProjectPrice = finalPrice.ToString();
+                                _db.SaveChanges();
+                            }
                         }
                     }
                     else
@@ -1898,8 +1902,8 @@ namespace Aephy.API.Controllers
 
                             if (mileStoneToTalDays.Days > 0)
                             {
-                                var finalPrice = await CountFinalProjectPricing(solutionFundData);
-                                var calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * MileStoneData.Days;
+                                //var finalPrice = await CountFinalProjectPricing(solutionFundData);
+                                var calculateProjectPrice = (Convert.ToDecimal(solutionFundData.ProjectPrice) / mileStoneToTalDays.Days) * MileStoneData.Days;
                                 ContractProjectPrice = calculateProjectPrice.ToString();
                             }
                             else
@@ -1910,8 +1914,8 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-                        var finalPrice = await CountFinalProjectPricing(solutionFundData);
-                        ContractProjectPrice = finalPrice.ToString();
+                        //var finalPrice = await CountFinalProjectPricing(solutionFundData);
+                        ContractProjectPrice = solutionFundData.ProjectPrice.ToString();
                     }
 
                     // Save to contract Table
@@ -2298,8 +2302,8 @@ namespace Aephy.API.Controllers
                             if (mileStoneToTalDays.Days > 0)
                             {
 
-                                var finalPrice = await CountFinalProjectPricing(solutionfund);
-                                calculateProjectPrice = (finalPrice / mileStoneToTalDays.Days) * mileStoneData.Days;
+                                //var finalPrice = await CountFinalProjectPricing(solutionfund);
+                                calculateProjectPrice = (Convert.ToDecimal(solutionfund.ProjectPrice) / mileStoneToTalDays.Days) * mileStoneData.Days;
                             }
                         }
 
@@ -3376,16 +3380,16 @@ namespace Aephy.API.Controllers
 
                         if (mileStoneToTalDays.Days > 0)
                         {
-                            var finalPrice = await CountFinalProjectPricing(model);
-                            var calculateProjectPrice = ((finalPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
+                           // var finalPrice = await CountFinalProjectPricing(model);
+                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
                     }
                 }
                 else
                 {
-                    var finalPrice = await CountFinalProjectPricing(model);
-                    model.ProjectPrice = (finalPrice * 100).ToString();
+                    //var finalPrice = await CountFinalProjectPricing(model);
+                    model.ProjectPrice = (ProjectPrice * 100).ToString();
                 }
 
                 var options = new RestClientOptions("https://sandbox-merchant.revolut.com/")

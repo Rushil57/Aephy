@@ -2601,6 +2601,7 @@ namespace Aephy.API.Controllers
                                             contractUser.StripeTranferId = CreatePaymentRsp.Id;
                                             contractUser.IsTransfered = true;
                                             contractUser.PaymentAmount = priceToTransfer.ToString();
+                                            contractUser.TransferDateTime = DateTime.Now;
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
                                         }
@@ -3690,6 +3691,220 @@ namespace Aephy.API.Controllers
             }
 
             return 0;
+        }
+
+        [HttpPost]
+        [Route("GetExchangeRate")]
+        public async Task<IActionResult> GetExchangeRate()
+        {
+
+            try
+            {
+                var UsdtoGbpexchangeDetails = await _revoultService.ExchangeCurrency("USD", "GBP", "1");
+                if (UsdtoGbpexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = UsdtoGbpexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if (checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+
+                var UsdtoEurexchangeDetails = await _revoultService.ExchangeCurrency("USD","EUR","1");
+                if(UsdtoEurexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = UsdtoEurexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if(checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+
+                var EurToUsdexchangeDetails = await _revoultService.ExchangeCurrency("EUR", "USD", "1");
+                if (EurToUsdexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = EurToUsdexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if (checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+
+                var EurToGbpexchangeDetails = await _revoultService.ExchangeCurrency("EUR", "GBP", "1");
+                if (EurToGbpexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = EurToGbpexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if (checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+
+                var GbpToUsdexchangeDetails = await _revoultService.ExchangeCurrency("GBP", "USD", "1");
+                if (GbpToUsdexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = GbpToUsdexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if (checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+
+                var GbpToEurexchangeDetails = await _revoultService.ExchangeCurrency("GBP", "EUR", "1");
+                if (GbpToEurexchangeDetails.StatusCode == HttpStatusCode.OK)
+                {
+                    var content = GbpToEurexchangeDetails.Content;
+                    dynamic parseContent = JObject.Parse(content);
+                    var rate = (decimal)parseContent["rate"];
+                    var fromCurrency = (string)parseContent["from"]["currency"];
+                    var toCurrency = (string)parseContent["to"]["currency"];
+
+                    var checkdataExists = _db.ExchangeRates.Where(x => x.FromCurrency == fromCurrency && x.ToCurrency == toCurrency).FirstOrDefault();
+                    if (checkdataExists == null)
+                    {
+                        var exchangeData = new ExchangeRates()
+                        {
+                            FromCurrency = fromCurrency,
+                            ToCurrency = toCurrency,
+                            Rate = rate,
+                            ExchangeRateDateTime = DateTime.Now
+                        };
+                        _db.ExchangeRates.Add(exchangeData);
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        checkdataExists.Rate = rate;
+                        checkdataExists.ExchangeRateDateTime = DateTime.Now;
+                        _db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = GbpToEurexchangeDetails.Content
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Rate Saved Successfully !"
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
         }
     }
 }

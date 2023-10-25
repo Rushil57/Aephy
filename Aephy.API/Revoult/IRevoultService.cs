@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Aephy.API.DBHelper;
+using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using RevolutAPI.Models.BusinessApi.Account;
 using RevolutAPI.Models.BusinessApi.Counterparties;
@@ -20,5 +21,8 @@ namespace Aephy.API.Revoult
         public Task<RefundPaymentRequest> RefundToClient(RefundPaymentRequest model);
 
         public Task<RestResponse> GetTranscationFeesDetails(string transferId);
+
+        public Task<RestResponse> ExchangeCurrency(string fromCurrency, string toCurrency, string amount);
+        
     }
 }

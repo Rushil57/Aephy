@@ -103,5 +103,7 @@ namespace Aephy.API.DBHelper
         public string? PaymentAmount { get; set; }
 
         public string? PaymentFees { get; set; }
+
+        public DateTime? TransferDateTime { get; set; }
     }
 }

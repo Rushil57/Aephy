@@ -82,6 +82,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<InvoiceListDetails> InvoiceListDetails { get; set; }
 
+        public DbSet<ExchangeRates> ExchangeRates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

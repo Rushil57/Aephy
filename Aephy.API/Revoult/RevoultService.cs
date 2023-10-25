@@ -9,6 +9,7 @@ using RevolutAPI.Models.BusinessApi.Payment;
 using RevolutAPI.Models.BusinessApi.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Aephy.API.DBHelper;
 //using RevolutAPI.Models.BusinessApi.Counterparties;
 
 namespace Aephy.API.Revoult
@@ -439,6 +440,43 @@ namespace Aephy.API.Revoult
             return response1;
             //Console.WriteLine(response1);
             //return OK(new { data = response1.Content });
+        }
+
+        //ExchangeCurrency
+        public async Task<RestResponse> ExchangeCurrency(string fromCurrency, string toCurrency, string amount)
+        {
+            try
+            {
+            RequestAgain:
+                var options = new RestClientOptions("https://sandbox-b2b.revolut.com")
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var request = new RestRequest("https://sandbox-b2b.revolut.com/api/1.0/rate?from=" + fromCurrency + "&amount=" + amount + "&to=" + toCurrency + "", Method.Get);
+                request.AddHeader("Accept", "application/json");
+                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.access_token));
+                RestResponse response = await client.ExecuteAsync(request);
+                if (response.ResponseStatus != ResponseStatus.Error)
+                {
+                    return response;
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await RefreshToken();
+                        goto RequestAgain;
+                    }
+                }
+                return response;
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return null;
         }
     }
 }

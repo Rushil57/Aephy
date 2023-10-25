@@ -116,5 +116,21 @@ namespace Aephy.API.DBHelper
 
         public string? MilestoneStatus { get; set; }
     }
+
+    public class ExchangeRates
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string? FromCurrency { get; set; }
+
+        public string? ToCurrency { get; set; }
+
+        public decimal? Rate { get; set; }
+
+        public DateTime? ExchangeRateDateTime { get; set; }
+
+    }
 }
 

@@ -1027,8 +1027,9 @@
         var addressExists = $("#Freelancer-Address").val();
         var cityExists = $("#Freelancer-City").val();
         var postcodeExists = $("#Freelancer-postcode").val();
+        var hourlyRate = $("#HourlyRate").val()
 
-        if (countryExists != 0 && addressExists != "" && cityExists != "" && postcodeExists != "") {
+        if (countryExists != 0 && addressExists != "" && cityExists != "" && postcodeExists != "" && hourlyRate != "") {
             $("#RevolutOnBoardingFeildsModal").modal('show');
             var prefreedCurrency = $("#PreferredCurrency").val();
             if(prefreedCurrency != ""){
@@ -1037,7 +1038,7 @@
                 $("#Currency").val("EUR")
             }
         } else {
-            showToaster("error", "Error !", "Please fill all address fields");
+            showToaster("error", "Error !", "Please fill all address and hourlyrate fields");
         }
     }
 

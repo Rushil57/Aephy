@@ -105,5 +105,9 @@ namespace Aephy.API.DBHelper
         public string? PaymentFees { get; set; }
 
         public DateTime? TransferDateTime { get; set; }
+
+        public decimal PaymentAmountProjectMgr { get; set; }
+
+        public decimal PaymentFeesProjectMgr { get; set; }
     }
 }

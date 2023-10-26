@@ -2636,22 +2636,31 @@ namespace Aephy.API.Controllers
                                     if (user != null && user.RevolutStatus == true)
                                     {
                                         //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-                                        if (model.ClientPreferredCurrency == null)
+                                        if(user.PreferredCurrency == null)
                                         {
-                                            model.ClientPreferredCurrency = "EUR";
+                                            user.PreferredCurrency = "EUR";
                                         }
-
+                                        decimal priceToTransfer = 0;
                                         var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
                                         //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                        long priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+
+                                        var getExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
+                                        if (getExchangeRate == null)
+                                        {
+                                            priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+                                        }
+                                        else
+                                        {
+                                            priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
+                                        }
                                         var getCounterParties = await _revoultService.GetCounterparties();
-                                        
+
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                            AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = 2,
-                                            Currency = model.ClientPreferredCurrency, // ##### Freelancer PreferredCurrency 
+                                            Currency = user.PreferredCurrency, // ##### Freelancer PreferredCurrency 
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -2692,6 +2701,57 @@ namespace Aephy.API.Controllers
                                         if (teamMember.IsProjectManager)
                                         {
                                             // ########## same logic as above - but it will update PaymentAmountProjectMgr and PaymentFeesProjectMgr in Contractuser table
+
+                                            decimal pmpriceToTransfer = 0;
+                                            var pmExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
+                                            if (pmExchangeRate == null)
+                                            {
+                                                pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees));
+                                            }
+                                            else
+                                            {
+                                                pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees)) * (Convert.ToDecimal(pmExchangeRate.Rate));
+                                            }
+                                            var getpmCounterParties = await _revoultService.GetCounterparties();
+
+                                            CreatePaymentReq createpmPaymentReq = new CreatePaymentReq
+                                            {
+                                                AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                                RequestId = Guid.NewGuid().ToString(),
+                                                Amount = 2,
+                                                Currency = user.PreferredCurrency, // ##### Freelancer PreferredCurrency 
+                                                Reference = "Payment For- " + SolutionTitle,
+                                                Receiver = new CreatePaymentReq.ReceiverData()
+                                                {
+                                                    CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
+                                                    AccountId = user.RevolutAccountId // freelancer RevolutAccountId
+                                                }
+                                            };
+
+                                            var CreatepmPaymentRsp = await _revoultService.CreatePayment(createpmPaymentReq);
+                                            //Possible values: [created, pending, completed, declined, failed, reverted]
+                                            if (CreatepmPaymentRsp.State == "completed" || CreatepmPaymentRsp.State == "pending")
+                                            {
+                                                var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
+                                                if (TranscationFeesDetails.IsSuccessStatusCode)
+                                                {
+                                                    decimal paymentFee = 0;
+                                                    var content = TranscationFeesDetails.Content;
+                                                    dynamic parseContent = JObject.Parse(content);
+                                                    JArray legsArray = (JArray)parseContent["legs"];
+                                                    foreach (JObject item in legsArray)
+                                                    {
+                                                        paymentFee = (decimal)item["fee"];
+                                                    }
+                                                    contractUser.PaymentFeesProjectMgr = paymentFee;
+                                                }
+                                                contractUser.PaymentAmountProjectMgr = pmpriceToTransfer;
+                                                _db.ContractUser.Update(contractUser);
+                                                _db.SaveChanges();
+                                            }
+
+
+                                            ////
                                         }
                                     }
                                     else
@@ -3788,7 +3848,7 @@ namespace Aephy.API.Controllers
                         if (freelancerDetails != null)
                         {
                             var freelancerPrefferedCurrency = _db.Users.Where(x => x.Id == freelancerDetails.UserId).Select(x => x.PreferredCurrency).FirstOrDefault();
-                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == ClientPrefferendCurrency && x.ToCurrency == freelancerPrefferedCurrency).FirstOrDefault();
+                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPrefferedCurrency && x.ToCurrency == ClientPrefferendCurrency).FirstOrDefault();
                             var HourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
                             decimal ExchangeHourlyRate = 0;
                             if (exchangeRate != null)

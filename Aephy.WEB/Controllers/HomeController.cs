@@ -90,6 +90,7 @@ namespace Aephy.WEB.Controllers
             HttpContext.Session.Remove("FullName");
             HttpContext.Session.Remove("LoggedUserRole");
             HttpContext.Session.Remove("LoggedUserLevel");
+            HttpContext.Session.Remove("ClientPreferredCurrency");
         }
 
         [HttpPost]
@@ -148,7 +149,7 @@ namespace Aephy.WEB.Controllers
                     }
 
                     HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
-                   // HttpContext.Session.SetString("CompleteUserStripeAccount", UserStripeAccount);
+                    // HttpContext.Session.SetString("CompleteUserStripeAccount", UserStripeAccount);
                 }
 
                 return test;
@@ -336,8 +337,19 @@ namespace Aephy.WEB.Controllers
                                 data.Result.ImageUrlWithSas = imageUrlWithSas;
                                 HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
                             }
-                        }
 
+                            string updatedCurrency = data.Result.PreferredCurrency;
+                            if(updatedCurrency != null)
+                            {
+                                var Currentcurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
+                                if (Currentcurrency != updatedCurrency)
+                                {
+                                    HttpContext.Session.Remove("ClientPreferredCurrency");
+                                    HttpContext.Session.SetString("ClientPreferredCurrency", updatedCurrency);
+                                }
+                            }
+                           
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1996,7 +2008,7 @@ namespace Aephy.WEB.Controllers
             doc.Add(masterTable);
         }
 
-        private void AddSingleTableWithCustomColumnWidths(Document doc, PdfWriter writer, dynamic data , dynamic fundType)
+        private void AddSingleTableWithCustomColumnWidths(Document doc, PdfWriter writer, dynamic data, dynamic fundType)
         {
             PdfPTable table = new PdfPTable(2);
             table.WidthPercentage = 100;
@@ -2041,12 +2053,12 @@ namespace Aephy.WEB.Controllers
             table.AddCell(amount1Cell);
 
             // Row 2: VAT
-            if(data.VatPercentage == null)
+            if (data.VatPercentage == null)
             {
                 data.VatPercentage = "0%";
                 data.VatAmount = "0";
             }
-            PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT ("+ data.VatPercentage + ")", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+            PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (" + data.VatPercentage + ")", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
             vatDescCell.Border = PdfPCell.BOX;
             vatDescCell.PaddingBottom = 10;
             table.AddCell(vatDescCell);

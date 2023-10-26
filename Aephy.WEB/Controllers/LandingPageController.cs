@@ -749,11 +749,13 @@ namespace Aephy.WEB.Controllers
         public async Task<string> SaveProjectInitiated([FromBody] SolutionFundModel model)
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
+            var preferredcurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
             if (userId == null)
             {
                 userId = "";
             }
             model.ClientId = userId;
+            model.ClientPreferredCurrency = preferredcurrency;
             var userData = await _apiRepository.MakeApiCallAsync("api/Client/SaveProjectInitiated", HttpMethod.Post, model);
 
             dynamic data = JsonConvert.DeserializeObject(userData);

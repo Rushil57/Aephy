@@ -2061,6 +2061,26 @@ namespace Aephy.API.Controllers
                                 }
                             }
                         }
+
+                        if(model.ClientPreferredCurrency != null)
+                        {
+                            if(model.ClientPreferredCurrency == "USD")
+                            {
+                                model.ClientPreferredCurrency = "$";
+                            }
+                            if(model.ClientPreferredCurrency == "EUR")
+                            {
+                                model.ClientPreferredCurrency = "€";
+                            }
+                            if (model.ClientPreferredCurrency == "GBP")
+                            {
+                                model.ClientPreferredCurrency = "£";
+                            }
+                        }
+                        else
+                        {
+                            model.ClientPreferredCurrency = "€";
+                        }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -2068,7 +2088,8 @@ namespace Aephy.API.Controllers
                             Result = new
                             {
                                 Expense = TotalExpense,
-                                Projects = finalFundList.Count
+                                Projects = finalFundList.Count,
+                                CurrentCurrency = model.ClientPreferredCurrency
                             }
                         });
 

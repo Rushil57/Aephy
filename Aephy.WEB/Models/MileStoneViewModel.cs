@@ -39,6 +39,8 @@
         public string? UserId { get; set; }
 
         public int SolutionFundId { get; set; }
+
+        public string? ClientPreferredCurrency { get; set; }
     }
     public class MileStoneIdViewModel
     {
@@ -50,6 +52,8 @@
 
         public int SolutionFundId { get; set; }
         public string? SolutionName { get; set; }
+
+        public string? ClientPreferredCurrency { get; set; }
     }
 
     public class SolutionIndustryDetailsViewModel
@@ -101,7 +105,9 @@
 
         public int SolutionFundId { get; set; }
 
-        public string? UserId { get; set; } 
+        public string? UserId { get; set; }
+
+        public string? ClientPreferredCurrency { get; set; }
 
     }
 

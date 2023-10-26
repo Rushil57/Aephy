@@ -844,7 +844,7 @@
                       
                       $("#solutionFundMileStoneId").val(mileStoneData.Id);
                       $("#solutionFundId").val(data.SolutionFund.Id);
-                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient,data.ContractData);
+                      BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient,data.ContractData,data.ClientCurrency);
                    }
                 
                 if(data.DocumentDataList != ""){
@@ -988,7 +988,7 @@
                 IndustryId : Industryid,
                 SolutionId : Solutionid,
                 ProjectType : projectType,
-                ProjectPrice : $("#projectfund-projectprice").html().replace("€", "").replace(",",""),
+                ProjectPrice : $("#projectfund-projectprice").html().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-'),
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : mileStoneCheckOut,
                 GetNextMileStoneData : nextMilestoneData
@@ -1084,7 +1084,7 @@
 
     }
 
-   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice,FundStopByClient,ContractData){
+   function BindSolutionFundData(data,milestoneData,fundDecided,IsFundCompleted,IsProjectStop, NextMilestonePrice,FundStopByClient,ContractData,ClientCurrency){
 
        var projectPrice = parseInt(data.ProjectPrice).toLocaleString('en-US');
           $("#solutionfund-popUp").css("display","block")
@@ -1097,7 +1097,7 @@
            $('input:radio[name=projSize]').attr('label',projectType);
 
           $(".projectfund-projecttype").html(projectType)
-          $(".cls-projectPrice").html("€" + projectPrice)
+          $(".cls-projectPrice").html(ClientCurrency + projectPrice)
 
            if(data.ProjectStatus == "INITIATED" || data.ProjectStatus == "INPROGRESS"){
 
@@ -1122,7 +1122,7 @@
                           $(".cls-fundPopOver").hide();
                           $(".cls-fundProgress").text("Fund Milestone " + fundDecided)
                           $(".project-progress").html("Milestone " + total + " is Completed")
-                          $(".cls-projectPrice").html("€" + parseInt(NextMilestonePrice).toLocaleString('en-US'))
+                          $(".cls-projectPrice").html(ClientCurrency + parseInt(NextMilestonePrice).toLocaleString('en-US'))
                       }else{
                           $(".cls-fundPopOver").show();
                           $(".cls-fundProgress").hide();

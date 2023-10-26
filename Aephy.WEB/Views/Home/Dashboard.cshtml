@@ -138,7 +138,17 @@
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-currency-euro"></i>
+                                        @{
+                                            if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
+                                                <i class="bi bi-currency-dollar"></i>
+                                            }
+                                            if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
+                                                <i class="bi bi-currency-euro"></i>
+                                            }
+                                            if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
+                                                <i class="bi bi-currency-pound"></i>
+                                            }
+                                        }
                                     </div>
                                     <div class="ps-3">
                                         <h6 id="expense_amount">€ 0</h6>

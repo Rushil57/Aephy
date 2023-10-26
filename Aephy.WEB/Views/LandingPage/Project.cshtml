@@ -1078,7 +1078,7 @@
                 }
 
                 if(data.FreelancerHourlyList != ""){
-                    BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays)
+                    BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays,data.PreferredCurrency)
                 }
 
                  BindSolutionFeedback(data.SolutionFeedback);
@@ -1270,15 +1270,15 @@
              var projectType = $("input[name='projSize']:checked").val();
              if(projectType == 'small'){
                 // Projectprice = 100;
-                Projectprice = $("#small-projectPrice").html().replace(',', '').replace("€", "");
+                Projectprice = $("#small-projectPrice").html().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
              }
              if(projectType == 'medium'){
                  //Projectprice = 200;
-                 Projectprice =  $("#medium-projectPrice").html().replace(',', '').replace("€", "");
+                 Projectprice =  $("#medium-projectPrice").html().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
              }
              if(projectType == 'large'){
                  //Projectprice = 500;
-                 Projectprice = $("#large-projectPrice").html().replace(',', '').replace("€", "");
+                 Projectprice = $("#large-projectPrice").html().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
              }
 
              var checkPayment =  $("#solutionfund-furtherprogress").text();
@@ -1332,7 +1332,7 @@
        
     }
 
-    function BindProjectPricingBasedOnFreelancerHourlyRate(hourlyrateData,TotalMilestoneDays){
+    function BindProjectPricingBasedOnFreelancerHourlyRate(hourlyrateData,TotalMilestoneDays,CurrentCurrency){
 
        // var TotalMilestoneDays = $("#MilestoneDays").val();
         var HoursPerDay = 8;
@@ -1354,10 +1354,10 @@
                              countPricing += freelancerPriceCount
                          });  
                          var finalPrice = countPricing.toLocaleString('en-US');
-                         $(".cls-smallProjectprice").html("€" + finalPrice);
+                         $(".cls-smallProjectprice").html(CurrentCurrency + finalPrice);
                     }
                     else{
-                        $(".cls-smallProjectprice").html("€" + countPricing);
+                        $(".cls-smallProjectprice").html(CurrentCurrency + countPricing);
                     }  
                 }
                 // small project price counting
@@ -1375,10 +1375,10 @@
                              countPricing += freelancerPriceCount
                          }); 
                            var finalPrice = countPricing.toLocaleString('en-US');
-                         $(".cls-mediumProjectprice").html("€" + finalPrice);
+                         $(".cls-mediumProjectprice").html(CurrentCurrency + finalPrice);
                     }
                     else{
-                         $(".cls-mediumProjectprice").html("€" + countPricing);
+                         $(".cls-mediumProjectprice").html(CurrentCurrency + countPricing);
                     }
                }
                // medium project price counting
@@ -1397,23 +1397,23 @@
                              countPricing += freelancerPriceCount
                          });
                           var finalPrice = countPricing.toLocaleString('en-US');
-                           $(".cls-largeProjectprice").html("€" + finalPrice);
+                           $(".cls-largeProjectprice").html(CurrentCurrency + finalPrice);
                     }
                     else{
-                      $(".cls-largeProjectprice").html("€" + countPricing);
+                      $(".cls-largeProjectprice").html(CurrentCurrency + countPricing);
                     }
                 }
                 // large project price counting
          })
 
          if(IsSmallPriceAvailable == false){
-             $(".cls-smallProjectprice").html("€0");
+             $(".cls-smallProjectprice").html(CurrentCurrency + "0");
          }
          if(IsMeduimPriceAvailable == false){
-             $(".cls-mediumProjectprice").html("€0");
+             $(".cls-mediumProjectprice").html(CurrentCurrency + "0");
          }
          if(IsLargePriceAvailable == false){
-              $(".cls-largeProjectprice").html("€0");
+              $(".cls-largeProjectprice").html(CurrentCurrency + "0");
          }
 
     }

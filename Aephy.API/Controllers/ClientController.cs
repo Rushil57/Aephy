@@ -538,6 +538,26 @@ namespace Aephy.API.Controllers
 
                     }
 
+                    if (model.ClientPreferredCurrency != null)
+                    {
+                        if (model.ClientPreferredCurrency == "USD")
+                        {
+                            model.ClientPreferredCurrency = "$";
+                        }
+                        if (model.ClientPreferredCurrency == "EUR")
+                        {
+                            model.ClientPreferredCurrency = "€";
+                        }
+                        if (model.ClientPreferredCurrency == "GBP")
+                        {
+                            model.ClientPreferredCurrency = "£";
+                        }
+                    }
+                    else
+                    {
+                        model.ClientPreferredCurrency = "€";
+                    }
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -552,7 +572,8 @@ namespace Aephy.API.Controllers
                             SolutionFund = fundProgress,
                             FreelancerHourlyList = freelancerList,
                             MileStoneToTalDays = mileStoneToTalDays,
-                            SolutionFeedback = projectReviewList
+                            SolutionFeedback = projectReviewList,
+                            PreferredCurrency = model.ClientPreferredCurrency
                         }
                     });
                 }
@@ -746,12 +767,25 @@ namespace Aephy.API.Controllers
                     var DocumentList = _db.ActiveProjectDocuments.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
                     var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
 
-                    //if(fundProgress.ProjectStatus != "COMPLETED")
-                    //{
-
-                    //    var finalPrice = await CountFinalProjectPricing(fundProgress);
-                    //    fundProgress.ProjectPrice = finalPrice.ToString();
-                    //}
+                    if (model.ClientPreferredCurrency != null)
+                    {
+                        if (model.ClientPreferredCurrency == "USD")
+                        {
+                            model.ClientPreferredCurrency = "$";
+                        }
+                        if (model.ClientPreferredCurrency == "EUR")
+                        {
+                            model.ClientPreferredCurrency = "€";
+                        }
+                        if (model.ClientPreferredCurrency == "GBP")
+                        {
+                            model.ClientPreferredCurrency = "£";
+                        }
+                    }
+                    else
+                    {
+                        model.ClientPreferredCurrency = "€";
+                    }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -772,7 +806,8 @@ namespace Aephy.API.Controllers
                             DocumentDataList = DocumentList,
                             FreelancerList = freelancerList,
                             FundStopByClient = fundStopByClient,
-                            ContractData = contractData
+                            ContractData = contractData,
+                            ClientCurrency = model.ClientPreferredCurrency
                         }
                     });
                 }
@@ -2536,7 +2571,7 @@ namespace Aephy.API.Controllers
 
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
 
-                            var getRevoultToken = await CheckOutUsingRevoult(data, model.ProjectPrice);
+                            var getRevoultToken = await CheckOutUsingRevoult(data);
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -2554,7 +2589,7 @@ namespace Aephy.API.Controllers
                         {
                             //data.ProjectStatus = "COMPLETED";
                             //_db.SaveChanges();
-                            var getRevoultToken = await CheckOutUsingRevoult(data, model.ProjectPrice);
+                            var getRevoultToken = await CheckOutUsingRevoult(data);
                             var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -2601,7 +2636,10 @@ namespace Aephy.API.Controllers
                                     if (user != null && user.RevolutStatus == true)
                                     {
                                         //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-
+                                        if (model.ClientPreferredCurrency == null)
+                                        {
+                                            model.ClientPreferredCurrency = "EUR";
+                                        }
 
                                         var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
                                         //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
@@ -2613,7 +2651,7 @@ namespace Aephy.API.Controllers
                                             AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(),
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = 2,
-                                            Currency = "EUR",
+                                            Currency = model.ClientPreferredCurrency,
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -3393,11 +3431,19 @@ namespace Aephy.API.Controllers
         //CheckOutUsingRevoult
         [HttpPost]
         [Route("CheckOutUsingRevoult")]
-        public async Task<string> CheckOutUsingRevoult([FromBody] SolutionFund model, string FinalProjectPrice)
+        public async Task<string> CheckOutUsingRevoult([FromBody] SolutionFund model)
         {
 
             try
             {
+                var clientpreferredCurrency = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.PreferredCurrency).FirstOrDefault();
+                if (clientpreferredCurrency == null)
+                {
+                    clientpreferredCurrency = "EUR";
+                }
+                string clientpreferredCurrencyQuote = '"' + clientpreferredCurrency + '"';
+
+
                 var ProjectPrice = Convert.ToDecimal(model.ProjectPrice);
                 if (model.FundType == SolutionFund.FundTypes.MilestoneFund)
                 {
@@ -3439,7 +3485,7 @@ namespace Aephy.API.Controllers
                 request.AddHeader("Revolut-Api-Version", "2023-09-01");
                 var body = @"{" + "\n" +
                 @"  ""amount"": " + model.ProjectPrice + "," + "\n" +
-                @"  ""currency"": ""EUR""" + "\n" +
+                @"  ""currency"": " + clientpreferredCurrencyQuote + "" + "\n" +
                 @"}";
                 request.AddStringBody(body, DataFormat.Json);
                 RestResponse response = await client.ExecuteAsync(request);
@@ -3544,7 +3590,7 @@ namespace Aephy.API.Controllers
                         if (projectType == "large")
                         {
                             //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-                            
+
                             if (exprtcount <= 1)
                             {
                                 var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();

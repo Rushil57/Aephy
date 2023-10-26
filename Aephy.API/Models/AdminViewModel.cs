@@ -273,6 +273,8 @@ namespace Aephy.API.Models
             public int SolutionFundId { get; set; }
 
             public string? SolutionName { get; set; }
+
+            public string? ClientPreferredCurrency { get; set; }
         }
 
         public class MileStoneDetailsViewModel
@@ -290,6 +292,8 @@ namespace Aephy.API.Models
             public string? UserId { get; set; }
 
             public int SolutionFundId { get; set; }
+
+            public string? ClientPreferredCurrency { get; set; }
         }
 
         public class UserCvFileModel
@@ -385,6 +389,8 @@ namespace Aephy.API.Models
             public string? UserId { get; set; }
 
             public bool RevolutStatus { get; set; }
+
+            public string? ClientPreferredCurrency { get; set; }
         }
 
         public class SolutionDisputeViewModel

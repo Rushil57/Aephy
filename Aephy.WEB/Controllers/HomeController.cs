@@ -104,7 +104,7 @@ namespace Aephy.WEB.Controllers
                 var Role = string.Empty;
                 var Level = string.Empty;
                 var imageUrlWithSas = string.Empty;
-               // var UserStripeAccount = string.Empty;
+                var ClientCurrency = string.Empty;
 
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
                 if (jsonObj["StatusCode"] == 200)
@@ -114,6 +114,7 @@ namespace Aephy.WEB.Controllers
                     Role = jsonObj.Result.Role;
                     Level = jsonObj.Result.Level;
                     UserId = jsonObj.Result.UserId;
+                    ClientCurrency = jsonObj.Result.ClientPreferredCurrency;
                     //UserStripeAccount = jsonObj.Result.StripeStatus;
 
                     HttpContext.Session.SetString("FullName", FirstName + " " + LastName);
@@ -137,6 +138,7 @@ namespace Aephy.WEB.Controllers
                         HttpContext.Session.SetString("LoggedUserLevel", Level);
                     }
                     HttpContext.Session.SetString("LoggedUser", UserId);
+                    HttpContext.Session.SetString("ClientPreferredCurrency", ClientCurrency);
 
                     string imagepath = jsonObj.Result.ImagePath;
                     if (imagepath != null)
@@ -1075,12 +1077,14 @@ namespace Aephy.WEB.Controllers
             if (model != null)
             {
                 var userId = HttpContext.Session.GetString("LoggedUser");
+                var preferredCurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
                 if (userId == null)
                 {
                     userId = "";
 
                 }
                 model.UserId = userId;
+                model.ClientPreferredCurrency = preferredCurrency;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetSolutionDetailsInProject", HttpMethod.Post, model);
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
                 try
@@ -1123,12 +1127,14 @@ namespace Aephy.WEB.Controllers
             if (model != null)
             {
                 var userId = HttpContext.Session.GetString("LoggedUser");
+                var preferredCurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
                 if (userId == null)
                 {
                     userId = "";
 
                 }
                 model.UserId = userId;
+                model.ClientPreferredCurrency = preferredCurrency;
                 var solutionData = await _apiRepository.MakeApiCallAsync("api/Client/GetActiveSolutionDetailsInProject", HttpMethod.Post, model);
                 dynamic data = JsonConvert.DeserializeObject(solutionData);
                 try
@@ -2449,12 +2455,14 @@ namespace Aephy.WEB.Controllers
         public async Task<string> GetClientProjectExpense()
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
+            var PreferredCurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
             if (userId == null)
             {
                 return "No Data Found";
             }
             MileStoneIdViewModel model = new MileStoneIdViewModel();
             model.UserId = userId;
+            model.ClientPreferredCurrency = PreferredCurrency;
             var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetProjectsExpense", HttpMethod.Post, model);
             return projectData;
 

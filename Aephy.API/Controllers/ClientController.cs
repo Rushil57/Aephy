@@ -2643,15 +2643,15 @@ namespace Aephy.API.Controllers
 
                                         var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
                                         //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                        long priceToTransfer = teamMember.IsProjectManager == true ? (long)(Convert.ToDecimal(teamMember?.PlatformFees)) : (long)(Convert.ToDecimal(teamMember?.Amount));
+                                        long priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
                                         var getCounterParties = await _revoultService.GetCounterparties();
-
+                                        
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(),
+                                            AccountId = allAccounts.Where(x => x.Currency == "EUR").Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = 2,
-                                            Currency = model.ClientPreferredCurrency,
+                                            Currency = model.ClientPreferredCurrency, // ##### Freelancer PreferredCurrency 
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -2687,6 +2687,11 @@ namespace Aephy.API.Controllers
                                         else
                                         {
                                             //Please check the status and place logic accordingly.
+                                        }
+
+                                        if (teamMember.IsProjectManager)
+                                        {
+                                            // ########## same logic as above - but it will update PaymentAmountProjectMgr and PaymentFeesProjectMgr in Contractuser table
                                         }
                                     }
                                     else

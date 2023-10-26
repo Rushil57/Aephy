@@ -97,6 +97,14 @@
                                     </div>
                                 </div>
 
+                                 <div class="row">
+                                    <div class="col-lg-4 col-md-6 label">Preferred Currency</div>
+                                    <div class="col-md-8 col-lg-8">
+                                        <input name="preferredCurrency" type="text" class="form-control cls-preferredCurrency" readonly>
+                                    </div>
+                                </div>
+
+
                                 <div class="ClientFields" style="display:none;">
                                     <div class="row">
                                         <div class="col-lg-4 col-md-6 label">Description</div>
@@ -184,7 +192,7 @@
 
 
                                     <div class="row">
-                                        <div class="col-lg-4 col-md-6 label">Hourly Rate Per Day ($)</div>
+                                        <div class="col-lg-4 col-md-6 label cls-freelancer-CurrencybasedhourlyRate"></div>
                                         <div class="col-md-8 col-lg-8">
                                             <input name="HourlyRate" type="text" class="form-control hourlyRate" readonly>
                                         </div>
@@ -237,13 +245,6 @@
                                         <div class="ccol-md-8 col-lg-8">
                                             <a onclick="DownloadCv()" class="cls-resume-dwld" style="cursor:pointer">Download Resume</a>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6 label">Preferred Currency</div>
-                                    <div class="col-md-8 col-lg-8">
-                                        <input name="preferredCurrency" type="text" class="form-control cls-preferredCurrency" readonly>
                                     </div>
                                 </div>
 
@@ -305,6 +306,19 @@
                                         <label for="Email" class="col-md-6 col-lg-4 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-8">
                                             <input name="email" type="email" class="form-control emailId" id="emailId" readonly>
+                                        </div>
+                                    </div>
+
+                                     <div class="row mb-3">
+                                        <label for="PreferredCurrency" class="col-md-6 col-lg-4 col-form-label">Preferred Currency</label>
+                                        <div class="col-md-8 col-lg-8">
+                                            <select class="form-select cls-preferredCurrency" aria-label="Default select example" name="preferredCurrency" id="PreferredCurrency">
+                                                <option value="">Select Currency</option>
+                                                <option value="USD">USD</option>
+                                                <option value="GBP">GBP</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
+
                                         </div>
                                     </div>
 
@@ -398,7 +412,7 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="HourlyRate" class="col-md-6 col-lg-4 col-form-label">Hourly Rate Per Day ($)</label>
+                                            <label for="HourlyRate" class="col-md-6 col-lg-4 col-form-label cls-freelancer-CurrencybasedhourlyRate"></label>
                                             <div class="col-md-8 col-lg-8">
                                                 <input name="HourlyRate" type="number" class="form-control hourlyRate" id="HourlyRate" />
                                             </div>
@@ -458,30 +472,19 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
-                                        <label for="PreferredCurrency" class="col-md-6 col-lg-4 col-form-label">Preferred Currency</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <select class="form-select cls-preferredCurrency" aria-label="Default select example" name="preferredCurrency" id="PreferredCurrency">
-                                                <option value="">Select Currency</option>
-                                                <option value="USD">USD</option>
-                                                <option value="GBP">GBP</option>
-                                                <option value="EUR">EUR</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
+                                   
 
                                     <div class="row mb-3">
                                         <label for="TaxType" class="col-md-6 col-lg-4 col-form-label">Tax Type</label>
                                         <div class="col-md-8 col-lg-8">
-                                            <input type="text" id="TaxType" class="form-control cls-taxType" name="taxType" />
+                                            <input type="text" id="TaxType" class="form-control cls-taxType" name="taxType" placeholder="VAT"/>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <label for="TaxNumber" class="col-md-6 col-lg-4 col-form-label">Tax Number</label>
                                         <div class="col-md-8 col-lg-8">
-                                            <input type="text" id="TaxNumber" class="form-control cls-taxNumber" name="taxNumber" />
+                                            <input type="text" id="TaxNumber" class="form-control cls-taxNumber" name="taxNumber" placeholder="EL999999999" />
                                         </div>
                                     </div>
 
@@ -714,6 +717,24 @@
                     $(".cls-client-companyname").val(data.CompanyName)
                     $("#bankCountry").val(data.BackCountry)
                     $(".cls-preferredCurrency").val(data.PreferredCurrency)
+                    var preferredCurrency = $("#PreferredCurrency").val();
+                    $(".cls-freelancer-CurrencybasedhourlyRate").html('');
+                    var currencyhourlyRate = "";
+                    if(preferredCurrency != ''){
+                        if(preferredCurrency == 'USD'){
+                            currencyhourlyRate = "Hourly Rate Per Day ($)"
+                        }
+                        if (preferredCurrency == 'GBP') {
+                            currencyhourlyRate = "Hourly Rate Per Day (£)"
+                        }
+                        if (preferredCurrency == 'EUR') {
+                            currencyhourlyRate = "Hourly Rate Per Day (€)"
+                        }
+                    }else{
+                        currencyhourlyRate = "Hourly Rate Per Day (€)"
+                    }
+                    $(".cls-freelancer-CurrencybasedhourlyRate").html(currencyhourlyRate);
+
                     $(".cls-taxType").val(data.TaxType)
                     $(".cls-taxNumber").val(data.TaxNumber)
                     if (data.IsRevoultBankAccount) {
@@ -835,6 +856,7 @@
             }
         }
     }
+    
 
     function UpdateUserData() {
         var filename = $("#CVPath").val();
@@ -861,6 +883,12 @@
                 return
             }
             RevoultBankAccount = true;
+        }
+
+        var preferredCurrency = $("#PreferredCurrency").val();
+        if (preferredCurrency == "") {
+            showToaster("error", "Error !", "Please select valid preferred currency");
+            return;
         }
 
         var FreelancerDetail = {

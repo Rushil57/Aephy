@@ -348,7 +348,7 @@ namespace Aephy.WEB.Controllers
                                     HttpContext.Session.SetString("ClientPreferredCurrency", updatedCurrency);
                                 }
                             }
-                           
+
                         }
                     }
                     catch (Exception ex)
@@ -1755,13 +1755,15 @@ namespace Aephy.WEB.Controllers
             return countryData;
         }
 
-        public async Task<IActionResult> DownloadInvoice(int ContractId)
+        public async Task<IActionResult> DownloadInvoice(int InvoiceId)
         {
             SolutionFundModel solutionFund = new SolutionFundModel();
-            solutionFund.ContractId = ContractId;
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            solutionFund.InvoiceId = InvoiceId;
+            solutionFund.UserId = userId;
             var invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
             dynamic datas = JObject.Parse(invoiceDetails);
-            var Details = datas.Result.InvoiceDetails;
+            var Details = datas.Result;
             var FundDetails = datas.Result.FundType;
 
             float cellHeight = 100f;
@@ -1868,10 +1870,10 @@ namespace Aephy.WEB.Controllers
 
 
             PdfPCell labelCell6 = new PdfPCell(new Phrase("Invoice  # " + data.InvoiceNumber, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + data.Date.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date " + data.DueDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
-            PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount " + data.TotalAmount, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due " + data.DueAmount, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
+            PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + data.InvoiceDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date " + data.PreferredCurrency + data.InvoiceDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
+            PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount " + data.PreferredCurrency + data.TotalAmount, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+            PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due " + data.TotalAmount, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
 
             // Create textField cells
             PdfPCell textFieldCell1 = new PdfPCell(); // You need to add a text field here
@@ -1961,7 +1963,17 @@ namespace Aephy.WEB.Controllers
             table2.HorizontalAlignment = Element.ALIGN_LEFT;
 
             // Content 2
-            string content2 = "Bill to\n" + data.ClientName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\nVAT ID: (If Applicable )\nTax ID: (other)";
+            var taxDetails = data.TaxType.ToString();
+            string content2 = string.Empty;
+            if (taxDetails != null && taxDetails != "" && taxDetails != "null")
+            {
+                content2 = "Bill to\n" + data.ClientFullName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\n" + data.TaxType.ToString() + " ID: " + data.TaxId.ToString();
+            }
+            else
+            {
+                content2 = "Bill to\n" + data.ClientFullName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\n";
+            }
+            
 
             // Split content2 into lines
             string[] content2Lines = content2.Split('\n');
@@ -2034,50 +2046,19 @@ namespace Aephy.WEB.Controllers
             //PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone 1: \"Title of Milestone\"", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
             //invoiceDescCell.Border = PdfPCell.BOX;
             //table.AddCell(invoiceDescCell);
-            if (fundType.ToString() == "MilestoneFund")
+
+            foreach (var datas in data.InvoicelistDetails)
             {
-                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Milestone : \"" + data.Title + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                PdfPCell invoiceDescCell = new PdfPCell(new Phrase(datas.Description.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
                 invoiceDescCell.Border = PdfPCell.BOX;
                 table.AddCell(invoiceDescCell);
+
+                PdfPCell amount1Cell = new PdfPCell(new Phrase(datas.Amount.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
+                amount1Cell.Border = PdfPCell.BOX;
+                amount1Cell.PaddingBottom = 10;
+                table.AddCell(amount1Cell);
             }
-            else
-            {
-                PdfPCell invoiceDescCell = new PdfPCell(new Phrase("Invoice for Project : \"" + data.Title + "\"", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                invoiceDescCell.Border = PdfPCell.BOX;
-                table.AddCell(invoiceDescCell);
-            }
 
-            PdfPCell amount1Cell = new PdfPCell(new Phrase(data.TotalAmount.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
-            amount1Cell.Border = PdfPCell.BOX;
-            amount1Cell.PaddingBottom = 10;
-            table.AddCell(amount1Cell);
-
-            // Row 2: VAT
-            if (data.VatPercentage == null)
-            {
-                data.VatPercentage = "0%";
-                data.VatAmount = "0";
-            }
-            PdfPCell vatDescCell = new PdfPCell(new Phrase("VAT (" + data.VatPercentage + ")", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
-            vatDescCell.Border = PdfPCell.BOX;
-            vatDescCell.PaddingBottom = 10;
-            table.AddCell(vatDescCell);
-
-            PdfPCell amount2Cell = new PdfPCell(new Phrase(data.VatAmount.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
-            amount2Cell.Border = PdfPCell.BOX;
-            amount2Cell.PaddingBottom = 10;
-            table.AddCell(amount2Cell);
-
-            // Row 3: Total Amount
-            PdfPCell totalDescCell = new PdfPCell(new Phrase("Total amount", FontFactory.GetFont(FontFactory.HELVETICA, 9)));
-            totalDescCell.Border = PdfPCell.BOX;
-            totalDescCell.PaddingBottom = 10;
-            table.AddCell(totalDescCell);
-
-            PdfPCell totalAmountCell = new PdfPCell(new Phrase(data.TotalAmount.ToString(), FontFactory.GetFont(FontFactory.HELVETICA, 9)));
-            totalAmountCell.Border = PdfPCell.BOX;
-            totalAmountCell.PaddingBottom = 10;
-            table.AddCell(totalAmountCell);
 
             // Add the table to the document
             doc.Add(table);

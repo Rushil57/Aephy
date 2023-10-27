@@ -651,8 +651,8 @@ function GetActiveProjectInvoices() {
 
 function DownloadSolutionInvoice() {
     $("#preloader").show();
-    var contractId = $("#InvoiceContractId").val();
-    window.location = "/Home/DownloadInvoice?ContractId=" + contractId;
+    var contractId = $("#InvoiceId").val();
+    window.location = "/Home/DownloadInvoice?InvoiceId=" + contractId;
 
     // $("#preloader").hide();
     setTimeout(function () {
@@ -688,7 +688,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 }
                 $("#ClientAddress").html("Address : " + data.ClientAddress)
 
-                if (data.TaxType != "") {
+                if (data.TaxType != "" && data.TaxType != null && data.TaxType != "null") {
                     $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
                 }
                 if (data.InvoicelistDetails.length != 0) {
@@ -708,26 +708,10 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#InvoiceListDetails").find("tr:gt(0)").remove();
                     $("#InvoiceListDetails tbody").append(htm);
                 }
-                //$("#TotalFundAmount").html(data.TotalAmount);
-                //if (data.VatPercentage == null) {
-                //    data.VatPercentage = 0;
-                //    data.VatAmount = 0
-                //}
-                //$("#VatPercentage").html("VAT (" + data.VatPercentage + "%)");
-                //$("#VatAmount").html(data.VatAmount);
-
-                //if (result.Result.FundType == "MilestoneFund") {
-                //    $("#FundTitle").html("Invoice for Milestone : " + "" + data.Title + "");
-
-                //} else {
-                //    $("#FundTitle").html("Invoice for Project : " + data.Title);
-
-                //}
-                //$("#FundAmount").html(data.Amount);
 
             }
 
-           // $("#InvoiceContractId").val(Contractid)
+            $("#InvoiceId").val(invoiceId)
             $("#preloader").hide();
         },
         error: function (result) {

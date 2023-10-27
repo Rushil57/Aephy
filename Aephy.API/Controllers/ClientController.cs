@@ -2143,8 +2143,7 @@ namespace Aephy.API.Controllers
                         decimal flFees = 0;
                         decimal clientFees = 0;
 
-                        var teamList = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId &&
-                        !x.IsProjectManager).ToList();
+                        var teamList = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToList(); //######
                         flFees = teamList.Sum(y => y.PlatformFees); // need to add client platform fee
 
                         if (solutionFundData.ProjectType == "large")
@@ -2505,17 +2504,38 @@ namespace Aephy.API.Controllers
                         {
                             List<SolutionTeam> solutionTeamsList = new List<SolutionTeam>();
                             var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == data.Id).ToList();
+                            //
+                            var clientPreferedCurrency = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault().PreferredCurrency;
+                            if (string.IsNullOrEmpty(clientPreferedCurrency))
+                            {
+                                clientPreferedCurrency = "EUR";
+                            }
+                            //
                             if (solutionTeamData.Count > 0)
                             {
                                 if (data.ProjectType == "small")
                                 {
                                     foreach (var item in solutionTeamData)
                                     {
+
                                         var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
                                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == item.FreelancerId).FirstOrDefault();
-
+                                        // ######
+                                        var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == item.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                        if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                        {
+                                            freelancerPreferedCurrency = "EUR";
+                                        }
+                                        var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
                                         var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                        decimal contractAmount = (singlemilestoneDay * 8 * hourlyRate);
+                                        decimal ExchangeHourlyRate = hourlyRate;
+                                        if (exchangeRate != null)
+                                        {
+                                            ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                        }
+                                        // ######
+                                        decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
                                         var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
                                         item.Amount = contractAmount;
                                         item.PlatformFees = Platformfees;
@@ -2532,9 +2552,22 @@ namespace Aephy.API.Controllers
                                         foreach (var teamData in solutionTeamData)
                                         {
                                             var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
-
+                                            // ######
+                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                            {
+                                                freelancerPreferedCurrency = "EUR";
+                                            }
+                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
                                             var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                            decimal contractAmount = (singlemilestoneDay * 8 * hourlyRate);
+                                            decimal ExchangeHourlyRate = hourlyRate;
+                                            if (exchangeRate != null)
+                                            {
+                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                            }
+                                            // ######
+                                            decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
                                             var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
                                             teamData.Amount = contractAmount;
                                             teamData.PlatformFees = Platformfees;
@@ -2550,8 +2583,22 @@ namespace Aephy.API.Controllers
                                         foreach (var teamData in solutionTeamData)
                                         {
                                             var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
-
-                                            var contractAmount = singlemilestoneDay * 8 * Convert.ToInt32(freelancerDetails.HourlyRate);
+                                            // ######
+                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                            {
+                                                freelancerPreferedCurrency = "EUR";
+                                            }
+                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                            decimal ExchangeHourlyRate = hourlyRate;
+                                            if (exchangeRate != null)
+                                            {
+                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                            }
+                                            // ######
+                                            var contractAmount = singlemilestoneDay * 8 * ExchangeHourlyRate;
                                             var PlatformFees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
                                             teamData.Amount = contractAmount;
                                             teamData.PlatformFees = PlatformFees;
@@ -3697,10 +3744,30 @@ namespace Aephy.API.Controllers
 
                     if (freelancerList.Count > 0)
                     {
+                        var clientId = _db.SolutionFund.Where(x => x.Id == model.Id).FirstOrDefault().ClientId;
+                        var clientPreferedCurrency = _db.Users.Where(x => x.Id == clientId).FirstOrDefault().PreferredCurrency;
+                        if (string.IsNullOrEmpty(clientPreferedCurrency))
+                        {
+                            clientPreferedCurrency = "EUR";
+                        }
                         foreach (var data in freelancerList)
                         {
+                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault().PreferredCurrency;
+                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                            {
+                                freelancerPreferedCurrency = "EUR";
+                            }
+                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == clientPreferedCurrency
+                            && x.ToCurrency == freelancerPreferedCurrency).FirstOrDefault();
+                            var HourlyRate = Convert.ToDecimal(data.HourlyRate);
+                            decimal ExchangeHourlyRate = HourlyRate;
+                            if (exchangeRate != null)
+                            {
+                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
+                            }
+
                             var projectManager = false;
-                            decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * Convert.ToDecimal(data.HourlyRate)); ;
+                            decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate); ;
                             decimal Platformfees = Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
 
                             if (data.FreelancerLevel == "Project Manager")

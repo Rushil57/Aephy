@@ -2352,6 +2352,8 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> GetClientInvoiceDetails([FromBody] SolutionFundModel model)
         {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            model.UserId = userId;
             var invoiceData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, model);
             return invoiceData;
 
@@ -2630,6 +2632,27 @@ namespace Aephy.WEB.Controllers
             ViewData["OrderId"] = orderId;
             ViewData["SolutionFundId"] = solutionFundId;
             return View();
+        }
+
+        //GetInvoiceTranscationTypeDetails
+        [HttpPost]
+        public async Task<string> GetInvoiceTranscationTypeDetails([FromBody] SolutionFundModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.ClientId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Client/GetInvoiceTranscationTypeDetails", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
         }
     }
 }

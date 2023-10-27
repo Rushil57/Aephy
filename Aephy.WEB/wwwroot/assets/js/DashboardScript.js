@@ -660,10 +660,9 @@ function DownloadSolutionInvoice() {
     }, 10000);
 }
 
-function OpenInvoiceModalPopUp() {
-    var Contractid = $("#GridContractId").val();
+function OpenInvoiceModalPopUp(invoiceId) {
     var data = {
-        ContractId: Contractid,
+        InvoiceId: invoiceId,
     }
     $("#preloader").show();
     $.ajax({
@@ -675,39 +674,57 @@ function OpenInvoiceModalPopUp() {
         success: function (result) {
             if (result.Result != null) {
                 $("#InvoiceModal").modal('show')
-                var data = result.Result.InvoiceDetails;
+                var data = result.Result;
                 $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
-                $("#ContractCreatedDate").html("Date " + moment(data.Date).format('DD MMMM YYYY'));
-                $("#ContractDueDate").html("Due Date " + moment(data.DueDate).format('DD MMMM YYYY'));
-                $("#ContractClientName").html(data.ClientName);
-                $("#ProjectTotalAmount").html("Total Amount € " + data.TotalAmount);
-                $("#ProjectTotalDueAmount").html("Due Amount € " + data.DueAmount);
-                $("#ProjectTotalDueAmount").css("font-weight", "bold");
+                $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                $("#ContractClientName").html(data.ClientFullName);
+                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency  + data.TotalAmount);
+                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency  + data.TotalAmount);
+                $("#ProjectTotalDueAmount").css("font-weight", "bold"); 
                 $("#ContractDueDate").css("font-weight", "bold");
                 if (data.ClientAddress == null) {
                     data.ClientAddress = "";
                 }
                 $("#ClientAddress").html("Address : " + data.ClientAddress)
-                $("#TotalFundAmount").html(data.TotalAmount);
-                if (data.VatPercentage == null) {
-                    data.VatPercentage = 0;
-                    data.VatAmount = 0
+
+                if (data.InvoicelistDetails.length != 0) {
+                    var index = 0;
+                    var subObj = '';
+                    var htm = '';
+                    var resultLength = data.InvoicelistDetails.length;
+                    if (resultLength > 0) {
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = data.InvoicelistDetails[index];
+                            htm += '<tr>';
+                            htm += '<td>' + subObj.Description + '</td>';
+                            htm += '<td>' + subObj.Amount + '</td>';
+                            htm += '</tr>';
+                        }
+                    }
+                    $("#InvoiceListDetails").find("tr:gt(0)").remove();
+                    $("#InvoiceListDetails tbody").append(htm);
                 }
-                $("#VatPercentage").html("VAT (" + data.VatPercentage + "%)");
-                $("#VatAmount").html(data.VatAmount);
+                //$("#TotalFundAmount").html(data.TotalAmount);
+                //if (data.VatPercentage == null) {
+                //    data.VatPercentage = 0;
+                //    data.VatAmount = 0
+                //}
+                //$("#VatPercentage").html("VAT (" + data.VatPercentage + "%)");
+                //$("#VatAmount").html(data.VatAmount);
 
-                if (result.Result.FundType == "MilestoneFund") {
-                    $("#FundTitle").html("Invoice for Milestone : " + "" + data.Title + "");
+                //if (result.Result.FundType == "MilestoneFund") {
+                //    $("#FundTitle").html("Invoice for Milestone : " + "" + data.Title + "");
 
-                } else {
-                    $("#FundTitle").html("Invoice for Project : " + data.Title);
+                //} else {
+                //    $("#FundTitle").html("Invoice for Project : " + data.Title);
 
-                }
-                $("#FundAmount").html(data.Amount);
+                //}
+                //$("#FundAmount").html(data.Amount);
 
             }
 
-            $("#InvoiceContractId").val(Contractid)
+           // $("#InvoiceContractId").val(Contractid)
             $("#preloader").hide();
         },
         error: function (result) {
@@ -1598,8 +1615,52 @@ function BindProjects() {
 }
 
 function ViewInvoiceGridPopUp(contractId) {
-    $("#InvoiceGridPopUpModal").modal('show');
-    $("#GridContractId").val(contractId)
+    //
+    //$("#GridContractId").val(contractId)
+    var data = {
+        ContractId: contractId
+    };
+
+    $("#preloader").show();
+    $.ajax({
+        type: "POST",
+        url: "/Home/GetInvoiceTranscationTypeDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (result) {
+            $("#InvoiceGridPopUpModal").modal('show');
+            if (result.Result.length != 0) {
+                $("#InvoiceGridTable").show();
+                var invoiceData = result.Result;
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                var resultLength = invoiceData.length;
+                if (resultLength > 0) {
+                    for (index = 0; index < resultLength; index++) {
+                        subObj = invoiceData[index];
+                        htm += '<tr>';
+                        htm += '<td>' + subObj.TransactionType + '</td>';
+                        htm += '<td><a class="text-primary" onclick=OpenInvoiceModalPopUp(' + subObj.Id + ')>View</a></td>';
+                        htm += '</tr>';
+                    }
+                }
+                $("#InvoiceGridTable").find("tr:gt(0)").remove();
+                $("#InvoiceGridTable tbody").append(htm);
+                $(".invoice-temp").hide();
+            }
+            else {
+                $("#InvoiceGridTable").hide()
+                $("<p class='invoice-temp'>No Data Available</p>").insertAfter("#InvoiceGridTable");
+
+            }
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            showToaster("error", "Error !", result);
+        }
+    });
 }
 
 function CloseInvoiceGridPopUp() {

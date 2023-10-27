@@ -1329,85 +1329,61 @@ namespace Aephy.API.Controllers
         //GetInvoiceDetails
         [HttpPost]
         [Route("GetInvoiceDetails")]
-        public async Task<IActionResult> GetInvoiceDetails([FromBody] SolutionDisputeViewModel model)
+        public async Task<IActionResult> GetInvoiceDetails([FromBody] InvoiceListViewModel model)
         {
             try
             {
                 if (model != null)
                 {
-                    if (model.ContractId != 0)
+                    if (model.InvoiceId != 0)
                     {
-                        var contarctData = await _db.Contract.Where(x => x.Id == model.ContractId).FirstOrDefaultAsync();
-
-                        if (contarctData != null)
+                        var invoicelistDetails = await _db.InvoiceList.Where(x => x.Id == model.InvoiceId && x.BillToClientId == model.UserId).FirstOrDefaultAsync();
+                        if(invoicelistDetails != null)
                         {
-                            var solutionFundData = _db.SolutionFund.Where(x => x.Id == contarctData.SolutionFundId).FirstOrDefault();
-                            var CheckDataExists = _db.Invoices.Where(x => x.SolutionFundId == contarctData.SolutionFundId).FirstOrDefault();
-                            if (CheckDataExists == null)
+                            InvoiceListViewModel InvoiceDetails = new InvoiceListViewModel();
+                            var invoiceListDetails = await _db.InvoiceListDetails.Where(x => x.InvoiceListId == invoicelistDetails.Id).ToListAsync();
+                            if(invoiceListDetails.Count > 0)
                             {
-                                var InvoiceNumber = 0;
-                                var TotalInvoiceData = _db.Invoices.ToList().Count();
-                                if (TotalInvoiceData == 0)
-                                {
-                                    InvoiceNumber = 100;
-                                }
-                                else
-                                {
-                                    var GetLastInvoiceNum = _db.Invoices.OrderByDescending(x => x.InvoiceNumber).FirstOrDefault();
-                                    InvoiceNumber = Convert.ToInt32(GetLastInvoiceNum.InvoiceNumber) + 1;
-                                }
-                                var Title = string.Empty;
-                                if (solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
-                                {
-                                    Title = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
-                                }
-                                else
-                                {
-                                    Title = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
-                                }
-                                var fullname = _db.Users.Where(x => x.Id == contarctData.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                                //var totalAmount = decimal.Parse(solutionFundData.ProjectPrice) + decimal.Parse(contarctData.VATAmount);
-                                //Decimal totalAmount = Decimal.Add(decimal.Parse(contarctData.Amount), decimal.Parse(contarctData.VATAmount));
-                                var InvoiceData = new Invoices()
-                                {
-                                    SolutionId = contarctData.SolutionId,
-                                    IndustryId = contarctData.IndustryId,
-                                    SolutionFundId = contarctData.SolutionFundId,
-                                    InvoiceNumber = InvoiceNumber.ToString(),
-                                    Date = contarctData.CreatedDateTime,
-                                    DueDate = contarctData.CreatedDateTime,
-                                    TotalAmount = contarctData.Amount.ToString(),
-                                    DueAmount = contarctData.Amount.ToString(),
-                                    ClientId = contarctData.ClientUserId,
-                                    ClientName = fullname.FirstName + " " + fullname.LastName,
-                                    ClientAddress = _db.FreelancerDetails.Where(x => x.UserId == contarctData.ClientUserId).Select(x => x.Address).FirstOrDefault(),
-                                    VatId = "1",
-                                    TaxId = contarctData.TaxId,
-                                    Title = Title,
-                                    Amount = contarctData.Amount,
-                                    VatPercentage = contarctData.VATPercentage,
-                                    VatAmount = contarctData.VATAmount
-                                };
-                                _db.Invoices.Add(InvoiceData);
-                                _db.SaveChanges();
+                                InvoiceDetails.InvoicelistDetails = invoiceListDetails;
                             }
-
-                            var Invoicedetails = _db.Invoices.Where(x => x.SolutionFundId == solutionFundData.Id).FirstOrDefault();
-                            var Fundtype = solutionFundData.FundType.ToString();
-
-                            if (Invoicedetails != null)
+                            InvoiceDetails.InvoiceNumber = invoicelistDetails.InvoiceNumber;
+                            InvoiceDetails.InvoiceDate = invoicelistDetails.InvoiceDate;
+                            var clientDetails = _db.Users.Where(x => x.Id == invoicelistDetails.BillToClientId).FirstOrDefault();
+                            if(clientDetails != null)
                             {
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                var fullname = clientDetails.FirstName + " " + clientDetails.LastName;
+                                InvoiceDetails.ClientFullName = fullname;
+                                InvoiceDetails.PreferredCurrency = clientDetails.PreferredCurrency;
+                                if(clientDetails.PreferredCurrency != null)
                                 {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Message = "success",
-                                    Result = new
+                                    if(clientDetails.PreferredCurrency == "USD")
                                     {
-                                        InvoiceDetails = Invoicedetails,
-                                        FundType = Fundtype
+                                        InvoiceDetails.PreferredCurrency = "$";
                                     }
-                                });
+                                    if (clientDetails.PreferredCurrency == "EUR")
+                                    {
+                                        InvoiceDetails.PreferredCurrency = "€";
+                                    }
+                                    if (clientDetails.PreferredCurrency == "GBP")
+                                    {
+                                        InvoiceDetails.PreferredCurrency = "£";
+                                    }
+                                }
                             }
+                            var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
+                            if(clientaddressDetails != null)
+                            {
+                                InvoiceDetails.ClientAddress = clientaddressDetails;
+                            }
+                            InvoiceDetails.TotalAmount = invoicelistDetails.TotalAmount;
+
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = InvoiceDetails
+                            });
                         }
                     }
 

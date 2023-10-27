@@ -4113,5 +4113,33 @@ namespace Aephy.API.Controllers
                 Message = "Something Went Wrong"
             });
         }
+
+        //GetInvoiceTranscationTypeDetails
+        [HttpPost]
+        [Route("GetInvoiceTranscationTypeDetails")]
+        public async Task<IActionResult> GetInvoiceTranscationTypeDetails([FromBody] SolutionsModel model)
+        {
+
+            try
+            {
+                var invoiceListData = await _db.InvoiceList.Where(x => x.ContractId == model.ContractId && x.BillToClientId == model.ClientId).ToListAsync();
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = invoiceListData
+                });
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
     }
 }

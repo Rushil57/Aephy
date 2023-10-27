@@ -39,7 +39,7 @@ namespace Aephy.API.Models
 
             public string? Description { get; set; }
 
-            public List<int> solutionIndustries { get; set; }
+            public List<int>? solutionIndustries { get; set; }
 
             public int solutionServices { get; set; }
 
@@ -711,6 +711,37 @@ namespace Aephy.API.Models
             public DateTime? created_at { get; set; }
 
             public DateTime? updated_at { get; set; }
+        }
+
+        public class InvoiceListViewModel
+        {
+            public int Id { get; set; }
+
+            public int InvoiceId {  get; set; }
+
+            public string? InvoiceType { get; set; }
+
+            public string? InvoiceNumber { get; set; }
+
+            public DateTime? InvoiceDate { get; set; }
+
+            public string? TotalAmount { get; set; }
+
+            public string? BillToClientId { get; set; }
+
+            public string? TransactionType { get; set; }
+
+            public int ContractId { get; set; }
+
+            public List<InvoiceListDetails>? InvoicelistDetails { get; set; }
+
+            public string? ClientFullName { get; set; }
+
+            public string? ClientAddress { get; set; }
+
+            public string? UserId { get; set; }
+
+            public string? PreferredCurrency {  get; set; }
         }
 
         

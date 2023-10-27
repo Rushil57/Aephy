@@ -108,6 +108,7 @@
         public string? UserId { get; set; }
 
         public string? ClientPreferredCurrency { get; set; }
+        public int InvoiceId {  get; set; }
 
     }
 

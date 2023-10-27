@@ -1353,6 +1353,8 @@ namespace Aephy.API.Controllers
                             {
                                 var fullname = clientDetails.FirstName + " " + clientDetails.LastName;
                                 InvoiceDetails.ClientFullName = fullname;
+                                InvoiceDetails.TaxType = clientDetails.TaxType;
+                                InvoiceDetails.TaxId = clientDetails.TaxNumber;
                                 InvoiceDetails.PreferredCurrency = clientDetails.PreferredCurrency;
                                 if(clientDetails.PreferredCurrency != null)
                                 {

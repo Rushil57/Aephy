@@ -742,6 +742,10 @@ namespace Aephy.API.Models
             public string? UserId { get; set; }
 
             public string? PreferredCurrency {  get; set; }
+
+            public string? TaxId { get; set; }
+
+            public string? TaxType { get; set; }
         }
 
         

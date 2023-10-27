@@ -688,6 +688,9 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 }
                 $("#ClientAddress").html("Address : " + data.ClientAddress)
 
+                if (data.TaxType != "") {
+                    $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
+                }
                 if (data.InvoicelistDetails.length != 0) {
                     var index = 0;
                     var subObj = '';

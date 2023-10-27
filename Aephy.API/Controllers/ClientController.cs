@@ -1980,7 +1980,7 @@ namespace Aephy.API.Controllers
                     var associatecount = 0;
 
                     var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                    if(Userslist.Count > 0)
+                    if (Userslist.Count > 0)
                     {
                         foreach (var data in Userslist)
                         {
@@ -2125,7 +2125,7 @@ namespace Aephy.API.Controllers
 
                     // Invoice Generate
                     var SolutionTitle = string.Empty;
-                    if(solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                    if (solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
                     {
                         SolutionTitle = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).Select(x => x.Title).FirstOrDefault();
                     }
@@ -2176,7 +2176,7 @@ namespace Aephy.API.Controllers
                         var invoiceFundingDetail = new InvoiceListDetails();
                         invoiceFundingDetail.InvoiceListId = invoiceFunding.Id;
                         invoiceFundingDetail.Amount = invoiceFunding.TotalAmount;
-                        invoiceFundingDetail.Description = "Funding for \""+ SolutionTitle + "\""; // ###### - this will be either project or milestone tile
+                        invoiceFundingDetail.Description = "Funding for \"" + SolutionTitle + "\""; // ###### - this will be either project or milestone tile
                         _db.InvoiceListDetails.Add(invoiceFundingDetail);
                         _db.SaveChanges();
 
@@ -2244,7 +2244,7 @@ namespace Aephy.API.Controllers
                         var invoiceTotalPlatformFeesDetail_total = new InvoiceListDetails();
                         invoiceTotalPlatformFeesDetail_total.InvoiceListId = invoiceTotalPlatformFees.Id;
                         invoiceTotalPlatformFeesDetail_total.Amount = invoiceTotalPlatformFees.TotalAmount;
-                        invoiceTotalPlatformFeesDetail_total.Description = "Total platform fees for \""+ SolutionTitle + "\""; //######
+                        invoiceTotalPlatformFeesDetail_total.Description = "Total platform fees for \"" + SolutionTitle + "\""; //######
                         _db.InvoiceListDetails.Add(invoiceTotalPlatformFeesDetail_total);
                         _db.SaveChanges();
 
@@ -2636,7 +2636,7 @@ namespace Aephy.API.Controllers
                                     if (user != null && user.RevolutStatus == true)
                                     {
                                         //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-                                        if(user.PreferredCurrency == null)
+                                        if (user.PreferredCurrency == null)
                                         {
                                             user.PreferredCurrency = "EUR";
                                         }
@@ -4141,5 +4141,8 @@ namespace Aephy.API.Controllers
                 Message = "Something Went Wrong"
             });
         }
+
+
+
     }
 }

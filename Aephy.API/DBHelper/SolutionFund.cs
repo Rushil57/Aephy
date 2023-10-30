@@ -132,5 +132,18 @@ namespace Aephy.API.DBHelper
         public DateTime? ExchangeRateDateTime { get; set; }
 
     }
+
+    public class SolutionLeave
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int SolutionFundId {  get; set; }
+
+        public string? FreelancerId {  get; set; }
+
+        public DateTime? LeaveDateTime {  get; set; }
+    }
 }
 

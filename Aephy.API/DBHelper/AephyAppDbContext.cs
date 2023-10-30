@@ -84,6 +84,9 @@ namespace Aephy.API.DBHelper
 
         public DbSet<ExchangeRates> ExchangeRates { get; set; }
 
+        public DbSet<SolutionLeave> SolutionLeave { get; set; }
+        
+
         protected override void OnModelCreating(ModelBuilder builder)
 		{
             base.OnModelCreating(builder);

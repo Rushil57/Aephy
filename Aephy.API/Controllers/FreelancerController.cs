@@ -2100,6 +2100,46 @@ namespace Aephy.API.Controllers
             });
         }
 
+        //FreelancerLeaveProject
+        [HttpPost]
+        [Route("FreelancerLeaveProject")]
+        public async Task<IActionResult> FreelancerLeaveProject([FromBody] solutionFundViewModel model)
+        {
+            if (model != null)
+            {
+                var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId && x.FreelancerId == model.UserId).FirstOrDefaultAsync();
+                if(solutionTeamData != null)
+                {
+                    _db.SolutionTeam.Remove(solutionTeamData);
+                    _db.SaveChanges();
+
+                    var leaveSolution = new SolutionLeave()
+                    {
+                        SolutionFundId = model.SolutionFundId,
+                        FreelancerId = model.UserId,
+                        LeaveDateTime = DateTime.Now,
+                    };
+
+                    _db.SolutionLeave.Add(leaveSolution);
+                    _db.SaveChanges();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Project leave Successfully !"
+                    });
+                }
+
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
 
     }
 }

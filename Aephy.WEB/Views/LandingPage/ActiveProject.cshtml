@@ -284,7 +284,7 @@
                             <div style="text-align: center;font-size: 16px;width: 100%;display:flex">
                                 <a data-toggle="popover" class="checkout-popover btn btn-brand cls-fundPopOver" data-open-accessibility-text-original="16px" style="font-size: 16px;width: 45%;">Fund</a>
                                 <button type="button" class="btn btn-brand cls-freelancerfundProgress" id="freelancer-progressDetails" style="width:42%;font-size:15px;display:none;"></button>
-                                <button type="button" class="btn btn-brand cls-freelancerleaveProject" id="freelancer-leaveproject" style="width:42%;font-size:15px;display:none;">Leave Project</button>
+                                <button type="button" class="btn btn-brand cls-freelancerleaveProject" id="freelancer-leaveproject" style="width:42%;font-size:15px;display:none;" onclick="LeaveProject()">Leave Project</button>
                                 <button type="button" class="btn btn-brand cls-fundProgress" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;display:none;"></button>
                                 <button type="button" class="btn btn-brand cls-solutionDetails" id="solutionfund-details" style="width:45%;" onclick="CheckEvent()"></button>
                             </div>
@@ -891,6 +891,8 @@
                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer'){
                       $(".cls-freelancerfundProgress").show();
                       $(".cls-freelancerleaveProject").show();
+                      $("#solutionfund-furtherprogress").hide();
+                      $("#solutionfund-details").hide();
                       $(".cls-fundPopOver").hide();
                       
                          if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
@@ -1216,22 +1218,22 @@
 	               DisabledFundButton()
                    DisabledSolutionFurtherProgressButton()
                }
-               // if (ContractData!= null) {
-               //      var ContractDate = new Date(ContractData.CreatedDateTime);
-               //      var today = new Date();
-               //      var currentDateTimestamp = today.getTime();
-               //      var selectedDateTimestamp = ContractDate.getTime();
+               if (ContractData!= null) {
+                    var ContractDate = new Date(ContractData.CreatedDateTime);
+                    var today = new Date();
+                    var currentDateTimestamp = today.getTime();
+                    var selectedDateTimestamp = ContractDate.getTime();
 
-               //      //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
-               //      if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
-	              //      DisabledFundButton()
-               //         DisabledSolutionFurtherProgressButton()
-               //      }
-               //      else{
-               //          $("#solutionfund-furtherprogress").css("color","white"); 
-               //          $("#solutionfund-furtherprogress").removeClass("disabled")
-               //      }
-               // }
+                    //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
+                    if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
+	                   DisabledFundButton()
+                       DisabledSolutionFurtherProgressButton()
+                    }
+                    else{
+                        $("#solutionfund-furtherprogress").css("color","white"); 
+                        $("#solutionfund-furtherprogress").removeClass("disabled")
+                    }
+               }
            }
 
             if(FundStopByClient){
@@ -1915,6 +1917,32 @@
        $(".cls-fundPopOver").addClass('disabled');
        $(".cls-fundPopOver").css("background-color", "var(--brand)");
        $(".cls-fundPopOver").css("color","black"); 
+    }
+
+    function LeaveProject(){
+          var data = {
+                SolutionFundId : $("#solutionFundId").val()
+          }
+           $("#preloader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "@Url.Action("FreelancerLeaveProject", "Home")",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    if(result.Message == "Project leave Successfully !"){
+                        showToaster("success", "Success !", result.Message);
+                        DisableFreelancerProjectLeave();
+                    }
+                  
+                   $("#preloader").hide();
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Something went wrong !!");
+                }
+            });
     }
      
 </script>

@@ -330,7 +330,7 @@ namespace Aephy.WEB.Controllers
                         if (data.Result != null)
                         {
                             string imagepath = data.Result.ImagePath;
-                            if(imagepath != null)
+                            if (imagepath != null)
                             {
                                 string sasToken = GenerateImageSasToken(imagepath);
                                 string imageUrlWithSas = $"{data.Result.ImagePath}?{sasToken}";
@@ -339,7 +339,7 @@ namespace Aephy.WEB.Controllers
                             }
 
                             string updatedCurrency = data.Result.PreferredCurrency;
-                            if(updatedCurrency != null)
+                            if (updatedCurrency != null)
                             {
                                 var Currentcurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
                                 if (Currentcurrency != updatedCurrency)
@@ -1973,7 +1973,7 @@ namespace Aephy.WEB.Controllers
             {
                 content2 = "Bill to\n" + data.ClientFullName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\n";
             }
-            
+
 
             // Split content2 into lines
             string[] content2Lines = content2.Split('\n');
@@ -2626,6 +2626,27 @@ namespace Aephy.WEB.Controllers
                     var userId = HttpContext.Session.GetString("LoggedUser");
                     model.ClientId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Client/GetInvoiceTranscationTypeDetails", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+
+        [HttpPost]
+        public async Task<string> FreelancerLeaveProject([FromBody] SolutionFundModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.UserId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/FreelancerLeaveProject", HttpMethod.Post, model);
                     return data;
                 }
                 catch (Exception ex)

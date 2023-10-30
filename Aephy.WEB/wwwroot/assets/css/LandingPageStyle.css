@@ -1974,6 +1974,12 @@ padding-top: 5%;
     margin-right: 70px;
 }
 
+.cls-freelancer-radio {
+    width: 10%;
+    margin-right: 70px;
+    height: 1.2em;
+}
+
 #freelancer-details {
     padding-top: 4%;
     margin-left: 20%;
@@ -2011,4 +2017,8 @@ padding-top: 5%;
 #number-of-radiofreelancer {
     margin-left: 25%;
     padding-top: 4%;
+}
+
+.cls-freelancer-radio:checked {
+    accent-color: #e0771f80;
 }

@@ -2385,6 +2385,7 @@ namespace Aephy.API.Controllers
                                 FundDecided = Funddecided,
                                 NextMileStonePrice = calculateProjectPrice,
                                 MilestoneList = milestoneList,
+                                Currency = model.ClientPreferredCurrency
                             }
                         });
                     }

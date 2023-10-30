@@ -283,6 +283,8 @@
                         <div class="row d-flex justify-content-center align-center">
                             <div style="text-align: center;font-size: 16px;width: 100%;display:flex">
                                 <a data-toggle="popover" class="checkout-popover btn btn-brand cls-fundPopOver" data-open-accessibility-text-original="16px" style="font-size: 16px;width: 45%;">Fund</a>
+                                <button type="button" class="btn btn-brand cls-freelancerfundProgress" id="freelancer-progressDetails" style="width:42%;font-size:15px;display:none;"></button>
+                                <button type="button" class="btn btn-brand cls-freelancerleaveProject" id="freelancer-leaveproject" style="width:42%;font-size:15px;display:none;">Leave Project</button>
                                 <button type="button" class="btn btn-brand cls-fundProgress" id="solutionfund-furtherprogress" onclick="ProjectInitiated(true,false)" style="width:42%;font-size:15px;display:none;"></button>
                                 <button type="button" class="btn btn-brand cls-solutionDetails" id="solutionfund-details" style="width:45%;" onclick="CheckEvent()"></button>
                             </div>
@@ -887,7 +889,10 @@
                 });
 
                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer'){
-                        $("#solutionfund-popUp").hide();
+                      $(".cls-freelancerfundProgress").show();
+                      $(".cls-freelancerleaveProject").show();
+                      $(".cls-fundPopOver").hide();
+                      
                          if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
                              $("#milestone-btn-div").show();
                             $(".cls-milestone-edit-pencil").show();
@@ -895,9 +900,9 @@
                              $("#milestone-btn-div").hide();
                              $(".cls-milestone-edit-pencil").hide()
                          }
-                  }
-                  else{
-                        $("#solutionfund-popUp").show();
+                  }else{
+                      $(".cls-freelancerfundProgress").hide();
+                      //$(".cls-fundPopOver").show();
                   }
 
                  $("#preloader").hide();
@@ -1007,7 +1012,7 @@
                        $("#solutionFundId").val(data.ProjectDetails.Id);
                        sessionStorage.setItem("SolutionFundId",data.ProjectDetails.Id)
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
-                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false,null);
+                       BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false,null,data.Currency);
                        if(data.MilestoneList != ""){
                            BindMileStoneSection(data.MilestoneList);
                        }
@@ -1113,6 +1118,11 @@
 
                         $(".project-progress").html("Project " + status)
                    }
+                   if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer') { 
+                                 //$(".cls-freelancerfundProgress").show();
+                       $("#freelancer-progressDetails").text("Fund Pending");
+                       DisableFreelancerFundDetails();
+                   }
                }
                if(data.FundType == 0){
                    
@@ -1129,9 +1139,14 @@
                             var status = data.ProjectStatus
                             status =  status.split(' ').map(status => status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()).join(' ');
                             $(".project-progress").html("Project " + status)
-
                       }
 
+                      if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer') { 
+                        $(".cls-fundProgress").hide();
+                        $(".project-progress").html("Milestone is Funding")
+                        $("#freelancer-progressDetails").text("Milestone Funding");
+                          DisableFreelancerProjectLeave();
+                   }
                }
            }
 
@@ -1142,7 +1157,7 @@
 
               if(data.FundType == 1)
               {
-                     if(IsFundCompleted)
+                  if(IsFundCompleted)
                      {
                           $(".cls-fundProgress").text('Project Completed');
                           DisabledSolutionFurtherProgressButton();
@@ -1157,7 +1172,11 @@
                              DisabledSolutionFurtherProgressButton()
                              DisabledSolutionDetailsButton();
                           }
-                         
+                       if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer') { 
+                            $(".cls-fundProgress").hide();
+                           $("#freelancer-progressDetails").text("Project Funded");
+                           DisableFreelancerProjectLeave();
+                       }    
                     }
                     
               }
@@ -1181,6 +1200,13 @@
                      }
                         $(".cls-fundProgress").text("Pay Milestone " + fundDecided);
                         $(".project-progress").html("Milestone " + fundDecided + " is in Progress");
+
+                        if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer') { 
+                            $(".cls-fundProgress").hide();
+                             $("#freelancer-progressDetails").text("Milestone Funded");
+                             $(".project-progress").html("Milestone Fund is in Progress");
+                             DisableFreelancerProjectLeave();
+                        }
                    }
                        
               }
@@ -1190,22 +1216,22 @@
 	               DisabledFundButton()
                    DisabledSolutionFurtherProgressButton()
                }
-               if (ContractData!= null) {
-                    var ContractDate = new Date(ContractData.CreatedDateTime);
-                    var today = new Date();
-                    var currentDateTimestamp = today.getTime();
-                    var selectedDateTimestamp = ContractDate.getTime();
+               // if (ContractData!= null) {
+               //      var ContractDate = new Date(ContractData.CreatedDateTime);
+               //      var today = new Date();
+               //      var currentDateTimestamp = today.getTime();
+               //      var selectedDateTimestamp = ContractDate.getTime();
 
-                    //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
-                    if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
-	                   DisabledFundButton()
-                       DisabledSolutionFurtherProgressButton()
-                    }
-                    else{
-                        $("#solutionfund-furtherprogress").css("color","white"); 
-                        $("#solutionfund-furtherprogress").removeClass("disabled")
-                    }
-               }
+               //      //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
+               //      if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
+	              //      DisabledFundButton()
+               //         DisabledSolutionFurtherProgressButton()
+               //      }
+               //      else{
+               //          $("#solutionfund-furtherprogress").css("color","white"); 
+               //          $("#solutionfund-furtherprogress").removeClass("disabled")
+               //      }
+               // }
            }
 
             if(FundStopByClient){
@@ -1213,6 +1239,13 @@
 	               DisabledFundButton()
                    DisabledSolutionFurtherProgressButton()
             }
+
+       if ('@Context.Session.GetString("LoggedUserRole")' == 'Freelancer') { 
+           DisabledSolutionDetailsButton();
+           DisabledFundButton();
+           DisabledSolutionFurtherProgressButton();
+            DisableFreelancerFundDetails();
+       }
    }
 
    function CheckEvent(){
@@ -1612,6 +1645,18 @@
        $(".cls-solutionDetails").css("color","black"); 
      }
 
+     function DisableFreelancerFundDetails(){
+       $(".cls-freelancerfundProgress").addClass('disabled');
+       $(".cls-freelancerfundProgress").css("background-color", "var(--brand)");
+       $(".cls-freelancerfundProgress").css("color","black"); 
+     }
+
+     function DisableFreelancerProjectLeave(){
+         $(".cls-freelancerleaveProject").addClass('disabled');
+          $(".cls-freelancerleaveProject").css("background-color", "var(--brand)");
+       $(".cls-freelancerleaveProject").css("color","black"); 
+     }
+
      function DeleteSolutionDocument(documentId){
           Swal.fire({
             title: 'Are you sure you want to delete document?',
@@ -1867,7 +1912,7 @@
     }
 
     function DisabledFundButton(){
-         $(".cls-fundPopOver").addClass('disabled');
+       $(".cls-fundPopOver").addClass('disabled');
        $(".cls-fundPopOver").css("background-color", "var(--brand)");
        $(".cls-fundPopOver").css("color","black"); 
     }

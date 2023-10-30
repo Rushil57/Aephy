@@ -34,25 +34,32 @@
                                         </h5>
                                     </div>
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Small</h4>
                                                 <h5 style="opacity:0.5;" class="cls-smallProjectprice"></h5>
                                             </label>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="medium" onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Medium</h4>
                                                 <h5 style="opacity:0.5;" class="cls-mediumProjectprice"></h5>
                                             </label>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <label class="radio-inline" style="text-align:center;">
                                                 <input class="form-check-input" type="radio" name="projSizemobile" value="large" onchange="GetProjectTypeValue(this)"/>
                                                 <h4>Large</h4>
                                                 <h5 style="opacity:0.5;" class="cls-largeProjectprice"></h5>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="radio-inline" style="text-align:center;">
+                                                <input class="form-check-input" type="radio" name="projSizemobile" value="custom" onchange="GetProjectTypeValue(this)"/>
+                                                <h4>Custom</h4>
+                                                <h5 style="opacity:0.5;" class="cls-customProjectprice">-</h5>
                                             </label>
                                         </div>
                                     </div>
@@ -395,10 +402,11 @@
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" label="Select Project" value="select" checked />
+                                <input type="radio" name="preferOption" label="Select Project" value="select" checked  id="ProjectSelectionButton"/>
                             </div>
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" label="Customize Project" value="customize" onclick="OpenCustomisePopUp()"/>
+                                <input type="radio" name="preferOption" value="customize" label="Customize Project" onclick="OpenCustomisePopUp()" id="customizedradioButton"/>
+                                <input type="radio" name="preferOption" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerRadioButton"/>
                             </div>
                         </div>
                         <div class="row m-lg-2 pt-4">
@@ -408,26 +416,33 @@
                             </h5>
                         </div>
                         <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                     <h4>Small</h4>
                                     <h5 style="opacity:0.5;" id="small-projectPrice" class="cls-smallProjectprice"></h5>
                                 </label>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="medium" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Medium</h4>
                                     <h5 style="opacity:0.5;" id="medium-projectPrice" class="cls-mediumProjectprice"></h5>
                                 </label>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Large</h4>
                                     <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectprice"></h5>
                                 </label>
+                            </div>
+                            <div class="col-3">
+                               <label class="radio-inline" style="text-align:center;">
+                                  <input class="form-check-input" type="radio" name="projSizeweb" value="custom" onchange="GetProjectTypeValue(this)"/>
+                                  <h4>Custom</h4>
+                                  <h5 style="opacity:0.5;" class="cls-customProjectprice">-</h5>
+                               </label>
                             </div>
                         </div>
                         <div class="projectDetails-div">
@@ -673,9 +688,9 @@
                                         <span id="freelancer-title">Select Freelancers</span>
                                     </div>
                                      <div id="number-of-freelancer">
-                                        <input type="text" class="cls-freelancer-number">
-                                        <input type="text" class="cls-freelancer-number">
-                                        <input type="text" class="cls-freelancer-number">
+                                        <input type="number" class="cls-freelancer-number" min="0">
+                                        <input type="number" class="cls-freelancer-number" min="0">
+                                        <input type="number" class="cls-freelancer-number" min="0">
                                     </div>
                                     <div id="freelancer-details">
                                         <label class="cls-freelancerlvl">Associate</label>
@@ -688,10 +703,8 @@
                                         <label class="cls-freelancerhourly">$30/h</label>
                                     </div>
                                     <div id="freelancer-info-icon">
-                                      @*  <i class="bi bi-info-circle-fill cls-freelancer-info-icon" data-open-accessibility-text-original="16px" style="font-size: 16px;"></i> *@
-                                      <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Test"><i class="bi bi-info-circle-fill cls-freelancer-info-icon"></i></a>
+                                      <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Displayed hourly rates are an estimated average and may vary based on the selected freelancer's individual hourly rate and availability."><i class="bi bi-info-circle-fill cls-freelancer-info-icon"></i></a>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -930,13 +943,22 @@
     }
 
     function GetProjectTypeValue(data){
-        $("#preloader").show();
+       
         var projecttype;
         if(data == undefined){
             projecttype = $('input[name=projSize]:checked').val()
         }
+        else if (data.value == "custom"){
+            $("#freelancerRadioButton").css("display", "flex");
+            $("#customizedradioButton").css("display", "none");
+            $("#freelancerRadioButton").prop("checked", true);
+            return;
+        }
         else{
              projecttype = data.value;
+            $("#freelancerRadioButton").css("display", "none");
+            $("#customizedradioButton").css("display", "flex");
+            $("#ProjectSelectionButton").prop("checked", true);
         }
         var Industryid = @ViewData["Industry"]; 
         var Serviceid = @ViewData["Service"];
@@ -947,6 +969,7 @@
             SolutionId : Solutionid,
             ProjectType : projecttype,
         }
+         $("#preloader").show();
          $.ajax({
             type: "POST",
             url: "@Url.Action("GetProjectDetailsbasedOnType", "Home")",
@@ -1204,9 +1227,6 @@
              }
 
          }
-
-         
-
     }
 
     function BindSuccessfullProject(data){
@@ -1657,4 +1677,5 @@
     function CloseFeedbackPopUp(){
         $("#FeedbackModal").modal('hide');
     }
+
 </script>

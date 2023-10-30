@@ -1949,3 +1949,66 @@ padding-top: 5%;
     font-size:15px !important;
     cursor: pointer;
 }
+
+#number-of-freelancer {
+    margin-left: 25%;
+    padding-top: 2%;
+}
+
+.cls-freelancerlvl {
+    font-weight: bold;
+    margin-right: 40px;
+}
+
+#freelancer-hourlyRate-details {
+    padding-top: 1%;
+}
+
+.cls-freelancerhourly {
+    margin-left: 95px;
+    font-family: serif;
+}
+
+.cls-freelancer-number {
+    width: 10%;
+    margin-right: 70px;
+}
+
+#freelancer-details {
+    padding-top: 4%;
+    margin-left: 20%;
+}
+
+#freelancer-info-icon {
+    margin-left: 100px;
+    padding-top: 2%;
+}
+
+#freelancer-title {
+    cursor: pointer;
+    border-radius: 20px;
+    padding: 5px 20px;
+    background: #fff;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: sans-serif;
+    width: 55%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--brand);
+    margin: 10px;
+    border: 2px solid rgba(58,58,58,0.2);
+}
+
+#freelancer-radio-details {
+    padding-top: 1%;
+    margin-left: 20%;
+}
+
+#number-of-radiofreelancer {
+    margin-left: 25%;
+    padding-top: 4%;
+}

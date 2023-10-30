@@ -654,7 +654,49 @@
                 </div>
                 <div class="modal-body p-0" style="background-color: #f5f5f5;">
                     <div class="container-fluid">
-                        <div style="border-radius:10px;" id="customisedDetailsForm">
+
+                        <div style="border-radius:10px;" id="FreelancerDetailsForm">
+                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
+                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
+                                    <h3 data-aos="fade-up">
+                                        Let’s start 
+                                    </h3>
+                                    <p data-aos="fade-up" data-aos-delay="100">
+                                        Select the appropriate
+                                        options; Get a step closer to
+                                        transform your business.
+                                    </p>
+                                </div> 
+
+                                <div class="col-lg-6 order-3 order-lg-3" id="FreelancerDetailsdescription">
+                                    <div id="freelancer-title-div" style="padding-left: 30%;">
+                                        <span id="freelancer-title">Select Freelancers</span>
+                                    </div>
+                                     <div id="number-of-freelancer">
+                                        <input type="text" class="cls-freelancer-number">
+                                        <input type="text" class="cls-freelancer-number">
+                                        <input type="text" class="cls-freelancer-number">
+                                    </div>
+                                    <div id="freelancer-details">
+                                        <label class="cls-freelancerlvl">Associate</label>
+                                        <label class="cls-freelancerlvl">Expert</label>
+                                        <label class="cls-freelancerlvl">Project Manager</label>
+                                    </div>
+                                    <div id="freelancer-hourlyRate-details">
+                                        <label class="cls-freelancerhourly">$10/h</label>
+                                        <label class="cls-freelancerhourly">$20/h</label>
+                                        <label class="cls-freelancerhourly">$30/h</label>
+                                    </div>
+                                    <div id="freelancer-info-icon">
+                                      @*  <i class="bi bi-info-circle-fill cls-freelancer-info-icon" data-open-accessibility-text-original="16px" style="font-size: 16px;"></i> *@
+                                      <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Test"><i class="bi bi-info-circle-fill cls-freelancer-info-icon"></i></a>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border-radius:10px;display:none;" id="customisedDetailsForm">
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
                                     <h3 data-aos="fade-up">
@@ -796,6 +838,7 @@
             $('#guidelineModal').modal('hide');
         });
         $(".info-popover").popover();
+        $('.freelancer-info-popover').popover();
         GetProjectDetails();
         
     });
@@ -813,7 +856,8 @@
 
     function OpenCustomisePopUp(){
       $('#CustomiseProjectPopUp').modal('show');
-      $("#customisedDetailsForm").css("display", "block")
+      $("#FreelancerDetailsForm").css("display", "block")
+      $("#customisedDetailsForm").css("display", "none")
       $("#customisedProjectWorkingForm").css("display", "none")
       $("#BrowseSolutionPostButton").text("Next")
       $("#BrowseSolutionPreviousButton").css("display", "none")
@@ -1124,17 +1168,44 @@
            $("#CustomiseProjectPopUp").modal('hide')
          }
          if (data.text == "Next") {
-           $("#customisedDetailsForm").css("display", "none")
-           $("#customisedProjectWorkingForm").css("display", "block")
-           $("#BrowseSolutionPostButton").text("Confirm")
-           $("#BrowseSolutionPreviousButton").css("display", "block")
+             if ($("#FreelancerDetailsForm").is(":visible")) {
+                   $("#FreelancerDetailsForm").css("display", "none")
+                   $("#customisedDetailsForm").css("display", "block")
+                   $("#customisedProjectWorkingForm").css("display", "none")
+                   $("#BrowseSolutionPostButton").text("Next")
+                   $("#BrowseSolutionPreviousButton").css("display","block")
+                 return;
+             }
+              if ($("#customisedDetailsForm").is(":visible")) {
+                   $("#FreelancerDetailsForm").css("display", "none")
+                   $("#customisedDetailsForm").css("display", "none")
+                   $("#customisedProjectWorkingForm").css("display", "block")
+                   $("#BrowseSolutionPostButton").text("Confirm")
+                   $("#BrowseSolutionPreviousButton").css("display","block")
+                   return;
+             }
          }
          if (data.text == "Previous") {
-           $("#customisedDetailsForm").css("display", "block")
-           $("#customisedProjectWorkingForm").css("display", "none")
-           $("#BrowseSolutionPostButton").text("Next")
-           $("#BrowseSolutionPreviousButton").css("display", "none")
+            if ($("#customisedDetailsForm").is(":visible")) {
+                   $("#FreelancerDetailsForm").css("display", "block")
+                   $("#customisedDetailsForm").css("display", "none")
+                   $("#customisedProjectWorkingForm").css("display", "none")
+                   $("#BrowseSolutionPostButton").text("Next")
+                   $("#BrowseSolutionPreviousButton").css("display","none")
+                   return;
+             }
+             if ($("#customisedProjectWorkingForm").is(":visible")) {
+                   $("#FreelancerDetailsForm").css("display", "none")
+                   $("#customisedDetailsForm").css("display", "block")
+                   $("#customisedProjectWorkingForm").css("display", "none")
+                   $("#BrowseSolutionPostButton").text("Next")
+                   $("#BrowseSolutionPreviousButton").css("display","block")
+                   return;
+             }
+
          }
+
+         
 
     }
 

@@ -25,9 +25,11 @@ namespace Aephy.API.Controllers
     public class FreelancerController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        public FreelancerController(AephyAppDbContext dbContext)
+        private readonly ClientController _clientcontroller;
+        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller)
         {
             _db = dbContext;
+            _clientcontroller = clientcontroller;
         }
 
         [HttpPost]
@@ -1355,22 +1357,10 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.ClientFullName = fullname;
                                 InvoiceDetails.TaxType = clientDetails.TaxType;
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
-                                InvoiceDetails.PreferredCurrency = clientDetails.PreferredCurrency;
-                                if(clientDetails.PreferredCurrency != null)
-                                {
-                                    if(clientDetails.PreferredCurrency == "USD")
-                                    {
-                                        InvoiceDetails.PreferredCurrency = "$";
-                                    }
-                                    if (clientDetails.PreferredCurrency == "EUR")
-                                    {
-                                        InvoiceDetails.PreferredCurrency = "€";
-                                    }
-                                    if (clientDetails.PreferredCurrency == "GBP")
-                                    {
-                                        InvoiceDetails.PreferredCurrency = "£";
-                                    }
-                                }
+                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
+
+
                             }
                             var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
                             if(clientaddressDetails != null)
@@ -2040,25 +2030,8 @@ namespace Aephy.API.Controllers
                             }
                         }
 
-                        if(model.ClientPreferredCurrency != null)
-                        {
-                            if(model.ClientPreferredCurrency == "USD")
-                            {
-                                model.ClientPreferredCurrency = "$";
-                            }
-                            if(model.ClientPreferredCurrency == "EUR")
-                            {
-                                model.ClientPreferredCurrency = "€";
-                            }
-                            if (model.ClientPreferredCurrency == "GBP")
-                            {
-                                model.ClientPreferredCurrency = "£";
-                            }
-                        }
-                        else
-                        {
-                            model.ClientPreferredCurrency = "€";
-                        }
+                        var CurrencySign = await _clientcontroller.ConvertToCurrencySign(model.ClientPreferredCurrency);
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -2067,7 +2040,7 @@ namespace Aephy.API.Controllers
                             {
                                 Expense = TotalExpense,
                                 Projects = finalFundList.Count,
-                                CurrentCurrency = model.ClientPreferredCurrency
+                                CurrentCurrency = CurrencySign
                             }
                         });
 

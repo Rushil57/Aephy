@@ -538,25 +538,7 @@ namespace Aephy.API.Controllers
 
                     }
 
-                    if (model.ClientPreferredCurrency != null)
-                    {
-                        if (model.ClientPreferredCurrency == "USD")
-                        {
-                            model.ClientPreferredCurrency = "$";
-                        }
-                        if (model.ClientPreferredCurrency == "EUR")
-                        {
-                            model.ClientPreferredCurrency = "€";
-                        }
-                        if (model.ClientPreferredCurrency == "GBP")
-                        {
-                            model.ClientPreferredCurrency = "£";
-                        }
-                    }
-                    else
-                    {
-                        model.ClientPreferredCurrency = "€";
-                    }
+                    var currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -573,7 +555,7 @@ namespace Aephy.API.Controllers
                             FreelancerHourlyList = freelancerList,
                             MileStoneToTalDays = mileStoneToTalDays,
                             SolutionFeedback = projectReviewList,
-                            PreferredCurrency = model.ClientPreferredCurrency
+                            PreferredCurrency = currency
                         }
                     });
                 }
@@ -767,25 +749,7 @@ namespace Aephy.API.Controllers
                     var DocumentList = _db.ActiveProjectDocuments.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
                     var freelancerList = _db.FreelancerDetails.Where(x => x.HourlyRate != null && x.HourlyRate != "").ToList();
 
-                    if (model.ClientPreferredCurrency != null)
-                    {
-                        if (model.ClientPreferredCurrency == "USD")
-                        {
-                            model.ClientPreferredCurrency = "$";
-                        }
-                        if (model.ClientPreferredCurrency == "EUR")
-                        {
-                            model.ClientPreferredCurrency = "€";
-                        }
-                        if (model.ClientPreferredCurrency == "GBP")
-                        {
-                            model.ClientPreferredCurrency = "£";
-                        }
-                    }
-                    else
-                    {
-                        model.ClientPreferredCurrency = "€";
-                    }
+                    var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -807,7 +771,7 @@ namespace Aephy.API.Controllers
                             FreelancerList = freelancerList,
                             FundStopByClient = fundStopByClient,
                             ContractData = contractData,
-                            ClientCurrency = model.ClientPreferredCurrency
+                            ClientCurrency = Currency
                         }
                     });
                 }
@@ -4207,6 +4171,42 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Something Went Wrong"
             });
+        }
+
+        [HttpPost]
+        [Route("ConvertToCurrencySign")]
+        public async Task<string> ConvertToCurrencySign(string Currency)
+        {
+
+            try
+            {
+                if (Currency != null)
+                {
+                    if (Currency == "USD")
+                    {
+                        Currency = "$";
+                    }
+                    if (Currency == "EUR")
+                    {
+                        Currency = "€";
+                    }
+                    if (Currency == "GBP")
+                    {
+                        Currency = "£";
+                    }
+                }
+                else
+                {
+                    Currency = "€";
+                }
+
+                return Currency;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+
+            }
         }
 
 

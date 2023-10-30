@@ -1603,7 +1603,7 @@ ul.social-links.clearfix li {
         padding: 10px;
     }
 
-#Projectdescription {
+#Projectdescription, #FreelancerDetailsdescription {
     border-left: 1px solid #000;
 }
 
@@ -1893,7 +1893,7 @@ padding-top: 5%;
     display: none !important;
 }
 
-.cls-team-info-icon {
+.cls-team-info-icon, .cls-freelancer-info-icon {
     color: var(--aephy) !important;
 }
 

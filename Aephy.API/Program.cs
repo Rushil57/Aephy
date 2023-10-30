@@ -60,6 +60,7 @@ builder.Services.AddControllers()
 
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMvc().AddControllersAsServices();
 
 builder.Services.AddSession(options =>
 {

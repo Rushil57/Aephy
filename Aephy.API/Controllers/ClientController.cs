@@ -3722,8 +3722,8 @@ namespace Aephy.API.Controllers
                             {
                                 freelancerPreferedCurrency = "EUR";
                             }
-                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == clientPreferedCurrency
-                            && x.ToCurrency == freelancerPreferedCurrency).FirstOrDefault();
+                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                            && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
                             var HourlyRate = Convert.ToDecimal(data.HourlyRate);
                             decimal ExchangeHourlyRate = HourlyRate;
                             if (exchangeRate != null)

@@ -2708,7 +2708,7 @@ namespace Aephy.API.Controllers
                                             // 4 Invoice Generate 
                                             try
                                             {
-                                                await GenerateInvoiceAfterPayAmount(contract, SolutionTitle);
+                                                await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, data.ProjectType);
                                             }
                                             catch (Exception exInvoice)
                                             {
@@ -3745,8 +3745,21 @@ namespace Aephy.API.Controllers
                             }
 
                             var projectManager = false;
-                            decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate); ;
-                            decimal Platformfees = Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                            decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
+                            decimal Platformfees = 0;
+                            if (projectType == "small")
+                            {
+                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                            }
+                            if (projectType == "medium")
+                            {
+                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
+                            }
+                            if (projectType == "large")
+                            {
+                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                            }
+                            
 
                             if (data.FreelancerLevel == "Project Manager")
                             {
@@ -4224,7 +4237,7 @@ namespace Aephy.API.Controllers
         }
 
 
-        public async Task GenerateInvoiceAfterPayAmount(Contract contract, string solutionTitle)
+        public async Task GenerateInvoiceAfterPayAmount(Contract contract, string solutionTitle, string projectType)
         {
             #region Invoice - Credit Memo
             var inv1 = _db.InvoiceList.Where(x => x.ContractId == contract.Id
@@ -4268,28 +4281,89 @@ namespace Aephy.API.Controllers
             //For all Freelancer
             var allFreelancers = await _db.ContractUser.Where(x => x.ContractId == contract.Id).ToListAsync();
             var count = 1;
-            foreach (var freelancers in allFreelancers)
+            foreach (var freelancer in allFreelancers)
             {
-                //var inv1 = _db.InvoiceList.Where(x => x.ContractId == contract.Id
-                //    && x.TransactionType == AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT).FirstOrDefault();
-                //var invoiceFreelancer = new InvoiceList();
-                //invoiceFreelancer.BillToClientId = inv1.BillToClientId;
-                //invoiceFreelancer.InvoiceNumber = "INV-00104_"+count; // ######
-                //invoiceFreelancer.InvoiceDate = DateTime.Now;
-                //invoiceFreelancer.TransactionType = AppConst.InvoiceTransactionType.CREDIT_MEMO;
-                //invoiceFreelancer.TotalAmount = Convert.ToString((Convert.ToDecimal(inv1.TotalAmount) * -1));
-                //invoiceFreelancer.InvoiceType = "CreditMemo";
-                //invoiceFreelancer.ContractId = contract.Id;
-                //_db.InvoiceList.Add(invoiceFreelancer);
-                //_db.SaveChanges();
+                var fullTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
+                var solutionTeam = fullTeam.Where(x => x.FreelancerId == freelancer.ApplicationUserId
+                    && x.SolutionFundId == contract.SolutionFundId).FirstOrDefault();
 
-                //// Invoice - Freelancer (Details 1) 
-                //var invoiceFreelancerDetail_milestone = new InvoiceListDetails();
-                //invoiceFreelancerDetail_milestone.InvoiceListId = invoiceFreelancer.Id;
-                //invoiceFreelancerDetail_milestone.Amount = "(" + inv1.TotalAmount + ")";
-                //invoiceFreelancerDetail_milestone.Description = "Paid from escrow for \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
-                //_db.InvoiceListDetails.Add(invoiceFreelancerDetail_milestone);
-                //_db.SaveChanges();
+                // freelancer initial total amount - platform fee (i.e solutionTeam.Amount - solutionTeam.PlatformFees)
+                decimal totalAmount = solutionTeam.Amount - solutionTeam.PlatformFees; 
+                var invoiceFreelancer = new InvoiceList();
+                invoiceFreelancer.BillToClientId = contract.ClientUserId;
+                invoiceFreelancer.InvoiceNumber = "INV-00104_" + count; // ######
+                invoiceFreelancer.InvoiceDate = DateTime.Now;
+                invoiceFreelancer.TransactionType = AppConst.InvoiceTransactionType.INVOICE_FREELANCER;
+                invoiceFreelancer.TotalAmount = Convert.ToString(totalAmount);
+                invoiceFreelancer.InvoiceType = "Invoice";
+                invoiceFreelancer.ContractId = contract.Id;
+                invoiceFreelancer.FreelancerId = freelancer.ApplicationUserId;
+                _db.InvoiceList.Add(invoiceFreelancer);
+                _db.SaveChanges();
+
+                //
+                decimal clientFees = 0;
+                if (projectType == "large")
+                {
+                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
+                }
+                else if (projectType == "small")
+                {
+                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
+                }
+                else if (projectType == "medium")
+                {
+                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
+                }
+                var revolutFees = contract.RevolutFee;
+                var solutionTeamSum = fullTeam.Sum(x => x.Amount)
+                    //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
+                    + fullTeam.Sum(p => p.ProjectManagerPlatformFees)
+                    + clientFees;
+                var checkoutRevoluteFeesForFreelancer = ((revolutFees * totalAmount) / solutionTeamSum);
+
+                // Invoice - Freelancer (Details 1)
+                var invoiceFreelancerDetail_InvFor = new InvoiceListDetails();
+                invoiceFreelancerDetail_InvFor.InvoiceListId = invoiceFreelancer.Id;
+                invoiceFreelancerDetail_InvFor.Amount = Convert.ToString((totalAmount 
+                    - (checkoutRevoluteFeesForFreelancer + Convert.ToDecimal(freelancer.PaymentFees))
+                    - (solutionTeam.PlatformFees * -1)));
+                invoiceFreelancerDetail_InvFor.Description = "Invoice for  \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
+                _db.InvoiceListDetails.Add(invoiceFreelancerDetail_InvFor);
+                _db.SaveChanges();
+
+                // Invoice - Freelancer (Details 2)
+                var invoiceFreelancerDetail_platformComm = new InvoiceListDetails();
+                invoiceFreelancerDetail_platformComm.InvoiceListId = invoiceFreelancer.Id;
+                invoiceFreelancerDetail_platformComm.Amount = Convert.ToString((solutionTeam.PlatformFees * -1));
+                invoiceFreelancerDetail_platformComm.Description = "Platform comission";
+                _db.InvoiceListDetails.Add(invoiceFreelancerDetail_platformComm);
+                _db.SaveChanges();
+
+                // Invoice - Freelancer (Details 3)
+                var invoiceFreelancerDetail_vat = new InvoiceListDetails();
+                invoiceFreelancerDetail_vat.InvoiceListId = invoiceFreelancer.Id;
+                invoiceFreelancerDetail_vat.Amount = "";
+                invoiceFreelancerDetail_vat.Description = "VAT(0%)";
+                _db.InvoiceListDetails.Add(invoiceFreelancerDetail_vat);
+                _db.SaveChanges();
+
+
+                // Invoice - Freelancer (Details 4)
+                var invoiceFreelancerDetail_OtherFees = new InvoiceListDetails();
+                invoiceFreelancerDetail_OtherFees.InvoiceListId = invoiceFreelancer.Id;
+                invoiceFreelancerDetail_OtherFees.Amount = Convert.ToString((checkoutRevoluteFeesForFreelancer + Convert.ToDecimal(freelancer.PaymentFees)));
+                invoiceFreelancerDetail_OtherFees.Description = "Other fees (Payment processing fees)";
+                _db.InvoiceListDetails.Add(invoiceFreelancerDetail_OtherFees);
+                _db.SaveChanges();
+
+                // Invoice - Freelancer (Details 5)
+                var invoiceFreelancerDetail_totalAmt = new InvoiceListDetails();
+                invoiceFreelancerDetail_totalAmt.InvoiceListId = invoiceFreelancer.Id;
+                invoiceFreelancerDetail_totalAmt.Amount = Convert.ToString(totalAmount);
+                invoiceFreelancerDetail_totalAmt.Description = "Total amount";
+                _db.InvoiceListDetails.Add(invoiceFreelancerDetail_totalAmt);
+                _db.SaveChanges();
 
                 count++;
             }

@@ -2372,7 +2372,7 @@ namespace Aephy.API.Controllers
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
                         var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
-
+                        var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2385,7 +2385,7 @@ namespace Aephy.API.Controllers
                                 FundDecided = Funddecided,
                                 NextMileStonePrice = calculateProjectPrice,
                                 MilestoneList = milestoneList,
-                                Currency = model.ClientPreferredCurrency
+                                Currency = Currency
                             }
                         });
                     }
@@ -2618,7 +2618,7 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    var completedData = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus == "COMPLETED").FirstOrDefault();
+                    var completedData = _db.SolutionFund.Where(x => x.Id == model.Id && x.ProjectStatus == "COMPLETED").FirstOrDefault();
                     if (completedData != null)
                     {
                         if (completedData.ProjectStatus == "COMPLETED")
@@ -2682,6 +2682,7 @@ namespace Aephy.API.Controllers
                                         };
 
                                         var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
+                                        CreatePaymentRsp.State = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
                                         if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
                                         {
@@ -2705,16 +2706,7 @@ namespace Aephy.API.Controllers
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
 
-                                            // 4 Invoice Generate 
-                                            try
-                                            {
-                                                await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, data.ProjectType);
-                                            }
-                                            catch (Exception exInvoice)
-                                            {
-
-                                                //#####
-                                            }
+                                            
                                             
 
                                         }
@@ -2794,6 +2786,19 @@ namespace Aephy.API.Controllers
                                         _db.SaveChanges();
                                     }
                                 }
+
+                                // 4 Invoice Generate 
+                                try
+                                {
+                                    await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, completedData.ProjectType);
+                                }
+                                catch (Exception exInvoice)
+                                {
+
+                                    //#####
+                                }
+
+
                                 var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
                                 var transfertoFreelancer = false;
                                 if (transferredcount == contract.ContractUsers.Count())
@@ -4377,7 +4382,7 @@ namespace Aephy.API.Controllers
 
             #region Invoice - Project Manager Fee
             var invoicePM = new InvoiceList();
-            invoiceCreditMemo.BillToClientId = contract.ClientUserId;
+            invoicePM.BillToClientId = contract.ClientUserId;
             invoicePM.InvoiceNumber = "INV-00106"; // ######
             invoicePM.InvoiceDate = DateTime.Now;
             invoicePM.TransactionType = AppConst.InvoiceTransactionType.INVOICE_PA;

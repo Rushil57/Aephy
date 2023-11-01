@@ -1,4 +1,6 @@
-﻿namespace Aephy.API.Models
+﻿using RevolutAPI.Models.MerchantApi.Orders;
+
+namespace Aephy.API.Models
 {
     public static class AppConst
     {
@@ -21,6 +23,17 @@
             public static int PLATFORM_COMM_FROM_FREELANCER_MEDIUM = 6;
             public static int PLATFORM_COMM_FROM_FREELANCER_LARGE = 6;
             public static int PLATFORM_COMM_FROM_FREELANCER_CUSTOM = 6;
+        }
+
+        public static class InvoiceTransactionType
+        {
+            public static string INVOICE1_PORTAL_TO_CLIENT = "Invoice1 - portal to client";
+            public static string PAYMENT_RECEIPT_AMOUNT_DUE = "Payment Receipt - Amount Due";
+            public static string INVOICE3_TOTAL_PLATFORM_FEES = "Invoice3 - Total platform fees";
+            public static string CREDIT_MEMO = "CREDIT MEMO";
+            public static string INVOICE_FREELANCER = "Invoice Freelancer";
+            public static string INVOICE_PA = "Invoice PA";
+            public static string PLATFORM_COMM_FROM_FREELANCER_CUSTOM = "Invoice Commision";
         }
     }
 }

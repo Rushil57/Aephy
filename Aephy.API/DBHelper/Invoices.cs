@@ -64,6 +64,8 @@ namespace Aephy.API.DBHelper
         public string? TransactionType { get; set; }
 
         public int ContractId { get; set; }
+
+        public string? FreelancerId { get; set; }
     }
 
     public class InvoiceListDetails

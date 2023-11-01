@@ -2128,7 +2128,7 @@ namespace Aephy.API.Controllers
                         invoiceFunding.BillToClientId = model.UserId;
                         invoiceFunding.InvoiceNumber = "INV-00101"; // ######
                         invoiceFunding.InvoiceDate = DateTime.Now;
-                        invoiceFunding.TransactionType = "Invoice1 - portal to client";
+                        invoiceFunding.TransactionType = AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT;
                         invoiceFunding.TotalAmount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
                         invoiceFunding.InvoiceType = "Invoice";
                         invoiceFunding.ContractId = contractSave.Id;
@@ -2166,7 +2166,7 @@ namespace Aephy.API.Controllers
                         invoicePaymentReceipt.BillToClientId = model.UserId;
                         invoicePaymentReceipt.InvoiceNumber = "INV-00102"; // ######
                         invoicePaymentReceipt.InvoiceDate = DateTime.Now;
-                        invoicePaymentReceipt.TransactionType = "Payment Receipt - Amount Due";
+                        invoicePaymentReceipt.TransactionType = AppConst.InvoiceTransactionType.PAYMENT_RECEIPT_AMOUNT_DUE;
                         invoicePaymentReceipt.TotalAmount = Convert.ToString(contractSave.Amount);
                         invoicePaymentReceipt.InvoiceType = "Payment Receipt";
                         invoicePaymentReceipt.ContractId = contractSave.Id;
@@ -2196,7 +2196,7 @@ namespace Aephy.API.Controllers
                         invoiceTotalPlatformFees.BillToClientId = model.UserId;
                         invoiceTotalPlatformFees.InvoiceNumber = "INV-00103"; // ######
                         invoiceTotalPlatformFees.InvoiceDate = DateTime.Now;
-                        invoiceTotalPlatformFees.TransactionType = "Invoice3 - Total platform fees";
+                        invoiceTotalPlatformFees.TransactionType = AppConst.InvoiceTransactionType.INVOICE3_TOTAL_PLATFORM_FEES;
                         invoiceTotalPlatformFees.TotalAmount = Convert.ToString(clientAndFLfees);
                         invoiceTotalPlatformFees.InvoiceType = "Invoice";
                         invoiceTotalPlatformFees.ContractId = contractSave.Id;
@@ -2666,13 +2666,13 @@ namespace Aephy.API.Controllers
                                             priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
                                         }
                                         var getCounterParties = await _revoultService.GetCounterparties();
-
+                                        // When Pay Amount button click
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
                                             AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                             RequestId = Guid.NewGuid().ToString(),
-                                            Amount = 2,
-                                            Currency = user.PreferredCurrency, // ##### Freelancer PreferredCurrency 
+                                            Amount = 2, // ##### actual amount - solutionteam.transferamount 
+                                            Currency = user.PreferredCurrency, 
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -2704,6 +2704,19 @@ namespace Aephy.API.Controllers
                                             contractUser.TransferDateTime = DateTime.Now;
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
+
+                                            // 4 Invoice Generate 
+                                            try
+                                            {
+                                                await GenerateInvoiceAfterPayAmount(contract, SolutionTitle);
+                                            }
+                                            catch (Exception exInvoice)
+                                            {
+
+                                                //#####
+                                            }
+                                            
+
                                         }
                                         else
                                         {
@@ -2730,8 +2743,8 @@ namespace Aephy.API.Controllers
                                             {
                                                 AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                                 RequestId = Guid.NewGuid().ToString(),
-                                                Amount = 2,
-                                                Currency = user.PreferredCurrency, // ##### Freelancer PreferredCurrency 
+                                                Amount = 2, // ##### actual amount  Solutionteam.ProjectManagerPlatformFees
+                                                Currency = user.PreferredCurrency, 
                                                 Reference = "Payment For- " + SolutionTitle,
                                                 Receiver = new CreatePaymentReq.ReceiverData()
                                                 {
@@ -4211,6 +4224,75 @@ namespace Aephy.API.Controllers
         }
 
 
+        public async Task GenerateInvoiceAfterPayAmount(Contract contract, string solutionTitle)
+        {
+            #region Invoice - Credit Memo
+            var inv1 = _db.InvoiceList.Where(x => x.ContractId == contract.Id
+            && x.TransactionType == AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT).FirstOrDefault();
+            var invoiceCreditMemo = new InvoiceList();
+            invoiceCreditMemo.BillToClientId = inv1.BillToClientId;
+            invoiceCreditMemo.InvoiceNumber = "INV-00104"; // ######
+            invoiceCreditMemo.InvoiceDate = DateTime.Now;
+            invoiceCreditMemo.TransactionType = AppConst.InvoiceTransactionType.CREDIT_MEMO;
+            invoiceCreditMemo.TotalAmount = Convert.ToString((Convert.ToDecimal(inv1.TotalAmount) * -1));
+            invoiceCreditMemo.InvoiceType = "CreditMemo";
+            invoiceCreditMemo.ContractId = contract.Id;
+            _db.InvoiceList.Add(invoiceCreditMemo);
+            _db.SaveChanges();
 
+            // Invoice - Credit Memo (Details 1) 
+            var invoiceCreditMemoDetail_escrow = new InvoiceListDetails();
+            invoiceCreditMemoDetail_escrow.InvoiceListId = invoiceCreditMemo.Id;
+            invoiceCreditMemoDetail_escrow.Amount = "(" + inv1.TotalAmount + ")";
+            invoiceCreditMemoDetail_escrow.Description = "Paid from escrow for \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
+            _db.InvoiceListDetails.Add(invoiceCreditMemoDetail_escrow);
+            _db.SaveChanges();
+
+            // Invoice - Credit Memo (Details 2) 
+            var invoiceCreditMemoDetail_vat = new InvoiceListDetails();
+            invoiceCreditMemoDetail_vat.InvoiceListId = invoiceCreditMemo.Id;
+            invoiceCreditMemoDetail_vat.Amount = "";
+            invoiceCreditMemoDetail_vat.Description = "VAT (0%)";
+            _db.InvoiceListDetails.Add(invoiceCreditMemoDetail_vat);
+            _db.SaveChanges();
+
+            // Invoice - Credit Memo (Details 3)
+            var invoiceCreditMemoDetail_total = new InvoiceListDetails();
+            invoiceCreditMemoDetail_total.InvoiceListId = invoiceCreditMemo.Id;
+            invoiceCreditMemoDetail_total.Amount = invoiceCreditMemo.TotalAmount;
+            invoiceCreditMemoDetail_total.Description = "Total amount";
+            _db.InvoiceListDetails.Add(invoiceCreditMemoDetail_total);
+            _db.SaveChanges();
+            #endregion
+
+            //For all Freelancer
+            var allFreelancers = await _db.ContractUser.Where(x => x.ContractId == contract.Id).ToListAsync();
+            var count = 1;
+            foreach (var freelancers in allFreelancers)
+            {
+                //var inv1 = _db.InvoiceList.Where(x => x.ContractId == contract.Id
+                //    && x.TransactionType == AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT).FirstOrDefault();
+                //var invoiceFreelancer = new InvoiceList();
+                //invoiceFreelancer.BillToClientId = inv1.BillToClientId;
+                //invoiceFreelancer.InvoiceNumber = "INV-00104_"+count; // ######
+                //invoiceFreelancer.InvoiceDate = DateTime.Now;
+                //invoiceFreelancer.TransactionType = AppConst.InvoiceTransactionType.CREDIT_MEMO;
+                //invoiceFreelancer.TotalAmount = Convert.ToString((Convert.ToDecimal(inv1.TotalAmount) * -1));
+                //invoiceFreelancer.InvoiceType = "CreditMemo";
+                //invoiceFreelancer.ContractId = contract.Id;
+                //_db.InvoiceList.Add(invoiceFreelancer);
+                //_db.SaveChanges();
+
+                //// Invoice - Freelancer (Details 1) 
+                //var invoiceFreelancerDetail_milestone = new InvoiceListDetails();
+                //invoiceFreelancerDetail_milestone.InvoiceListId = invoiceFreelancer.Id;
+                //invoiceFreelancerDetail_milestone.Amount = "(" + inv1.TotalAmount + ")";
+                //invoiceFreelancerDetail_milestone.Description = "Paid from escrow for \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
+                //_db.InvoiceListDetails.Add(invoiceFreelancerDetail_milestone);
+                //_db.SaveChanges();
+
+                count++;
+            }
+        }
     }
 }

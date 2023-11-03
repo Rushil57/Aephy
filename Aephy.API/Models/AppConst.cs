@@ -35,5 +35,14 @@ namespace Aephy.API.Models
             public static string INVOICE_PA = "Invoice PA";
             public static string PLATFORM_COMM_FROM_FREELANCER_CUSTOM = "Invoice Commision";
         }
+
+        public static class ProjectType
+        {
+            public static string SMALL_PROJECT = "small";
+
+            public static string MEDIUM_PROJECT = "medium";
+
+            public static string LARGE_PROJECT = "large";
+        }
     }
 }

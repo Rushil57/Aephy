@@ -1948,7 +1948,7 @@ namespace Aephy.API.Controllers
                     {
                         foreach (var data in Userslist)
                         {
-                            if (solutionFundData.ProjectType == "small")
+                            if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                             {
                                 //var teamSize = "1 Project Manager + 1 Associate";
                                 if (!associateDetailsAdded)
@@ -1972,7 +1972,7 @@ namespace Aephy.API.Controllers
                                 }
 
                             }
-                            if (solutionFundData.ProjectType == "medium")
+                            if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                             {
                                 //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
                                 if (!expertDetailsAdded)
@@ -2006,7 +2006,7 @@ namespace Aephy.API.Controllers
                                 }
 
                             }
-                            if (solutionFundData.ProjectType == "large")
+                            if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
                             {
                                 //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
                                 if (exprtcount <= 1)
@@ -2110,15 +2110,15 @@ namespace Aephy.API.Controllers
                         var teamList = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToList(); //######
                         flFees = teamList.Sum(y => y.PlatformFees); // need to add client platform fee
 
-                        if (solutionFundData.ProjectType == "large")
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
                         {
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
                         }
-                        else if (solutionFundData.ProjectType == "small")
+                        else if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                         {
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
                         }
-                        else if (solutionFundData.ProjectType == "medium")
+                        else if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                         {
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                         }
@@ -2478,7 +2478,7 @@ namespace Aephy.API.Controllers
                             //
                             if (solutionTeamData.Count > 0)
                             {
-                                if (data.ProjectType == "small")
+                                if (data.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                                 {
                                     foreach (var item in solutionTeamData)
                                     {
@@ -2509,7 +2509,7 @@ namespace Aephy.API.Controllers
 
 
                                 }
-                                if (data.ProjectType == "medium")
+                                if (data.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                                 {
                                     if (solutionTeamData.Count > 0)
                                     {
@@ -2540,7 +2540,7 @@ namespace Aephy.API.Controllers
                                         }
                                     }
                                 }
-                                if (data.ProjectType == "large")
+                                if (data.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
                                 {
                                     if (solutionTeamData.Count > 0)
                                     {
@@ -2641,6 +2641,7 @@ namespace Aephy.API.Controllers
                                 //var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
 
                                 var allAccounts = await _revoultService.RetrieveAllAccounts();
+                                double totalAmt = 0;
                                 foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
                                 {
                                     var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
@@ -2652,27 +2653,30 @@ namespace Aephy.API.Controllers
                                         {
                                             user.PreferredCurrency = "EUR";
                                         }
-                                        decimal priceToTransfer = 0;
+                                        double priceToTransfer = 0;
                                         var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
                                         //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-
-                                        var getExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
-                                        if (getExchangeRate == null)
-                                        {
-                                            priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
-                                        }
-                                        else
-                                        {
-                                            priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
-                                        }
+                                        priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+                                        //var getExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
+                                        //if (getExchangeRate == null)
+                                        //{
+                                        //    priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+                                        //}
+                                        //else
+                                        //{
+                                        //    priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
+                                        //}
                                         var getCounterParties = await _revoultService.GetCounterparties();
                                         // When Pay Amount button click
+                                        totalAmt += (double)priceToTransfer;
+
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                            AccountId = allAccounts.Where(x => x.Currency == model.ClientPreferredCurrency 
+                                            && x.Balance >= (double)totalAmt).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                             RequestId = Guid.NewGuid().ToString(),
-                                            Amount = 2, // ##### actual amount - solutionteam.transferamount 
-                                            Currency = user.PreferredCurrency, 
+                                            Amount = (double)priceToTransfer, // ##### actual amount - solutionteam.transferamount 
+                                            Currency = model.ClientPreferredCurrency, 
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -2682,7 +2686,7 @@ namespace Aephy.API.Controllers
                                         };
 
                                         var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
-                                        CreatePaymentRsp.State = "completed";
+                                        //CreatePaymentRsp.State = "completed";
                                         //Possible values: [created, pending, completed, declined, failed, reverted]
                                         if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
                                         {
@@ -3624,7 +3628,7 @@ namespace Aephy.API.Controllers
                     List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
                     foreach (var data in Userslist)
                     {
-                        if (projectType == "small")
+                        if (projectType == AppConst.ProjectType.SMALL_PROJECT)
                         {
                             //var teamSize = "1 Project Manager + 1 Associate";
                             if (!associateDetailsAdded)
@@ -3648,7 +3652,7 @@ namespace Aephy.API.Controllers
                             }
 
                         }
-                        if (projectType == "medium")
+                        if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
                         {
                             //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
                             if (!expertDetailsAdded)
@@ -3682,7 +3686,7 @@ namespace Aephy.API.Controllers
                             }
 
                         }
-                        if (projectType == "large")
+                        if (projectType == AppConst.ProjectType.LARGE_PROJECT)
                         {
                             //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
 
@@ -3752,15 +3756,15 @@ namespace Aephy.API.Controllers
                             var projectManager = false;
                             decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
                             decimal Platformfees = 0;
-                            if (projectType == "small")
+                            if (projectType == AppConst.ProjectType.SMALL_PROJECT)
                             {
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
                             }
-                            if (projectType == "medium")
+                            if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
                             {
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
                             }
-                            if (projectType == "large")
+                            if (projectType == AppConst.ProjectType.LARGE_PROJECT)
                             {
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
                             }
@@ -3790,15 +3794,15 @@ namespace Aephy.API.Controllers
                         if (soluionTeamData.Count > 0)
                         {
                             var projectTypeFee = 0;
-                            if (projectType == "small")
+                            if (projectType == AppConst.ProjectType.SMALL_PROJECT)
                             {
                                 projectTypeFee = AppConst.Commission.PROJECT_MANAGER_SMALL;
                             }
-                            if (projectType == "medium")
+                            if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
                             {
                                 projectTypeFee = AppConst.Commission.PROJECT_MANAGER_MEDIUM;
                             }
-                            if (projectType == "large")
+                            if (projectType == AppConst.ProjectType.LARGE_PROJECT)
                             {
                                 projectTypeFee = AppConst.Commission.PROJECT_MANAGER_LARGE;
                             }
@@ -3936,17 +3940,17 @@ namespace Aephy.API.Controllers
                 decimal projectManagerFees = 0;
                 //var projectFreelancers = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToListAsync();
                 //var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).FirstOrDefault();
-                if (model.ProjectType == "small")
+                if (model.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                 {
                     clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
                     projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_SMALL)) / 100;
                 }
-                if (model.ProjectType == "medium")
+                if (model.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                 {
                     clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
                     projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_MEDIUM)) / 100;
                 }
-                if (model.ProjectType == "large")
+                if (model.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
                 {
                     clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
                     projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_LARGE)) / 100;
@@ -4242,6 +4246,7 @@ namespace Aephy.API.Controllers
         }
 
 
+        [HttpPost]
         public async Task GenerateInvoiceAfterPayAmount(Contract contract, string solutionTitle, string projectType)
         {
             #region Invoice - Credit Memo
@@ -4288,17 +4293,23 @@ namespace Aephy.API.Controllers
             var allFreelancers = await _db.ContractUser.Where(x => x.ContractId == contract.Id).ToListAsync();
             var fullTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
             decimal clientFees = 0;
-            if (projectType == "large")
+            decimal freelancerFees = 0;
+            //decimal pmPlatformfees = 0;
+            if (projectType == AppConst.ProjectType.LARGE_PROJECT)
             {
                 clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
+                freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                //pmPlatformfees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
             }
-            else if (projectType == "small")
+            else if (projectType == AppConst.ProjectType.SMALL_PROJECT)
             {
                 clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
+                freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
             }
-            else if (projectType == "medium")
+            else if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
             {
                 clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
+                freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
             }
             var revolutFees = contract.RevolutFee;
             var solutionTeamSum = fullTeam.Sum(x => x.Amount)
@@ -4430,6 +4441,117 @@ namespace Aephy.API.Controllers
             _db.SaveChanges();
             #endregion
 
+            #region Invoice - Invoice Commission
+
+            decimal finalProjectpricing = 0;
+            decimal HoursPerDay = 8;
+
+            var ClientPrefferendCurrency = await _db.Users.Where(x => x.Id == contract.ClientUserId).Select(x => x.PreferredCurrency).FirstOrDefaultAsync();
+
+            foreach (var data in fullTeam)
+            {
+                var freelancerDetails = _db.FreelancerDetails.Where(q => q.UserId == data.FreelancerId).FirstOrDefault();
+                if (freelancerDetails != null)
+                {
+                    var freelancerPrefferedCurrency = _db.Users.Where(x => x.Id == freelancerDetails.UserId).Select(x => x.PreferredCurrency).FirstOrDefault();
+                    var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPrefferedCurrency && x.ToCurrency == ClientPrefferendCurrency).FirstOrDefault();
+                    var HourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                    decimal ExchangeHourlyRate = 0;
+                    if (exchangeRate != null)
+                    {
+                        ExchangeHourlyRate = (decimal)(HourlyRate * exchangeRate.Rate);
+                    }
+                    else
+                    {
+                        ExchangeHourlyRate = HourlyRate;
+                    }
+                    var solutionFundData = _db.SolutionFund.Where(x => x.Id == contract.SolutionFundId).FirstOrDefault();
+                    var solutionMilestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == solutionFundData.ProjectType).ToList();
+                    if (solutionMilestoneData.Count > 0)
+                    {
+                        var totalMilestoneDays = solutionMilestoneData.Sum(x => x.Days);
+                        finalProjectpricing += HoursPerDay * ExchangeHourlyRate * totalMilestoneDays;
+                    }
+                }
+            }
+
+            // calculation for client platform fees//
+            var pmPlatformFees = fullTeam.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).First();
+            var b11 = clientFees;
+            var c11 = (clientFees * revolutFees) / (finalProjectpricing + pmPlatformFees) + (finalProjectpricing * 10 / 100); // c11
+            var e11 = b11 - revolutFees;
+            var clientPlatformFees = Math.Abs(e11 - b11 - c11);
+            // calculation for client platform fees//
+
+
+            // calculation for freelancer platform fees//
+            var freelancerb12and13 = clientFees;
+            var freelancerc12and13 = freelancerFees - c11;
+            var freelancerE12and13 = fullTeam.Sum(x => x.PlatformFees);
+            var freelancerPlatformFees = Math.Abs(freelancerb12and13 - freelancerc12and13 - freelancerE12and13);
+            // calculation for freelancer platform fees//
+
+            // calculation for fees platform fees//
+            var feesC11and12and13 = c11 + c11 + c11;
+            var feesE11and12and13 = (finalProjectpricing * 10 / 100) + fullTeam.Sum(x => x.PlatformFees);
+            var comissionFees = Math.Abs(feesC11and12and13 + feesE11and12and13);
+            // calculation for fees platform fees//
+
+            var commisiontotalAmount = clientPlatformFees + freelancerPlatformFees + comissionFees;
+
+            var invCommission = _db.InvoiceList.Where(x => x.ContractId == contract.Id
+            && x.TransactionType == AppConst.InvoiceTransactionType.PLATFORM_COMM_FROM_FREELANCER_CUSTOM).FirstOrDefault();
+            var invoiceCommission = new InvoiceList();
+            invoiceCommission.BillToClientId = inv1.BillToClientId;
+            invoiceCommission.InvoiceNumber = "INV-00101"; // ######
+            invoiceCommission.InvoiceDate = DateTime.Now;
+            invoiceCommission.TransactionType = AppConst.InvoiceTransactionType.PLATFORM_COMM_FROM_FREELANCER_CUSTOM;
+            invoiceCommission.TotalAmount = commisiontotalAmount.ToString();
+            invoiceCommission.InvoiceType = "Invoice Commisions";
+            invoiceCommission.ContractId = contract.Id;
+            _db.InvoiceList.Add(invoiceCommission);
+            _db.SaveChanges();
+
+            // Invoice - Commisions (Details 1) 
+            var invoiceplatformFees_Client = new InvoiceListDetails();
+            invoiceplatformFees_Client.InvoiceListId = invoiceCommission.Id;
+            invoiceplatformFees_Client.Amount = clientPlatformFees.ToString();
+            invoiceplatformFees_Client.Description = "Platform fees to client for  \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
+            _db.InvoiceListDetails.Add(invoiceplatformFees_Client);
+            _db.SaveChanges();
+
+            // Invoice - Commisions (Details 2) 
+            var invoiceplatformFees_Freelancer = new InvoiceListDetails();
+            invoiceplatformFees_Freelancer.InvoiceListId = invoiceCommission.Id;
+            invoiceplatformFees_Freelancer.Amount = freelancerPlatformFees.ToString();
+            invoiceplatformFees_Freelancer.Description = "Platform fees to freelancers for  \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
+            _db.InvoiceListDetails.Add(invoiceplatformFees_Freelancer);
+            _db.SaveChanges();
+
+            // Invoice - Commisions (Details 3)
+            var invoiceVat = new InvoiceListDetails();
+            invoiceVat.InvoiceListId = invoiceCommission.Id;
+            invoiceVat.Amount = "";
+            invoiceVat.Description = "VAT (0%)";
+            _db.InvoiceListDetails.Add(invoiceVat);
+            _db.SaveChanges();
+
+            // Invoice - Commisions (Details 4)
+            var invoiceCommision_OtherFees = new InvoiceListDetails();
+            invoiceCommision_OtherFees.InvoiceListId = invoiceCommission.Id;
+            invoiceCommision_OtherFees.Amount = comissionFees.ToString();
+            invoiceCommision_OtherFees.Description = "Other fees (Payment processing fees)";
+            _db.InvoiceListDetails.Add(invoiceCommision_OtherFees);
+            _db.SaveChanges();
+
+            // Invoice - Commisions (Details 5)
+            var invoiceCommision_Totalamount = new InvoiceListDetails();
+            invoiceCommision_Totalamount.InvoiceListId = invoiceCommission.Id;
+            invoiceCommision_Totalamount.Amount = commisiontotalAmount.ToString();
+            invoiceCommision_Totalamount.Description = "Total amount";
+            _db.InvoiceListDetails.Add(invoiceCommision_Totalamount);
+            _db.SaveChanges();
+            #endregion
         }
     }
 }

@@ -658,7 +658,7 @@
         $("#preloader").show();
         $("#drp-assigned-freelancers").empty();
         $("#MileStoneTable tbody").empty();
-        GetFreelancerList();
+       // GetFreelancerList();
         $.ajax({
             type: "POST",
             url: "@Url.Action("GetSolutionDetailsById", "Solutions")",
@@ -753,11 +753,7 @@
 
                     RefreshDataTable();
                 }
-                if (data.ArchitectIds.length > 0) {
-                    data.ArchitectIds.forEach(function (key) {
-                        architectData.push(key);
-                    });
-                }
+               
                 //--- FreeLancer pool entry bind end --//
                 GetTopProfessionalList()
                 GetProjectList()

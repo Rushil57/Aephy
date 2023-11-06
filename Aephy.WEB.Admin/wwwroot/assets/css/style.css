@@ -1459,5 +1459,50 @@ input:checked + .slider:before {
 }
 
 .swal2-title {
-    font-size: 1.5em !important;
+    font-size: 1.3em !important;
 }
+
+.view_action_Link div {
+    position: relative;
+    transition: 0.5s; 
+    background-color: rgba(211, 139, 78,0.5);
+    text-decoration: auto;
+    text-align: center;
+}
+
+.progressContainer {
+    position: relative;
+    height: fit-content;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 2rem;
+    color: var(--font)
+}
+
+.list-title-size {
+    font-size: 18px;
+    padding-top: 1%;
+}
+
+.section-title-size {
+    font-size: 18px !important;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.section-detail-size {
+    font-size: 17px !important;
+}
+
+.cls-ol-list {
+    padding-left: 2rem;
+}
+
+ol, ul {
+    padding-left: 2rem;
+}
+
+li {
+    padding-bottom: 1%;
+}
+

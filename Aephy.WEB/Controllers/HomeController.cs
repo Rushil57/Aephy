@@ -1967,11 +1967,11 @@ namespace Aephy.WEB.Controllers
             string content2 = string.Empty;
             if (taxDetails != null && taxDetails != "" && taxDetails != "null")
             {
-                content2 = "Bill to\n" + data.ClientFullName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\n" + data.TaxType.ToString() + " ID: " + data.TaxId.ToString();
+                content2 = "Bill to\n" + data.ClientFullName + "\nName \nAddress: " + data.ClientAddress + "\n" + data.TaxType.ToString() + " ID: " + data.TaxId.ToString();
             }
             else
             {
-                content2 = "Bill to\n" + data.ClientFullName + "\nName (if applicable)\nAddress: " + data.ClientAddress + "\n";
+                content2 = "Bill to\n" + data.ClientFullName + "\nName \nAddress: " + data.ClientAddress + "\n";
             }
 
 
@@ -2233,7 +2233,7 @@ namespace Aephy.WEB.Controllers
             table2.HorizontalAlignment = Element.ALIGN_LEFT;
 
             // Content 2
-            string content2 = "Bill to\nClient 1 International Client\nName (if applicable)\nAddress:\nVAT ID: (If Applicable )\nTax ID: (other)";
+            string content2 = "Bill to\nClient 1 International Client\nName \nAddress:\nVAT ID: (If Applicable )\nTax ID: (other)";
 
             // Split content2 into lines
             string[] content2Lines = content2.Split('\n');

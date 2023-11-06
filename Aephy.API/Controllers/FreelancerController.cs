@@ -213,9 +213,7 @@ namespace Aephy.API.Controllers
                             x.Description,
                             SolutionName = solutionName,
                             ServiceName = serviceName,
-                            IndustryName = IndName,
-                            IsDefine = freelancerPools.Any(p => p.IndustryId == x.IndustryId && p.SolutionID == x.SolutionId
-                            && p.IsProjectArchitect)
+                            IndustryName = IndName
                         };
                         finalList.Add(obj);
                     }
@@ -238,7 +236,7 @@ namespace Aephy.API.Controllers
 
                     dynamic obj = new
                     {
-                        Level = fp.IsProjectArchitect ? "Project Manager/Project Architect" : freelancerDetails?.FreelancerLevel,
+                        Level = freelancerDetails?.FreelancerLevel,
                         Title = "-",
                         CreatedDateTime = "",
                         ID = 0,
@@ -248,7 +246,6 @@ namespace Aephy.API.Controllers
                         SolutionName = solutionName,
                         ServiceName = serviceName,
                         IndustryName = IndName,
-                        IsDefine = fp?.IsProjectArchitect
                     };
                     finalList.Add(obj);
                 });

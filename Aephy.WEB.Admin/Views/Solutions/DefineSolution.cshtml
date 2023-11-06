@@ -117,7 +117,7 @@
                                             <span style="background-color:#d38b4e; width:1rem;"></span>
                                             <div class="d-flex justify-content-center align-items-center">
                                                 <a href="" class="cls-milestone-popup" id="clsGuidelineModal" data-bs-toggle="modal" data-bs-target="#guidelineModal">View Guidelines</a>
-                                                <img src="~/assets/img/dashboard/icons-send.png" />
+                                                <img src="~/assets/img/icons-send.png" />
                                             </div>
                                         </div>
                                     </div>
@@ -227,6 +227,175 @@
         </div>
     </div>
 </div>
+
+ <div class="modal fade" id="guidelineModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Guidelines</h4>
+                    <a class="close" data-dismiss="#guidelineModal" onclick="hideGuidelinesModal();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="progressContainer d-flex flex-column">
+                        <ol class="px-4 cls-ol-list">
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">An Introduction to Predefined Al Projects: The Essential Role and Process of the Project Architect</h3>
+                                <h4 class="section-title-size">
+                                    In the innovative world of predefined Al projects, the central figure is the Project Architect, who shapes the success of the entire project lifecycle. The process, broken down into distinct stages, provides a seamless experience for clients and freelancers alike:
+                                </h4>
+                                <ol type="i" class="cls-ol-list">
+                                    <li class="section-detail-size">
+                                        Project Creation by the Project Architect: With a deep understanding of industry needs, the Project Architect initiates the project by defining its requirements, details, scope, and timeline. By meticulously outlining every aspect, the Architect ensures that the project is not only viable but also tailored to meet specific client demands.                                    </li>
+                                    <li class="section-detail-size">
+                                        Client Purchasing: Once the project is carefully crafted and approved, it becomes available for clients to purchase. The predefined nature of these projects means that clients can confidently select projects that align with their needs, knowing that all critical aspects have been expertly planned.                                    </li>
+                                    <li class="section-detail-size">
+                                        Advantages for Freelancers: When a client purchases a project, the robust definition created by the Project Architect comes into play. Freelancers selected to work on the project benefit from the Architect's groundwork, finding it easier to adhere to timelines and scope. This clarity eliminates guesswork and fosters efficiency.                                    </li>
+                                    <li class="section-detail-size">
+                                        Transparent and Incentivized Payment Structure: The Project Architect is motivated by receiving an extra 3% or 4% from the total project fees, depending on the project's size. This transparent payment system ensures fairness and encourages excellence.                                    </li>
+                                    <li class="section-detail-size">
+                                           Automated Price Estimation: Our platform uses the inputs provided by the Project Architect, along with other factors, to automatically estimate the project price. This approach streamlines the selection and purchasing process for clients, making it easier for them to choose the right predefined Al projects.                                    </li>
+                                </ol>
+                                <p class="section-detail-size">In essence, the predefined Al project model, championed by the role of the Project Architect, establishes a solid foundation that benefits all stakeholders. Clients gain access to projects that resonate with their needs, while freelancers enjoy clear guidance that makes execution straightforward. The process, built on precision and professionalism, reinforces the importance of careful planning, and leads to successful projects that meet and exceed expectations.</p>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Before You Dive In</h3>
+                                <p class="section-detail-size">This document has been designed as a reference for Project Architects. It offers guidelines for creating the “Project Outline”, "Project Details", “Milestones” and “Project Highlights” sections for predefined solutions. Predefined solutions refer to small, medium, and large projects. Custom projects, on the other hand, are not required to be defined by the project architect, as they will be determined later through communication with the client.
+                                </p>
+                                <h4 class="section-title-size">
+                                    Team size will be determined based on the project scale:
+                                </h4>
+                                <ul>
+                                    <li class="section-detail-size">
+                                        Small : 1 Project Manager + 1 Associate
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Medium : 1 Project Manager + 1 Expert + 1 Associate
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Large : 1 Project Leader + 2 Experts + 2 Associates
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Custom projects : Team size and timelines will be selected based on client preferences.
+                                    </li>
+                                </ul>
+                                <p class="section-detail-size">Although we typically suggest maintaining a uniform duration for predefined projects, regardless of whether they are small, medium, or large, it's important to consider that larger projects, given their increased complexity, might not only require a larger team of freelancers, but also an extended timeline for completion. The platform has a word limit for displaying information, Project Architects should stay within that limit and include all relevant information. All relevant information should be adjusted based on the size of each project - small, medium, or large - and populated accordingly. Once projects have been defined and submitted by the project Architect and approved by the admin, they can be accessed on the website by following the relevant path: / Browse Solutions / Selected Service / Selected Solution / Selected Industry. See below for a preview of how the project should be defined and identify which fields will be updated from the Project Architect's dashboard.</p>
+                                <img src="~/assets/defineguidelines/choosesmall.png" class="img-fluid pt-4" alt="" style="width:100%;">
+                                <p style="font-size: 15px !important;">Figure 1: Defining a Small Project</p>
+                                <img src="~/assets/defineguidelines/choosemedium.png" class="img-fluid pt-4" alt="" style="width:100%;">
+                                <p style="font-size: 15px !important;">Figure 2: Defining a Medium Project</p>
+                                <img src="~/assets/defineguidelines/chooselarge.png" class="img-fluid pt-4" alt="" style="width:100%;">
+                                <p style="font-size: 15px !important;">Figure 3: Defining a Large Project</p>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Project Outline</h3>
+                                <ul>
+                                    <li class="section-detail-size">
+                                        Paragraph 1:<p>Focus on the expected benefits and outcomes of the project. Highlight any unique features or advantages that differentiate this project from others in the field.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 2:<p>Provide an overview of the project process, mentioning any key milestones or deliverables. Ensure the summary is client-focused, communicating effectively what potential clients can expect to gain from their collaboration with freelancers on the website.</p>
+                                    </li class="section-detail-size">
+                                </ul>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Project Details</h3>
+                                <h4 class="section-title-size">
+                                Defining the scope and requirements for an AI project involves several steps:      
+                                </h4>
+                                <ul>
+                                    <li class="section-detail-size">
+                                        Paragraph 1:<p>Identify the problem: First, identify the business problem or opportunity that the AI project will address. This can involve analysing data, identifying inefficiencies, or uncovering opportunities for automation.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 2:<p>Determine the goals: Next, determine the goals of the project. These should be specific, measurable, and aligned with the business problem or opportunity identified in step one. For example, a goal might be to reduce customer service response time by 50%.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 3:<p>Define the scope: Once the goals are established, define the scope of the project. This should include the data sources that will be used, the technology stack that will be employed, and any other key parameters.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 4:<p>Define the requirements: Based on the goals and scope, define the technical requirements for the project. This may include selecting specific AI algorithms, defining data pre-processing steps, and selecting performance metrics.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 5:<p>Prioritize requirements: Once the requirements are defined, prioritize them based on their importance to achieving the project goals. This will help ensure that the most critical features are implemented first.</p>
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Paragraph 6:<p>Develop a plan: Finally, develop a project plan that outlines the timeline, milestones, and resources required to deliver the project. This plan should be reviewed and updated regularly to ensure that the project plan stays on track.</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Milestones</h3>
+                                <h4 class="section-title-size">
+                                    Milestones should be created by following the guidelines as described below:
+                                </h4>
+                                <ul class="section-title-size">
+                                    <li data-aos="fade-up" data-aos-delay="100">
+                                        <p class="section-detail-size">
+                                            Identification - Identify the key deliverables and deadlines that signify progress in the project.
+                                        </p>
+                                    </li>
+                                    <li data-aos="fade-up" data-aos-delay="100">
+                                        <p class="section-detail-size">Relevance - Ensure each milestone is related directly to the project's goals and objectives.</p>
+                                    </li>
+                                    <li data-aos="fade-up" data-aos-delay="100">
+                                        <p class="section-detail-size">
+                                            Measurable - Milestones should be tangible and quantifiable so that it's clear when they have been achieved.
+                                        </p>
+                                    </li>
+                                    <li data-aos="fade-up" data-aos-delay="100">
+                                        <p class="section-detail-size">
+                                            Timely - Set realistic yet ambitious timelines for each milestone to keep the project on track.
+                                        </p>
+                                    </li>
+                                    <li data-aos="fade-up" data-aos-delay="100">
+                                        <p class="section-detail-size">
+                                            Review - Regularly review and update the milestones after client and freelancers’ feedback.
+                                        </p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Project Highlights</h3>
+                                <p class="section-detail-size">On the main box, before the “Buy” and “Message” options, the Project Architect should define the duration of each project and can add up to 3 summary points. These points should capture the essence of the project, its key deliverables, and client benefits.</p>
+                            </li>
+                        </ol>
+                        
+                        <!--Appedix-->
+                        <ol class="px-4 cls-ol-list" type="A">
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Determining Project Duration</h3>
+                                <h4 class="section-title-size">
+                                    When defining the duration for each predefined project, whether small, medium, or large, the Project Architect must consider the following factors:                                </h4>
+                                <ol type="i">
+                                    <li class="section-detail-size">
+                                    Working Hours: Assume that freelancers involved in the project, including project managers, experts, and associates, will work 8 hours a day.
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Project Complexity: Evaluate the complexity of the project's tasks and requirements. A small project may be completed within a few weeks, while a medium or large project might require several months.                                    
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Team Composition: Consider the team size and roles for each project type (small: 1 Project Manager + 1 Associate, medium: 1 Project Manager + 1 Expert + 1 Associate, large: 1 Project Manager + 2 Experts + 2 Associates) and how this influences the timeline.
+                                    </li>
+                                    <li class="section-detail-size">
+                                        Milestones and Deliverables: Break down the project into key milestones and deliverables, estimating the time needed for each phase, aligned with the project's goals and objectives.
+                                    </li>
+                                </ol>
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="100" class="list-title-size">
+                                <h3 class="list-title-size">Approval, Feedback, and Aftercare Process</h3>
+                                        <p class="section-detail-size">
+                                            The process of review and approval for predefined Al projects starts with a thorough self-review by the Project Architect. Once the project is refined and aligned with the expectations, it is submitted through our website, followed by a meticulous examination and final approval by our team. This step ensures that the project meets the predefined standards and quality criteria.
+                                            </p>
+                                        <p class="section-detail-size">
+                                            After the project is launched, aftercare services become an essential part of its ongoing success. These services include offering support to the Project Architect, gathering and analysing feedback from other freelancers and clients, and monitoring the sales volume of each project. This multifaceted approach fosters a continuous feedback loop, allowing the project to evolve and adapt to changing needs and demands. It underscores our commitment to excellence and continuous improvement, enhancing satisfaction among all stakeholders.
+                                       </p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script>
     $(function () {
@@ -764,4 +933,8 @@
     $("#ProjectType").change(function () {
         GetSolutionDefineDetails()
     });
+
+    function hideGuidelinesModal() {
+    $('#guidelineModal').modal('hide');
+    }
 </script>

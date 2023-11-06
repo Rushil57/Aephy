@@ -475,7 +475,6 @@ namespace Aephy.API.Controllers
                         data.FirstName = userData.FirstName;
                         data.LastName = userData.LastName;
                         data.Lavel = _db.FreelancerDetails.Where(x => x.UserId == id).Select(x => x.FreelancerLevel).FirstOrDefault();
-                        data.IsProjectArchitect = _db.FreelancerPool.Where(x => x.FreelancerID == id && x.SolutionID == userIdsModel.SolutionId && x.IndustryId == userIdsModel.IndustryId).Select(x => x.IsProjectArchitect).FirstOrDefault();
                         userlevelDetails.Add(data);
                     }
                 }

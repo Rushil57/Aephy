@@ -925,7 +925,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var listDB = _db.GigOpenRoles.ToList();
+                var listDB = await _db.GigOpenRoles.ToListAsync();
                 var listSolution = _db.Solutions.ToList();
                 var listServiceSol = _db.SolutionServices.ToList();
                 var listService = _db.Services.ToList();
@@ -1399,7 +1399,7 @@ namespace Aephy.API.Controllers
                 x.IndustryId == solutionIndustry.IndustryId && x.ProjectType == "SMALL").ToList();
 
                 var freeLancerPoolIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId).Select(x => x.FreelancerID).ToList();
-                var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
+                //var architectIds = _db.FreelancerPool.Where(x => x.SolutionID == solutionIndustry.SolutionId && x.IndustryId == solutionIndustry.IndustryId && x.IsProjectArchitect == true).Select(x => x.FreelancerID).ToList();
 
                 var solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustry.Id && x.ProjectType == "SMALL").FirstOrDefault();
 
@@ -1415,7 +1415,6 @@ namespace Aephy.API.Controllers
                         Services = solutionServices,
                         MilestoneDetails = milestoneDetails,
                         FreeLancerPoolIds = freeLancerPoolIds,
-                        ArchitectIds = architectIds,
                         PointsDetails = pointsDetails,
                         SolutionDefine = solutionDefine
                     }
@@ -1478,7 +1477,8 @@ namespace Aephy.API.Controllers
                         {
                             FreelancerID = item,
                             SolutionID = model.SolutionId,
-                            IsProjectArchitect = model.IsArchitectIds.Contains(item),
+                            //IsProjectArchitect = model.IsArchitectIds.Contains(item),
+                            IsProjectArchitect = false,
                             IndustryId = model.IndustryId,
                         };
 
@@ -1608,8 +1608,7 @@ namespace Aephy.API.Controllers
                                         sln?.Id,
                                         sln?.Title,
                                         ind?.IndustryName,
-                                        FreelancerPoolId = mdl?.ID,
-                                        mdl.IsProjectArchitect
+                                        FreelancerPoolId = mdl?.ID
                                     }
                                 );
                             });
@@ -1928,7 +1927,7 @@ namespace Aephy.API.Controllers
                         FreelancerID = model.FreelancerId,
                         IndustryId = model.IndustryId,
                         SolutionID = model.SolutionId,
-                        IsProjectArchitect = model.ProjectArchitect
+                        IsProjectArchitect = false
                     };
 
                     await _db.FreelancerPool.AddAsync(dbModel);

@@ -1883,3 +1883,12 @@ progress::-webkit-progress-value {
     max-height: 500px;
     overflow-y: auto;
 }
+
+.cls-initiate-div {
+    text-align: center;
+    font-size: 16px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}

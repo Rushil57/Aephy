@@ -1,23 +1,23 @@
 @{
-	ViewData["Title"] = "Open gig roles";
-	Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
-	ViewData["UserRole"] = Context.Session.GetString("LoggedUserRole");
-	if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
-	{
-		<style>
-			.applyFor-btn{
-				display:block;
-			}
-		</style>
-	}
-	else
-	{
-		<style>
-			.applyFor-btn {
-				display: none;
-			}
-		</style>
-	}
+    ViewData["Title"] = "Open gig roles";
+    Layout = "~/Views/Shared/_LandingPageLayout.cshtml";
+    ViewData["UserRole"] = Context.Session.GetString("LoggedUserRole");
+    if (Context.Session.GetString("LoggedUserRole") == null || Context.Session.GetString("LoggedUserRole") == "Freelancer")
+    {
+        <style>
+            .applyFor-btn{
+                display:block;
+            }
+        </style>
+    }
+    else
+    {
+        <style>
+            .applyFor-btn {
+                display: none;
+            }
+        </style>
+    }
 }
 
 <link href="../assets/css/gigopenings.css" rel="stylesheet" />
@@ -28,366 +28,342 @@
         <div class="container">
             <!--Row 1-->
             <div class="row d-flex justify-content-center first-row" style="background-color:#d38b4e">
-				<div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center cls-intropart" style="justify-content:center;">
+                <div class="col-lg-6 order-3 order-lg-1 d-flex flex-column justify-content-center cls-intropart" style="justify-content:center;">
                     <div class="left-data">
                         <h2 data-aos="fade-up" class="service-title-size">
                             Open Gig Roles
                         </h2>
-						<h5 class="section-title-size">
+                        <h5 class="section-title-size">
                             Partner with us to push the boundaries of innovation
                         </h5>
                     </div>
                 </div>
-				<div class="col-lg-1 order-2 order-lg-2">
-				</div>
+                <div class="col-lg-1 order-2 order-lg-2">
+                </div>
 
-				<div class="col-lg-5 order-1 order-lg-3 hero-img" data-aos="zoom-out" style="margin-top: 0;padding-right: 0;">
-					<img src="../assets/img/gig openings/open gig roles/open_roles.jpg" class="img-banner" alt="">
-				</div>
+                <div class="col-lg-5 order-1 order-lg-3 hero-img" data-aos="zoom-out" style="margin-top: 0;padding-right: 0;">
+                    <img src="../assets/img/gig openings/open gig roles/open_roles.jpg" class="img-banner" alt="">
+                </div>
             </div>
         </div>
     </section><!-- End Hero Section -->
 
-	<section id="OpenRolesTable" class="OpenRolesTable">
-		<div class="container">
-			<div class="row d-flex">
-				<div class="col-12 d-block my-2">
-					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
-						<option value="0">All Services</option>
-					</select>
-					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
-						<option value="">All Solutions</option>
-					</select>
-					<!-- Show Numbers Of Rows -->
-					<select class="dropdown btn-dropdown" name="level" id="select-levels" onchange="getFilteredRoles();">
-						<option value="0">All Levels</option>
-						<option value="Associate">Associate</option>
-						<option value="Expert">Expert</option>
-						<option value="Project Manager">Project Manager</option>
-						<option value="Project Architect">Project Architect</option>
-					</select>
+    <section id="OpenRolesTable" class="OpenRolesTable">
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-12 d-block my-2">
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="service" id="select-services" onchange="getFilteredRoles();">
+                        <option value="0">All Services</option>
+                    </select>
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="solution" id="select-solutions" onchange="getFilteredRoles();">
+                        <option value="">All Solutions</option>
+                    </select>
+                    <!-- Show Numbers Of Rows -->
+                    <select class="dropdown btn-dropdown" name="level" id="select-levels" onchange="getFilteredRoles();">
+                        <option value="0">All Levels</option>
+                        <option value="Associate">Associate</option>
+                        <option value="Expert">Expert</option>
+                        <option value="Project Manager">Project Manager</option>
+                        <option value="Project Architect">Project Architect</option>
+                    </select>
 
-					<select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
-						<option value="0">All Industies</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="table-responsive">
-			<table class="table table-striped table-class" id="table-OpenRoles">
-
-				<thead>
-					<tr>
-							<th scope="col">Service</th>
-							<th scope="col">Solution</th>
-							<th scope="col">Title</th>
-							<th scope="col">Level</th>
-							<th scope="col">Industry</th>
-							<th scope="col" class="cls-RolesId"></th>
-					</tr>
-
-				</thead>
-			
-			</table>
-			
-			
-			</div>
-			<!--Row 2 Join Us-->
-			<div class="row justify-content-center" style="padding:50px 0;">
-				<div class="title titleOutside">
-					<label style="font-weight:600; font-size:25px;">
-						Join Us and Drive Innovation with Us
-					</label>
-				</div>
-				<div class="col-lg-6 content order-lg-last fitImage">
-					<img src="../assets/img/gig openings/gig_openings_join_us.jpg" class="img-fluid join-us-img" alt="">
+                    <select class="dropdown btn-dropdown" name="service" id="select-industries" onchange="getFilteredRoles();">
+                        <option value="0">All Industies</option>
+                    </select>
                 </div>
-				<div class="col-lg-6 px-lg-5 order-lg-first">
-					<div class="title titleInside">
-						<label style="font-weight:600; font-size:25px;">
-							Join Us and Drive Innovation with Us
-						</label>
-					</div>
-					<div class="description">
-						<p>
-							Welcome to our AI-driven platform, where our mission is to connect businesses with highly skilled freelancers to deliver exceptional AI projects that drive transformation and shape the future of businesses.      As a valued member of our freelance team, specializing in AI, you will have the opportunity to work remotely on challenging and groundbreaking projects. Collaborating with a talented and diverse group of AI specialists from around the world, you will become an integral part of a global network of freelancers committed to delivering exceptional AI solutions to our clients.
-							<br /><br />
-							We foster a culture that values creativity, collaboration, and an unwavering pursuit of excellence. Our platform encourages you to cultivate your AI skills and build an impressive portfolio. Additionally, we offer flexible scheduling options, enabling you to tailor your calendar to align with your individual needs and achieve a healthy work-life balance. Furthermore, our freelancers are rewarded with competitive compensation for their valuable contributions.
-							<br /><br />
-							Join us and be at the forefront of AI innovation in the world of freelancing and outsourcing. Together, let's shape the future with our shared passion for AI and drive for remarkable achievements.
-						</p>
-					</div>
-				</div>
-			</div>
+            </div>
 
-		</div> <!-- 		End of Container -->
-		<!--  Developed By Yasser Mas -->
+            <div class="table-responsive">
+                <table class="table table-striped table-class" id="table-OpenRoles">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Service</th>
+                            <th scope="col">Solution</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Industry</th>
+                            <th scope="col" class="cls-RolesId"></th>
+                        </tr>
+
+                    </thead>
+
+                </table>
+
+
+            </div>
+            <!--Row 2 Join Us-->
+            <div class="row justify-content-center" style="padding:50px 0;">
+                <div class="title titleOutside">
+                    <label style="font-weight:600; font-size:25px;">
+                        Join Us and Drive Innovation with Us
+                    </label>
+                </div>
+                <div class="col-lg-6 content order-lg-last fitImage">
+                    <img src="../assets/img/gig openings/gig_openings_join_us.jpg" class="img-fluid join-us-img" alt="">
+                </div>
+                <div class="col-lg-6 px-lg-5 order-lg-first">
+                    <div class="title titleInside">
+                        <label style="font-weight:600; font-size:25px;">
+                            Join Us and Drive Innovation with Us
+                        </label>
+                    </div>
+                    <div class="description">
+                        <p>
+                            Welcome to our AI-driven platform, where our mission is to connect businesses with highly skilled freelancers to deliver exceptional AI projects that drive transformation and shape the future of businesses.      As a valued member of our freelance team, specializing in AI, you will have the opportunity to work remotely on challenging and groundbreaking projects. Collaborating with a talented and diverse group of AI specialists from around the world, you will become an integral part of a global network of freelancers committed to delivering exceptional AI solutions to our clients.
+                            <br /><br />
+                            We foster a culture that values creativity, collaboration, and an unwavering pursuit of excellence. Our platform encourages you to cultivate your AI skills and build an impressive portfolio. Additionally, we offer flexible scheduling options, enabling you to tailor your calendar to align with your individual needs and achieve a healthy work-life balance. Furthermore, our freelancers are rewarded with competitive compensation for their valuable contributions.
+                            <br /><br />
+                            Join us and be at the forefront of AI innovation in the world of freelancing and outsourcing. Together, let's shape the future with our shared passion for AI and drive for remarkable achievements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- 		End of Container -->
+        <!--  Developed By Yasser Mas -->
     </section>
 
 </main>
 <div class="modal fade" id="GigOpeningApplyModal" tabindex="-1" aria-labelledby="GigOpeningApplyModal" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-xl">
-		<div id="preloader" style="display:none;"></div>
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title main-title">Apply For Gig Role</h4>
-				<a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
-			</div>
-			<div class="modal-body p-0">
-				<div class="row">
-					<div class="col">
-						<div class="card">
-							<div class="card-body">
-								@*<h5 class="card-title">Vertical Form</h5>*@
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div id="preloader" style="display:none;"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Apply For Gig Role</h4>
+                <a class="close" data-dismiss="#GigOpeningApplyModal" onclick="CloseGigOpeningApplyModal();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                @*<h5 class="card-title">Vertical Form</h5>*@
 
-								<!-- Vertical Form -->
-								<!-- Vertical Form -->
-								<form class="row g-3 mt-3" name="GigOpeningApplyForm">
-									<input type="hidden" id="gigRole_id" value="0">
-									<input type="hidden" id="UserCvpath" value="">
-									<div class="col-12">
-										<label for="Description" class="form-label">Role Description</label>
-										<div class="input-group">
-											<textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:330px;resize: vertical !important;" disabled></textarea>
-										</div>
-									</div>
-									<div class="col-12">
-										<label for="CVPath" class="form-label">Upload CV</label>
-										<input type="hidden" id="ChangeCvUpload" value="true"/>
-										<div class="col-12">
-											<div class="input-group">
-												<input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
-											</div>
-										</div>
-									</div>
-									<div class="input-group" style="display:none" id="dwld-resume">
-                                             <a onclick="DownloadCv()" class="cls-resume-dwld">Download resume</a>
+                                <!-- Vertical Form -->
+                                <!-- Vertical Form -->
+                                <form class="row g-3 mt-3" name="GigOpeningApplyForm">
+                                    <input type="hidden" id="gigRole_id" value="0">
+                                    <input type="hidden" id="UserCvpath" value="">
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Role Description</label>
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control" id="RoleDescription" name="RoleDescription" style="height:330px;resize: vertical !important;" disabled></textarea>
                                         </div>
-									<div class="col-12">
-										<div class="col-12 d-flex">
-											<div class="input-group">
-												<input class="file-preview" type="text" id="filePreview" readonly>
-											</div>
-										</div>
-									</div>
-									<div class="col-12">
-										<label for="Description" class="form-label">Additional Information</label>
-										<div class="input-group">
-											<textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;resize: vertical !important;"></textarea>
-										</div>
-									</div>
-									<div class="text-center">
-										<button type="submit" class="btn btn-brand">Submit</button>
-										<button class="btn btn-secondary" onclick="clearApplyForm();" type="button">Reset</button>
-									</div>
-								</form><!-- Vertical Form -->
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="CVPath" class="form-label">Upload CV</label>
+                                        <input type="hidden" id="ChangeCvUpload" value="true"/>
+                                        <div class="col-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="file" id="CVPath" name="CVPath" accept=".pdf,.docx" style="max-height:37px;" onchange="getFileData(this);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="display:none" id="dwld-resume">
+                                        <a onclick="DownloadCv()" class="cls-resume-dwld">Download resume</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="col-12 d-flex">
+                                            <div class="input-group">
+                                                <input class="file-preview" type="text" id="filePreview" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="Description" class="form-label">Additional Information</label>
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control" id="Description" name="Description" style="height:150px;resize: vertical !important;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-brand">Apply</button>
+                                        <button class="btn btn-secondary" onclick="clearApplyForm();" type="button">Reset</button>
+                                    </div>
+                                </form><!-- Vertical Form -->
 
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
 <script src="~/assets/js/opengigroles.js"></script>
 <script>
 
-	"use strict";
-	//var connection = new signalR.HubConnectionBuilder().withUrl("/dashboardHub").build();
+    "use strict";
+    //var connection = new signalR.HubConnectionBuilder().withUrl("/dashboardHub").build();
 
-	$(function(){
-	//	connection.start().then(function () {
-	//		alert('Connected to dashboardHub');
-			InvokeOpenRoles();
-	//	}).catch(function (err) {
-	//		return console.error(err.toString());
-	//	});
-	});
+    $(function () {
+        GetRolesList();
+        BindGigServices();
+        BindGigSolutions();
+        BindGigIndustries();
+    });
 
-	// Product
-	function InvokeOpenRoles() {
-		GetRolesList();
-		/*connection.invoke("SendProducts").catch(function (err) {
-			return console.error(err.toString());
-		});*/
-	}
+    function BindGigServices(){
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetServices", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#select-services").append($("<option     />").val(value.Id).text(value.ServicesName));
+                })
+                $('#select-services').trigger('chosen:updated');
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
 
-//	connection.on("ChnagedOpenRoles", function (statusBool) {
-		/*BindProductsToGrid(products);*/
-//		if (statusBool) {
-//			GetRolesList();
-//		}
-//	});
+    function BindGigSolutions() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetSolutions", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
+                })
+                $('#select-solutions').trigger('chosen:updated');
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+    function BindGigIndustries() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetIndustries", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $.each(result.Result, function (data, value) {
+                    $("#select-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
+                })
+                $('#select-industries').trigger('chosen:updated');
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+    function getFilteredRoles() {
+        $("#preloader").show();
+        var filteredData = {
+            service : $('#select-services').val(),
+            solution : $('#select-solutions').val(),
+            level : $('#select-levels').val(),
+            industry : $('#select-industries').val()
+        };
 
-	$(document).ready(function(){
-		//GetRolesList();
-		BindGigServices();
-		BindGigSolutions();
-		BindGigIndustries();
-	});
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetFilteredRolesList", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType:"json",
+            data: filteredData,
+            success: function (result) {
+                $('#table-OpenRoles').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "className": "cls-RolesId"
+                        },
+                        { "data": "ServiceName" },
+                        { "data": "SolutionName" },
+                        { "data": "Title" },
+                        { "data": "Level" },
+                        { "data": "IndustryName" },
+                        {
+                            "data": "ID",
+                            "render": function (data, type, row) {
+                                return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
 
-	function BindGigServices(){
-		$.ajax({
-			type: "Get",
-			url: "@Url.Action("GetServices", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success: function (result) {
-				$.each(result.Result, function (data, value) {
-					$("#select-services").append($("<option     />").val(value.Id).text(value.ServicesName));
-				})
-				$('#select-services').trigger('chosen:updated');
-			},
-			error: function (result) {
-				//alert("failure");
-				showToaster("error", "Error !", "Failure");
-			}
-		});
-	}
-	
-	function BindGigSolutions() {
-		$.ajax({
-			type: "Get",
-			url: "@Url.Action("GetSolutions", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success: function (result) {
-				$.each(result.Result, function (data, value) {
-					$("#select-solutions").append($("<option     />").val(value.Id).text(value.Title));
-				})
-				$('#select-solutions').trigger('chosen:updated');
-			},
-			error: function (result) {
-				//alert("failure");
-				showToaster("error", "Error !", "Failure");
-			}
-		});
-	}
-	function BindGigIndustries() {
-		$.ajax({
-			type: "Get",
-			url: "@Url.Action("GetIndustries", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success: function (result) {
-				$.each(result.Result, function (data, value) {
-					$("#select-industries").append($("<option     />").val(value.Id).text(value.IndustryName));
-				})
-				$('#select-industries').trigger('chosen:updated');
-			},
-			error: function (result) {
-				//alert("failure");
-				showToaster("error", "Error !", "Failure");
-			}
-		});
-	}
-	function getFilteredRoles() {
-		$("#preloader").show();
-		var filteredData = {
-			service : $('#select-services').val(),
-			solution : $('#select-solutions').val(),
-			level : $('#select-levels').val(),
-			industry : $('#select-industries').val()
-		};
-		
-		$.ajax({
-			type: "Get",
-			url: "@Url.Action("GetFilteredRolesList", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType:"json",
-			data: filteredData,
-			success: function (result) {
-				$('#table-OpenRoles').DataTable({
-					destroy: true,
-					data: result.Result,
-					"columns": [
-						{
-							"data": "ID",
-							"className": "cls-RolesId"
-						},
-						{ "data": "ServiceName" },
-						{ "data": "SolutionName" },
-						{ "data": "Title" },
-						{ "data": "Level" },
-						{ "data": "IndustryName" },
-						{
-							"data": "ID",
-							"render": function (data, type, row) {
-								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
+                            }
+                        }
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
 
-							}
-						}
-					]
-				});
-				$("#preloader").hide();
-			},
-			error: function (result) {
-				//alert("failure");
-				showToaster("error", "Error !", "Failure");
-				$("#preloader").hide();
-			}
-		});
-	}
+    function GetRolesList() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetRolesList", "LandingPage")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#table-OpenRoles').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ID",
+                            "className": "cls-RolesId"
+                        },
+                        { "data": "ServiceName" },
+                        { "data": "SolutionName" },
+                        { "data": "Title" },
+                        { "data": "Level" },
+                        { "data": "IndustryName" },
+                        {
+                            "data": "ID",
+                            "render": function (data, type, row) {
+                                //return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
+                                return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">View Details</a>';
 
-	function GetRolesList() {
-		$("#preloader").show();
-		$.ajax({
-			type: "Get",
-			url: "@Url.Action("GetRolesList", "LandingPage")",
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success: function (result) {
-				$('#table-OpenRoles').DataTable({
-					destroy: true,
-					data: result.Result,
-					"columns": [
-						{
-							"data": "ID",
-							"className": "cls-RolesId"
-						},
-						{ "data": "ServiceName" },
-						{ "data": "SolutionName" },
-						{ "data": "Title" },
-						{ "data": "Level" },
-						{ "data": "IndustryName" },
-						{
-							"data": "ID",
-							"render": function (data, type, row) {
-								//return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ',' + "'" + row.Description + "'" +')">Apply</a>';
-								return '<a class="btn btn-success applyFor-btn" style="color: white;" onclick="GigApply(' + row.ID + ')">Apply</a>';
+                            }
+                        }
+                    ]
+                });
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                //alert("failure");
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
 
-							}
-						}
-					]
-				});
-				$("#preloader").hide();
-			},
-			error: function (result) {
-				//alert("failure");
-				showToaster("error", "Error !", "Failure");
-				$("#preloader").hide();
-			}
-		});
-	}
+    function CloseGigOpeningApplyModal() {
+        $("#GigOpeningApplyModal").modal('hide')
+    }
+    function OpenGigOpeningApplyModal() {
+        $("#GigOpeningApplyModal").modal('show')
+    }
+    function clearApplyForm() {
+        $("#Description").val("");
+        $("#CVPath").val("");
+        $('#filePreview').css("display", "none");
+    }
 
-	function CloseGigOpeningApplyModal() {
-		$("#GigOpeningApplyModal").modal('hide')
-	}
-	function OpenGigOpeningApplyModal() {
-		$("#GigOpeningApplyModal").modal('show')
-	}
-	function clearApplyForm() {
-		$("#Description").val("");
-		$("#CVPath").val("");
-		$('#filePreview').css("display", "none");
-	}
-
- function GigOpenRolesApply(){
+    function GigOpenRolesApply(){
 
         var filename = $("#CVPath").val();
         var validFileExtentions = /(\.pdf|\.docx)$/i;
@@ -403,7 +379,7 @@
                 Description: $("#Description").val(),
                 AlreadyExistCv : $("#ChangeCvUpload").val()
             }
-            
+
             var formData = new FormData();
             for (var i = 0; i < files.length; i++) {
                 formData.append("httpPostedFileBase", files[i]);
@@ -417,13 +393,13 @@
                 processData: false,
                 data: formData,
                 success: function (result) {
-					clearForm();
+                    clearForm();
                     $('#preloader').hide();
                     showToaster("success", "Success", result);
                     CloseGigOpeningApplyModal();
                 },
                 error: function (result) {
-					clearForm();
+                    clearForm();
                     $('#preloader').hide();
                     //alert("failure");
                     showToaster("error", "Error !", "Failure");
@@ -432,38 +408,41 @@
         } else {
             //alert('You can upload only PDF or Document file..')
             showToaster("error", "Error !", "You can upload only PDF or Document file..");
-			clearForm();
+            clearForm();
         }
     }
-	// code to read selected table row cell data (values).
-	function GigApply(Id) {
-		if('@ViewData["UserRole"]' == "Freelancer" ){
-		OpenGigOpeningApplyModal();
-		clearApplyForm();
-		$("#gigRole_id").val(Id);
-		$.ajax({
-			type: "post",
-			url: "@Url.Action("GetRolesDataById", "LandingPage")",
-			dataType: "json",
-			data:{ID:Id},
-			success: function (result) {
-				var data = result.Result;
-				$("#RoleDescription").val(data.OpenRoles.Description);
-					if (data.FreelancerDetail.CVUrlWithSas != null) {
-						$("#dwld-resume").show()
-						$("#UserCvpath").val(data.FreelancerDetail.CVPath)
-						addNameToFile(data.FreelancerDetail.CVPath.split("/")[4])
-					}
-			},
-			error:function (result){
-				//alert(result.Message)
-				showToaster("error", "Error !", result.Message);
-			}
-		});
-		}
-	}
+    // code to read selected table row cell data (values).
+    function GigApply(Id) {
+        if('@ViewData["UserRole"]' == "Freelancer" ){
+            OpenGigOpeningApplyModal();
+            clearApplyForm();
+            $("#gigRole_id").val(Id);
+            $.ajax({
+                type: "post",
+                url: "@Url.Action("GetRolesDataById", "LandingPage")",
+                dataType: "json",
+                data:{ID:Id},
+                success: function (result) {
+                    var data = result.Result;
+                    $("#RoleDescription").val(data.OpenRoles.Description);
+                    if (data.FreelancerDetail.CVUrlWithSas != null) {
+                        $("#dwld-resume").show()
+                        $("#UserCvpath").val(data.FreelancerDetail.CVPath)
+                        addNameToFile(data.FreelancerDetail.CVPath.split("/")[4])
+                    }
+                },
+                error:function (result){
+                    //alert(result.Message)
+                    showToaster("error", "Error !", result.Message);
+                }
+            });
+        }
+        if ('@ViewData["UserRole"]' == ''){
+            window.location.href = '/Home/Login'
+        }
+    }
 
-	  function addNameToFile(url) {
+    function addNameToFile(url) {
         getImgURL(url, (imgBlob) => {
             let file = new File([imgBlob], url, { type: "pdf/application", lastModified: new Date().getTime() }, 'utf-8');
             let container = new DataTransfer();
@@ -483,26 +462,26 @@
     }
 
 
-	function getFileData(myFile) {
-		$("#ChangeCvUpload").val(false);
-		$('#filePreview').css("display", "none");
-		var file = myFile.files[0];
-		if(file){
-			var filename = file.name;
-			$('#filePreview').css("display", "block");
-			$('#filePreview').val(filename);
-		}
-		else{
-			$('#filePreview').css("display", "none");
-			$('#filePreview').val("");
-		}
-	}
+    function getFileData(myFile) {
+        $("#ChangeCvUpload").val(false);
+        $('#filePreview').css("display", "none");
+        var file = myFile.files[0];
+        if(file){
+            var filename = file.name;
+            $('#filePreview').css("display", "block");
+            $('#filePreview').val(filename);
+        }
+        else{
+            $('#filePreview').css("display", "none");
+            $('#filePreview').val("");
+        }
+    }
 
 
-	function DownloadCv() {
-		var Cvname = $("#UserCvpath").val()
-		if (Cvname != "") {
-			window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
-		}
-	}
+    function DownloadCv() {
+        var Cvname = $("#UserCvpath").val()
+        if (Cvname != "") {
+            window.location = "@Url.Action("DownloadApplicantCV", "Home")?Cvname=" + Cvname;
+        }
+    }
 </script>

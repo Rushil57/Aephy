@@ -1871,7 +1871,7 @@ namespace Aephy.WEB.Controllers
 
             PdfPCell labelCell6 = new PdfPCell(new Phrase("Invoice  # " + data.InvoiceNumber, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
             PdfPCell labelCell2 = new PdfPCell(new Phrase("Date " + data.InvoiceDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date " + data.PreferredCurrency + data.InvoiceDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
+            PdfPCell labelCell3 = new PdfPCell(new Phrase("Due Date " + data.InvoiceDate.ToString("dd MMMM yyyy"), FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8))); // Bold font for "Due Date" label
             PdfPCell labelCell4 = new PdfPCell(new Phrase("Total Amount " + data.PreferredCurrency + data.TotalAmount, FontFactory.GetFont(FontFactory.HELVETICA, 8)));
             PdfPCell labelCell5 = new PdfPCell(new Phrase("Total Due " + data.TotalAmount, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8)));
 
@@ -2459,6 +2459,24 @@ namespace Aephy.WEB.Controllers
             model.UserId = userId;
             model.ClientPreferredCurrency = PreferredCurrency;
             var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetProjectsExpense", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
+        //getFreelancerProjectExpense
+        [HttpGet]
+        public async Task<string> getFreelancerProjectExpense()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            var PreferredCurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            model.ClientPreferredCurrency = PreferredCurrency;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/getFreelancerProjectExpense", HttpMethod.Post, model);
             return projectData;
 
         }

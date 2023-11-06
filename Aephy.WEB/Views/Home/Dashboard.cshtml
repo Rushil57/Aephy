@@ -117,75 +117,81 @@
                     </div><!-- End Sales Card -->
 
                     <!-- Revenue Card -->
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card revenue-card">
+                    @{
+                       if(Context.Session.GetString("LoggedUserRole") == "Client")
+                       {
+                             <div class="col-xxl-4 col-md-6">
+                                <div class="card info-card revenue-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Expenses</h5>
 
-                            @* <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div> *@
-
-                            <div class="card-body">
-                                <h5 class="card-title">Expense</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        @{
-                                            if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
-                                                <i class="bi bi-currency-dollar"></i>
-                                            }
-                                            if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
-                                                <i class="bi bi-currency-euro"></i>
-                                            }
-                                            if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
-                                                <i class="bi bi-currency-pound"></i>
-                                            }
-                                        }
+                                        <div class="d-flex align-items-center">
+                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                @{
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
+                                                            <i class="bi bi-currency-dollar"></i>
+                                                }
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
+                                                            <i class="bi bi-currency-euro"></i>
+                                                }
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
+                                                            <i class="bi bi-currency-pound"></i>
+                                                }
+                                                }
+                                            </div>
+                                            <div class="ps-3">
+                                                <h6 id="expense_amount"></h6>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="ps-3">
-                                        <h6 id="expense_amount"></h6>
+
+                                </div>
+                             </div>
+                       }
+                        else
+                        {
+                             <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card revenue-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Revenue</h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                             @{
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
+                                                            <i class="bi bi-currency-dollar"></i>
+                                                }
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
+                                                            <i class="bi bi-currency-euro"></i>
+                                                }
+                                                if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
+                                                            <i class="bi bi-currency-pound"></i>
+                                                }
+                                              }
+                                        </div>
+                                        <div class="ps-3">
+                                           <h6 id="revenue_amount"></h6>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
-                    </div><!-- End Revenue Card -->
+                        }
+                    }
                     <!-- Customers Card -->
                     <div class="col-xxl-4 col-xl-12">
 
                         <div class="card info-card customers-card">
-
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
                             <div class="card-body">
-                                <h5 class="card-title">Customers <span>| This Year</span></h5>
+                                <h5 class="card-title">Project Durations</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-people"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <h6>1244</h6>
-                                        <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
+                                     <div class="ps-3">
+                                        <h6 id="Project_Duartion"></h6>
 
                                     </div>
                                 </div>
@@ -315,7 +321,7 @@
                      <div class="col-12" id="ActiveProjectInvoices">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
-                                <h5 class="card-title">Invoices</h5>
+                                <h5 class="card-title">View Invoices</h5>
 
                                 <table class="table datatable" id="InvoiceTable">
                                     <thead>
@@ -339,7 +345,7 @@
                      <div class="col-12" id="ArchivesProject">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
-                                <h5 class="card-title">Archived Project</h5>
+                                <h5 class="card-title"> Archived Projects</h5>
                                 <table class="table datatable" id="ArchieveTable">
                                     <thead>
                                         <tr>
@@ -551,7 +557,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-brand">Submit</button>
+                                        <button type="submit" class="btn btn-brand">Apply</button>
                                         <button class="btn btn-secondary" onclick="clearApplyForm();" type="button">Reset</button>
                                     </div>
                                 </form><!-- Vertical Form -->
@@ -614,7 +620,8 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <input type="hidden" id="SolutionId" value="0">
+                                <form name="ProjectDetailsForm">
+                                    <input type="hidden" id="SolutionId" value="0">
                                 <input type="hidden" id="IndustryId" value="0">
                                 <input type="hidden" id="ProjectOulineId" value="0">
 
@@ -627,15 +634,14 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group pt-3">
-                                    <label for="projectDetails">Project Details</label>
-                                    @*<input type="text" class="form-control" id="industry-ProjectDetails" name="ProjectDetails" placeholder="Project Details">*@
-                                    <textarea id="industry-ProjectDetails" class="form-control" name="ProjectDetails" rows="4" cols="50" maxlength="330"></textarea>
+                                 <div class="form-group pt-3">
+                                    <label for="Description">Project Outline</label>
+                                    <textarea id="industry-ProjectOutline" class="form-control" name="ProjectOutline" rows="4" cols="50" maxlength="330"></textarea>
                                 </div>
 
                                 <div class="form-group pt-3">
-                                    <label for="Description">Project Outline</label>
-                                    <textarea id="industry-ProjectOutline" class="form-control" name="ProjectOutline" rows="4" cols="50" maxlength="330"></textarea>
+                                    <label for="projectDetails">Project Details</label>
+                                    <textarea id="industry-ProjectDetails" class="form-control" name="ProjectDetails" rows="4" cols="50" maxlength="330"></textarea>
                                 </div>
 
                                 <div class="form-group pt-3">
@@ -687,7 +693,7 @@
                                 </div>
 
                                 <div class="form-group pt-3">
-                                    <button type="button" class="btn btn-brand" onclick="SaveSolutionIndustryDescription()">Submit</button>
+                                    <button type="submit" class="btn btn-brand">Submit</button>
                                     <button type="button" class="btn btn-secondary" onclick="ResetDetailsForm()">Close</button>
                                     <div class="view_action_Link d-flex justify-content-end">
                                     <span style="background-color:#d38b4e; width:1rem;"></span>
@@ -698,6 +704,7 @@
                                 </div>
                                 </div>
 
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -1735,6 +1742,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             </div>
     </div>
 </div>
+</div>
 
 <div class="modal" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -2178,6 +2186,30 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                     SavePointsData()
                 }
             });
+            $("form[name='ProjectDetailsForm']").validate({
+                rules: {
+                    ProjectOutline: { required: true },
+                    ProjectDuration: { required: true },
+                    ProjectDetails : { required: true }
+                },
+                messages: {
+                    ProjectOutline: { required: "Please enter project outline" },
+                    ProjectDuration : { required: "Please enter project duration" },
+                    ProjectDetails : { required: "Please enter project details" }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    SaveSolutionIndustryDescription()
+                }
+            });
+            
 
              if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
                 GetSavedProjects();
@@ -2188,6 +2220,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 $(".cls-freelancerField").hide();
                 $("#RecentOpening").hide();
                  $("#ApprovedListSection").hide();
+                 getClientProjectExpense();
             }else{
                 getOpenRoles();
                  GetApprovedList();
@@ -2197,6 +2230,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 GetFreelancerArchivesProject();
                 $(".cls-clientField").hide();
                 $(".cls-freelancerField").show();
+                 getFreelancerProjectExpense();
             }
 
             $('.news_card').hide();
@@ -2207,7 +2241,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             if(window.location.toString().includes("#activeProjects")){
                 window.scrollTo({ top:255, behavior: 'smooth' });
             }
-            getProjectExpense();
+            
      });
 
     //========== Chat Module Coding Start ================//

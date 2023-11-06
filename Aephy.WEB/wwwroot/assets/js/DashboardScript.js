@@ -580,7 +580,7 @@ function GetClientArchivesProject() {
 }
 
 //getExpense
-function getProjectExpense() {
+function getClientProjectExpense() {
     $("#preloader").show();
     $.ajax({
         type: "Get",
@@ -592,7 +592,36 @@ function getProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.Projects);
-                $('#expense_amount').html(Data.CurrentCurrency + Data.Expense.toFixed(2));
+                $('#expense_amount').html(Data.CurrentCurrency + Data.Expense.toFixed());
+                $('#Project_Duartion').html(Data.ProjectDuartion + " Days");
+            }
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            showToaster("error", "Error !", result);
+            $("#preloader").hide();
+        }
+    });
+}
+
+function getFreelancerProjectExpense() {
+    $("#preloader").show();
+    $.ajax({
+        type: "Get",
+        url: "/Home/getFreelancerProjectExpense",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            if (result.Result.length != 0) {
+                var Data = result.Result
+
+                $("#ContractUser-Value").html(Data.FreelancerActiveProject);
+                $('#revenue_amount').html(Data.FreelancerCurrency + Data.RevenueAmount);
+                $('#Project_Duartion').html(Data.ProjectDuration + " Days");
+            } else {
+                $("#ContractUser-Value").html(0);
+                $('#revenue_amount').html(0);
+                $('#Project_Duartion').html("0 Days");
             }
             $("#preloader").hide();
         },
@@ -1718,7 +1747,7 @@ function getOpenRoles() {
                     htm += '<td>' + subObj.Title + '</td>';
                     htm += '<td>' + subObj.Level + '</td>';
                     htm += '<td>' + subObj.IndustryName + '</td>';
-                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="GigApply(' + subObj.ID + ')">Apply</a></td>';
+                    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1 btn-sm" style="color: white;" onclick="GigApply(' + subObj.ID + ')">View Details</a></td>';
                     htm += '</tr>';
                 }
             }

@@ -1533,18 +1533,6 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != null)
                 {
-                    //if (userDetails != null)
-                    //{
-                    //    userDetails.IsDeleted = true;
-                    //    _db.SaveChanges();
-
-                    //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    //    {
-                    //        StatusCode = StatusCodes.Status200OK,
-                    //        Message = "User Deleted Succesfully!"
-                    //    });
-                    //}
-
                     var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
                     _db.Users.Remove(userDetails);
                     int status = await _db.SaveChangesAsync();
@@ -1556,6 +1544,14 @@ namespace Aephy.API.Controllers
                             _db.FreelancerPool.Remove(freelancerDetails);
                             _db.SaveChanges();
                         }
+
+                        var freelancerTopprofessionalData = _db.SolutionTopProfessionals.Where(x => x.FreelancerId == model.Id).ToList();
+                        if(freelancerTopprofessionalData.Count > 0)
+                        {
+                            _db.SolutionTopProfessionals.RemoveRange(freelancerTopprofessionalData);
+                            _db.SaveChanges();
+                        }
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,

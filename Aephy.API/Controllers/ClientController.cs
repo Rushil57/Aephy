@@ -2672,11 +2672,11 @@ namespace Aephy.API.Controllers
 
                                         CreatePaymentReq createPaymentReq = new CreatePaymentReq
                                         {
-                                            AccountId = allAccounts.Where(x => x.Currency == model.ClientPreferredCurrency 
+                                            AccountId = allAccounts.Where(x => x.Currency == model.ClientPreferredCurrency
                                             && x.Balance >= (double)totalAmt).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                             RequestId = Guid.NewGuid().ToString(),
                                             Amount = (double)priceToTransfer, // ##### actual amount - solutionteam.transferamount 
-                                            Currency = model.ClientPreferredCurrency, 
+                                            Currency = model.ClientPreferredCurrency,
                                             Reference = "Payment For- " + SolutionTitle,
                                             Receiver = new CreatePaymentReq.ReceiverData()
                                             {
@@ -2710,8 +2710,8 @@ namespace Aephy.API.Controllers
                                             _db.ContractUser.Update(contractUser);
                                             _db.SaveChanges();
 
-                                            
-                                            
+
+
 
                                         }
                                         else
@@ -2740,7 +2740,7 @@ namespace Aephy.API.Controllers
                                                 AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
                                                 RequestId = Guid.NewGuid().ToString(),
                                                 Amount = 2, // ##### actual amount  Solutionteam.ProjectManagerPlatformFees
-                                                Currency = user.PreferredCurrency, 
+                                                Currency = user.PreferredCurrency,
                                                 Reference = "Payment For- " + SolutionTitle,
                                                 Receiver = new CreatePaymentReq.ReceiverData()
                                                 {
@@ -3768,7 +3768,7 @@ namespace Aephy.API.Controllers
                             {
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
                             }
-                            
+
 
                             if (data.FreelancerLevel == "Project Manager")
                             {
@@ -4319,7 +4319,7 @@ namespace Aephy.API.Controllers
             var count = 1;
             foreach (var freelancer in allFreelancers)
             {
-                
+
                 var solutionTeam = fullTeam.Where(x => x.FreelancerId == freelancer.ApplicationUserId
                     && x.SolutionFundId == contract.SolutionFundId).FirstOrDefault();
 
@@ -4338,9 +4338,9 @@ namespace Aephy.API.Controllers
                 _db.SaveChanges();
 
                 //
-                
-                
-                
+
+
+
                 var checkoutRevoluteFeesForFreelancer = ((revolutFees * totalAmount) / solutionTeamSum);
 
                 // Invoice - Freelancer (Details 1)
@@ -4476,28 +4476,37 @@ namespace Aephy.API.Controllers
             }
 
             // calculation for client platform fees//
-            var pmPlatformFees = fullTeam.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).First();
             var b11 = clientFees;
-            var c11 = (clientFees * revolutFees) / (finalProjectpricing + pmPlatformFees) + (finalProjectpricing * 10 / 100); // c11
-            var e11 = b11 - revolutFees;
-            var clientPlatformFees = Math.Abs(e11 - b11 - c11);
+                var c18 = revolutFees;
+                var I8 = clientFees;
+                var I6 = fullTeam.Where(x => x.IsProjectManager).Select(x => x.Amount).ToList();
+                var I6Calculation = (I6.FirstOrDefault() * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                var I6finalcalc = I6.FirstOrDefault() - I6Calculation;
+                var I11 = fullTeam.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).FirstOrDefault();
+            var c11 = (c18 * I8) / ((decimal)I6finalcalc + I11);
+                var E11Calculation = b11 - c11;
+            var E11 = (E11Calculation * 1) / 100;
+
+            var FinalpmFees = b11 - c11 - E11;
+
+
             // calculation for client platform fees//
 
 
             // calculation for freelancer platform fees//
             var freelancerb12and13 = clientFees;
-            var freelancerc12and13 = freelancerFees - c11;
+            var freelancerc12and13 = freelancerFees - 0;
             var freelancerE12and13 = fullTeam.Sum(x => x.PlatformFees);
             var freelancerPlatformFees = Math.Abs(freelancerb12and13 - freelancerc12and13 - freelancerE12and13);
             // calculation for freelancer platform fees//
 
             // calculation for fees platform fees//
-            var feesC11and12and13 = c11 + c11 + c11;
+            var feesC11and12and13 = 0 + 0 + 0;
             var feesE11and12and13 = (finalProjectpricing * 10 / 100) + fullTeam.Sum(x => x.PlatformFees);
             var comissionFees = Math.Abs(feesC11and12and13 + feesE11and12and13);
             // calculation for fees platform fees//
 
-            var commisiontotalAmount = clientPlatformFees + freelancerPlatformFees + comissionFees;
+            var commisiontotalAmount = FinalpmFees + freelancerPlatformFees + comissionFees;
 
             var invCommission = _db.InvoiceList.Where(x => x.ContractId == contract.Id
             && x.TransactionType == AppConst.InvoiceTransactionType.PLATFORM_COMM_FROM_FREELANCER_CUSTOM).FirstOrDefault();
@@ -4515,7 +4524,7 @@ namespace Aephy.API.Controllers
             // Invoice - Commisions (Details 1) 
             var invoiceplatformFees_Client = new InvoiceListDetails();
             invoiceplatformFees_Client.InvoiceListId = invoiceCommission.Id;
-            invoiceplatformFees_Client.Amount = clientPlatformFees.ToString();
+            invoiceplatformFees_Client.Amount = FinalpmFees.ToString();
             invoiceplatformFees_Client.Description = "Platform fees to client for  \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
             _db.InvoiceListDetails.Add(invoiceplatformFees_Client);
             _db.SaveChanges();

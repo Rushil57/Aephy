@@ -1478,74 +1478,74 @@ namespace Aephy.API.Controllers
 
                             if (solutionList.Count > 0)
                             {
-                                    var grouped_activeSolutions = solutionList
-                               .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
-                               .Select(g => new
-                               {
-                                   FundList = g.ToList(),
-                               });
+                                var grouped_activeSolutions = solutionList
+                           .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
+                           .Select(g => new
+                           {
+                               FundList = g.ToList(),
+                           });
 
-                                    foreach (var group in grouped_activeSolutions)
+                                foreach (var group in grouped_activeSolutions)
+                                {
+                                    var list = group.FundList;
+                                    solutionFundViewModel grouping = new solutionFundViewModel();
+                                    if (list.Count != 1)
                                     {
-                                        var list = group.FundList;
-                                        solutionFundViewModel grouping = new solutionFundViewModel();
-                                        if (list.Count != 1)
-                                        {
-                                            grouping.solutionFunds = list.Last();
-                                            finalFundList.Add(grouping);
-                                        }
-                                        else
-                                        {
-                                            grouping.solutionFunds = list.FirstOrDefault();
-                                            finalFundList.Add(grouping);
-                                        }
-
-
+                                        grouping.solutionFunds = list.Last();
+                                        finalFundList.Add(grouping);
                                     }
-                                    if (finalFundList.Count > 0)
+                                    else
                                     {
-                                        List<string> industrylist = new List<string>();
-                                        foreach (var data in finalFundList)
-                                        {
-                                            var checkContractCompleted = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                            if (checkContractCompleted != Contract.PaymentStatuses.Splitted)
-                                            {
-                                                SolutionsModel solutionsdataStore = new SolutionsModel();
-                                                var solutionData = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).FirstOrDefault();
-                                                var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.solutionFunds.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
-                                                var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
-                                                var industryname = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                                                var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                                var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();
-                                                var contractid = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.Id).FirstOrDefault();
-                                                var clientId = _db.SolutionFund.Where(x => x.Id == data.solutionFunds.Id).Select(f => f.ClientId).FirstOrDefault();
-
-                                                solutionsdataStore.Services = serviceData;
-                                                solutionsdataStore.ServiceId = serviceId;
-                                                solutionsdataStore.SolutionId = data.solutionFunds.SolutionId;
-                                                solutionsdataStore.IndustryId = data.solutionFunds.IndustryId;
-                                                solutionsdataStore.Industries = industryname;
-                                                solutionsdataStore.Id = data.solutionFunds.Id;
-                                                solutionsdataStore.Title = solutionData.Title;
-                                                solutionsdataStore.Description = solutionData.Description;
-                                                solutionsdataStore.ImagePath = solutionData.ImagePath;
-                                                solutionsdataStore.MileStoneTitle = milestoneData;
-                                                solutionsdataStore.PaymentStatus = contractStatus.ToString();
-                                                solutionsdataStore.ContractId = contractid;
-                                                solutionsdataStore.ClientId = clientId;
-                                                solutionsdataStore.ProjectStatus = data.solutionFunds.ProjectStatus;
-                                                solutionsModel.Add(solutionsdataStore);
-                                                industrylist.Clear();
-                                            }
-                                        }
-
-                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                        {
-                                            StatusCode = StatusCodes.Status200OK,
-                                            Message = "success",
-                                            Result = solutionsModel
-                                        });
+                                        grouping.solutionFunds = list.FirstOrDefault();
+                                        finalFundList.Add(grouping);
                                     }
+
+
+                                }
+                                if (finalFundList.Count > 0)
+                                {
+                                    List<string> industrylist = new List<string>();
+                                    foreach (var data in finalFundList)
+                                    {
+                                        var checkContractCompleted = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                        if (checkContractCompleted != Contract.PaymentStatuses.Splitted)
+                                        {
+                                            SolutionsModel solutionsdataStore = new SolutionsModel();
+                                            var solutionData = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).FirstOrDefault();
+                                            var serviceId = _db.SolutionServices.Where(x => x.SolutionId == data.solutionFunds.SolutionId).Select(x => x.ServicesId).FirstOrDefault();
+                                            var serviceData = _db.Services.Where(x => x.Id == serviceId).Select(x => x.ServicesName).FirstOrDefault();
+                                            var industryname = _db.Industries.Where(x => x.Id == data.solutionFunds.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                            var contractStatus = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
+                                            var milestoneData = _db.SolutionMilestone.Where(x => x.Id == data.solutionFunds.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                            var contractid = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.Id).FirstOrDefault();
+                                            var clientId = _db.SolutionFund.Where(x => x.Id == data.solutionFunds.Id).Select(f => f.ClientId).FirstOrDefault();
+
+                                            solutionsdataStore.Services = serviceData;
+                                            solutionsdataStore.ServiceId = serviceId;
+                                            solutionsdataStore.SolutionId = data.solutionFunds.SolutionId;
+                                            solutionsdataStore.IndustryId = data.solutionFunds.IndustryId;
+                                            solutionsdataStore.Industries = industryname;
+                                            solutionsdataStore.Id = data.solutionFunds.Id;
+                                            solutionsdataStore.Title = solutionData.Title;
+                                            solutionsdataStore.Description = solutionData.Description;
+                                            solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                            solutionsdataStore.MileStoneTitle = milestoneData;
+                                            solutionsdataStore.PaymentStatus = contractStatus.ToString();
+                                            solutionsdataStore.ContractId = contractid;
+                                            solutionsdataStore.ClientId = clientId;
+                                            solutionsdataStore.ProjectStatus = data.solutionFunds.ProjectStatus;
+                                            solutionsModel.Add(solutionsdataStore);
+                                            industrylist.Clear();
+                                        }
+                                    }
+
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = "success",
+                                        Result = solutionsModel
+                                    });
+                                }
                             }
                         }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1641,7 +1641,7 @@ namespace Aephy.API.Controllers
                                 solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                                 solutionsdataStore.Title = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
                                 solutionsdataStore.ContractId = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.Id).FirstOrDefault();
-                                if (data.FundType.ToString() == "MilestoneFund")
+                                if (data.FundType == SolutionFund.FundTypes.MilestoneFund)
                                 {
                                     solutionsdataStore.MileStoneTitle = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
                                 }
@@ -1910,7 +1910,7 @@ namespace Aephy.API.Controllers
                             teamData.SolutionId = solutionFunddata.SolutionId;
                             TeamList.Add(teamData);
                         }
-                        
+
                     }
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1951,7 +1951,7 @@ namespace Aephy.API.Controllers
                     ProjectManagement = model.ProfessionalismRating,
                     WellDefinedProjectScope = model.WellDefinedProjectRating
                 };
-               await _db.FreelancerToFreelancerReview.AddAsync(reviewData);
+                await _db.FreelancerToFreelancerReview.AddAsync(reviewData);
                 _db.SaveChanges();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -1979,6 +1979,7 @@ namespace Aephy.API.Controllers
                     try
                     {
                         decimal TotalExpense = 0;
+                        var projectDuration = 0;
                         List<solutionFundViewModel> finalFundList = new List<solutionFundViewModel>();
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                         var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId).ToListAsync();
@@ -2012,6 +2013,13 @@ namespace Aephy.API.Controllers
                                 List<string> industrylist = new List<string>();
                                 foreach (var data in finalFundList)
                                 {
+                                    var milestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == data.solutionFunds.SolutionId && x.IndustryId == data.solutionFunds.IndustryId && x.ProjectType == data.solutionFunds.ProjectType).ToList();
+                                    if (milestoneData.Count > 0)
+                                    {
+                                        var totalMilestonDays = milestoneData.Sum(x => x.Days);
+                                        projectDuration += totalMilestonDays;
+                                    }
+
                                     var expense = "";
                                     var record = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).FirstOrDefault();
                                     if(record != null)
@@ -2040,7 +2048,8 @@ namespace Aephy.API.Controllers
                             {
                                 Expense = TotalExpense,
                                 Projects = finalFundList.Count,
-                                CurrentCurrency = CurrencySign
+                                CurrentCurrency = CurrencySign,
+                                ProjectDuartion = projectDuration
                             }
                         });
 
@@ -2062,6 +2071,132 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Data not Found"
             });
+        }
+
+        //getFreelancerProjectExpense
+        [HttpPost]
+        [Route("getFreelancerProjectExpense")]
+        public async Task<IActionResult> getFreelancerProjectExpense([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        List<SolutionFund> solutionList = new List<SolutionFund>();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        List<solutionFundViewModel> finalFundList = new List<solutionFundViewModel>();
+                        var projectData = await _db.SolutionTeam.Where(x => x.FreelancerId == model.UserId).ToListAsync();
+                        if (projectData.Count > 0)
+                        {
+                            foreach (var solution in projectData)
+                            {
+                                SolutionFund dataRestore = new SolutionFund();
+                                var solutionFundData = _db.SolutionFund.Where(x => x.Id == solution.SolutionFundId).FirstOrDefault();
+                                if (solutionFundData != null)
+                                {
+                                    if (!solutionFundData.IsStoppedProject)
+                                    {
+                                        dataRestore.SolutionId = solutionFundData.SolutionId;
+                                        dataRestore.IndustryId = solutionFundData.IndustryId;
+                                        dataRestore.ProjectPrice = solutionFundData.ProjectPrice;
+                                        dataRestore.Id = solutionFundData.Id;
+                                        dataRestore.MileStoneId = solutionFundData.MileStoneId;
+                                        dataRestore.FundType = solutionFundData.FundType;
+                                        dataRestore.ProjectType = solutionFundData.ProjectType;
+                                        solutionList.Add(dataRestore);
+                                    }
+                                }
+
+
+                            }
+
+                            if (solutionList.Count > 0)
+                            {
+                                var grouped_activeSolutions = solutionList
+                                   .GroupBy(t => new { t.IndustryId, t.SolutionId, t.ProjectType })
+                                   .Select(g => new
+                                   {
+                                       FundList = g.ToList(),
+                                   });
+
+                                foreach (var group in grouped_activeSolutions)
+                                {
+                                    var list = group.FundList;
+                                    solutionFundViewModel grouping = new solutionFundViewModel();
+                                    if (list.Count != 1)
+                                    {
+                                        grouping.solutionFunds = list.Last();
+                                        finalFundList.Add(grouping);
+                                    }
+                                    else
+                                    {
+                                        grouping.solutionFunds = list.FirstOrDefault();
+                                        finalFundList.Add(grouping);
+                                    }
+
+
+                                }
+                                decimal revenueAmount = 0;
+                                var projectDuration = 0;
+                                if (finalFundList.Count > 0)
+                                {
+                                    List<string> industrylist = new List<string>();
+                                    foreach (var data in finalFundList)
+                                    {
+                                        var milestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == data.solutionFunds.SolutionId && x.IndustryId == data.solutionFunds.IndustryId && x.ProjectType == data.solutionFunds.ProjectType).ToList();
+                                        if (milestoneData.Count > 0)
+                                        {
+                                            var totalMilestonDays = milestoneData.Sum(x => x.Days);
+                                            projectDuration += totalMilestonDays;
+                                        }
+
+                                        var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == data.solutionFunds.SolutionId).ToList();
+                                        if(solutionTeamData.Count > 0)
+                                        {
+                                            var freelancerAmount = solutionTeamData.Sum(x => x.Amount);
+                                            revenueAmount += freelancerAmount;
+                                        }
+
+                                    }
+                                }
+
+                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(model.ClientPreferredCurrency);
+
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "success",
+                                    Result = new
+                                    {
+                                        ProjectDuration = projectDuration,
+                                        RevenueAmount = revenueAmount,
+                                        FreelancerActiveProject = finalFundList.Count(),
+                                        FreelancerCurrency = CurrencySign
+                                    }
+                                });
+                            }
+                        }
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+
+                }
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "success",
+            });
+
         }
 
         //CheckFreelancerToFreelancerReviewExits
@@ -2108,7 +2243,7 @@ namespace Aephy.API.Controllers
             if (model != null)
             {
                 var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId && x.FreelancerId == model.UserId).FirstOrDefaultAsync();
-                if(solutionTeamData != null)
+                if (solutionTeamData != null)
                 {
                     _db.SolutionTeam.Remove(solutionTeamData);
                     _db.SaveChanges();
@@ -2122,6 +2257,13 @@ namespace Aephy.API.Controllers
 
                     _db.SolutionLeave.Add(leaveSolution);
                     _db.SaveChanges();
+
+                    var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
+                    if (solutionFundData != null)
+                    {
+                        solutionFundData.IsProjectPriceAlreadyCount = false;
+                        _db.SaveChanges();
+                    }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {

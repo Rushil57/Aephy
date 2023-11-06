@@ -307,7 +307,7 @@ namespace Aephy.API.Controllers
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
                         DueDate = DateTime.MinValue,
-                        FreelancerId = model.FreelancerId,
+                        FreelancerId = model.UserId,
                         ProjectType = model.ProjectType,
                         Days = model.Days
                     };
@@ -437,9 +437,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var milestoneList = await _db.SolutionMilestone.Where(x => x.FreelancerId == model.FreelancerId
-                && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-                && x.ProjectType == model.ProjectType).ToListAsync();
+                var milestoneList = await _db.SolutionMilestone.Where(x => x.FreelancerId == model.UserId
+            && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+               && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -527,9 +527,9 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var pointsList = await _db.SolutionPoints.Where(x => x.FreelancerId == model.FreelancerId
-                && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-                && x.ProjectType == model.ProjectType).ToListAsync();
+                var pointsList = await _db.SolutionPoints.Where(x => x.FreelancerId == model.UserId
+            && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+               && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -616,32 +616,23 @@ namespace Aephy.API.Controllers
 
                 if (solutionIndustryDetailsId > 0)
                 {
-                    var solutionDefineMpdel = await _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetailsId
+                    var solutionDefineModel = await _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetailsId
                                                 && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
 
-                    if (solutionDefineMpdel != null)
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Success",
-                            Result = solutionDefineMpdel
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Failed"
-                        });
-                    }
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = solutionDefineModel
+                    });
+
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "Failed"
+                    Message = "Data Not Found"
                 });
             }
             catch (Exception ex)
@@ -990,7 +981,7 @@ namespace Aephy.API.Controllers
                 try
                 {
                     var saveprojectData = _db.SavedProjects.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.UserId == model.UserId).FirstOrDefault();
-                    if(saveprojectData != null)
+                    if (saveprojectData != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -1245,7 +1236,7 @@ namespace Aephy.API.Controllers
                                 {
                                     var checkProjectStopByClient = _db.SolutionFund.Where(x => x.Id == data.solutionFunds.Id).FirstOrDefault();
                                     var checkContractCompleted = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).Select(x => x.PaymentStatus).FirstOrDefault();
-                                    if (checkContractCompleted != Contract.PaymentStatuses.Splitted &&  data.solutionFunds.IsStoppedProject == false)
+                                    if (checkContractCompleted != Contract.PaymentStatuses.Splitted && data.solutionFunds.IsStoppedProject == false)
                                     {
                                         SolutionsModel solutionsdataStore = new SolutionsModel();
                                         var solutionData = _db.Solutions.Where(x => x.Id == data.solutionFunds.SolutionId).FirstOrDefault();
@@ -1340,18 +1331,18 @@ namespace Aephy.API.Controllers
                     if (model.InvoiceId != 0)
                     {
                         var invoicelistDetails = await _db.InvoiceList.Where(x => x.Id == model.InvoiceId && x.BillToClientId == model.UserId).FirstOrDefaultAsync();
-                        if(invoicelistDetails != null)
+                        if (invoicelistDetails != null)
                         {
                             InvoiceListViewModel InvoiceDetails = new InvoiceListViewModel();
                             var invoiceListDetails = await _db.InvoiceListDetails.Where(x => x.InvoiceListId == invoicelistDetails.Id).ToListAsync();
-                            if(invoiceListDetails.Count > 0)
+                            if (invoiceListDetails.Count > 0)
                             {
                                 InvoiceDetails.InvoicelistDetails = invoiceListDetails;
                             }
                             InvoiceDetails.InvoiceNumber = invoicelistDetails.InvoiceNumber;
                             InvoiceDetails.InvoiceDate = invoicelistDetails.InvoiceDate;
                             var clientDetails = _db.Users.Where(x => x.Id == invoicelistDetails.BillToClientId).FirstOrDefault();
-                            if(clientDetails != null)
+                            if (clientDetails != null)
                             {
                                 var fullname = clientDetails.FirstName + " " + clientDetails.LastName;
                                 InvoiceDetails.ClientFullName = fullname;
@@ -1363,7 +1354,7 @@ namespace Aephy.API.Controllers
 
                             }
                             var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
-                            if(clientaddressDetails != null)
+                            if (clientaddressDetails != null)
                             {
                                 InvoiceDetails.ClientAddress = clientaddressDetails;
                             }
@@ -1791,9 +1782,9 @@ namespace Aephy.API.Controllers
                                 {
                                     var contractData = _db.Contract.Where(x => x.SolutionFundId == solutionFundData.Id).FirstOrDefault();
                                     var IsProjectCompleteed = false;
-                                    if(contractData != null)
+                                    if (contractData != null)
                                     {
-                                        if(contractData.PaymentStatus == Contract.PaymentStatuses.Splitted)
+                                        if (contractData.PaymentStatus == Contract.PaymentStatuses.Splitted)
                                         {
                                             IsProjectCompleteed = true;
                                         }
@@ -1895,10 +1886,10 @@ namespace Aephy.API.Controllers
             {
                 var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
                 List<SolutionTeamViewModel> TeamList = new List<SolutionTeamViewModel>();
-                if(solutionTeamData.Count > 0)
+                if (solutionTeamData.Count > 0)
                 {
                     var solutionFunddata = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
-                    foreach(var data in solutionTeamData)
+                    foreach (var data in solutionTeamData)
                     {
                         SolutionTeamViewModel teamData = new SolutionTeamViewModel();
                         if (data.FreelancerId != model.UserId)
@@ -2022,7 +2013,7 @@ namespace Aephy.API.Controllers
 
                                     var expense = "";
                                     var record = _db.Contract.Where(x => x.SolutionFundId == data.solutionFunds.Id).FirstOrDefault();
-                                    if(record != null)
+                                    if (record != null)
                                     {
                                         expense = record.Amount;
                                         decimal exp = expense != "" ? Convert.ToDecimal(expense) : 0;
@@ -2153,7 +2144,7 @@ namespace Aephy.API.Controllers
                                         }
 
                                         var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == data.solutionFunds.SolutionId).ToList();
-                                        if(solutionTeamData.Count > 0)
+                                        if (solutionTeamData.Count > 0)
                                         {
                                             var freelancerAmount = solutionTeamData.Sum(x => x.Amount);
                                             revenueAmount += freelancerAmount;
@@ -2178,7 +2169,7 @@ namespace Aephy.API.Controllers
                                 });
                             }
                         }
-                        
+
                     }
                     catch (Exception ex)
                     {

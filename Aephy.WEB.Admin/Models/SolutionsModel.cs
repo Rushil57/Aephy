@@ -51,6 +51,19 @@ namespace Aephy.WEB.Admin.Models
         public int SolutionId { get; set; }
 
         public int IndustryId { get; set; }
+
+        public int SolutionIndustryId { get; set; }
+
+        public string? ProjectType { get; set; }
+
+        public string? UserId { get; set; }
+
+        public string? ProjectOutline { get; set; }
+        public string? ProjectDetails { get; set; }
+
+        public string? Duration { get; set; }
+
+        public string? TeamSize { get; set; }
     }
 
     public class SolutionIdModel
@@ -190,5 +203,48 @@ namespace Aephy.WEB.Admin.Models
 
         public string? RevoultOrderId { get; set; }
 
+    }
+
+    public class MileStoneViewModel
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+
+        public int IndustryId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public DateTime? DueDate { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+        public string? ProjectType { get; set; }
+        public int Days { get; set; }
+        public string? UserId { get; set; }
+
+        public int SolutionFundId { get; set; }
+
+        public bool MileStoneCheckout { get; set; }
+
+    }
+
+    public class SolutionPointsViewModel
+    {
+        public int Id { get; set; }
+
+        public string? point { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+        public string? ProjectType { get; set; }
+
+        public string? PointKey { get; set; }
+
+        public string? PointValue { get; set; }
     }
 }

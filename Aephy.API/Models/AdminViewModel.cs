@@ -230,6 +230,8 @@ namespace Aephy.API.Models
 
             public string? FreelancerId { get; set; }
 
+            public string? UserId { get; set; }
+
             public string? ProjectType { get; set; }
             public int Days { get; set; }
 
@@ -294,6 +296,8 @@ namespace Aephy.API.Models
             public int SolutionFundId { get; set; }
 
             public string? ClientPreferredCurrency { get; set; }
+
+            public int SolutionIndustryId { get; set; }
         }
 
         public class UserCvFileModel

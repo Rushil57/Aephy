@@ -64,11 +64,6 @@
                                         <option value="All">All Industries</option>
                                     </select>
 
-                                    <div class="col-12 pt-3" style="display:none;padding-left: 1%;" id="architect-div">
-                                        <input type="checkbox" id="IsProjectArchitect" name="IsProjectarchitect" value="IsProjectArchitect">
-                                        <label for="IsProjectArchitect">Project Architect</label><br>
-                                    </div>
-
                                     <div class="p-3">
                                         <button type="button" class="btn btn-brand" onclick="SaveAssignedFreelancer()">Add</button>
                                     </div>
@@ -80,7 +75,6 @@
                                             <th scope="col">Solution Id</th>
                                             <th scope="col">Solution Name</th>
                                             <th scope="col">Industry Name</th>
-                                            <th scope="col">Project Architect</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
@@ -285,9 +279,6 @@
     function SoutionsList(data,Id) {
         $('#userPopupModal').modal('show');
         var freelencerLevel = $(data).parents('tr').find(".cls-level").text();
-        if (freelencerLevel == "Project Manager") {
-            $("#architect-div").css("display", "block")
-        }
         BindMainServices();
         BindMainSolutions();
         BindMainIndustries();
@@ -314,16 +305,6 @@
                         { "data": "Id" },
                         { "data": "Title" },
                         { "data": "IndustryName" },
-                        { 
-                            "data": "IsProjectArchitect",
-                            "render": function (data, type, row) {
-                                if(data){
-                                    return '<span class="badge bg-success">true</span>';
-                                }else{
-                                    return '<span class="badge bg-danger">false</span>';
-                                }
-                            }
-                        },
                         {
                             "data": "FreelancerPoolId",
                             "render": function (data, type, row) {
@@ -418,7 +399,6 @@
         $('#userPopupModal').modal('hide');
         $('#solutionsList').find("tr:gt(0)").remove();
         $("#Freelancer-id").val("");
-        $("#architect-div").css("display","none")
     }
 
     function BindMainServices() {
@@ -512,8 +492,6 @@
                 }else{
                     showToaster("warning", "Warning!", result.Message);
                 }
-                
-                $('#IsProjectArchitect').prop('checked', false);
                 GetServicesValues();
                 GetFreelancerDetailsById(freelancerid)
                 $("#preloader").hide();

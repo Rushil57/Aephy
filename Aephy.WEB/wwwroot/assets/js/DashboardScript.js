@@ -414,9 +414,9 @@ function GetApprovedList() {
                     htm += '<td class="cls-level">' + subObj.Level + '</td>';
                     htm += '<td>' + subObj.IndustryName + '</td>';
                     htm += '<td><a class="btn btn-danger pt-0 pb-1" style="color: white;" onclick=DeleteFreelancerAppliedSolution(this,' + subObj.SolutionId + ',' + subObj.IndustryId + ')>Delete</a></td>';
-                    if (subObj.IsDefine) {
-                        htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
-                    }
+                    //if (subObj.IsDefine) {
+                    //    htm += '<td><a class="btn btn-success applyFor-btn pt-0 pb-1" style="color: white;" onclick="OpenDetailsPopModal(' + subObj.ID + ',' + subObj.SolutionId + ',' + subObj.IndustryId + ')">Define</a></td>';
+                    //}
                     htm += '</tr>';
                 }
             } else {

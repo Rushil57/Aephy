@@ -1326,7 +1326,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                List<SolutionIndustryDetails> solutionIndustries = _db.SolutionIndustryDetails.ToList();
+                List<SolutionIndustryDetails> solutionIndustries = await _db.SolutionIndustryDetails.ToListAsync();
 
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
@@ -1354,6 +1354,8 @@ namespace Aephy.API.Controllers
                         dataStore.Title = solutionsList.Where(x => x.Id == list.SolutionId).Select(x => x.Title).FirstOrDefault();
                         dataStore.SubTitle = solutionsList.Where(x => x.Id == list.SolutionId).Select(x => x.SubTitle).FirstOrDefault();
                         dataStore.Services = Servicename;
+                        dataStore.SolutionId = list.SolutionId;
+                        dataStore.IndustryId = list.IndustryId;
                         solutionsModel.Add(dataStore);
                         industrylist.Clear();
 
@@ -1918,20 +1920,6 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                if (model.ProjectArchitect)
-                {
-                    var checkprojectArchitect = _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId && x.IsProjectArchitect == true).FirstOrDefault();
-                    if (checkprojectArchitect != null)
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Project Architect already assign with same solution and industry !",
-                        });
-                    }
-                }
-
-
                 var data = _db.FreelancerPool.Where(x => x.FreelancerID == model.FreelancerId && x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
                 if (data == null)
                 {

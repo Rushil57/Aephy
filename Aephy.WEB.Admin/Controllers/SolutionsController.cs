@@ -845,6 +845,11 @@ namespace Aephy.WEB.Admin.Controllers
             return clientTransfertData;
         }
 
+        public ActionResult DefineSolution()
+        {
+            return View();
+        }
+
 
     }
 }

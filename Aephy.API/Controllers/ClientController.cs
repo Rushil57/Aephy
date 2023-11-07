@@ -4447,7 +4447,7 @@ namespace Aephy.API.Controllers
 
             var adminRevolute = _db.EphylinkRevolutAccount.FirstOrDefault();
             
-            decimal total_detail1 = 0; // B11 + C11 + E11
+            decimal total_detail1 = 0; // B11 - C11 - E11
             // B11 = clientFees
             // C11 = J8 = (revolutFees * clientFees)/ solutionTeamSum
             // E11 = L8 = if admin flag is false then 0 else revolutetransferfee

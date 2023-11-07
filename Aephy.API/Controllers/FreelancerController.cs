@@ -376,9 +376,9 @@ namespace Aephy.API.Controllers
                                                 && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
                 if (solutionIndustryDetails != null)
                 {
-                    //data.ProjectOutline = model.ProjectOutline;
-                    //data.ProjectDetails = model.ProjectDetails;
-                    //_db.SaveChanges();
+                    solutionIndustryDetails.ActionOn= DateTime.Now;
+                    solutionIndustryDetails.IsApproved= 1;
+                    _db.SaveChanges();
 
                     var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetails.Id
                                                 && x.ProjectType == model.ProjectType).FirstOrDefault();

@@ -3032,7 +3032,7 @@ namespace Aephy.API.Controllers
         {
             if (model.AlreadyExistDocument)
             {
-                var applicantsDetails = _db.CustomSolutions.Where(x => x.ID == model.ID).FirstOrDefault();
+                var applicantsDetails = await _db.CustomSolutions.Where(x => x.ID == model.ID).FirstOrDefaultAsync();
                 if (applicantsDetails != null)
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -3213,7 +3213,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var CheckType = _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefault();
+                    var CheckType = await _db.Users.Where(x => x.Id == model.UserId).Select(x => x.UserType).FirstOrDefaultAsync();
                     List<Solutions> solutionList = _db.Solutions.ToList();
                     List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                     List<Industries> industrylistDetails = new List<Industries>();
@@ -4342,14 +4342,18 @@ namespace Aephy.API.Controllers
                 //
 
 
-
+                
                 var checkoutRevoluteFeesForFreelancer = ((revolutFees * totalAmount) / solutionTeamSum);
+                var e6freelancerfees = totalAmount - checkoutRevoluteFeesForFreelancer;
+                var k6value = (e6freelancerfees * 1) / 100;
+
+                var freelancerfees = checkoutRevoluteFeesForFreelancer + k6value;
 
                 // Invoice - Freelancer (Details 1)
                 var invoiceFreelancerDetail_InvFor = new InvoiceListDetails();
                 invoiceFreelancerDetail_InvFor.InvoiceListId = invoiceFreelancer.Id;
                 invoiceFreelancerDetail_InvFor.Amount = Convert.ToString((totalAmount
-                    - (checkoutRevoluteFeesForFreelancer + Convert.ToDecimal(freelancer.PaymentFees))
+                    - (freelancerfees + Convert.ToDecimal(freelancer.PaymentFees))
                     - (solutionTeam.PlatformFees * -1)));
                 invoiceFreelancerDetail_InvFor.Description = "Invoice for  \"" + solutionTitle + "\""; // ###### - this will be either project or milestone tile
                 _db.InvoiceListDetails.Add(invoiceFreelancerDetail_InvFor);
@@ -4375,7 +4379,7 @@ namespace Aephy.API.Controllers
                 // Invoice - Freelancer (Details 4)
                 var invoiceFreelancerDetail_OtherFees = new InvoiceListDetails();
                 invoiceFreelancerDetail_OtherFees.InvoiceListId = invoiceFreelancer.Id;
-                invoiceFreelancerDetail_OtherFees.Amount = Convert.ToString((checkoutRevoluteFeesForFreelancer + Convert.ToDecimal(freelancer.PaymentFees)));
+                invoiceFreelancerDetail_OtherFees.Amount = freelancerfees.ToString();
                 invoiceFreelancerDetail_OtherFees.Description = "Other fees (Payment processing fees)";
                 _db.InvoiceListDetails.Add(invoiceFreelancerDetail_OtherFees);
                 _db.SaveChanges();

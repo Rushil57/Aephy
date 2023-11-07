@@ -708,8 +708,8 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractClientName").html(data.ClientFullName);
-                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency  + data.TotalAmount);
-                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency  + data.TotalAmount);
+                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency  + parseFloat(data.TotalAmount).toFixed(2));
+                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency  + parseFloat(data.TotalAmount).toFixed(2));
                 $("#ProjectTotalDueAmount").css("font-weight", "bold"); 
                 $("#ContractDueDate").css("font-weight", "bold");
                 if (data.ClientAddress == null) {
@@ -728,6 +728,12 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     if (resultLength > 0) {
                         for (index = 0; index < resultLength; index++) {
                             subObj = data.InvoicelistDetails[index];
+                            if (!subObj.Amount.indexOf("(") == 0) {
+                                if (subObj.Amount == "") {
+                                    subObj.Amount = 0.0;
+                                }
+                                subObj.Amount = parseFloat(subObj.Amount).toFixed(2);
+                            }
                             htm += '<tr>';
                             htm += '<td>' + subObj.Description + '</td>';
                             htm += '<td>' + subObj.Amount + '</td>';

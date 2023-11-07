@@ -13,10 +13,10 @@ namespace Aephy.API.Models
             public static int PLATFORM_COMM_FROM_CLIENT_CUSTOM = 10;
 
             //PROJACT MANAGER FEES  (%)
-            public static int PROJECT_MANAGER_SMALL = 4;
-            public static int PROJECT_MANAGER_MEDIUM = 3;
-            public static int PROJECT_MANAGER_LARGE = 3;
-            public static int PROJECT_MANAGER_CUSTOM = 0;
+            //public static int PROJECT_MANAGER_SMALL = 4;
+            //public static int PROJECT_MANAGER_MEDIUM = 3;
+            //public static int PROJECT_MANAGER_LARGE = 3;
+            //public static int PROJECT_MANAGER_CUSTOM = 0;
 
             // PLATFORM FEES (%)
             public static int PLATFORM_COMM_FROM_FREELANCER_SMALL = 6;
@@ -33,7 +33,7 @@ namespace Aephy.API.Models
             public static string CREDIT_MEMO = "CREDIT MEMO";
             public static string INVOICE_FREELANCER = "Invoice Freelancer";
             public static string INVOICE_PA = "Invoice PA";
-            public static string PLATFORM_COMM_FROM_FREELANCER_CUSTOM = "Invoice Commision";
+            public static string INVOICE_COMMISIONS = "Invoice Commision";
         }
 
         public static class ProjectType

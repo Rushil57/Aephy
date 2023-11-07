@@ -1753,7 +1753,8 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
             <div class="modal-body p-0">
                 <input type="hidden" value="0" id="InvoiceId"/>
                  <div class="container" id="InvoiceContent">
-                                <div class="row pt-1">
+                                <div id="invoiceCeated-title">Invoice Created Via</div>
+                                <div class="row mt-3">
                                     <div class="col-sm-8 col-lg-8">
                                         <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png" 
                                         class="img-fluid" width="265" height="150"/>
@@ -1761,7 +1762,7 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
 
                                     <div class="col-sm-4 col-lg-4">
                                         <div class="p-1 text-center" style="background-color: #d9d9d9;">
-                                            <span>Invoice</span>
+                                            <span id="invoice-mainTitle">Invoice</span>
                                         </div>
 
                                         <div class="mt-3">
@@ -1779,16 +1780,21 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                                         <h3 style="color: #c37813;">From</h3>
 
                                         <div class="mt-3">
-                                            <h5> <b> Ephylink </b> </h5>
+                                           @*  <h5> <b> Ephylink </b> </h5>
                                             <h5> Dimitrios Vamvakas </h5>
                                             <h5> Ellispontou 39, Patra, 26226 </h5>
                                             <h5> Achaia, Greece </h5>
-                                            <h5> VAT ID: 148366653 </h5>
+                                            <h5> VAT ID: 148366653 </h5> *@
+                                            <h5 id="from-Title"> <b> Ephylink </b> </h5>
+                                            <h5 id="from-name"> Dimitrios Vamvakas </h5>
+                                            <h5 id="from-address"> Ellispontou 39, Patra, 26226 </h5>
+                                            <h5 id="from-country"> Achaia, Greece </h5>
+                                            <h5 id="from-vatId"> VAT ID: 148366653 </h5>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-6 col-lg-6">
-                                            <h3 style="color: #c37813;">Bill to</h3>
+                                            <h3 style="color: #c37813;" id="billTo-tile">Bill to</h3>
 
                                             <div class="mt-3">
                                                 <h5 id="ContractClientName"> <b></b> </h5>

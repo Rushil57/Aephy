@@ -704,13 +704,12 @@ function OpenInvoiceModalPopUp(invoiceId) {
             if (result.Result != null) {
                 $("#InvoiceModal").modal('show')
                 var data = result.Result;
-                $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
                 $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractClientName").html(data.ClientFullName);
-                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency  + parseFloat(data.TotalAmount).toFixed(2));
-                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency  + parseFloat(data.TotalAmount).toFixed(2));
-                $("#ProjectTotalDueAmount").css("font-weight", "bold"); 
+                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency + parseFloat(data.TotalAmount).toFixed(2));
+                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency + parseFloat(data.TotalAmount).toFixed(2));
+                $("#ProjectTotalDueAmount").css("font-weight", "bold");
                 $("#ContractDueDate").css("font-weight", "bold");
                 if (data.ClientAddress == null) {
                     data.ClientAddress = "";
@@ -744,9 +743,117 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#InvoiceListDetails tbody").append(htm);
                 }
 
+
+                if (data.TransactionType == "Payment Receipt - Amount Due") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#ContractDueDate").css("display", "none");
+                    $("#ProjectTotalDueAmount").css("display", "none");
+                    $("#invoice-mainTitle").html("RECEIPT");
+                    $("#billTo-tile").html("Received From");
+                    $("#InvoiceNumber").html("Receipt # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice1 - portal to client") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#invoice-mainTitle").html("Invoice");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice3 - Total platform fees") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#invoice-mainTitle").html("PROFORMA INVOICE");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "CREDIT MEMO") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#invoice-mainTitle").html("CREDIT MEMO");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "none");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice Freelancer") {
+
+                    if (data.FreelancerAddress == null) {
+                        data.FreelancerAddress = "";
+                    }
+
+                    $("#invoiceCeated-title").css("display", "block");
+                    $("#invoiceCeated-title").css("margin-left", "4%");
+                    $("#invoiceCeated-title").css("margin-top", "4%");
+                    //margin - left: 4 %;
+                    //margin - top: 4 %;
+
+                    $("#from-Title").html(data.FreelancerFullName);
+                    $("#invoice-mainTitle").html("INVOICE");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+                    $("#from-name").html("Name :" + data.FreelancerFullName);
+                    $("#from-address").html("Address : " + data.FreelancerAddress);
+                    $("#from-country").css("display", "none");
+                    if (data.FreelancerTaxType != "" && data.FreelancerTaxType != null && data.FreelancerTaxType != "null") {
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html(data.FreelancerTaxType + "ID : " + data.FreelancerTaxId);
+                    } else {
+                        $("#from-vatId").css("display", "none");
+                    }
+                }
+                if (data.TransactionType == "Invoice Commision") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
             }
 
-            $("#InvoiceId").val(invoiceId)
+            $("#from-Title").css("font-size", "19px");
+            $("#from-Title").css("font-weight", "bold");
+            $("#ContractClientName").css("font-size", "19px");
+            $("#ContractClientName").css("font-weight", "bold");
+
+            $("#InvoiceId").val(invoiceId);
             $("#preloader").hide();
         },
         error: function (result) {
@@ -754,8 +861,9 @@ function OpenInvoiceModalPopUp(invoiceId) {
             showToaster("error", "Error !", result);
         }
     });
-
 }
+
+
 
 function GetActiveProjectDetails(Id, ServiceId, SolutionId, IndustryId) {
     //alert(Id,ServiceId,SolutionId,IndustryId);
@@ -1775,3 +1883,4 @@ function getOpenRoles() {
         GetSolutionDefineDetails()
     });
 }
+

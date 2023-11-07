@@ -750,6 +750,16 @@ namespace Aephy.API.Models
             public string? TaxId { get; set; }
 
             public string? TaxType { get; set; }
+
+            public string? FreelancerFullName { get; set; }
+
+            public string? FreelancerTaxId { get; set; }
+
+            public string? FreelancerTaxType { get; set; }
+
+            public string? FreelancerPreferredCurrency { get; set; }
+
+            public string? FreelancerAddress { get; set; }
         }
 
         

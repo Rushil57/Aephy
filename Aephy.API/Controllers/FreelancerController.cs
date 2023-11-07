@@ -1331,6 +1331,8 @@ namespace Aephy.API.Controllers
                         if (invoicelistDetails != null)
                         {
                             InvoiceListViewModel InvoiceDetails = new InvoiceListViewModel();
+                            InvoiceDetails.TransactionType = invoicelistDetails.TransactionType;
+                            InvoiceDetails.InvoiceType = invoicelistDetails.InvoiceType;
                             var invoiceListDetails = await _db.InvoiceListDetails.Where(x => x.InvoiceListId == invoicelistDetails.Id).ToListAsync();
                             if (invoiceListDetails.Count > 0)
                             {
@@ -1347,13 +1349,26 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
                                 var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
-
-
                             }
                             var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
                             if (clientaddressDetails != null)
                             {
                                 InvoiceDetails.ClientAddress = clientaddressDetails;
+                            }
+                            if(invoicelistDetails.FreelancerId != null)
+                            {
+                                var freelancerDetails = _db.Users.Where(x => x.Id == invoicelistDetails.FreelancerId).FirstOrDefault();
+                                if(freelancerDetails != null)
+                                {
+                                    var freelanceraddressDetails = _db.FreelancerDetails.Where(x => x.UserId == invoicelistDetails.FreelancerId).FirstOrDefault();
+                                    var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                                    InvoiceDetails.FreelancerFullName = fullname;
+                                    InvoiceDetails.FreelancerTaxType = freelancerDetails.TaxType;
+                                    InvoiceDetails.FreelancerTaxId = freelancerDetails.TaxNumber;
+                                    InvoiceDetails.FreelancerAddress = freelanceraddressDetails.Address;
+                                    //var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                    
+                                }
                             }
                             InvoiceDetails.TotalAmount = invoicelistDetails.TotalAmount;
 

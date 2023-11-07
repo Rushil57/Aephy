@@ -574,7 +574,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                List<Industries> industryList = _db.Industries.ToList();
+                List<Industries> industryList = await _db.Industries.ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -597,7 +597,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                Industries industryRecord = _db.Industries.Where(x => x.Id == model.Id).FirstOrDefault();
+                Industries industryRecord = await _db.Industries.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                 if (industryRecord != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1502,29 +1502,29 @@ namespace Aephy.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
-        [HttpPost]
-        [Route("ActionByAdminOnSolution")]
-        public async Task<IActionResult> ActionByAdminOnSolution(string solutionIndustryDetailsId, string action)
-        {
-            try
-            {
-                var solutionDetail = _db.SolutionIndustryDetails.Where(x => x.Id == Convert.ToInt32(solutionIndustryDetailsId)).FirstOrDefault();
-                solutionDetail.ActionOn = DateTime.Now;
-                solutionDetail.IsApproved = Convert.ToInt32(action);
-                _db.SaveChanges();
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data Updated Succesfully!",
-                    Result = ""
-                });
-            }
+        //[HttpPost]
+        //[Route("ActionByAdminOnSolution")]
+        //public async Task<IActionResult> ActionByAdminOnSolution(string solutionIndustryDetailsId, string action)
+        //{
+        //    try
+        //    {
+        //        var solutionDetail = _db.SolutionIndustryDetails.Where(x => x.Id == Convert.ToInt32(solutionIndustryDetailsId)).FirstOrDefault();
+        //        solutionDetail.ActionOn = DateTime.Now;
+        //        solutionDetail.IsApproved = Convert.ToInt32(action);
+        //        _db.SaveChanges();
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status200OK,
+        //            Message = "Data Updated Succesfully!",
+        //            Result = ""
+        //        });
+        //    }
 
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
-            }
-        }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+        //    }
+        //}
 
 
         [HttpPost]
@@ -3354,7 +3354,7 @@ namespace Aephy.API.Controllers
                             JobDescription = model.JobDescription,
                             CreatedDateTime = date
                         };
-                        _db.EmployeeOpenRole.Add(roles);
+                        await _db.EmployeeOpenRole.AddAsync(roles);
                         _db.SaveChanges();
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

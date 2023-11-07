@@ -2782,6 +2782,60 @@ namespace Aephy.API.Controllers
                                     }
                                 }
 
+                                // Ephylinklog section
+                                var ephylinkaccountDetails = _db.EphylinkRevolutAccount.FirstOrDefault();
+                                if (ephylinkaccountDetails != null)
+                                {
+                                    if (ephylinkaccountDetails.IsEnable)
+                                    {
+                                        var totalamountTotransfer = 5;
+                                        CreatePaymentReq createephylinkPaymentReq = new CreatePaymentReq
+                                        {
+                                            AccountId = allAccounts.Where(x => x.Currency == ephylinkaccountDetails.Currency
+                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                            RequestId = Guid.NewGuid().ToString(),
+                                            Amount = (double)totalamountTotransfer, // ##### actual amount - solutionteam.transferamount 
+                                            Currency = ephylinkaccountDetails.Currency,
+                                            Reference = "Payment to Ephylink",
+                                            Receiver = new CreatePaymentReq.ReceiverData()
+                                            {
+                                                CounterpartyId = ephylinkaccountDetails.RevolutConnectId,
+                                                AccountId = ephylinkaccountDetails.RevolutAccountId
+                                            }
+                                        };
+
+                                        var CreateephylinkPaymentRsp = await _revoultService.CreatePayment(createephylinkPaymentReq);
+                                        if (CreateephylinkPaymentRsp.State == "completed" || CreateephylinkPaymentRsp.State == "pending")
+                                        {
+                                            var ephylinkFeesDetails = await _revoultService.GetTranscationFeesDetails(CreateephylinkPaymentRsp.Id);
+                                            if (ephylinkFeesDetails.IsSuccessStatusCode)
+                                            {
+                                                decimal paymentFee = 0;
+                                                var content = ephylinkFeesDetails.Content;
+                                                dynamic parseContent = JObject.Parse(content);
+                                                JArray legsArray = (JArray)parseContent["legs"];
+                                                foreach (JObject item in legsArray)
+                                                {
+                                                    paymentFee = (decimal)item["fee"];
+                                                }
+
+                                                var accountLog = new EphylinkRevolutAccountTransferLog()
+                                                {
+                                                    ContractId = contract.Id,
+                                                    TransferAmount = totalamountTotransfer,
+                                                    RevoultFee = paymentFee,
+                                                    TransferDateTime = DateTime.Now
+                                                };
+                                                _db.EphylinkRevolutAccountTransferLog.Add(accountLog);
+                                                _db.SaveChanges();
+
+                                            }
+                                        }
+
+                                    }
+                                }
+
+
                                 if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
                                 {
                                     var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();

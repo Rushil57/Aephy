@@ -85,7 +85,9 @@ namespace Aephy.API.DBHelper
         public DbSet<ExchangeRates> ExchangeRates { get; set; }
 
         public DbSet<SolutionLeave> SolutionLeave { get; set; }
-        
+
+        public DbSet<EphylinkRevolutAccountTransferLog> EphylinkRevolutAccountTransferLog { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

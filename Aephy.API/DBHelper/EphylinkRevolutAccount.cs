@@ -34,4 +34,20 @@ namespace Aephy.API.DBHelper
         public bool IsEnable { get; set; }
 
     }
+
+    public class EphylinkRevolutAccountTransferLog
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int ContractId { get; set; }
+
+        public decimal TransferAmount { get; set; }
+
+        public decimal RevoultFee { get; set; }
+
+        public DateTime? TransferDateTime { get; set; }
+
+    }
 }

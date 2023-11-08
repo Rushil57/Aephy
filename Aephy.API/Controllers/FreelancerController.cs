@@ -1349,6 +1349,7 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
                                 var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
+                                InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
                             var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
                             if (clientaddressDetails != null)
@@ -1366,8 +1367,9 @@ namespace Aephy.API.Controllers
                                     InvoiceDetails.FreelancerTaxType = freelancerDetails.TaxType;
                                     InvoiceDetails.FreelancerTaxId = freelancerDetails.TaxNumber;
                                     InvoiceDetails.FreelancerAddress = freelanceraddressDetails.Address;
+                                    InvoiceDetails.FreelancerCountry = _db.Country.Where(x => x.Id == freelancerDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                                     //var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
-                                    
+
                                 }
                             }
                             InvoiceDetails.TotalAmount = invoicelistDetails.TotalAmount;

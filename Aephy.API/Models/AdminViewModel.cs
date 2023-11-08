@@ -760,6 +760,10 @@ namespace Aephy.API.Models
             public string? FreelancerPreferredCurrency { get; set; }
 
             public string? FreelancerAddress { get; set; }
+
+            public string? FreelancerCountry { get; set; }
+
+            public string? ClientCountry { get; set; }
         }
 
         

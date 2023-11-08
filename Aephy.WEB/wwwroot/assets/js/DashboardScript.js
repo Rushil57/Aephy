@@ -704,21 +704,23 @@ function OpenInvoiceModalPopUp(invoiceId) {
             if (result.Result != null) {
                 $("#InvoiceModal").modal('show')
                 var data = result.Result;
+
+                var totalamt = parseFloat(data.TotalAmount).toFixed(2);
+                var splitamt = totalamt.toString().split(".");
+                splitamt[0] = splitamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                var finalamt = splitamt.join(".");
+
                 $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
                 $("#ContractClientName").html(data.ClientFullName);
-                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency + parseFloat(data.TotalAmount).toFixed(2));
-                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency + parseFloat(data.TotalAmount).toFixed(2));
+                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency + finalamt);
+                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency + finalamt);
                 $("#ProjectTotalDueAmount").css("font-weight", "bold");
                 $("#ContractDueDate").css("font-weight", "bold");
                 if (data.ClientAddress == null) {
                     data.ClientAddress = "";
                 }
                 $("#ClientAddress").html("Address : " + data.ClientAddress)
-
-                if (data.TaxType != "" && data.TaxType != null && data.TaxType != "null") {
-                    $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
-                }
                 if (data.InvoicelistDetails.length != 0) {
                     var index = 0;
                     var subObj = '';
@@ -730,8 +732,12 @@ function OpenInvoiceModalPopUp(invoiceId) {
                             if (!subObj.Amount.indexOf("(") == 0) {
                                 if (subObj.Amount == "") {
                                     subObj.Amount = 0.0;
+                                } else {
+                                    var totalinvoiceamt = parseFloat(subObj.Amount).toFixed(2);
+                                    var splitinvoiceamt = totalinvoiceamt.toString().split(".");
+                                    splitinvoiceamt[0] = splitinvoiceamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    subObj.Amount = splitinvoiceamt.join(".");
                                 }
-                                subObj.Amount = parseFloat(subObj.Amount).toFixed(2);
                             }
                             htm += '<tr>';
                             htm += '<td>' + subObj.Description + '</td>';
@@ -817,8 +823,6 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#invoiceCeated-title").css("display", "block");
                     $("#invoiceCeated-title").css("margin-left", "4%");
                     $("#invoiceCeated-title").css("margin-top", "4%");
-                    //margin - left: 4 %;
-                    //margin - top: 4 %;
 
                     $("#from-Title").html(data.FreelancerFullName);
                     $("#invoice-mainTitle").html("INVOICE");
@@ -829,10 +833,14 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#from-name").html("Name :" + data.FreelancerFullName);
                     $("#from-address").html("Address : " + data.FreelancerAddress);
                     $("#from-country").css("display", "none");
-                    if (data.FreelancerTaxType != "" && data.FreelancerTaxType != null && data.FreelancerTaxType != "null") {
-                        $("#from-vatId").css("display", "block");
-                        $("#from-vatId").html(data.FreelancerTaxType + "ID : " + data.FreelancerTaxId);
-                    } else {
+
+                    if (data.FreelancerCountry == "GR") {
+                        if (data.FreelancerTaxType != "" && data.FreelancerTaxType != null && data.FreelancerTaxType != "null") {
+                            $("#from-vatId").css("display", "block");
+                            $("#from-vatId").html(data.FreelancerTaxType + "ID : " + data.FreelancerTaxId);
+                        }
+                    }
+                    else {
                         $("#from-vatId").css("display", "none");
                     }
                 }
@@ -842,9 +850,18 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#from-name").html("Dimitrios Vamvakas");
                     $("#from-address").html(" Ellispontou 39, Patra, 26226");
                     $("#from-country").css("Achaia, Greece");
+                    $("#from-Title").html("Ephylink");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
-                    $("#from-Title").html("Ephylink");
+                }
+
+                if (data.ClientCountry == "GR") {
+                    $("#TaxDetails").css("display", "block");
+                    if (data.TaxType != "" && data.TaxType != null && data.TaxType != "null") {
+                        $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
+                    }
+                } else {
+                    $("#TaxDetails").css("display", "none");
                 }
             }
 

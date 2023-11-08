@@ -1329,94 +1329,8 @@ function BindSavedProject(projectData) {
 //    GetSolutionDefineDetails();
 //}
 
-//function GetMiletoneList() {
-//    var data = {
-//        SolutionId: parseInt($("#SolutionId").val()),
-//        IndustryId: parseInt($("#IndustryId").val()),
-//        ProjectType: $("#ProjectType").val(),
-//    }
 
-//    $("#preloader").show();
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/GetMiletoneList",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(data),
-//        success: function (result) {
-//            var data = result.Result
-//            var index = 0;
-//            var subObj = '';
-//            var htm = '';
-//            for (index = 0; index < data.length; index++) {
-//                subObj = data[index];
 
-//                htm += '<tr>';
-//                //htm += '<td class="" >' + subObj.Id + '</td>';
-//                htm += '<td onclick=EditMiletoneData(' + subObj.Id + ') class=cls-milestone>' + subObj.Id + '</td>';
-//                htm += '<td>' + subObj.Description + '</td>';
-//                htm += '<td>' + subObj.Title + '</td>';
-//                htm += '<td>' + subObj.Days + '</td>';
-//                htm += '<td><a class="btn btn-danger btn-sm" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
-//                htm += '</tr>';
-//            }
-//            $("#MileStoneTable").find("tr:gt(0)").remove();
-//            $("#MileStoneTable tbody").append(htm);
-//            $("#preloader").hide();
-//        },
-//        error: function (result) {
-//            //alert("failure");
-//            showToaster("error", "Error !", result);
-//            $("#preloader").hide();
-//        }
-//    });
-//}
-
-//function GetPointsList() {
-
-//    var data = {
-//        SolutionId: parseInt($("#SolutionId").val()),
-//        IndustryId: parseInt($("#IndustryId").val()),
-//        ProjectType: $("#ProjectType").val(),
-//    }
-
-//    $("#preloader").show();
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/GetPointsList",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(data),
-//        success: function (result) {
-//            var data = result.Result
-//            var index = 0;
-//            var subObj = '';
-//            var htm = '';
-//            for (index = 0; index < data.length; index++) {
-//                subObj = data[index];
-//                if (subObj.PointKey == null || subObj.PointKey == undefined) {
-//                    subObj.PointKey = ""
-//                }
-//                if (subObj.PointValue == null || subObj.PointValue == undefined) {
-//                    subObj.PointValue = ""
-//                }
-//                htm += '<tr>';
-//                htm += '<td class=cls-milestone onclick=GetPointsDataById(' + subObj.Id + ')>' + subObj.Id + '</td>';
-//                htm += '<td>' + subObj.PointKey + '</td>';
-//                htm += '<td>' + subObj.PointValue + '</td>';
-//                htm += '<td><a class="btn btn-danger btn-sm" onclick=DeletePointsById(' + subObj.Id + ')>Delete</a></td>';
-//                htm += '</tr>';
-//            }
-//            $("#PointsTable").find("tr:gt(0)").remove();
-//            $("#PointsTable tbody").append(htm);
-//            $("#preloader").hide();
-//        },
-//        error: function (result) {
-//            showToaster("error", "Error !", result);
-//            $("#preloader").hide();
-//        }
-//    });
-//}
 
 //function GetSolutionDefineDetails() {
 
@@ -1479,212 +1393,25 @@ function getFileData(myFile) {
     }
 }
 
-//function OpenMileStonePopup() {
-//    $("#MileStonePopModal").modal('show')
-//}
-
-//function SaveMilStoneData() {
-//    var MileStoneData = {
-//        Id: $("#MileStoneId").val(),
-//        Description: $("#mileStoneDescription").val(),
-//        Title: $("#mileStoneTitle").val(),
-//        //DueDate: $("#mileStonedueDate").val(),
-//        Days: $("#txtMilestoneDays").val(),
-//        SolutionId: $("#SolutionId").val(),
-//        IndustryId: $("#IndustryId").val(),
-//        ProjectType: $("#ProjectType").val(),
-//    };
-//    $("#preloader").show();
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/SaveMileStone",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(MileStoneData),
-//        success: function (result) {
-//            $("#preloader").hide();
-//            showToaster("success", "Success", result.Message);
-//            ResetMileStoneForm()
-//        },
-//        error: function (result) {
-//            showToaster("error", "Error !", result);
-//        }
-//    });
-//}
-
-//function ResetMileStoneForm() {
-//    validator.resetForm();
-//    $("#MileStoneId").val(0);
-//    $("#mileStoneDescription").val("");
-//    $("#mileStoneTitle").val("");
-//    $("#txtMilestoneDays").val("0");
-//    $("#mileStonedueDate").val("");
-//    $("#MileStonePopModal").modal('hide')
-//    GetMiletoneList()
-//}
-
-//function EditMiletoneData(id) {
-//    var data = {
-//        Id: id,
-//    };
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/GetMileStoneById",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(data),
-//        success: function (result) {
-//            if (result != null) {
-//                $("#MileStonePopModal").modal('show')
-//                var data = result.Result;
-//                $("#MileStoneId").val(data.Id);
-//                $("#mileStoneDescription").val(data.Description);
-//                $("#txtMilestoneDays").val(data.Days);
-//                $("#mileStoneTitle").val(data.Title);
-//                $("#mileStonedueDate").val(moment(data.DueDate).format('YYYY-MM-DD'));
-//            }
-//        },
-//        error: function (result) {
-//            //alert("Error occured..");
-//            showToaster("error", "Error !", result);
-//        }
-//    });
-//}
-
-//function DeleteMileStoneById(Id) {
-//    Swal.fire({
-//        title: 'Are you sure you want to delete milestone?',
-//        icon: 'warning',
-//        showCancelButton: true,
-//        confirmButtonColor: '#3085d6',
-//        cancelButtonColor: '#d33',
-//        confirmButtonText: 'Yes, delete it!'
-//    }).then(function (t) {
-//        if (!t.isConfirmed) return;
-//        var Data = {
-//            Id: Id,
-//        };
-//        $.ajax({
-//            type: "POST",
-//            url: "/Home/DeleteMileStone",
-//            contentType: "application/json; charset=utf-8",
-//            dataType: "json",
-//            data: JSON.stringify(Data),
-//            success: function (result) {
-//                showToaster("success", "Success", result.Message);
-//                GetMiletoneList()
-//            },
-//            error: function (result) {
-//                showToaster("error", "Error !", result);
-//            }
-//        });
-
-//    });
-//}
-
-//function OpenPointsPopup() {
-//    if ($("#PointsTable tbody tr").length >= 3) {
-//        showToaster("warning", "Warning !", "you have reached a limit for adding points");
-//    } else {
-//        $("#PointsPopModal").modal('show')
-//    }
-
-//}
-//function SavePointsData() {
-//    var PointsData = {
-//        Id: $("#PointsId").val(),
-//        PointKey: $("#pointsKey-id").val(),
-//        PointValue: $("#pointsValue-id").val(),
-//        SolutionId: $("#SolutionId").val(),
-//        IndustryId: $("#IndustryId").val(),
-//        ProjectType: $("#ProjectType").val()
-//    };
-
-//    $("#preloader").show();
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/SavePoints",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(PointsData),
-//        success: function (result) {
-//            $("#preloader").hide();
-//            showToaster("success", "Success", result.Message);
-//            ResetPointsForm()
-//        },
-//        error: function (result) {
-//            showToaster("error", "Error !", result);
-//        }
-//    });
-//}
-
-//function ResetPointsForm() {
-//    pointsvalidator.resetForm()
-//    $("#PointsId").val(0);
-//    $("#pointsKey-id").val("");
-//    $("#pointsValue-id").val("");
-//    $("#PointsPopModal").modal('hide')
-//    GetPointsList()
-//}
 
 
 
-//function DeletePointsById(Id) {
 
-//    Swal.fire({
-//        title: 'Are you sure you want to delete points?',
-//        icon: 'warning',
-//        showCancelButton: true,
-//        confirmButtonColor: '#3085d6',
-//        cancelButtonColor: '#d33',
-//        confirmButtonText: 'Yes, delete it!'
-//    }).then(function (t) {
-//        if (!t.isConfirmed) return;
 
-//        var Data = {
-//            Id: Id,
-//        };
-//        $.ajax({
-//            type: "POST",
-//            url: "/Home/DeletePoints",
-//            contentType: "application/json; charset=utf-8",
-//            dataType: "json",
-//            data: JSON.stringify(Data),
-//            success: function (result) {
-//                showToaster("success", "Success", result.Message);
-//                GetPointsList()
-//            },
-//            error: function (result) {
-//                showToaster("error", "Error !", result);
-//            }
-//        });
-//    });
-//}
 
-//function GetPointsDataById(id) {
-//    var data = {
-//        Id: id,
-//    };
-//    $.ajax({
-//        type: "POST",
-//        url: "/Home/GetPointsDataById",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        data: JSON.stringify(data),
-//        success: function (result) {
-//            if (result != null) {
-//                $("#PointsPopModal").modal('show')
-//                var data = result.Result;
-//                $("#PointsId").val(data.Id);
-//                $("#pointsKey-id").val(data.PointKey);
-//                $("#pointsValue-id").val(data.PointValue);
-//            }
-//        },
-//        error: function (result) {
-//            showToaster("error", "Error !", result);
-//        }
-//    });
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //function SaveSolutionIndustryDescription() {
 //    var data = $("#industry-ProjectOutline").val();

@@ -2032,3 +2032,10 @@ padding-top: 5%;
     color: #d38b4e;
     cursor: pointer;
 }
+
+.cls-editnum {
+    color: #e85f09 !important;
+    text-decoration: underline;
+    font-size: 18px;
+    cursor: pointer;
+}

@@ -725,7 +725,7 @@ namespace Aephy.WEB.Controllers
                 try
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
-                    mileStone.FreelancerId = userId;
+                    mileStone.UserId = userId;
                     var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveMileStoneData", HttpMethod.Post, mileStone);
                     return test;
                 }
@@ -762,7 +762,7 @@ namespace Aephy.WEB.Controllers
             if (userId != null)
             {
                 //GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
-                model.FreelancerId = userId;
+                model.UserId = userId;
                 var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Post, model);
                 return aprroveList;
             }
@@ -844,7 +844,7 @@ namespace Aephy.WEB.Controllers
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId != null)
             {
-                model.FreelancerId = userId;
+                model.UserId = userId;
                 var pointsList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsList", HttpMethod.Post, model);
                 return pointsList;
             }

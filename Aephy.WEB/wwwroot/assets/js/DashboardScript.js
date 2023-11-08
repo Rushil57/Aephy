@@ -1393,26 +1393,6 @@ function getFileData(myFile) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //function SaveSolutionIndustryDescription() {
 //    var data = $("#industry-ProjectOutline").val();
 //    if (data == "") {
@@ -1515,7 +1495,7 @@ function ViewInvoiceGridPopUp(contractId) {
                     for (index = 0; index < resultLength; index++) {
                         subObj = invoiceData[index];
                         htm += '<tr>';
-                        htm += '<td>' + subObj.TransactionType + '</td>';
+                        htm += '<td>' + subObj.InvoiceName + '</td>';
                         htm += '<td><a class="text-primary" onclick=OpenInvoiceModalPopUp(' + subObj.Id + ')>View</a></td>';
                         htm += '</tr>';
                     }

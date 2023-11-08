@@ -155,4 +155,42 @@
 
     }
 
+    public class CustomSolutionViewModel
+    {
+        public int Id { get; set; }
+
+        public string? TotalAssociate { get; set; }
+
+        public string? TotalExpert { get; set; }
+
+        public string? TotalProjectManager { get; set; }
+
+        public string? CustomProjectOutline { get; set; }
+
+        public string? CustomProjectDetail { get; set; }
+        public decimal? CustomPrice { get; set; }
+
+        public DateTime? CustomStartDate { get; set; }
+        public DateTime? CustomEndDate { get; set; }
+
+        public bool CustomExcludeWeek { get; set; }
+
+        public string? CustomHolidayList { get; set; }
+
+        public DateTime? CustomStartHour { get; set; }
+
+        public DateTime? CustomEndHour { get; set; }
+
+        public string? UserId { get; set; }
+
+        public int SolutionId { get; set; }
+
+        public int IndustryId { get; set; }
+        public string? ProjectType { get; set; }
+
+        public string? CustomProjectDuration { get; set; }
+    }
+
 }
+
+

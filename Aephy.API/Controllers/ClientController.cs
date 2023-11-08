@@ -2128,7 +2128,7 @@ namespace Aephy.API.Controllers
 
                         var invoiceFunding = new InvoiceList();
                         invoiceFunding.BillToClientId = model.UserId;
-                        invoiceFunding.InvoiceNumber = "INV-00101"; // ######
+                       // invoiceFunding.InvoiceNumber = "INV-00101"; // ######
                         invoiceFunding.InvoiceDate = DateTime.Now;
                         invoiceFunding.TransactionType = AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT;
                         invoiceFunding.TotalAmount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
@@ -2136,6 +2136,8 @@ namespace Aephy.API.Controllers
                         invoiceFunding.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoiceFunding);
                         _db.SaveChanges();
+
+                        await UpdateInvoiceNumberAsync(invoiceFunding.Id);
 
                         // Invoice 1 (Details 1) - Funding for Milestone or Project
                         var invoiceFundingDetail = new InvoiceListDetails();
@@ -2166,7 +2168,7 @@ namespace Aephy.API.Controllers
                         // Payment Receipt
                         var invoicePaymentReceipt = new InvoiceList();
                         invoicePaymentReceipt.BillToClientId = model.UserId;
-                        invoicePaymentReceipt.InvoiceNumber = "INV-00102"; // ######
+                        //invoicePaymentReceipt.InvoiceNumber = "INV-00102"; // ######
                         invoicePaymentReceipt.InvoiceDate = DateTime.Now;
                         invoicePaymentReceipt.TransactionType = AppConst.InvoiceTransactionType.PAYMENT_RECEIPT_AMOUNT_DUE;
                         invoicePaymentReceipt.TotalAmount = Convert.ToString(contractSave.Amount);
@@ -2174,6 +2176,7 @@ namespace Aephy.API.Controllers
                         invoicePaymentReceipt.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoicePaymentReceipt);
                         _db.SaveChanges();
+                        await UpdateInvoiceNumberAsync(invoicePaymentReceipt.Id);
 
                         // Payment Receipt (Details 1) - 
                         var invoicePaymentReceiptDetail_amtDue = new InvoiceListDetails();
@@ -2196,7 +2199,7 @@ namespace Aephy.API.Controllers
                         // Invoice 3 - Total platform fees for Milestone or Project
                         var invoiceTotalPlatformFees = new InvoiceList();
                         invoiceTotalPlatformFees.BillToClientId = model.UserId;
-                        invoiceTotalPlatformFees.InvoiceNumber = "INV-00103"; // ######
+                        //invoiceTotalPlatformFees.InvoiceNumber = "INV-00103"; // ######
                         invoiceTotalPlatformFees.InvoiceDate = DateTime.Now;
                         invoiceTotalPlatformFees.TransactionType = AppConst.InvoiceTransactionType.INVOICE3_TOTAL_PLATFORM_FEES;
                         invoiceTotalPlatformFees.TotalAmount = Convert.ToString(clientAndFLfees);
@@ -2204,6 +2207,8 @@ namespace Aephy.API.Controllers
                         invoiceTotalPlatformFees.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoiceTotalPlatformFees);
                         _db.SaveChanges();
+
+                        await UpdateInvoiceNumberAsync(invoiceTotalPlatformFees.Id);
 
                         // Invoice 3 (Details 1) - Total platform fees for Milestone or Project
                         var invoiceTotalPlatformFeesDetail_total = new InvoiceListDetails();
@@ -4277,11 +4282,35 @@ namespace Aephy.API.Controllers
             try
             {
                 var invoiceListData = await _db.InvoiceList.Where(x => x.ContractId == model.ContractId && x.BillToClientId == model.ClientId).ToListAsync();
+                List<dynamic> list = new List<dynamic>();
+                foreach (var item in invoiceListData)
+                {
+                    string name = "";
+                    if (item.FreelancerId != null)
+                    {
+                        var freelancer = await _db.Users.FirstOrDefaultAsync(x => x.Id == item.FreelancerId);
+                        if (freelancer != null)
+                        {
+                            name = freelancer.FirstName + "_" + freelancer.LastName + "_" + item.InvoiceNumber;
+                        }
+                    }
+                    else
+                    {
+                        name = item.InvoiceType + "_" + item.InvoiceNumber;
+                    }
+
+                    list.Add(
+                    new
+                    {
+                        InvoiceName = name,
+                        Id = item.Id
+                    });
+                }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "success",
-                    Result = invoiceListData
+                    Result = list
                 });
             }
             catch (Exception ex)
@@ -4341,7 +4370,7 @@ namespace Aephy.API.Controllers
             && x.TransactionType == AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT).FirstOrDefault();
             var invoiceCreditMemo = new InvoiceList();
             invoiceCreditMemo.BillToClientId = inv1.BillToClientId;
-            invoiceCreditMemo.InvoiceNumber = "INV-00104"; // ######
+            //invoiceCreditMemo.InvoiceNumber = "INV-00104"; // ######
             invoiceCreditMemo.InvoiceDate = DateTime.Now;
             invoiceCreditMemo.TransactionType = AppConst.InvoiceTransactionType.CREDIT_MEMO;
             invoiceCreditMemo.TotalAmount = Convert.ToString((Convert.ToDecimal(inv1.TotalAmount) * -1));
@@ -4349,6 +4378,8 @@ namespace Aephy.API.Controllers
             invoiceCreditMemo.ContractId = contract.Id;
             _db.InvoiceList.Add(invoiceCreditMemo);
             _db.SaveChanges();
+
+            await UpdateInvoiceNumberAsync(invoiceCreditMemo.Id);
 
             // Invoice - Credit Memo (Details 1) 
             var invoiceCreditMemoDetail_escrow = new InvoiceListDetails();
@@ -4403,7 +4434,7 @@ namespace Aephy.API.Controllers
                     //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
                     //+ fullTeam.Sum(p => p.ProjectManagerPlatformFees)
                     + clientFees;
-            var count = 1;
+            //var count = 1;
             foreach (var freelancer in allFreelancers)
             {
 
@@ -4414,7 +4445,7 @@ namespace Aephy.API.Controllers
                 decimal totalAmount = solutionTeam.Amount - solutionTeam.PlatformFees;
                 var invoiceFreelancer = new InvoiceList();
                 invoiceFreelancer.BillToClientId = contract.ClientUserId;
-                invoiceFreelancer.InvoiceNumber = "INV-00104_" + count; // ######
+                //invoiceFreelancer.InvoiceNumber = "INV-00104_" + count; // ######
                 invoiceFreelancer.InvoiceDate = DateTime.Now;
                 invoiceFreelancer.TransactionType = AppConst.InvoiceTransactionType.INVOICE_FREELANCER;
                 invoiceFreelancer.TotalAmount = Convert.ToString(totalAmount);
@@ -4423,6 +4454,8 @@ namespace Aephy.API.Controllers
                 invoiceFreelancer.FreelancerId = freelancer.ApplicationUserId;
                 _db.InvoiceList.Add(invoiceFreelancer);
                 _db.SaveChanges();
+
+                await UpdateInvoiceNumberAsync(invoiceFreelancer.Id);
 
                 //
 
@@ -4473,7 +4506,7 @@ namespace Aephy.API.Controllers
                 _db.InvoiceListDetails.Add(invoiceFreelancerDetail_totalAmt);
                 _db.SaveChanges();
 
-                count++;
+              //  count++;
             }
             #endregion
 
@@ -4598,7 +4631,7 @@ namespace Aephy.API.Controllers
 
             var invoiceCommission = new InvoiceList();
             invoiceCommission.BillToClientId = inv1.BillToClientId;
-            invoiceCommission.InvoiceNumber = "INV-00106"; // ######
+            //invoiceCommission.InvoiceNumber = "INV-00106"; // ######
             invoiceCommission.InvoiceDate = DateTime.Now;
             invoiceCommission.TransactionType = AppConst.InvoiceTransactionType.INVOICE_COMMISIONS;
             invoiceCommission.TotalAmount = Convert.ToString((total_detail1 + total_detail2 + total_detail3 + total_detail4));
@@ -4606,6 +4639,8 @@ namespace Aephy.API.Controllers
             invoiceCommission.ContractId = contract.Id;
             _db.InvoiceList.Add(invoiceCommission);
             _db.SaveChanges();
+
+            await UpdateInvoiceNumberAsync(invoiceCommission.Id);
 
             // Invoice - Commisions (Details 1) 
             var invoiceplatformFees_Client = new InvoiceListDetails();
@@ -4648,5 +4683,120 @@ namespace Aephy.API.Controllers
             _db.SaveChanges();
             #endregion
         }
+
+        //SaveCustomSolutionData
+        [HttpPost]
+        [Route("SaveCustomSolutionData")]
+        public async Task<IActionResult> SaveCustomSolutionData([FromBody] CustomSolutionModel model)
+        {
+
+            try
+            {
+                var solutionIndustryDetails = await _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
+                                              && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
+                if(solutionIndustryDetails != null)
+                {
+                    var teamSize = Convert.ToInt16(model.TotalAssociate) + Convert.ToInt16(model.TotalExpert) + Convert.ToInt16(model.TotalProjectManager);
+                    var solutionDefine = new SolutionDefine()
+                    {
+                        SolutionIndustryDetailsId = solutionIndustryDetails.Id,
+                        ProjectOutline = model.CustomProjectOutline,
+                        ProjectDetails = model.CustomProjectDetail,
+                        ProjectType = model.ProjectType,
+                        IsActive = true,
+                        CreatedDateTime = DateTime.Now,
+                        TeamSize = Convert.ToInt16(teamSize),
+                        Duration = model.CustomProjectDuration
+                    };
+
+                    _db.SolutionDefine.Add(solutionDefine);
+                    _db.SaveChanges();
+
+                    var customsolution = new CustomProjectDetials()
+                    {
+                        SolutionDefineId = solutionDefine.Id,
+                        EstimatedPrice = model.CustomPrice,
+                        StartDate = model.CustomStartDate,
+                        EndDate = model.CustomEndDate,
+                        StartHour = model.CustomStartHour,
+                        EndHour = model.CustomEndHour,
+                        ClientId = model.UserId,
+                        Associate = model.TotalAssociate.ToString(),
+                        Expert = model.TotalExpert.ToString(),
+                        ProjectManager = model.TotalProjectManager.ToString(),
+                        IsSingleFreelancer = false,
+                        ProjectDuration = model.CustomProjectDuration
+                    };
+
+                    _db.CustomProjectDetials.Add(customsolution);
+                    _db.SaveChanges();
+
+                    var solutionfund = new SolutionFund()
+                    {
+                        SolutionId = model.SolutionId,
+                        IndustryId = model.IndustryId,
+                        ClientId = model.UserId,
+                        ProjectType = model.ProjectType.ToLower(),
+                        ProjectPrice = model.CustomPrice.ToString(),
+                        ProjectStatus = "INITIATED",
+                        FundType = SolutionFund.FundTypes.ProjectFund,
+                    };
+                    _db.SolutionFund.Add(solutionfund);
+                    _db.SaveChanges();
+
+                    //solutionFundViewModel customTeam = new solutionFundViewModel();
+                    //customTeam.SolutionId = solutionfund.SolutionId;
+                    //customTeam.IndustryId = solutionfund.IndustryId;
+                    //customTeam.ClientId = solutionfund.ClientId;
+                    //customTeam.ProjectType = solutionfund.ProjectType;
+                    //customTeam.ProjectPrice = solutionfund.ProjectPrice;
+                    //customTeam.ProjectStatus = solutionfund.ProjectStatus;
+                    //customTeam.FundType = solutionfund.FundType;
+                    //customTeam.TotalAssociate = Convert.ToInt16(model.TotalAssociate);
+                    //customTeam.IndustryId = solutionfund.IndustryId;
+                    //customTeam.IndustryId = solutionfund.IndustryId;
+
+                    //var solutionstatus =  await SaveSolutionTeamData(solutionfund);
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Project Initated Successfully!"
+                    });
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Something Went Wrong"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+
+            }
+        }
+
+        private async Task UpdateInvoiceNumberAsync(int id)
+        {
+            if (id > 0)
+            {
+                string invoicePrefix = "INV-";
+                string invoiceNumber = invoicePrefix + id.ToString("D5");
+
+                var invoiceModel = await _db.InvoiceList.FirstOrDefaultAsync(x => x.Id == id);
+                if (invoiceModel != null)
+                {
+                    invoiceModel.InvoiceNumber = invoiceNumber;
+                }
+                _db.InvoiceList.Update(invoiceModel);
+                await _db.SaveChangesAsync();
+            }
+        }
+
     }
 }

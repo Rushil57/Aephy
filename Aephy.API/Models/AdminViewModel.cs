@@ -65,6 +65,8 @@ namespace Aephy.API.Models
 
             public string? ClientId { get; set; }
 
+            public string? ClientName { get; set; }
+
             //public IFormFile[] ImageFile { get; set; }
         }
 
@@ -395,6 +397,12 @@ namespace Aephy.API.Models
             public bool RevolutStatus { get; set; }
 
             public string? ClientPreferredCurrency { get; set; }
+
+            public int TotalAssociate { get; set; }
+
+            public string? TotalExpert { get; set; }
+
+            public string? TotalProjectManager { get; set; }
         }
 
         public class SolutionDisputeViewModel
@@ -766,7 +774,44 @@ namespace Aephy.API.Models
             public string? ClientCountry { get; set; }
         }
 
-        
+        public class CustomSolutionModel
+        {
+            public int Id { get; set; }
+
+            public string? TotalAssociate { get; set; }
+
+            public string? TotalExpert { get; set; }
+
+            public string? TotalProjectManager { get; set; }
+
+            public string? CustomProjectOutline { get; set; }
+
+            public string? CustomProjectDetail { get; set; }
+            public decimal CustomPrice { get; set; }
+
+            public DateTime? CustomStartDate { get; set; }
+            public DateTime? CustomEndDate { get; set; }
+
+            public bool CustomExcludeWeek { get; set; }
+
+            public string? CustomHolidayList { get; set; }
+
+            public DateTime? CustomStartHour { get; set; }
+
+            public DateTime? CustomEndHour { get; set; }
+
+            public string? UserId { get; set; }
+
+            public int SolutionId { get; set; }
+
+            public int IndustryId { get; set; }
+            public string? ProjectType { get; set; }
+
+            public string? CustomProjectDuration { get; set; }
+
+        }
+
+
     }
 }
 

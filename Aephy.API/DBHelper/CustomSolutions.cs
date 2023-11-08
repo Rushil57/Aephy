@@ -23,4 +23,33 @@ namespace Aephy.API.DBHelper
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }
+
+    public class CustomProjectDetials
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int SolutionDefineId { get; set; }
+
+        public string? ProjectDuration { get; set; }
+
+        public decimal EstimatedPrice { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? StartHour { get; set; }
+        public DateTime? EndHour { get; set; }
+
+        public DateTime? AvailableDate { get; set; }
+
+        public string? ClientId { get; set; }
+
+        public string? Associate { get; set; }
+
+        public string? Expert { get; set; }
+
+        public string? ProjectManager { get; set; }
+
+        public bool IsSingleFreelancer { get; set; }
+    }
 }

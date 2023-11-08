@@ -88,6 +88,9 @@ namespace Aephy.API.DBHelper
 
         public DbSet<EphylinkRevolutAccountTransferLog> EphylinkRevolutAccountTransferLog { get; set; }
 
+        public DbSet<CustomProjectDetials> CustomProjectDetials { get; set; }
+        
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

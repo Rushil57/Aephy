@@ -2674,5 +2674,25 @@ namespace Aephy.WEB.Controllers
             }
             return "";
         }
+
+        //SaveCustomSolutionData
+        public async Task<string> SaveCustomSolutionData([FromBody] CustomSolutionViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.UserId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Client/SaveCustomSolutionData", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
     }
 }

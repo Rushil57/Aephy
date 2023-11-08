@@ -1237,11 +1237,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        @* <div class="col d-flex justify-content-end">
-                        <a class="btn btn-brand my-3 mx-0" id="PreviousButton" style="display:none;" onclick="GetClientForm(this)">Previous</a> &nbsp;&nbsp;
-                        <a class="btn btn-brand my-3 mx-0" id="PostButton" onclick="GetClientForm(this)">Next</a>
-                        </div> *@
                     </div>
                 </div>
 
@@ -1249,18 +1244,19 @@
         </div>
     </div>
 
-    <div class="modal" id="FreelancerProjectPopUp" tabindex="-1" aria-labelledby="FrelancerProjectPopUp" aria-hidden="true">
+    <div class="modal" id="CustomiseProjectPopUp" tabindex="-1" aria-labelledby="CustomiseProjectPopUp" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Find Project</h4>
-                    <a class="close" data-dismiss="#FreelancerProjectPopUp" onclick="CloseFreelancerPopUp()">
-                        <i class="bi bi-x-circle"></i>
+                    <h4 class="modal-title">Find Freelancer</h4>
+                    <a class="close" data-dismiss="#CustomiseProjectPopUp" onclick="CloseCustomisePopUp()">
+                        <i class="bi bi-x-circle" style="cursor:pointer;"></i>
                     </a>
                 </div>
                 <div class="modal-body p-0" style="background-color: #f5f5f5;">
                     <div class="container-fluid">
-                        <div style="border-radius:10px;" id="FreelancerForm">
+
+                        <div style="border-radius:10px;" id="FreelancerDetailsForm">
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
                                     <h3 data-aos="fade-up">
@@ -1277,12 +1273,21 @@
                                     <div id="freelancer-title-div" style="padding-left: 30%;">
                                         <span id="freelancer-title">Select Freelancers</span>
                                     </div>
-                                    <div id="number-of-radiofreelancer">
-                                        <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
-                                        <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
-                                        <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                    <div id="number-of-freelancer">
+                                        <div id="single-freelancerSelected">
+                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                        </div>
+
+                                        <div id="multiple-freelancerselected">
+                                            <input type="number" class="cls-freelancer-number" min="0" value="0">
+                                            <input type="number" class="cls-freelancer-number" min="0" value="0">
+                                            <input type="number" class="cls-freelancer-number" min="0" value="0">
+                                        </div>
+                                       
                                     </div>
-                                    <div id="freelancer-radio-details">
+                                    <div id="freelancer-details">
                                         <label class="cls-freelancerlvl">Associate</label>
                                         <label class="cls-freelancerlvl">Expert</label>
                                         <label class="cls-freelancerlvl">Project Manager</label>
@@ -1299,8 +1304,121 @@
                             </div>
                         </div>
 
+                        <div style="border-radius:10px;display:none;" id="customisedDetailsForm">
+                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
+                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
+                                    <h3 data-aos="fade-up">
+                                        Let’s start
+                                    </h3>
+                                    <p data-aos="fade-up" data-aos-delay="100">
+                                        Select the appropriate
+                                        options; Get a step closer to
+                                        transform your business.
+                                    </p>
+                                </div>
+
+                                <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
+                                    <form action="#">
+                                        <div class="col d-flex flex-column">
+                                            <label data-aos="fade-up">Project Outline</label>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Outline" id="custom-ProjectOutline" rows="4" cols="50"></textarea>
+                                        </div>
+
+                                        <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Project Description</label>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50"></textarea>
+                                        </div>
+
+                                        <div class="row p-3">
+                                            <a class="col-sm-4 cls-cutomDetails">Add Milestone</a>
+                                            <a class="col-sm-4 cls-cutomDetails">Add Highlights</a>
+                                        </div>
+
+                                        <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Attach relevant file</label>
+                                            <input type="file" class="form-control">
+                                        </div>
+
+                                        <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Project Duartion</label>
+                                            <input type="date" class="form-control" id="delivery-time">
+                                        </div>
+
+                                        <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Price</label>
+                                            <input type="text" class="form-control" placeholder='1,50,000'>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border-radius:10px;display:none;" id="customisedProjectWorkingForm">
+                            <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
+                                <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
+                                    <h3 data-aos="fade-up">
+                                        Let’s start
+                                    </h3>
+                                    <p data-aos="fade-up" data-aos-delay="100">
+                                        Select the appropriate
+                                        options; Get a step closer to
+                                        transform your business.
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
+                                    <div>
+                                        <form name="workingInfoForm" style="padding-top: 3%;">
+                                            <div class="col d-flex flex-column">
+                                                <label data-aos="fade-up">Working Days</label>
+                                                <div class="row pt-2">
+                                                    <div class="col">
+                                                        <label>Start Date : </label>
+                                                        <input type="date" class="form-control" id="start-date" name="startDate">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>End Date : </label>
+                                                        <input type="date" class="form-control" id="end-date" name="endDate">
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="input-group">
+                                                            <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
+                                                            <label for="excludeWeekends" class="form-label px-2">Exclude weekends (Saturday / Sunday)</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <label for="holidaysLst" class="form-label">Other holidays</label>
+                                                        <div class="input-group">
+                                                            <textarea class="form-control cls-textarea" id="holidaysLst" name="holidaysLst" rows="4" cols="50"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <label data-aos="fade-up" class="mt-2" id="labelWorkDays"></label>
+                                            </div>
+
+                                            <div class="col d-flex flex-column pt-4">
+                                                <label data-aos="fade-up">Working Hours</label>
+
+                                                <div class="row pt-2">
+                                                    <div class="col">
+                                                        <label>Start Hour : </label>
+                                                        <input type="time" name="startTime" class="form-control" id="start-hour">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>End Hour : </label>
+                                                        <input type="time" name="endTime" class="form-control" id="end-hour">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col d-flex justify-content-end">
-                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPostButton" onclick="CloseFreelancerPopUp(this)">Confirm</a>
+                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
+                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPostButton" onclick="GetWorkingOurForm(this)">Next</a>
                         </div>
                     </div>
                 </div>
@@ -1996,11 +2114,62 @@
         }
 
         function OpenFreelancerPopUp() {
-            $('#FreelancerProjectPopUp').modal('show');
+            $('#CustomiseProjectPopUp').modal('show');
+            $("#multiple-freelancerselected").show();
+            $("#single-freelancerSelected").hide();
+            $("#FreelancerDetailsForm").css("display", "block")
+            $("#customisedDetailsForm").css("display", "none")
+            $("#customisedProjectWorkingForm").css("display", "none")
+            $("#BrowseSolutionPostButton").text("Next")
+            $("#BrowseSolutionPreviousButton").css("display", "none");
+            $("#freelancer-title").html("Select Freelancers")
         }
 
         function CloseFreelancerPopUp() {
-            $('#FreelancerProjectPopUp').modal('hide');
+            $('#CustomiseProjectPopUp').modal('hide');
+        }
+
+        function GetWorkingOurForm(data) {
+            if (data.text == "Confirm") {
+                $("#CustomiseProjectPopUp").modal('hide')
+            }
+            if (data.text == "Next") {
+                if ($("#FreelancerDetailsForm").is(":visible")) {
+                    $("#FreelancerDetailsForm").css("display", "none")
+                    $("#customisedDetailsForm").css("display", "block")
+                    $("#customisedProjectWorkingForm").css("display", "none")
+                    $("#BrowseSolutionPostButton").text("Next")
+                    $("#BrowseSolutionPreviousButton").css("display", "block")
+                    return;
+                }
+                if ($("#customisedDetailsForm").is(":visible")) {
+                    $("#FreelancerDetailsForm").css("display", "none")
+                    $("#customisedDetailsForm").css("display", "none")
+                    $("#customisedProjectWorkingForm").css("display", "block")
+                    $("#BrowseSolutionPostButton").text("Confirm")
+                    $("#BrowseSolutionPreviousButton").css("display", "block")
+                    return;
+                }
+            }
+            if (data.text == "Previous") {
+                if ($("#customisedDetailsForm").is(":visible")) {
+                    $("#FreelancerDetailsForm").css("display", "block")
+                    $("#customisedDetailsForm").css("display", "none")
+                    $("#customisedProjectWorkingForm").css("display", "none")
+                    $("#BrowseSolutionPostButton").text("Next")
+                    $("#BrowseSolutionPreviousButton").css("display", "none")
+                    return;
+                }
+                if ($("#customisedProjectWorkingForm").is(":visible")) {
+                    $("#FreelancerDetailsForm").css("display", "none")
+                    $("#customisedDetailsForm").css("display", "block")
+                    $("#customisedProjectWorkingForm").css("display", "none")
+                    $("#BrowseSolutionPostButton").text("Next")
+                    $("#BrowseSolutionPreviousButton").css("display", "block")
+                    return;
+                }
+
+            }
         }
     </script>
 </body>

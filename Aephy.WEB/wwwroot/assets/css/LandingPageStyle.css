@@ -1952,7 +1952,7 @@ padding-top: 5%;
 
 #number-of-freelancer {
     margin-left: 25%;
-    padding-top: 2%;
+    padding-top: 5%;
 }
 
 .cls-freelancerlvl {
@@ -1981,7 +1981,7 @@ padding-top: 5%;
 }
 
 #freelancer-details {
-    padding-top: 4%;
+    /*padding-top: 4%;*/
     margin-left: 20%;
 }
 
@@ -1991,22 +1991,23 @@ padding-top: 5%;
 }
 
 #freelancer-title {
-    cursor: pointer;
-    border-radius: 20px;
-    padding: 5px 20px;
-    background: #fff;
-    color: white;
+    /*cursor: pointer;*/
+    /* border-radius: 20px; */
+    /* padding: 5px; */
+    /* background: #fff; */
+    color: black;
     font-weight: bold;
     font-size: 16px;
     font-family: sans-serif;
     width: 55%;
-    height: 100px;
+    /* height: 100px; */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--brand);
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* background-color: var(--brand); */
     margin: 10px;
-    border: 2px solid rgba(58,58,58,0.2);
+    font-size: 17px;
+     /*border: 2px solid rgba(58,58,58,0.2);*/
 }
 
 #freelancer-radio-details {
@@ -2021,4 +2022,13 @@ padding-top: 5%;
 
 .cls-freelancer-radio:checked {
     accent-color: #e0771f80;
+}
+
+.cls-textarea{
+    resize: none;
+}
+
+.cls-cutomDetails {
+    color: #d38b4e;
+    cursor: pointer;
 }

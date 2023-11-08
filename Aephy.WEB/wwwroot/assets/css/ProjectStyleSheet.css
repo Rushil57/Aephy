@@ -1892,3 +1892,13 @@ progress::-webkit-progress-value {
     justify-content: center;
     align-items: center;
 }
+
+
+.form-check-input.cls-custom:checked {
+    background-color: rgb(0, 25, 115);
+}
+
+.cls-customTitle {
+    font-weight: bold;
+    color: rgb(0, 25, 115);
+}

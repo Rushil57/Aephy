@@ -1390,7 +1390,7 @@ td.cls-Solution, .cls-service, .cls-industries, .cls-RolesId, .cls-milestone {
     width: 280px;
 }
 
-#SuccessfullProjectDescription, #TopDescription, #PaymentReason, #SolutionDescription, .cls-ephylinkAddress {
+#SuccessfullProjectDescription, #TopDescription, #PaymentReason, #SolutionDescription, .cls-ephylinkAddress, #industry-ProjectOutline, #industry-ProjectDetails {
     resize: none;
 }
 

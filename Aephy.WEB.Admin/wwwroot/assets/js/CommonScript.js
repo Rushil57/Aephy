@@ -103,13 +103,14 @@ function addSolution() {
         dataType: 'json',
         success: function (result) {
             $("#preloader").hide();
-            alert(result.Message);
+            //alert(result.Message);
+            showToaster("success", "Success !", result.Message);
             ResetForm();
             GetSolutionList();
         },
         error: function (err) {
             $("#preloader").hide();
-            alert("Something Went Wrong!");
+            showToaster("error", "Error !", result.Message);
         }
     });
 
@@ -124,7 +125,8 @@ function SignOut() {
             window.location.href = '/Home/Login';
         },
         error: function (result) {
-            alert("Something Went Wrong!");
+            //alert("Something Went Wrong!");
+            showToaster("error", "Error !", result.Message);
         }
     });
 }
@@ -187,7 +189,8 @@ function BindServices() {
             $('#drp-services').trigger('chosen:updated');
         },
         error: function (result) {
-            alert("failure");
+           // alert("failure");
+            showToaster("error", "Error !", result);
         }
     });
 }
@@ -205,7 +208,7 @@ function BindIndustries() {
             $('#drp-industries').trigger('chosen:updated');
         },
         error: function (result) {
-            alert("failure");
+            showToaster("error", "Error !", result);
         }
     });
 }

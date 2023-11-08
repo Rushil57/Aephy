@@ -850,6 +850,154 @@ namespace Aephy.WEB.Admin.Controllers
             return View();
         }
 
+        //GetPointsList
+        [HttpPost]
+        public async Task<string> GetPointsList([FromBody] SolutionIndustryViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId != null)
+            {
+                model.UserId = userId;
+                var pointsList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsList", HttpMethod.Post, model);
+                return pointsList;
+            }
+            return "Something Went Wrong";
+        }
+
+        //SaveMileStone
+        [HttpPost]
+        public async Task<string> SaveMileStone([FromBody] MileStoneViewModel mileStone)
+        {
+            if (mileStone != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedAdmin");
+                    mileStone.UserId = userId;
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveMileStoneData", HttpMethod.Post, mileStone);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        //SavePoints
+        [HttpPost]
+        public async Task<string> SavePoints([FromBody] SolutionPointsViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedAdmin");
+                    model.FreelancerId = userId;
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SavePointsData", HttpMethod.Post, model);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+            }
+            return "Something Went Wrong";
+        }
+
+        //DeletePoints
+        [HttpPost]
+        public async Task<string> DeletePoints([FromBody] SolutionPointsViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                var pointsData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeletePointsById", HttpMethod.Post, model);
+                return pointsData;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        //DeleteMileStone
+        [HttpPost]
+        public async Task<string> DeleteMileStone([FromBody] MileStoneViewModel model)
+        {
+            if (model.Id != 0)
+            {
+                var milestonData = await _apiRepository.MakeApiCallAsync("api/Freelancer/DeleteMileStoneById", HttpMethod.Post, model);
+                return milestonData;
+
+            }
+            else
+            {
+                return "failed to receive data..";
+            }
+        }
+
+        [HttpPost]
+        public async Task<string> GetMileStoneById([FromBody] MileStoneViewModel model)
+        {
+            var milestonedata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMileStoneById", HttpMethod.Post, model);
+            return milestonedata;
+
+        }
+
+        [HttpPost]
+        public async Task<string> GetPointsDataById([FromBody] MileStoneViewModel model)
+        {
+            var pointsdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetPointsDataById", HttpMethod.Post, model);
+            return pointsdata;
+
+        }
+
+        [HttpPost]
+        public async Task<string> UpdateIndustryOutline([FromBody] SolutionIndustryViewModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateIndustryOutline", HttpMethod.Post, model);
+                    return test;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
+
+        [HttpPost]
+        public async Task<string> GetSolutionDefineData([FromBody] SolutionIndustryViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId != null)
+            {
+                //model.FreelancerId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetSolutionDefineData", HttpMethod.Post, model);
+                return aprroveList;
+            }
+            return "Something Went Wrong";
+        }
+
+        [HttpPost]
+        public async Task<string> GetMiletoneList([FromBody] SolutionIndustryViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId != null)
+            {
+                model.UserId = userId;
+                var milestoneList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Post, model);
+                return milestoneList;
+            }
+            return "Something Went Wrong";
+        }
+
 
     }
 }

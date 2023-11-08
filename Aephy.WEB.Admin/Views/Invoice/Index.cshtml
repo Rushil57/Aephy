@@ -1,0 +1,515 @@
+﻿@{
+    ViewData["Title"] = "- Invoices List";
+}
+<main id="main" class="main">
+    <div class="row">
+        <!-- Recent Sales -->
+        <div class="col-12" id="ActiveProjectInvoices">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">View Invoices</h5>
+
+                    <table class="table datatable" id="InvoiceTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Solution Title</th>
+                                <th scope="col">Industry Name</th>
+                                <th scope="col">MilestoneName</th>
+                                <th scope="col">View Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- End Recent Sales -->
+    </div>
+
+    <div class="modal" id="addInviteModal" tabindex="-1" aria-labelledby="guidelineModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Invite New User</h4>
+                    <a class="close" onclick="ResetInviteForm();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Vertical Form -->
+                                    <form class="row g-3 mt-3" name="addInviteForm">
+                                        <div class="col-12">
+                                            <label for="FirstName" class="form-label">First Name</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="FirstName" name="FirstName">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="LastName" class="form-label">Last Name</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="LastName" name="LastName">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="EmailAddress" class="form-label">Email Address</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="EmailAddress" name="EmailAddress">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-brand">Submit</button>
+                                            <button type="reset" class="btn btn-secondary" onclick="ResetInviteForm();">Reset</button>
+                                        </div>
+                                    </form><!-- Vertical Form -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div class="modal" id="InvoiceGridPopUpModal" tabindex="-1" aria-labelledby="InvoiceGridPopUpModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Invoice Grid</h4>
+                <a class="close" onclick="CloseInvoiceGridPopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card recent-sales overflow-auto">
+                    <input type="hidden" id="GridContractId" value="0" />
+                    <div class="card-body">
+                        <table class="table datatable" id="InvoiceGridTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Invoice Name</th>
+                                    <th scope="col">View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    @* </div> *@
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title main-title">Invoice</h4>
+                <a class="close" onclick="CloseInvoicePopUp();"><i class="bi bi-x-circle"></i></a>
+            </div>
+            <div class="modal-body p-0">
+                <input type="hidden" value="0" id="InvoiceId" />
+                <input type="hidden" value="0" id="ClientID" />
+                <div class="container" id="InvoiceContent">
+                    <div id="invoiceCeated-title">Invoice Created Via</div>
+                    <div class="row mt-3">
+                        <div class="col-sm-8 col-lg-8">
+                            <img src="https://aephyweb.azurewebsites.net/assets/img/ephylink_no_background_blue.png"
+                                 class="img-fluid" width="265" height="150" />
+                        </div>
+
+                        <div class="col-sm-4 col-lg-4">
+                            <div class="p-1 text-center" style="background-color: #d9d9d9;">
+                                <span id="invoice-mainTitle">Invoice</span>
+                            </div>
+
+                            <div class="mt-3">
+                                <h5 id="InvoiceNumber"></h5>
+                                <h5 id="ContractCreatedDate"></h5>
+                                <h5 id="ContractDueDate"> <b></b> </h5>
+                                <h5 id="ProjectTotalAmount"> </h5>
+                                <h5 id="ProjectTotalDueAmount"> <b> </b> </h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="padding-left:20px;">
+                        <div class="col-sm-6 col-lg-6">
+                            <h3 style="color: #c37813;">From</h3>
+
+                            <div class="mt-3">
+                                @*  <h5> <b> Ephylink </b> </h5>
+                                <h5> Dimitrios Vamvakas </h5>
+                                <h5> Ellispontou 39, Patra, 26226 </h5>
+                                <h5> Achaia, Greece </h5>
+                                <h5> VAT ID: 148366653 </h5> *@
+                                <h5 id="from-Title"> <b> Ephylink </b> </h5>
+                                <h5 id="from-name"> Dimitrios Vamvakas </h5>
+                                <h5 id="from-address"> Ellispontou 39, Patra, 26226 </h5>
+                                <h5 id="from-country"> Achaia, Greece </h5>
+                                <h5 id="from-vatId"> VAT ID: 148366653 </h5>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-6">
+                            <h3 style="color: #c37813;" id="billTo-tile">Bill to</h3>
+
+                            <div class="mt-3">
+                                <h5 id="ContractClientName"> <b></b> </h5>
+                                <h5> Name</h5>
+                                <h5 id="ClientAddress"> </h5>
+                                <h5 id="TaxDetails"></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-1" style="padding-left:10px;">
+                        <table class="table table-bordered small" id="InvoiceListDetails">
+                            <tr style="background-color: #d9d9d9;">
+                                <th>DESCRIPTION</th>
+                                <th>AMOUNT</th>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-brand" onclick="DownloadSolutionInvoice()">Download Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        GetActiveProjectInvoices();
+    });
+
+    function GetActiveProjectInvoices() {
+        $("#preloader").show();
+        $.ajax({
+            type: "Get",
+            url: "/Invoice/GetClientInvoices",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Result.length != 0) {
+                    var invoiceData = result.Result
+                    var index = 0;
+                    var subObj = '';
+                    var htm = '';
+                    var resultLength = invoiceData.length;
+                    if (resultLength > 0) {
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = invoiceData[index];
+                            if (subObj.MileStoneTitle == null) {
+                                subObj.MileStoneTitle = ""
+                            }
+
+                            htm += '<tr>';
+                            htm += '<td>' + subObj.ClientName + '</td>';
+                            htm += '<td>' + subObj.Title + '</td>';
+                            htm += '<td>' + subObj.Industries + '</td>';
+                            htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                            htm += '<td><a class="text-primary" onclick=ViewInvoiceGridPopUp(' + subObj.ContractId + ",'" + subObj.ClientId + "'" + ')>View Invoice</a></td>';
+                            htm += '</tr>';
+                        }
+                    }
+                    $("#InvoiceTable").find("tr:gt(0)").remove();
+                    $("#InvoiceTable tbody").append(htm);
+                    $(".cls-invoice-temp").hide();
+                }
+                else {
+                    $(".cls-invoice-temp").remove();
+                    $("<p class='cls-invoice-temp'>No Data Available</p>").insertAfter("#InvoiceTable");
+                }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function ViewInvoiceGridPopUp(contractId,ClientID) {
+        //
+        //$("#GridContractId").val(contractId)
+        var data = {
+            ContractId: contractId,
+            ClientId: ClientID
+        };
+
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "/Invoice/GetInvoiceTranscationTypeDetails",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#InvoiceGridPopUpModal").modal('show');
+                if (result.Result.length != 0) {
+                    $("#InvoiceGridTable").show();
+                    var invoiceData = result.Result;
+                    var index = 0;
+                    var subObj = '';
+                    var htm = '';
+                    var resultLength = invoiceData.length;
+                    if (resultLength > 0) {
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = invoiceData[index];
+                            htm += '<tr>';
+                            htm += '<td>' + subObj.TransactionType + '</td>';
+                            htm += '<td><a class="text-primary" onclick=OpenInvoiceModalPopUp(' + subObj.Id + ",'" + ClientID + "'" + ')>View</a></td>';
+                            htm += '</tr>';
+                        }
+                    }
+                    $("#InvoiceGridTable").find("tr:gt(0)").remove();
+                    $("#InvoiceGridTable tbody").append(htm);
+                    $(".invoice-temp").hide();
+                }
+                else {
+                    $("#InvoiceGridTable").hide()
+                    $("<p class='invoice-temp'>No Data Available</p>").insertAfter("#InvoiceGridTable");
+
+                }
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                showToaster("error", "Error !", result);
+            }
+        });
+    }
+
+    function CloseInvoiceGridPopUp() {
+        $("#InvoiceGridPopUpModal").modal('hide');
+    }
+
+    function OpenInvoiceModalPopUp(invoiceId,ClientID) {
+        var data = {
+            InvoiceId: invoiceId,
+            UserId: ClientID
+        }
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "/Invoice/GetClientInvoiceDetails",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.Result != null) {
+                    $("#InvoiceModal").modal('show')
+                    var data = result.Result;
+
+                    var totalamt = parseFloat(data.TotalAmount).toFixed(2);
+                    var splitamt = totalamt.toString().split(".");
+                    splitamt[0] = splitamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var finalamt = splitamt.join(".");
+
+                    $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                    $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                    $("#ContractClientName").html(data.ClientFullName);
+                    $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency + finalamt);
+                    $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency + finalamt);
+                    $("#ProjectTotalDueAmount").css("font-weight", "bold");
+                    $("#ContractDueDate").css("font-weight", "bold");
+                    if (data.ClientAddress == null) {
+                        data.ClientAddress = "";
+                    }
+                    $("#ClientAddress").html("Address : " + data.ClientAddress)
+                    if (data.InvoicelistDetails.length != 0) {
+                        var index = 0;
+                        var subObj = '';
+                        var htm = '';
+                        var resultLength = data.InvoicelistDetails.length;
+                        if (resultLength > 0) {
+                            for (index = 0; index < resultLength; index++) {
+                                subObj = data.InvoicelistDetails[index];
+                                if (!subObj.Amount.indexOf("(") == 0) {
+                                    if (subObj.Amount == "") {
+                                        subObj.Amount = 0.0;
+                                    } else {
+                                        var totalinvoiceamt = parseFloat(subObj.Amount).toFixed(2);
+                                        var splitinvoiceamt = totalinvoiceamt.toString().split(".");
+                                        splitinvoiceamt[0] = splitinvoiceamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                        subObj.Amount = splitinvoiceamt.join(".");
+                                    }
+                                }
+                                htm += '<tr>';
+                                htm += '<td>' + subObj.Description + '</td>';
+                                htm += '<td>' + subObj.Amount + '</td>';
+                                htm += '</tr>';
+                            }
+                        }
+                        $("#InvoiceListDetails").find("tr:gt(0)").remove();
+                        $("#InvoiceListDetails tbody").append(htm);
+                    }
+
+
+                    if (data.TransactionType == "Payment Receipt - Amount Due") {
+                        $("#invoiceCeated-title").css("display", "none");
+                        $("#ContractDueDate").css("display", "none");
+                        $("#ProjectTotalDueAmount").css("display", "none");
+                        $("#invoice-mainTitle").html("RECEIPT");
+                        $("#billTo-tile").html("Received From");
+                        $("#InvoiceNumber").html("Receipt # " + data.InvoiceNumber);
+
+                        $("#from-country").css("display", "block");
+                        $("#from-name").html("Dimitrios Vamvakas");
+                        $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                        $("#from-country").css("Achaia, Greece");
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html("VAT ID: 148366653");
+                        $("#from-Title").html("Ephylink");
+                    }
+                    if (data.TransactionType == "Invoice1 - portal to client") {
+                        $("#invoiceCeated-title").css("display", "none");
+                        $("#ContractDueDate").css("display", "block");
+                        $("#ProjectTotalDueAmount").css("display", "block");
+                        $("#invoice-mainTitle").html("Invoice");
+                        $("#billTo-tile").html("Bill to");
+                        $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                        $("#from-country").css("display", "block");
+                        $("#from-name").html("Dimitrios Vamvakas");
+                        $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                        $("#from-country").css("Achaia, Greece");
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html("VAT ID: 148366653");
+                        $("#from-Title").html("Ephylink");
+                    }
+                    if (data.TransactionType == "Invoice3 - Total platform fees") {
+                        $("#invoiceCeated-title").css("display", "none");
+                        $("#invoice-mainTitle").html("PROFORMA INVOICE");
+                        $("#ContractDueDate").css("display", "block");
+                        $("#ProjectTotalDueAmount").css("display", "block");
+                        $("#billTo-tile").html("Bill to");
+                        $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                        $("#from-country").css("display", "block");
+                        $("#from-name").html("Dimitrios Vamvakas");
+                        $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                        $("#from-country").css("Achaia, Greece");
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html("VAT ID: 148366653");
+                        $("#from-Title").html("Ephylink");
+                    }
+                    if (data.TransactionType == "CREDIT MEMO") {
+                        $("#invoiceCeated-title").css("display", "none");
+                        $("#invoice-mainTitle").html("CREDIT MEMO");
+                        $("#ContractDueDate").css("display", "block");
+                        $("#ProjectTotalDueAmount").css("display", "none");
+                        $("#billTo-tile").html("Bill to");
+                        $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                        $("#from-country").css("display", "block");
+                        $("#from-name").html("Dimitrios Vamvakas");
+                        $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                        $("#from-country").css("Achaia, Greece");
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html("VAT ID: 148366653");
+                        $("#from-Title").html("Ephylink");
+                    }
+                    if (data.TransactionType == "Invoice Freelancer") {
+
+                        if (data.FreelancerAddress == null) {
+                            data.FreelancerAddress = "";
+                        }
+
+                        $("#invoiceCeated-title").css("display", "block");
+                        $("#invoiceCeated-title").css("margin-left", "4%");
+                        $("#invoiceCeated-title").css("margin-top", "4%");
+
+                        $("#from-Title").html(data.FreelancerFullName);
+                        $("#invoice-mainTitle").html("INVOICE");
+                        $("#ContractDueDate").css("display", "block");
+                        $("#ProjectTotalDueAmount").css("display", "block");
+                        $("#billTo-tile").html("Bill to");
+                        $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+                        $("#from-name").html("Name :" + data.FreelancerFullName);
+                        $("#from-address").html("Address : " + data.FreelancerAddress);
+                        $("#from-country").css("display", "none");
+
+                        if (data.FreelancerCountry == "GR") {
+                            if (data.FreelancerTaxType != "" && data.FreelancerTaxType != null && data.FreelancerTaxType != "null") {
+                                $("#from-vatId").css("display", "block");
+                                $("#from-vatId").html(data.FreelancerTaxType + "ID : " + data.FreelancerTaxId);
+                            }
+                        }
+                        else {
+                            $("#from-vatId").css("display", "none");
+                        }
+                    }
+                    if (data.TransactionType == "Invoice Commision") {
+                        $("#invoiceCeated-title").css("display", "none");
+                        $("#from-country").css("display", "block");
+                        $("#from-name").html("Dimitrios Vamvakas");
+                        $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                        $("#from-country").css("Achaia, Greece");
+                        $("#from-Title").html("Ephylink");
+                        $("#from-vatId").css("display", "block");
+                        $("#from-vatId").html("VAT ID: 148366653");
+                    }
+
+                    if (data.ClientCountry == "GR") {
+                        $("#TaxDetails").css("display", "block");
+                        if (data.TaxType != "" && data.TaxType != null && data.TaxType != "null") {
+                            $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
+                        }
+                    } else {
+                        $("#TaxDetails").css("display", "none");
+                    }
+                }
+
+                $("#from-Title").css("font-size", "19px");
+                $("#from-Title").css("font-weight", "bold");
+                $("#ContractClientName").css("font-size", "19px");
+                $("#ContractClientName").css("font-weight", "bold");
+
+                $("#InvoiceId").val(invoiceId);
+                $("#ClientID").val(ClientID);
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", result);
+            }
+        });
+    }
+    function CloseInvoicePopUp() {
+        $("#InvoiceModal").modal('hide')
+    }
+
+    function DownloadSolutionInvoice() {
+        $("#preloader").show();
+        var contractId = $("#InvoiceId").val();
+        var ClientId = $("#ClientID").val();
+        window.location = "/Invoice/DownloadInvoice?InvoiceId=" + contractId + "&ClientId="+'"'+ClientId+'"';
+
+        // $("#preloader").hide();
+        setTimeout(function () {
+            $("#preloader").hide();
+        }, 10000);
+    }
+
+
+</script>

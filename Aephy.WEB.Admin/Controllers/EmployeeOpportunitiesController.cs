@@ -110,7 +110,7 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> GetApplicantsdataById([FromBody] GigOpenRolesModel solutionsModel)
+        public async Task<string> GetApplicantsdataById([FromBody] Models.GigOpenRolesModel solutionsModel)
         {
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/GetApplicantsdataById", HttpMethod.Post, solutionsModel);
             if (applicationdata != "")
@@ -138,7 +138,7 @@ namespace Aephy.WEB.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<string> DeleteApplicationById([FromBody] GigOpenRolesModel solutionsModel)
+        public async Task<string> DeleteApplicationById([FromBody] Models.GigOpenRolesModel solutionsModel)
         {
             var Response = await _apiRepository.MakeApiCallAsync("api/Admin/DeleteUserApplication", HttpMethod.Post,solutionsModel);
             return Response;
@@ -215,7 +215,7 @@ namespace Aephy.WEB.Admin.Controllers
 
 
         [HttpPost]
-        public async Task<string> ApproveOrRejectFreelancer([FromBody] GigOpenRolesModel solutionsModel)
+        public async Task<string> ApproveOrRejectFreelancer([FromBody] Models.GigOpenRolesModel solutionsModel)
         {
             var LoggedInUser = HttpContext.Session.GetString("LoggedAdmin");
             solutionsModel.CurrentLoggedInId = LoggedInUser;

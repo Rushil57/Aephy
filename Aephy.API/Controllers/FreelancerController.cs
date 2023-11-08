@@ -2287,6 +2287,56 @@ namespace Aephy.API.Controllers
             });
         }
 
+        //GetClientInvoiceslist
+        [HttpGet]
+        [Route("GetClientInvoiceslist")]
+        public async Task<IActionResult> GetClientInvoiceslist()
+        {
+            try
+            {
+                List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                var projectData = await _db.SolutionFund.Where(x => x.ProjectStatus != "INITIATED").ToListAsync();
+                if (projectData.Count > 0)
+                {
+                    foreach (var data in projectData)
+                    {
+                        SolutionsModel solutionsdataStore = new SolutionsModel();
+                        ApplicationUser client = await _db.Users.Where(x=>x.Id == data.ClientId).FirstOrDefaultAsync();
+                        solutionsdataStore.ClientName = client.FirstName + " " + client.LastName;
+                        solutionsdataStore.ClientId = client.Id;
+                        solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                        solutionsdataStore.Title = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        solutionsdataStore.ContractId = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.Id).FirstOrDefault();
+                        if (data.FundType == SolutionFund.FundTypes.MilestoneFund)
+                        {
+                            solutionsdataStore.MileStoneTitle = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                        }
+                        solutionsModel.Add(solutionsdataStore);
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = solutionsModel
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
 
     }
 }

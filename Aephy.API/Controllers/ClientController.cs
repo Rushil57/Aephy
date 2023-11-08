@@ -20,6 +20,7 @@ using System.Reflection.Metadata;
 using System.Xml.Schema;
 using static Aephy.API.DBHelper.ApplicationUser;
 using static Aephy.API.Models.AdminViewModel;
+using static Aephy.API.Models.AppConst;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
@@ -2788,13 +2789,43 @@ namespace Aephy.API.Controllers
                                 {
                                     if (ephylinkaccountDetails.IsEnable)
                                     {
-                                        var totalamountTotransfer = 5;
+                                        var fullTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
+                                        decimal totalamountTotransfer = 0;
+                                        decimal clientFees = 0;
+                                        decimal revolutFees = contract.RevolutFee;
+                                        decimal platfomrFromClient = 0; // I8 - J8
+                                        // I8 = clientFees = fullTeam.Sum(y => y.Amount) * const / 100;
+                                        // J8 = (revolutFees * clientFees) / solutionTeamSum;
+                                        if (completedData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                                        {
+                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
+                                        }
+                                        else if (completedData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
+                                        {
+                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
+                                        }
+                                        else if (completedData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                                        {
+                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
+                                        }
+                                        var solutionTeamSum = fullTeam.Sum(x => x.Amount)
+                                                            //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
+                                                            + clientFees;
+                                        decimal j8 = (revolutFees * clientFees) / solutionTeamSum;
+                                        platfomrFromClient = clientFees - j8;
+                                        totalamountTotransfer += platfomrFromClient;
+                                        foreach (var teamMember in fullTeam)
+                                        {
+                                            decimal checkoutRevolutFees = (revolutFees * teamMember.PlatformFees) / solutionTeamSum;
+                                            decimal amountToBeTransfered = teamMember.PlatformFees - checkoutRevolutFees;
+                                            totalamountTotransfer += amountToBeTransfered;
+                                        }
                                         CreatePaymentReq createephylinkPaymentReq = new CreatePaymentReq
                                         {
                                             AccountId = allAccounts.Where(x => x.Currency == ephylinkaccountDetails.Currency
-                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(), 
                                             RequestId = Guid.NewGuid().ToString(),
-                                            Amount = (double)totalamountTotransfer, // ##### actual amount - solutionteam.transferamount 
+                                            Amount = (double)totalamountTotransfer, 
                                             Currency = ephylinkaccountDetails.Currency,
                                             Reference = "Payment to Ephylink",
                                             Receiver = new CreatePaymentReq.ReceiverData()
@@ -4512,7 +4543,11 @@ namespace Aephy.API.Controllers
             {
                 if (adminRevolute.IsEnable)
                 {
-                    //e11 = revolutetransferfee;
+                    var totalRevolutFeePortal = _db.EphylinkRevolutAccountTransferLog.Where(x => x.ContractId == contract.Id).FirstOrDefault();
+                    if(totalRevolutFeePortal != null)
+                    {
+                        e11 = (totalRevolutFeePortal.RevoultFee / (fullTeam.Count + 1)); // Because we do only one transfer with sum of client + freelancers
+                    }
                 }
                 else
                 {
@@ -4544,7 +4579,7 @@ namespace Aephy.API.Controllers
                 {
                     if (adminRevolute.IsEnable)
                     {
-                        //e12 = revolutetransferfee;
+                        e12 = e11; // Because we do only one transfer with sum of client + freelancers
                     }
                     else
                     {

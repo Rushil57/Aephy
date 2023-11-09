@@ -789,16 +789,16 @@ namespace Aephy.API.Models
             public string? CustomProjectDetail { get; set; }
             public decimal CustomPrice { get; set; }
 
-            public DateTime? CustomStartDate { get; set; }
-            public DateTime? CustomEndDate { get; set; }
+            public string? CustomStartDate { get; set; }
+            public string? CustomEndDate { get; set; }
 
             public bool CustomExcludeWeek { get; set; }
 
             public string? CustomHolidayList { get; set; }
 
-            public DateTime? CustomStartHour { get; set; }
+            public string? CustomStartHour { get; set; }
 
-            public DateTime? CustomEndHour { get; set; }
+            public string? CustomEndHour { get; set; }
 
             public string? UserId { get; set; }
 

@@ -2692,7 +2692,7 @@ namespace Aephy.WEB.Controllers
                     throw ex;
                 }
             }
-            return "";
+            return "No Data Found";
         }
     }
 }

@@ -43,6 +43,8 @@ namespace Aephy.API.Models
             public static string MEDIUM_PROJECT = "medium";
 
             public static string LARGE_PROJECT = "large";
+
+            public static string CUSTOM_PROJECT = "custom";
         }
     }
 }

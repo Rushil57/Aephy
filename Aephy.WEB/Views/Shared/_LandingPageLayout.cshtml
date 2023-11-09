@@ -126,49 +126,49 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                    </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                </li>
                                             }
                                             else
                                             {
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="bi bi-bell cls-navicon nav-link"></i>
-                                                    </li>
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="ri-mail-line cls-navicon nav-link"></i>
-                                                    </li>
+                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                    <i class="bi bi-bell cls-navicon nav-link"></i>
+                                                </li>
+                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                    <i class="ri-mail-line cls-navicon nav-link"></i>
+                                                </li>
 
                                                 if (Context.Session.GetString("LoggedUserRole") != "Client")
                                                 {
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                        </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
+                                                    </li>
                                                 }
                                                 else
                                                 {
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
-                                                        </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
+                                                    </li>
                                                 }
 
 
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
-                                                    </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                </li>
 
                                                 if (@Context.Session.GetString("UserProfileImage") != "")
                                                 {
-                                                        <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
-                                                            <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
-                                                        </div>
+                                                    <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                        <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                    </div>
                                                 }
                                                 else
                                                 {
-                                                        <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
+                                                    <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
                                                 }
                                             }
 
@@ -1275,33 +1275,39 @@
                                     <div id="freelancer-title-div" style="padding-left: 30%;">
                                         <span id="freelancer-title">Select Freelancers</span>
                                     </div>
-                                    <div id="number-of-freelancer">
-                                        <div id="single-freelancerSelected">
-                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
-                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
-                                            <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
-                                        </div>
+                                    <form name="freelancerDetailForm">
+                                        <div id="number-of-freelancer">
+                                            <div id="single-freelancerSelected">
+                                                <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                                <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                                <input type="radio" class="cls-freelancer-radio" name="fav_freelancer">
+                                            </div>
 
-                                        <div id="multiple-freelancerselected">
-                                            <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-associate">
-                                            <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-expert">
-                                            <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-projectmanager">
-                                        </div>
+                                            <div id="multiple-freelancerselected">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-associate" name="associatetxt">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-expert" name="experttxt">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-projectmanager" name="projectmanagertxt">
+                                            </div>
 
-                                    </div>
-                                    <div id="freelancer-details">
-                                        <label class="cls-freelancerlvl">Associate</label>
-                                        <label class="cls-freelancerlvl">Expert</label>
-                                        <label class="cls-freelancerlvl">Project Manager</label>
-                                    </div>
-                                    <div id="freelancer-hourlyRate-details">
-                                        <label class="cls-freelancerhourly">$10/h</label>
-                                        <label class="cls-freelancerhourly">$20/h</label>
-                                        <label class="cls-freelancerhourly">$30/h</label>
-                                    </div>
-                                    <div id="freelancer-info-icon">
-                                        <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Displayed hourly rates are an estimated average and may vary based on the selected freelancer's individual hourly rate and availability."><i class="bi bi-info-circle-fill cls-freelancer-info-icon" style="cursor:pointer;"></i></a>
-                                    </div>
+                                        </div>
+                                        <div id="freelancer-details">
+                                            <label class="cls-freelancerlvl">Associate</label>
+                                            <label class="cls-freelancerlvl">Expert</label>
+                                            <label class="cls-freelancerlvl">Project Manager</label>
+                                        </div>
+                                        <div id="freelancer-hourlyRate-details">
+                                            <label class="cls-freelancerhourly">$10/h</label>
+                                            <label class="cls-freelancerhourly">$20/h</label>
+                                            <label class="cls-freelancerhourly">$30/h</label>
+                                        </div>
+                                        <div id="freelancer-info-icon">
+                                            <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Displayed hourly rates are an estimated average and may vary based on the selected freelancer's individual hourly rate and availability."><i class="bi bi-info-circle-fill cls-freelancer-info-icon" style="cursor:pointer;"></i></a>
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            @* <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp; *@
+                                            <a class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn" onclick="GetWorkingOurForm(this)">Next</a>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -1320,15 +1326,15 @@
                                 </div>
 
                                 <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
-                                    <form action="#">
+                                    <form name="ProjectDetailsForm">
                                         <div class="col d-flex flex-column">
                                             <label data-aos="fade-up">Project Outline</label>
-                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Outline" id="custom-ProjectOutline" rows="4" cols="50"></textarea>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Outline" id="custom-ProjectOutline" rows="4" cols="50" name="customprojectoutline"></textarea>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Project Description</label>
-                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50"></textarea>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50" name="customprojectdescription"></textarea>
                                         </div>
 
                                         <div class="row p-3">
@@ -1337,18 +1343,19 @@
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
-                                            <label data-aos="fade-up">Attach relevant file</label>
-                                            <input type="file" class="form-control">
-                                        </div>
-
-                                        <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Project Duartion</label>
-                                            <input type="date" class="form-control" id="Customproject-Duartion">
+                                            <input type="date" class="form-control" id="Customproject-Duartion" name="customProjectDuration">
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Price</label>
                                             <input type="text" class="form-control" placeholder='1,50,000' id="custom-price">
+                                        </div>
+
+                                        <div class="col d-flex justify-content-end">
+                                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
+                                            <a class="btn btn-brand my-3 mx-0" id="ProjectDetailsbtn">Next</a>
+                                          @*   <button type="submit" class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn"></button> *@
                                         </div>
                                     </form>
                                 </div>
@@ -1369,17 +1376,17 @@
                                 </div>
                                 <div class="col-lg-6 order-3 order-lg-3" id="Projectdescription">
                                     <div>
-                                        <form name="workingInfoForm" style="padding-top: 3%;">
+                                        <form name="CustomWorkingInfoForm" style="padding-top: 3%;">
                                             <div class="col d-flex flex-column">
                                                 <label data-aos="fade-up">Working Days</label>
                                                 <div class="row pt-2">
                                                     <div class="col">
                                                         <label>Start Date : </label>
-                                                        <input type="date" class="form-control" id="Customstart-date" name="startDate">
+                                                        <input type="date" class="form-control" id="Customstart-date" name="customstartDate">
                                                     </div>
                                                     <div class="col">
                                                         <label>End Date : </label>
-                                                        <input type="date" class="form-control" id="Customend-date" name="endDate">
+                                                        <input type="date" class="form-control" id="Customend-date" name="customendDate">
                                                     </div>
                                                     <div class="col-12 mt-2">
                                                         <div class="input-group">
@@ -1390,7 +1397,7 @@
                                                     <div class="col-12 mt-2">
                                                         <label for="holidaysLst" class="form-label">Other holidays</label>
                                                         <div class="input-group">
-                                                            <textarea class="form-control cls-textarea" id="CustomholidaysLst" name="holidaysLst" rows="4" cols="50"></textarea>
+                                                            <textarea class="form-control cls-textarea" id="CustomholidaysLst" name="CustomholidaysLst" rows="4" cols="50"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1403,25 +1410,25 @@
                                                 <div class="row pt-2">
                                                     <div class="col">
                                                         <label>Start Hour : </label>
-                                                        <input type="time" name="startTime" class="form-control" id="customstart-hour">
+                                                        <input type="time" name="CustomstartTime" class="form-control" id="customstart-hour">
                                                     </div>
                                                     <div class="col">
                                                         <label>End Hour : </label>
-                                                        <input type="time" name="endTime" class="form-control" id="customend-hour">
+                                                        <input type="time" name="CustomendTime" class="form-control" id="customend-hour">
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="col d-flex justify-content-end">
+                                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
+                                            <a class="btn btn-brand my-3 mx-0" id="WorkingFormbtn">Confirm</a>
+                                        </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-
-                        <div class="col d-flex justify-content-end">
-                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
-                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPostButton" onclick="GetWorkingOurForm(this)">Next</a>
-                        </div>
                     </div>
                 </div>
 
@@ -1677,6 +1684,47 @@
             });
             if (form.valid() === true) {
                 GetClientForm(this);
+            }
+        });
+
+        
+        $('#ProjectDetailsbtn').on('click', function () {
+            var form = $("form[name='ProjectDetailsForm']");
+            form.validate({
+                rules: {
+                    customprojectoutline: { required: true },
+                    customprojectdescription: { required: true },
+                    customProjectDuration : { required: true }
+                },
+                messages: {
+                    customprojectoutline: { required: "Please Project outline" },
+                    customprojectdescription: { required: "Please enter Project description" },
+                    customProjectDuration: { required: "Please enter Project Duration" }
+                }
+            });
+            if (form.valid() === true) {
+                GetWorkingOurForm(this);
+            }
+        });
+
+        $('#WorkingFormbtn').on('click', function () {
+            var form = $("form[name='CustomWorkingInfoForm']");
+            form.validate({
+                rules: {
+                    customstartDate: { required: true },
+                    customendDate: { required: true },
+                    CustomstartTime : { required: true },
+                    CustomendTime: { required: true }
+                },
+                messages: {
+                    customstartDate: { required: "Please select proper start date" },
+                    customendDate: { required: "Please select proper end date" },
+                    CustomstartTime: { required: "Please select proper start time" },
+                    CustomendTime: { required: "Please select proper End Date" }
+                }
+            });
+            if (form.valid() === true) {
+                SaveCustomSolutionData();
             }
         });
 
@@ -2318,10 +2366,10 @@
         }
 
         function GetWorkingOurForm(data) {
-            if (data.text == "Confirm") {
-                // $("#CustomiseProjectPopUp").modal('hide')
-                SaveCustomSolutionData();
-            }
+            // if (data.text == "Confirm") {
+            //     // $("#CustomiseProjectPopUp").modal('hide')
+            //     SaveCustomSolutionData();
+            // }
             if (data.text == "Next") {
                 if ($("#FreelancerDetailsForm").is(":visible")) {
                     $("#FreelancerDetailsForm").css("display", "none")
@@ -2694,15 +2742,15 @@
                 CustomEndDate: $("#Customend-date").val(),
                 CustomExcludeWeek: $('#CustomexcludeWeekends').is(':checked'),
                 CustomHolidayList: $("#CustomholidaysLst").val(),
-                // CustomStartHour: $("#customstart-hour").val(),
-                //CustomEndHour: $("#customend-hour").val(),
+                CustomStartHour: $("#customstart-hour").val(),
+                CustomEndHour: $("#customend-hour").val(),
                 SolutionId: parseInt($("#custom-solutionId").val()),
                 IndustryId: parseInt($("#custom-IndustryId").val()),
                 ProjectType: $('input[name="projSizeweb"]:checked').val(),
             }
 
             $("#preloader").show();
-           
+
             $.ajax({
                 type: "POST",
                 url: "/Home/SaveCustomSolutionData",

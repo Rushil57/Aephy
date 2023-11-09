@@ -1227,8 +1227,8 @@
 
                     //Check if the timestamp is within 24 hours, 24 hours = 60 seconds * 60 minutes * 24 hours * 1000 milliseconds
                     if (Math.abs(currentDateTimestamp - selectedDateTimestamp) <= 60 * 60 * 24 * 1000) {
-	                   DisabledFundButton()
-                       DisabledSolutionFurtherProgressButton()
+	                   // DisabledFundButton()
+                    //    DisabledSolutionFurtherProgressButton()
                     }
                     else{
                         $("#solutionfund-furtherprogress").css("color","white"); 
@@ -1577,16 +1577,21 @@
          var milestoneSection = "";
          var milestonePopupsection = "";
            $.each(milestoneData, function (datas, values) {
-               // if(values.MilestoneStatus == null){
-               //     values.MilestoneStatus
-               // }
+
+               var finalamt = 0;
+               if(values.MilestonePrice != null){
+                   var totalamt = parseFloat(values.MilestonePrice).toFixed(2);
+                    var splitamt = totalamt.toString().split(".");
+                    splitamt[0] = splitamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    finalamt = splitamt.join(".");
+               }
 
                milestoneSection += '<li class="progress__item">' +
                    '<p class="progress__title Project-title-size cls-milestoneTitle">' + values.Title + '</p>';
                    if(values.MilestoneStatus != null){
                       milestoneSection +='<span class="badge bg-primary cls-milestoneStatus">' + values.MilestoneStatus + '</span>';
                   }
-                   milestoneSection += '<span class="badge bg-primary cls-milestonePrice">' + values.MilestonePrice + '</span>';
+                   milestoneSection += '<span class="badge bg-primary cls-milestonePrice">' + finalamt + '</span>';
                  
                   
                   milestoneSection +='<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +

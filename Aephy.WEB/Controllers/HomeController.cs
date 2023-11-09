@@ -2676,6 +2676,7 @@ namespace Aephy.WEB.Controllers
         }
 
         //SaveCustomSolutionData
+        [HttpPost]
         public async Task<string> SaveCustomSolutionData([FromBody] CustomSolutionViewModel model)
         {
             if (model != null)
@@ -2683,6 +2684,10 @@ namespace Aephy.WEB.Controllers
                 try
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
+                    if(userId == null)
+                    {
+                        return "Please login to purchase solution";
+                    }
                     model.UserId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Client/SaveCustomSolutionData", HttpMethod.Post, model);
                     return data;

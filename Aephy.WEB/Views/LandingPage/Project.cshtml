@@ -730,13 +730,13 @@
        
         var projecttype;
         if(data == undefined){
-            projecttype = $('input[name=projSize]:checked').val()
+            projecttype = $('input[name=projSizeweb]:checked').val()
         }
         else if (data.value == "custom"){
             $("#freelancerRadioButton").css("display", "flex");
             $("#customizedradioButton").css("display", "none");
             $("#freelancerRadioButton").prop("checked", true);
-            return;
+            projecttype = data.value;
         }
         else{
              projecttype = data.value;
@@ -937,6 +937,7 @@
                 if ('@Context.Session.GetString("LoggedUserRole")' == 'Client'){
                    if(data.SolutionFund != null)
                    {
+                       $('#freelancerRadioButton').attr('disabled','disabled');
                        $(".btn-contract").addClass('disabled');
                        $(".btn-contract").css("background-color", "var(--brand)");
                        $(".btn-contract").css("color","black");

@@ -425,7 +425,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title main-title">Add Milestone</h4>
-                    <a onclick="ResetMileStoneForm();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
+                    <a onclick="ResetActiveMileStoneForm();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
                 </div>
                  <div class="modal-body p-0">
                     <div class="row">
@@ -461,7 +461,7 @@
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-brand">Submit</button>
-                                        <button  type="button" class="btn btn-secondary" onclick="ResetMileStoneForm();">Reset</button>
+                                        <button  type="button" class="btn btn-secondary" onclick="ResetActiveMileStoneForm();">Reset</button>
                                     </div>
                                 </form>
 
@@ -597,11 +597,11 @@
         });
         GetProjectDetails();
 
-         if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
-            $(".cls-edit-pencil").show()
-         }else{
-             $(".cls-edit-pencil").hide()
-         }
+         // if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
+           
+         // }else{
+         //     $(".cls-edit-pencil").hide()
+         // }
 
         $("form[name='MileStoneForm']").validate({
             rules: {
@@ -623,7 +623,7 @@
                 }
             },
             submitHandler: function (form) {
-                SaveMilStoneData()
+                SaveActiveProjectMilStoneData()
             }
         });
 
@@ -894,18 +894,19 @@
                       $("#solutionfund-furtherprogress").hide();
                       $("#solutionfund-details").hide();
                       $(".cls-fundPopOver").hide();
-                      
-                         if('@Context.Session.GetString("LoggedUserLevel")' == 'Project Manager'){
-                             $("#milestone-btn-div").show();
-                            $(".cls-milestone-edit-pencil").show();
-                         }else{
-                             $("#milestone-btn-div").hide();
-                             $(".cls-milestone-edit-pencil").hide()
-                         }
                   }else{
                       $(".cls-freelancerfundProgress").hide();
-                      //$(".cls-fundPopOver").show();
                   }
+
+                   if(projecttype == 'custom'){
+                             $("#milestone-btn-div").show();
+                            $(".cls-milestone-edit-pencil").show();
+                       $(".cls-edit-pencil").show();
+                         }else{
+                             $("#milestone-btn-div").hide();
+                             $(".cls-milestone-edit-pencil").hide();
+                              $(".cls-edit-pencil").hide()
+                         }
 
                  $("#preloader").hide();
             },
@@ -1374,12 +1375,12 @@
         $("#MileStonePopModal").modal('show')
     }
 
-    function SaveMilStoneData(){
+    function SaveActiveProjectMilStoneData(){
 
         var solutionid = @ViewData["Solution"];
         var Industryid = @ViewData["Industry"]; 
 
-          var MileStoneData = {
+          var ActiveMileStoneData = {
             Id: $("#MileStoneId").val(),
             Description: $("#mileStoneDescription").val(),
             Title: $("#mileStoneTitle").val(),
@@ -1394,12 +1395,12 @@
             url: "@Url.Action("SaveMileStone", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify(MileStoneData),
+            data: JSON.stringify(ActiveMileStoneData),
             success: function (result) {
                 $("#preloader").hide();
                 showToaster("success", "Success", result.Message);
                 GetProjectTypeValue()
-                ResetMileStoneForm()
+                ResetActiveMileStoneForm()
             },
             error: function (result) {
                 showToaster("error", "Error !", result);
@@ -1407,7 +1408,7 @@
         });
     }
 
-    function ResetMileStoneForm() {
+    function ResetActiveMileStoneForm() {
         $("#MileStoneId").val(0);
         $("#mileStoneDescription").val("");
         $("#mileStoneTitle").val("");
@@ -1582,9 +1583,11 @@
 
                milestoneSection += '<li class="progress__item">' +
                    '<p class="progress__title Project-title-size cls-milestoneTitle">' + values.Title + '</p>';
-                  if(values.MilestoneStatus != null){
+                   if(values.MilestoneStatus != null){
                       milestoneSection +='<span class="badge bg-primary cls-milestoneStatus">' + values.MilestoneStatus + '</span>';
                   }
+                   milestoneSection += '<span class="badge bg-primary cls-milestonePrice">' + values.MilestonePrice + '</span>';
+                 
                   
                   milestoneSection +='<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
                '</li>'

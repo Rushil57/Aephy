@@ -168,14 +168,14 @@
         public string? CustomProjectOutline { get; set; }
 
         public string? CustomProjectDetail { get; set; }
-        public decimal? CustomPrice { get; set; }
+        public decimal CustomPrice { get; set; }
 
         public string? CustomStartDate { get; set; }
         public string? CustomEndDate { get; set; }
 
-        public bool CustomExcludeWeek { get; set; }
+        public bool CustomExcludeWeekend { get; set; }
 
-        public string? CustomHolidayList { get; set; }
+        public string? CustomOtherHolidayList { get; set; }
 
         public string? CustomStartHour { get; set; }
 

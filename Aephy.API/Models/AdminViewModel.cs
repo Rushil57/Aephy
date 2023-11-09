@@ -239,6 +239,8 @@ namespace Aephy.API.Models
 
             public string? MilestoneStatus { get; set; }
 
+            public decimal MilestonePrice { get; set; }
+
         }
 
         public class SolutionIndustryDetailsModel
@@ -792,9 +794,9 @@ namespace Aephy.API.Models
             public string? CustomStartDate { get; set; }
             public string? CustomEndDate { get; set; }
 
-            public bool CustomExcludeWeek { get; set; }
+            public bool CustomExcludeWeekend { get; set; }
 
-            public string? CustomHolidayList { get; set; }
+            public string? CustomOtherHolidayList { get; set; }
 
             public string? CustomStartHour { get; set; }
 

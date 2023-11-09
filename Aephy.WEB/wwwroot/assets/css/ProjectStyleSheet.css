@@ -1835,6 +1835,12 @@ progress::-webkit-progress-value {
     float: right;
 }
 
+.cls-milestonePrice {
+    font-size: 12px;
+    float: right;
+    margin-right: 2%;
+}
+
 .lblTotalReviews {
     margin-left: 10% !important;
 }

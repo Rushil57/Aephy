@@ -120,63 +120,63 @@
                     @{
                        if(Context.Session.GetString("LoggedUserRole") == "Client")
                        {
-                             <div class="col-xxl-4 col-md-6">
-                                <div class="card info-card revenue-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Expenses</h5>
+                                     <div class="col-xxl-4 col-md-6">
+                                        <div class="card info-card revenue-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Expenses</h5>
 
-                                        <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                @{
+                                                <div class="d-flex align-items-center">
+                                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        @{
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
-                                                            <i class="bi bi-currency-dollar"></i>
+                                                                            <i class="bi bi-currency-dollar"></i>
                                                 }
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
-                                                            <i class="bi bi-currency-euro"></i>
+                                                                            <i class="bi bi-currency-euro"></i>
                                                 }
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
-                                                            <i class="bi bi-currency-pound"></i>
+                                                                            <i class="bi bi-currency-pound"></i>
                                                 }
-                                                }
+                                                        }
+                                                    </div>
+                                                    <div class="ps-3">
+                                                        <h6 id="expense_amount"></h6>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="ps-3">
-                                                <h6 id="expense_amount"></h6>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                </div>
-                             </div>
+                                        </div>
+                                     </div>
                        }
                         else
                         {
-                             <div class="col-xxl-4 col-md-6">
-                            <div class="card info-card revenue-card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Revenue</h5>
+                                     <div class="col-xxl-4 col-md-6">
+                                    <div class="card info-card revenue-card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Revenue</h5>
 
-                                    <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                             @{
+                                            <div class="d-flex align-items-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                     @{
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "USD"){
-                                                            <i class="bi bi-currency-dollar"></i>
+                                                                            <i class="bi bi-currency-dollar"></i>
                                                 }
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "EUR"){
-                                                            <i class="bi bi-currency-euro"></i>
+                                                                            <i class="bi bi-currency-euro"></i>
                                                 }
                                                 if(Context.Session.GetString("ClientPreferredCurrency") == "GBP"){
-                                                            <i class="bi bi-currency-pound"></i>
+                                                                            <i class="bi bi-currency-pound"></i>
                                                 }
-                                              }
+                                                      }
+                                                </div>
+                                                <div class="ps-3">
+                                                   <h6 id="revenue_amount"></h6>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="ps-3">
-                                           <h6 id="revenue_amount"></h6>
-                                        </div>
+
                                     </div>
                                 </div>
-
-                            </div>
-                        </div>
                         }
                     }
                     <!-- Customers Card -->
@@ -317,12 +317,36 @@
 
                         </div>
                     </div>
-                     <div class="col-12" id="ActiveProjectInvoices">
+                    <div class="col-12" id="ActiveProjectInvoices">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
                                 <h5 class="card-title">View Invoices</h5>
 
                                 <table class="table datatable" id="InvoiceTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Solution Title</th>
+                                            <th scope="col">Industry Name</th>
+                                            <th scope="col">MilestoneName</th>
+                                            <th scope="col">View Invoice</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12" id="FreelancerActiveProjectInvoices">
+                        <div class="card recent-sales overflow-auto">
+                            <div class="card-body">
+                                <h5 class="card-title">View Invoices</h5>
+
+                                <table class="table datatable" id="FreelancerInvoiceTable">
                                     <thead>
                                         <tr>
                                             <th scope="col">Solution Title</th>
@@ -2061,11 +2085,13 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 $(".cls-freelancerField").hide();
                 $("#RecentOpening").hide();
                  $("#ApprovedListSection").hide();
+                 $("#FreelancerActiveProjectInvoices").hide();
                  getClientProjectExpense();
             }else{
                 getOpenRoles();
                  GetApprovedList();
                 GetFreelancerActiveProjectList();
+                 GetFreelancerInvoices();
                 $("#savedProjects").hide();
                 $("#ActiveProjectInvoices").hide();
                 GetFreelancerArchivesProject();

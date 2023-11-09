@@ -1401,6 +1401,91 @@ namespace Aephy.API.Controllers
             }
         }
 
+        //GetInvoiceDetails
+        [HttpPost]
+        [Route("GetFreelancerInvoiceDetails")]
+        public async Task<IActionResult> GetFreelancerInvoiceDetails([FromBody] InvoiceListViewModel model)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    if (model.InvoiceId != 0)
+                    {
+                        var invoicelistDetails = await _db.InvoiceList.Where(x => x.Id == model.InvoiceId && x.FreelancerId == model.UserId).FirstOrDefaultAsync();
+                        if (invoicelistDetails != null)
+                        {
+                            InvoiceListViewModel InvoiceDetails = new InvoiceListViewModel();
+                            InvoiceDetails.TransactionType = invoicelistDetails.TransactionType;
+                            InvoiceDetails.InvoiceType = invoicelistDetails.InvoiceType;
+                            var invoiceListDetails = await _db.InvoiceListDetails.Where(x => x.InvoiceListId == invoicelistDetails.Id).ToListAsync();
+                            if (invoiceListDetails.Count > 0)
+                            {
+                                InvoiceDetails.InvoicelistDetails = invoiceListDetails;
+                            }
+                            InvoiceDetails.InvoiceNumber = invoicelistDetails.InvoiceNumber;
+                            InvoiceDetails.InvoiceDate = invoicelistDetails.InvoiceDate;
+                            var clientDetails = _db.Users.Where(x => x.Id == invoicelistDetails.BillToClientId).FirstOrDefault();
+                            if (clientDetails != null)
+                            {
+                                var fullname = clientDetails.FirstName + " " + clientDetails.LastName;
+                                InvoiceDetails.ClientFullName = fullname;
+                                InvoiceDetails.TaxType = clientDetails.TaxType;
+                                InvoiceDetails.TaxId = clientDetails.TaxNumber;
+                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
+                                InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
+                            }
+                            var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
+                            if (clientaddressDetails != null)
+                            {
+                                InvoiceDetails.ClientAddress = clientaddressDetails;
+                            }
+                            if (invoicelistDetails.FreelancerId != null)
+                            {
+                                var freelancerDetails = _db.Users.Where(x => x.Id == invoicelistDetails.FreelancerId).FirstOrDefault();
+                                if (freelancerDetails != null)
+                                {
+                                    var freelanceraddressDetails = _db.FreelancerDetails.Where(x => x.UserId == invoicelistDetails.FreelancerId).FirstOrDefault();
+                                    var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                                    InvoiceDetails.FreelancerFullName = fullname;
+                                    InvoiceDetails.FreelancerTaxType = freelancerDetails.TaxType;
+                                    InvoiceDetails.FreelancerTaxId = freelancerDetails.TaxNumber;
+                                    InvoiceDetails.FreelancerAddress = freelanceraddressDetails.Address;
+                                    InvoiceDetails.FreelancerCountry = _db.Country.Where(x => x.Id == freelancerDetails.CountryId).Select(x => x.Code).FirstOrDefault();
+                                    //var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+
+                                }
+                            }
+                            InvoiceDetails.TotalAmount = invoicelistDetails.TotalAmount;
+
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "success",
+                                Result = InvoiceDetails
+                            });
+                        }
+                    }
+
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data Not Found"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message
+                });
+            }
+        }
+
         [HttpPost]
         [Route("GetChatResponse")]
         public async Task<IActionResult> GetChatResponse([FromBody] ChatPopupRequestViewModel model)
@@ -1638,6 +1723,61 @@ namespace Aephy.API.Controllers
                     {
                         List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                         var projectData = await _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.ProjectStatus != "INITIATED").ToListAsync();
+                        if (projectData.Count > 0)
+                        {
+                            foreach (var data in projectData)
+                            {
+                                SolutionsModel solutionsdataStore = new SolutionsModel();
+                                solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                                solutionsdataStore.Title = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                solutionsdataStore.ContractId = _db.Contract.Where(x => x.SolutionFundId == data.Id).Select(x => x.Id).FirstOrDefault();
+                                if (data.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                {
+                                    solutionsdataStore.MileStoneTitle = _db.SolutionMilestone.Where(x => x.Id == data.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                }
+                                solutionsModel.Add(solutionsdataStore);
+                            }
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = solutionsModel
+                        });
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status403Forbidden,
+                            Message = ex.Message + ex.InnerException
+                        });
+                    }
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        [HttpPost]
+        [Route("GetFreelancerInvoices")]
+        public async Task<IActionResult> GetFreelancerInvoices([FromBody] MileStoneIdViewModel model)
+        {
+            if (model != null)
+            {
+                if (model.UserId != null)
+                {
+                    try
+                    {
+                        var fundIds = await _db.SolutionTeam.Where(x => x.FreelancerId == model.UserId).Select(y => y.SolutionFundId).Distinct().ToListAsync();
+                        List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
+                        var projectData = await _db.SolutionFund.Where(x => fundIds.Contains(x.Id) && x.ProjectStatus != "INITIATED").ToListAsync();
                         if (projectData.Count > 0)
                         {
                             foreach (var data in projectData)

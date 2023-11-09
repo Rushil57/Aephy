@@ -1945,21 +1945,27 @@ namespace Aephy.API.Controllers
                     var exprtcount = 0;
                     var associatecount = 0;
                     var projectmanagercount = 0;
+                    var experttotal = 0;
+                    var assosiatetotal = 0;
+                    var projectmanagertotal = 0;
 
                     CustomProjectDetials? teamData = null;
                     var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                    var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
-                    if(solutionIndustryData != null)
+                    if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
-                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
-                        if(solutionDefineData != null)
+                        var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
+                        if (solutionIndustryData != null)
                         {
-                            teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                            var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
+                            if (solutionDefineData != null)
+                            {
+                                teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                            }
                         }
+                        experttotal = Convert.ToInt32(teamData.Expert);
+                        assosiatetotal = Convert.ToInt32(teamData.Associate);
+                        projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
                     }
-                    var experttotal = Convert.ToInt32(teamData.Expert);
-                    var assosiatetotal = Convert.ToInt32(teamData.Associate);
-                    var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
 
                     if (Userslist.Count > 0)
                     {
@@ -4401,6 +4407,58 @@ namespace Aephy.API.Controllers
                     Message = "Rate Saved Successfully !"
                 });
 
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Something Went Wrong"
+            });
+        }
+
+        //GetFreelancerInvoiceTypeDetails
+        [HttpPost]
+        [Route("GetFreelancerInvoiceTypeDetails")]
+        public async Task<IActionResult> GetFreelancerInvoiceTypeDetails([FromBody] SolutionsModel model)
+        {
+
+            try
+            {
+                var invoiceListData = await _db.InvoiceList.Where(x => x.ContractId == model.ContractId && x.FreelancerId == model.ClientId).ToListAsync();
+                List<dynamic> list = new List<dynamic>();
+                foreach (var item in invoiceListData)
+                {
+                    string name = "";
+                    if (item.FreelancerId != null)
+                    {
+                        var freelancer = await _db.Users.FirstOrDefaultAsync(x => x.Id == item.FreelancerId);
+                        if (freelancer != null)
+                        {
+                            name = freelancer.FirstName + "_" + freelancer.LastName + "_" + item.InvoiceNumber;
+                        }
+                    }
+                    else
+                    {
+                        name = item.InvoiceType + "_" + item.InvoiceNumber;
+                    }
+
+                    list.Add(
+                    new
+                    {
+                        InvoiceName = name,
+                        Id = item.Id
+                    });
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = list
+                });
             }
             catch (Exception ex)
             {

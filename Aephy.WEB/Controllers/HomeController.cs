@@ -2340,6 +2340,18 @@ namespace Aephy.WEB.Controllers
 
         }
 
+        
+        //GetClientInvoiceDetails
+        [HttpPost]
+        public async Task<string> GetFreelancerInvoiceDetails([FromBody] SolutionFundModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            model.UserId = userId;
+            var invoiceData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerInvoiceDetails", HttpMethod.Post, model);
+            return invoiceData;
+
+        }
+
         //GetFreelancerActiveProjectList
         [HttpGet]
         public async Task<string> GetFreelancerActiveProjectList()
@@ -2425,6 +2437,22 @@ namespace Aephy.WEB.Controllers
             MileStoneIdViewModel model = new MileStoneIdViewModel();
             model.UserId = userId;
             var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetActiveProjectInvoices", HttpMethod.Post, model);
+            return projectData;
+
+        }
+
+        //GetFreelancerInvoices
+        [HttpGet]
+        public async Task<string> GetFreelancerInvoices()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            MileStoneIdViewModel model = new MileStoneIdViewModel();
+            model.UserId = userId;
+            var projectData = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerInvoices", HttpMethod.Post, model);
             return projectData;
 
         }
@@ -2654,6 +2682,27 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+
+        //GetFreelancerInvoiceTypeDetails
+        [HttpPost]
+        public async Task<string> GetFreelancerInvoiceTypeDetails([FromBody] SolutionFundModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.ClientId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Client/GetFreelancerInvoiceTypeDetails", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "";
+        }
 
         [HttpPost]
         public async Task<string> FreelancerLeaveProject([FromBody] SolutionFundModel model)

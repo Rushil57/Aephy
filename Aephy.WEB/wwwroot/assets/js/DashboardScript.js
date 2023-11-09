@@ -678,6 +678,52 @@ function GetActiveProjectInvoices() {
     });
 }
 
+function GetFreelancerInvoices() {
+    $("#preloader").show();
+    $.ajax({
+        type: "Get",
+        url: "/Home/GetFreelancerInvoices",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            if (result.Result.length != 0) {
+                var invoiceData = result.Result
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                var resultLength = invoiceData.length;
+                if (resultLength > 0) {
+                    for (index = 0; index < resultLength; index++) {
+                        subObj = invoiceData[index];
+                        if (subObj.MileStoneTitle == null) {
+                            subObj.MileStoneTitle = ""
+                        }
+
+                        htm += '<tr>';
+                        htm += '<td>' + subObj.Title + '</td>';
+                        htm += '<td>' + subObj.Industries + '</td>';
+                        htm += '<td>' + subObj.MileStoneTitle + '</td>';
+                        htm += '<td><a class="text-primary" onclick=ViewFreelancerInvoiceGridPopUp(' + subObj.ContractId + ')>View Invoice</a></td>';
+                        htm += '</tr>';
+                    }
+                }
+                $("#FreelancerInvoiceTable").find("tr:gt(0)").remove();
+                $("#FreelancerInvoiceTable tbody").append(htm);
+                $(".cls-Freelancerinvoice-temp").hide();
+            }
+            else {
+                $(".cls-Freelancerinvoice-temp").remove();
+                $("<p class='cls-Freelancerinvoice-temp'>No Data Available</p>").insertAfter("#FreelanerInvoiceTable");
+            }
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            showToaster("error", "Error !", result);
+            $("#preloader").hide();
+        }
+    });
+}
+
 function DownloadSolutionInvoice() {
     $("#preloader").show();
     var contractId = $("#InvoiceId").val();
@@ -697,6 +743,197 @@ function OpenInvoiceModalPopUp(invoiceId) {
     $.ajax({
         type: "POST",
         url: "/Home/GetClientInvoiceDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (result) {
+            if (result.Result != null) {
+                $("#InvoiceModal").modal('show')
+                var data = result.Result;
+
+                var totalamt = parseFloat(data.TotalAmount).toFixed(2);
+                var splitamt = totalamt.toString().split(".");
+                splitamt[0] = splitamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                var finalamt = splitamt.join(".");
+
+                $("#ContractCreatedDate").html("Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                $("#ContractDueDate").html("Due Date " + moment(data.InvoiceDate).format('DD MMMM YYYY'));
+                $("#ContractClientName").html(data.ClientFullName);
+                $("#ProjectTotalAmount").html("Total Amount " + data.PreferredCurrency + finalamt);
+                $("#ProjectTotalDueAmount").html("Due Amount " + data.PreferredCurrency + finalamt);
+                $("#ProjectTotalDueAmount").css("font-weight", "bold");
+                $("#ContractDueDate").css("font-weight", "bold");
+                if (data.ClientAddress == null) {
+                    data.ClientAddress = "";
+                }
+                $("#ClientAddress").html("Address : " + data.ClientAddress)
+                if (data.InvoicelistDetails.length != 0) {
+                    var index = 0;
+                    var subObj = '';
+                    var htm = '';
+                    var resultLength = data.InvoicelistDetails.length;
+                    if (resultLength > 0) {
+                        for (index = 0; index < resultLength; index++) {
+                            subObj = data.InvoicelistDetails[index];
+                            if (!subObj.Amount.indexOf("(") == 0) {
+                                if (subObj.Amount == "") {
+                                    subObj.Amount = 0.0;
+                                } else {
+                                    var totalinvoiceamt = parseFloat(subObj.Amount).toFixed(2);
+                                    var splitinvoiceamt = totalinvoiceamt.toString().split(".");
+                                    splitinvoiceamt[0] = splitinvoiceamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    subObj.Amount = splitinvoiceamt.join(".");
+                                }
+                            }
+                            htm += '<tr>';
+                            htm += '<td>' + subObj.Description + '</td>';
+                            htm += '<td>' + subObj.Amount + '</td>';
+                            htm += '</tr>';
+                        }
+                    }
+                    $("#InvoiceListDetails").find("tr:gt(0)").remove();
+                    $("#InvoiceListDetails tbody").append(htm);
+                }
+
+
+                if (data.TransactionType == "Payment Receipt - Amount Due") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#ContractDueDate").css("display", "none");
+                    $("#ProjectTotalDueAmount").css("display", "none");
+                    $("#invoice-mainTitle").html("RECEIPT");
+                    $("#billTo-tile").html("Received From");
+                    $("#InvoiceNumber").html("Receipt # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice1 - portal to client") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#invoice-mainTitle").html("Invoice");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice3 - Total platform fees") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#invoice-mainTitle").html("PROFORMA INVOICE");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "CREDIT MEMO") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#invoice-mainTitle").html("CREDIT MEMO");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "none");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                    $("#from-Title").html("Ephylink");
+                }
+                if (data.TransactionType == "Invoice Freelancer") {
+
+                    if (data.FreelancerAddress == null) {
+                        data.FreelancerAddress = "";
+                    }
+
+                    $("#invoiceCeated-title").css("display", "block");
+                    $("#invoiceCeated-title").css("margin-left", "4%");
+                    $("#invoiceCeated-title").css("margin-top", "4%");
+
+                    $("#from-Title").html(data.FreelancerFullName);
+                    $("#invoice-mainTitle").html("INVOICE");
+                    $("#ContractDueDate").css("display", "block");
+                    $("#ProjectTotalDueAmount").css("display", "block");
+                    $("#billTo-tile").html("Bill to");
+                    $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
+                    $("#from-name").html("Name :" + data.FreelancerFullName);
+                    $("#from-address").html("Address : " + data.FreelancerAddress);
+                    $("#from-country").css("display", "none");
+
+                    if (data.FreelancerCountry == "GR") {
+                        if (data.FreelancerTaxType != "" && data.FreelancerTaxType != null && data.FreelancerTaxType != "null") {
+                            $("#from-vatId").css("display", "block");
+                            $("#from-vatId").html(data.FreelancerTaxType + "ID : " + data.FreelancerTaxId);
+                        }
+                    }
+                    else {
+                        $("#from-vatId").css("display", "none");
+                    }
+                }
+                if (data.TransactionType == "Invoice Commision") {
+                    $("#invoiceCeated-title").css("display", "none");
+                    $("#from-country").css("display", "block");
+                    $("#from-name").html("Dimitrios Vamvakas");
+                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-country").css("Achaia, Greece");
+                    $("#from-Title").html("Ephylink");
+                    $("#from-vatId").css("display", "block");
+                    $("#from-vatId").html("VAT ID: 148366653");
+                }
+
+                if (data.ClientCountry == "GR") {
+                    $("#TaxDetails").css("display", "block");
+                    if (data.TaxType != "" && data.TaxType != null && data.TaxType != "null") {
+                        $("#TaxDetails").html(data.TaxType + " ID : " + data.TaxId)
+                    }
+                } else {
+                    $("#TaxDetails").css("display", "none");
+                }
+            }
+
+            $("#from-Title").css("font-size", "19px");
+            $("#from-Title").css("font-weight", "bold");
+            $("#ContractClientName").css("font-size", "19px");
+            $("#ContractClientName").css("font-weight", "bold");
+
+            $("#InvoiceId").val(invoiceId);
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            $("#preloader").hide();
+            showToaster("error", "Error !", result);
+        }
+    });
+}
+
+function OpenFreelancerInvoiceModalPopUp(invoiceId) {
+    var data = {
+        InvoiceId: invoiceId,
+    }
+    $("#preloader").show();
+    $.ajax({
+        type: "POST",
+        url: "/Home/GetFreelancerInvoiceDetails",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(data),
@@ -1497,6 +1734,55 @@ function ViewInvoiceGridPopUp(contractId) {
                         htm += '<tr>';
                         htm += '<td>' + subObj.InvoiceName + '</td>';
                         htm += '<td><a class="text-primary" onclick=OpenInvoiceModalPopUp(' + subObj.Id + ')>View</a></td>';
+                        htm += '</tr>';
+                    }
+                }
+                $("#InvoiceGridTable").find("tr:gt(0)").remove();
+                $("#InvoiceGridTable tbody").append(htm);
+                $(".invoice-temp").hide();
+            }
+            else {
+                $("#InvoiceGridTable").hide()
+                $("<p class='invoice-temp'>No Data Available</p>").insertAfter("#InvoiceGridTable");
+
+            }
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            showToaster("error", "Error !", result);
+        }
+    });
+}
+
+function ViewFreelancerInvoiceGridPopUp(contractId) {
+    //
+    //$("#GridContractId").val(contractId)
+    var data = {
+        ContractId: contractId
+    };
+
+    $("#preloader").show();
+    $.ajax({
+        type: "POST",
+        url: "/Home/GetFreelancerInvoiceTypeDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (result) {
+            $("#InvoiceGridPopUpModal").modal('show');
+            if (result.Result.length != 0) {
+                $("#InvoiceGridTable").show();
+                var invoiceData = result.Result;
+                var index = 0;
+                var subObj = '';
+                var htm = '';
+                var resultLength = invoiceData.length;
+                if (resultLength > 0) {
+                    for (index = 0; index < resultLength; index++) {
+                        subObj = invoiceData[index];
+                        htm += '<tr>';
+                        htm += '<td>' + subObj.InvoiceName + '</td>';
+                        htm += '<td><a class="text-primary" onclick=OpenFreelancerInvoiceModalPopUp(' + subObj.Id + ')>View</a></td>';
                         htm += '</tr>';
                     }
                 }

@@ -593,9 +593,12 @@ namespace Aephy.API.Controllers
                     SolutionMilestone solutionMilesData = new SolutionMilestone();
                     bool fundCompleted = false;
                     bool fundStopByClient = false;
+                    decimal projectFinalPrice = 0;
+
                     if (model.UserId != "")
                     {
                         fundProgress = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
+                        projectFinalPrice = Convert.ToDecimal(fundProgress.ProjectPrice);
                         var checkfundCompleted = await _db.Contract.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.PaymentStatus).FirstOrDefaultAsync();
                         if (checkfundCompleted == Contract.PaymentStatuses.Splitted)
                         {
@@ -656,6 +659,7 @@ namespace Aephy.API.Controllers
                             if (!fundProgress.IsProjectPriceAlreadyCount)
                             {
                                 var finalPrice = await CountFinalProjectPricing(fundProgress);
+                                projectFinalPrice = finalPrice;
                                 fundProgress.ProjectPrice = finalPrice.ToString();
                                 fundProgress.IsProjectPriceAlreadyCount = true;
                                 _db.SaveChanges();
@@ -675,6 +679,15 @@ namespace Aephy.API.Controllers
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
                     if (milestoneData.Count > 0)
                     {
+                        // SolutionMilestone mileStoneToTalDays = milestoneData
+                        //.GroupBy(l => l.ProjectType)
+                        //.Select(cl => new SolutionMilestone
+                        //{
+                        //    ProjectType = cl.First().ProjectType,
+                        //    Days = cl.Sum(c => c.Days),
+                        //}).FirstOrDefault();
+                        var mileStoneToTalDays = milestoneData.Sum(x => x.Days);
+
                         foreach (var stonedata in milestoneData)
                         {
                             MileStoneModel milestonData = new MileStoneModel();
@@ -683,6 +696,10 @@ namespace Aephy.API.Controllers
                             milestonData.Title = stonedata.Title;
                             milestonData.Description = stonedata.Description;
                             milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.UserId).Select(x => x.MilestoneStatus).FirstOrDefault();
+                            if (mileStoneToTalDays > 0)
+                            {
+                                milestonData.MilestonePrice = (projectFinalPrice / mileStoneToTalDays) * stonedata.Days;
+                            }
                             milestoneList.Add(milestonData);
                         }
                     }
@@ -1945,21 +1962,28 @@ namespace Aephy.API.Controllers
                     var exprtcount = 0;
                     var associatecount = 0;
                     var projectmanagercount = 0;
+                    var experttotal = 0;
+                    var assosiatetotal = 0;
+                    var projectmanagertotal = 0;
 
                     CustomProjectDetials? teamData = null;
                     var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                    var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
-                    if(solutionIndustryData != null)
+                    if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
-                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
-                        if(solutionDefineData != null)
+                        var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
+                        if(solutionIndustryData != null)
                         {
-                            teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                            var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
+                            if(solutionDefineData != null)
+                            {
+                                teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                            }
                         }
+                        experttotal = Convert.ToInt32(teamData.Expert);
+                        assosiatetotal = Convert.ToInt32(teamData.Associate);
+                        projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
                     }
-                    var experttotal = Convert.ToInt32(teamData.Expert);
-                    var assosiatetotal = Convert.ToInt32(teamData.Associate);
-                    var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
+
 
                     if (Userslist.Count > 0)
                     {
@@ -2199,11 +2223,23 @@ namespace Aephy.API.Controllers
                         {
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                         }
+                        else if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                        {
+                            if(teamList.Count <= 3)
+                            {
+                                clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
+                            }
+                            else
+                            {
+                                clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
+                            }
+                            
+                        }
                         clientAndFLfees = flFees + clientFees;
 
                         var invoiceFunding = new InvoiceList();
                         invoiceFunding.BillToClientId = model.UserId;
-                       // invoiceFunding.InvoiceNumber = "INV-00101"; // ######
+                        // invoiceFunding.InvoiceNumber = "INV-00101"; // ######
                         invoiceFunding.InvoiceDate = DateTime.Now;
                         invoiceFunding.TransactionType = AppConst.InvoiceTransactionType.INVOICE1_PORTAL_TO_CLIENT;
                         invoiceFunding.TotalAmount = Convert.ToString((Convert.ToDecimal(contractSave.Amount) - clientAndFLfees));
@@ -2382,9 +2418,11 @@ namespace Aephy.API.Controllers
                 {
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                    var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
                     if (milestoneData.Count > 0)
                     {
+                        var mileStoneToTalDays = milestoneData.Sum(x => x.Days);
                         foreach (var stonedata in milestoneData)
                         {
                             MileStoneModel milestonData = new MileStoneModel();
@@ -2393,12 +2431,15 @@ namespace Aephy.API.Controllers
                             milestonData.Title = stonedata.Title;
                             milestonData.Description = stonedata.Description;
                             milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.ClientId).Select(x => x.MilestoneStatus).FirstOrDefault();
+                            if (mileStoneToTalDays > 0)
+                            {
+                                milestonData.MilestonePrice = (Convert.ToDecimal(checkType.ProjectPrice) / mileStoneToTalDays) * stonedata.Days;
+                            }
                             milestoneList.Add(milestonData);
                         }
                     }
                     if (mileStoneData != null)
                     {
-                        var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
                         var solutionfund = new SolutionFund()
                         {
                             SolutionId = model.SolutionId,
@@ -2421,7 +2462,7 @@ namespace Aephy.API.Controllers
                             var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
                             if (Userslist.Count > 0)
                             {
-                                await SaveSolutionTeamData(solutionfund,0,0,0);
+                                await SaveSolutionTeamData(solutionfund, 0, 0, 0);
                             }
 
                         }
@@ -2513,7 +2554,7 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
 
 
-                        await SaveSolutionTeamData(solutionfund,0,0,0);
+                        await SaveSolutionTeamData(solutionfund, 0, 0, 0);
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2649,6 +2690,37 @@ namespace Aephy.API.Controllers
                                             var PlatformFees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
                                             teamData.Amount = contractAmount;
                                             teamData.PlatformFees = PlatformFees;
+                                            _db.SaveChanges();
+                                        }
+                                    }
+                                }
+                                if (data.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                {
+                                    if (solutionTeamData.Count > 0)
+                                    {
+                                        var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
+                                        foreach (var teamData in solutionTeamData)
+                                        {
+                                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
+                                            // ######
+                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                            {
+                                                freelancerPreferedCurrency = "EUR";
+                                            }
+                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                            decimal ExchangeHourlyRate = hourlyRate;
+                                            if (exchangeRate != null)
+                                            {
+                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                            }
+                                            // ######
+                                            decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
+                                            var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+                                            teamData.Amount = contractAmount;
+                                            teamData.PlatformFees = Platformfees;
                                             _db.SaveChanges();
                                         }
                                     }
@@ -2888,6 +2960,17 @@ namespace Aephy.API.Controllers
                                         {
                                             clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                                         }
+                                        else if (completedData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                        {
+                                            if (fullTeam.Count <= 3)
+                                            {
+                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
+                                            }
+                                            else
+                                            {
+                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
+                                            }
+                                        }
                                         var solutionTeamSum = fullTeam.Sum(x => x.Amount)
                                                             //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
                                                             + clientFees;
@@ -2903,9 +2986,9 @@ namespace Aephy.API.Controllers
                                         CreatePaymentReq createephylinkPaymentReq = new CreatePaymentReq
                                         {
                                             AccountId = allAccounts.Where(x => x.Currency == ephylinkaccountDetails.Currency
-                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(), 
+                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(),
                                             RequestId = Guid.NewGuid().ToString(),
-                                            Amount = (double)totalamountTotransfer, 
+                                            Amount = (double)totalamountTotransfer,
                                             Currency = ephylinkaccountDetails.Currency,
                                             Reference = "Payment to Ephylink",
                                             Receiver = new CreatePaymentReq.ReceiverData()
@@ -3912,7 +3995,7 @@ namespace Aephy.API.Controllers
                                     expertDetailsAdded = true;
                                 }
                             }
-                           
+
 
                             if (!associateDetailsAdded)
                             {
@@ -3934,7 +4017,7 @@ namespace Aephy.API.Controllers
 
                             if (!projectManagerAdded)
                             {
-                                if(projectmanagercount < projectmanager)
+                                if (projectmanagercount < projectmanager)
                                 {
                                     var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
                                     if (projectManager != null)
@@ -3994,6 +4077,10 @@ namespace Aephy.API.Controllers
                             if (projectType == AppConst.ProjectType.LARGE_PROJECT)
                             {
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                            }
+                            if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                            {
+                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
                             }
 
 
@@ -4185,7 +4272,14 @@ namespace Aephy.API.Controllers
                 }
                 if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                 {
-                    clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM)) / 100;
+                    if(solutionTeamdata.Count <= 3)
+                    {
+                        clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS)) / 100;
+                    }
+                    else
+                    {
+                        clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM)) / 100;
+                    }
                     //projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_LARGE)) / 100;
                 }
                 // var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
@@ -4570,6 +4664,19 @@ namespace Aephy.API.Controllers
                 clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                 freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
             }
+            else if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+            {
+                if(fullTeam.Count <= 3)
+                {
+                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
+                }
+                else
+                {
+                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
+                }
+                
+                freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+            }
             var revolutFees = contract.RevolutFee;
             var solutionTeamSum = fullTeam.Sum(x => x.Amount)
                     //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
@@ -4647,7 +4754,7 @@ namespace Aephy.API.Controllers
                 _db.InvoiceListDetails.Add(invoiceFreelancerDetail_totalAmt);
                 _db.SaveChanges();
 
-              //  count++;
+                //  count++;
             }
             #endregion
 
@@ -4718,7 +4825,7 @@ namespace Aephy.API.Controllers
                 if (adminRevolute.IsEnable)
                 {
                     var totalRevolutFeePortal = _db.EphylinkRevolutAccountTransferLog.Where(x => x.ContractId == contract.Id).FirstOrDefault();
-                    if(totalRevolutFeePortal != null)
+                    if (totalRevolutFeePortal != null)
                     {
                         e11 = (totalRevolutFeePortal.RevoultFee / (fullTeam.Count + 1)); // Because we do only one transfer with sum of client + freelancers
                     }
@@ -4835,7 +4942,7 @@ namespace Aephy.API.Controllers
             {
                 var solutionIndustryDetails = await _db.SolutionIndustryDetails.Where(x => x.IndustryId == model.IndustryId
                                               && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
-                if(solutionIndustryDetails != null)
+                if (solutionIndustryDetails != null)
                 {
                     var teamSize = Convert.ToInt16(model.TotalAssociate) + Convert.ToInt16(model.TotalExpert) + Convert.ToInt16(model.TotalProjectManager);
                     var solutionDefine = new SolutionDefine()
@@ -4866,7 +4973,10 @@ namespace Aephy.API.Controllers
                         Expert = model.TotalExpert.ToString(),
                         ProjectManager = model.TotalProjectManager.ToString(),
                         IsSingleFreelancer = false,
-                        ProjectDuration = model.CustomProjectDuration
+                        ProjectDuration = model.CustomProjectDuration,
+                        IsExcludeWeekend = model.CustomExcludeWeekend,
+                        OtherHolidays = model.CustomOtherHolidayList,
+
                     };
 
                     _db.CustomProjectDetials.Add(customsolution);
@@ -4885,18 +4995,20 @@ namespace Aephy.API.Controllers
                     _db.SolutionFund.Add(solutionfund);
                     _db.SaveChanges();
 
-                    var solutionstatus =  await SaveSolutionTeamData(solutionfund, Convert.ToInt32(model.TotalAssociate),Convert.ToInt32(model.TotalExpert),Convert.ToInt32(model.TotalProjectManager));
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    var solutionstatus = await SaveSolutionTeamData(solutionfund, Convert.ToInt32(model.TotalAssociate), Convert.ToInt32(model.TotalExpert), Convert.ToInt32(model.TotalProjectManager));
+                    if (solutionstatus == "success")
                     {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Project Initated Successfully!"
-                    });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Project Initated Successfully!"
+                        });
+                    }
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "Something Went Wrong"
+                    Message = "Something Went Wrong While inititaing Project Please try again later!"
                 });
             }
             catch (Exception ex)

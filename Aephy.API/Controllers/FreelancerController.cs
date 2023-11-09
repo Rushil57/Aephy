@@ -376,8 +376,8 @@ namespace Aephy.API.Controllers
                                                 && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
                 if (solutionIndustryDetails != null)
                 {
-                    solutionIndustryDetails.ActionOn= DateTime.Now;
-                    solutionIndustryDetails.IsApproved= 1;
+                    solutionIndustryDetails.ActionOn = DateTime.Now;
+                    solutionIndustryDetails.IsApproved = 1;
                     _db.SaveChanges();
 
                     var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryDetails.Id
@@ -1356,10 +1356,10 @@ namespace Aephy.API.Controllers
                             {
                                 InvoiceDetails.ClientAddress = clientaddressDetails;
                             }
-                            if(invoicelistDetails.FreelancerId != null)
+                            if (invoicelistDetails.FreelancerId != null)
                             {
                                 var freelancerDetails = _db.Users.Where(x => x.Id == invoicelistDetails.FreelancerId).FirstOrDefault();
-                                if(freelancerDetails != null)
+                                if (freelancerDetails != null)
                                 {
                                     var freelanceraddressDetails = _db.FreelancerDetails.Where(x => x.UserId == invoicelistDetails.FreelancerId).FirstOrDefault();
                                     var fullname = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
@@ -2441,7 +2441,7 @@ namespace Aephy.API.Controllers
                     foreach (var data in projectData)
                     {
                         SolutionsModel solutionsdataStore = new SolutionsModel();
-                        ApplicationUser client = await _db.Users.Where(x=>x.Id == data.ClientId).FirstOrDefaultAsync();
+                        ApplicationUser client = await _db.Users.Where(x => x.Id == data.ClientId).FirstOrDefaultAsync();
                         solutionsdataStore.ClientName = client.FirstName + " " + client.LastName;
                         solutionsdataStore.ClientId = client.Id;
                         solutionsdataStore.Industries = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
@@ -2478,5 +2478,76 @@ namespace Aephy.API.Controllers
             });
         }
 
+        [HttpPost]
+        [Route("SaveFreelancerExcludeDate")]
+        public async Task<IActionResult> SaveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            if(model != null)
+            {
+                var dbmodel = new FreelancerExcludeDate()
+                {
+                    FreelancerId = model.FreelancerId,
+                    ExcludeDate = model.ExcludeDate
+                };
+
+                await _db.FreelancerExcludeDate.AddAsync(dbmodel);
+                await _db.SaveChangesAsync();
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = dbmodel
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        [HttpPost]
+        [Route("GetFreelancerExcludeDateData")]
+        public async Task<IActionResult> GetFreelancerExcludeDateData([FromBody] ExcludeDateModel model)
+        {
+            var modelList = await _db.FreelancerExcludeDate.Where(x=>x.FreelancerId == model.FreelancerId).ToListAsync();
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Success",
+                Result = modelList
+            });
+        }
+
+        [HttpPost]
+        [Route("RemoveFreelancerExcludeDate")]
+        public async Task<IActionResult> RemoveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            try
+            {
+                var dbModel = await _db.FreelancerExcludeDate.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                if (dbModel != null)
+                {
+                    _db.FreelancerExcludeDate.Remove(dbModel);
+                    await _db.SaveChangesAsync();
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Delete Succesfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
     }
 }

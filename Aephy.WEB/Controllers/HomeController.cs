@@ -2725,6 +2725,7 @@ namespace Aephy.WEB.Controllers
         }
 
         //SaveCustomSolutionData
+        [HttpPost]
         public async Task<string> SaveCustomSolutionData([FromBody] CustomSolutionViewModel model)
         {
             if (model != null)
@@ -2732,6 +2733,10 @@ namespace Aephy.WEB.Controllers
                 try
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
+                    if(userId == null)
+                    {
+                        return "Please login to purchase solution";
+                    }
                     model.UserId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Client/SaveCustomSolutionData", HttpMethod.Post, model);
                     return data;
@@ -2742,6 +2747,42 @@ namespace Aephy.WEB.Controllers
                 }
             }
             return "No Data Found";
+        }
+
+        [HttpPost]
+        public async Task<string> SaveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.FreelancerId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "No Data Found";
+        }
+
+        [HttpGet]
+        public async Task<string> GetFreelancerExcludeDateData()
+        {
+            var model = new ExcludeDateModel();
+            model.FreelancerId = HttpContext.Session.GetString("LoggedUser");
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerExcludeDateData", HttpMethod.Post, model);
+            return RolesList;
+        }
+        
+        [HttpPost]
+        public async Task<string> RemoveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/RemoveFreelancerExcludeDate", HttpMethod.Post,model);
+            return RolesList;
         }
     }
 }

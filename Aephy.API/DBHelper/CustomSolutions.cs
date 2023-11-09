@@ -51,5 +51,9 @@ namespace Aephy.API.DBHelper
         public string? ProjectManager { get; set; }
 
         public bool IsSingleFreelancer { get; set; }
+
+        public bool IsExcludeWeekend { get; set; }
+
+        public string? OtherHolidays { get; set; }
     }
 }

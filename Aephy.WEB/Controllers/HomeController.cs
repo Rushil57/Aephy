@@ -2694,5 +2694,41 @@ namespace Aephy.WEB.Controllers
             }
             return "No Data Found";
         }
+
+        [HttpPost]
+        public async Task<string> SaveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var userId = HttpContext.Session.GetString("LoggedUser");
+                    model.FreelancerId = userId;
+                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, model);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return "No Data Found";
+        }
+
+        [HttpGet]
+        public async Task<string> GetFreelancerExcludeDateData()
+        {
+            var model = new ExcludeDateModel();
+            model.FreelancerId = HttpContext.Session.GetString("LoggedUser");
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerExcludeDateData", HttpMethod.Post, model);
+            return RolesList;
+        }
+        
+        [HttpPost]
+        public async Task<string> RemoveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/RemoveFreelancerExcludeDate", HttpMethod.Post,model);
+            return RolesList;
+        }
     }
 }

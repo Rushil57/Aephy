@@ -21,14 +21,13 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                    <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                            <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                    <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                            <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
-
 
                         <h2 id="fullName"></h2>
                         <h3 id="userRole"></h3>
@@ -60,6 +59,10 @@
 
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander">calendar</button>
                             </li>
 
                         </ul>
@@ -97,7 +100,7 @@
                                     </div>
                                 </div>
 
-                                 <div class="row">
+                                <div class="row">
                                     <div class="col-lg-4 col-md-6 label">Preferred Currency</div>
                                     <div class="col-md-8 col-lg-8">
                                         <input name="preferredCurrency" type="text" class="form-control cls-preferredCurrency" readonly>
@@ -309,7 +312,7 @@
                                         </div>
                                     </div>
 
-                                     <div class="row mb-3">
+                                    <div class="row mb-3">
                                         <label for="PreferredCurrency" class="col-md-6 col-lg-4 col-form-label">Preferred Currency</label>
                                         <div class="col-md-8 col-lg-8">
                                             <select class="form-select cls-preferredCurrency" aria-label="Default select example" name="preferredCurrency" id="PreferredCurrency">
@@ -472,12 +475,12 @@
                                         </div>
                                     </div>
 
-                                   
+
 
                                     <div class="row mb-3">
                                         <label for="TaxType" class="col-md-6 col-lg-4 col-form-label">Tax Type</label>
                                         <div class="col-md-8 col-lg-8">
-                                            <input type="text" id="TaxType" class="form-control cls-taxType" name="taxType" placeholder="VAT"/>
+                                            <input type="text" id="TaxType" class="form-control cls-taxType" name="taxType" placeholder="VAT" />
                                         </div>
                                     </div>
 
@@ -525,8 +528,32 @@
 
                             </div>
 
-                        </div>
+                            <div class="tab-pane fade pt-3" id="profile-calander">
 
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 label ">Select Date</div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <input type="date" name="ExcludeTime" class="form-control" id="exclude-time">
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 text-center">
+                                        <button type="submit" class="btn btn-primary" id="btnAddDate">Add</button>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5" style="max-height: 30rem;overflow: scroll;">
+                                    <table class="table table-borderless datatable" id="table-excludeDate">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Exclude Date</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -562,7 +589,7 @@
                                     <div class="col-6">
                                         <label for="currency" class="form-label">Currency</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input type="text" id="Currency" class="form-control" name="Currency" readonly/>
+                                            <input type="text" id="Currency" class="form-control" name="Currency" readonly />
                                         </div>
                                     </div>
                                     <div class="col-6 cls-non-mexican-field cls-aus-field cls-us-field cls-indian-field cls-Ibannot-mandatory">
@@ -682,6 +709,8 @@
             }
         });
         GetUserData()
+
+        bindFreelancerExcludeGrid();
     });
 
     function GetUserData() {
@@ -720,8 +749,8 @@
                     var preferredCurrency = $("#PreferredCurrency").val();
                     $(".cls-freelancer-CurrencybasedhourlyRate").html('');
                     var currencyhourlyRate = "";
-                    if(preferredCurrency != ''){
-                        if(preferredCurrency == 'USD'){
+                    if (preferredCurrency != '') {
+                        if (preferredCurrency == 'USD') {
                             currencyhourlyRate = "Hourly Rate Per Day ($)"
                         }
                         if (preferredCurrency == 'GBP') {
@@ -730,7 +759,7 @@
                         if (preferredCurrency == 'EUR') {
                             currencyhourlyRate = "Hourly Rate Per Day (€)"
                         }
-                    }else{
+                    } else {
                         currencyhourlyRate = "Hourly Rate Per Day (€)"
                     }
                     $(".cls-freelancer-CurrencybasedhourlyRate").html(currencyhourlyRate);
@@ -856,7 +885,7 @@
             }
         }
     }
-    
+
 
     function UpdateUserData() {
         var filename = $("#CVPath").val();
@@ -878,7 +907,7 @@
         var RevoultBank = $('input[name="revoult_BankAccount"]:checked').val();
         if (RevoultBank == "YES") {
             var RevData = $("#RevTag").val();
-            if(RevData == ""){
+            if (RevData == "") {
                 showToaster("error", "Error !", "Please fill rev tag field!");
                 return
             }
@@ -1060,9 +1089,9 @@
         if (countryExists != 0 && addressExists != "" && cityExists != "" && postcodeExists != "" && hourlyRate != "") {
             $("#RevolutOnBoardingFeildsModal").modal('show');
             var prefreedCurrency = $("#PreferredCurrency").val();
-            if(prefreedCurrency != ""){
+            if (prefreedCurrency != "") {
                 $("#Currency").val(prefreedCurrency)
-            }else{
+            } else {
                 $("#Currency").val("EUR")
             }
         } else {
@@ -1159,5 +1188,94 @@
             $(".cls-revtagSection").hide();
             $(".RevoultStatusSection").show();
         }
+    }
+
+    let excludeData = [];
+
+    $("#btnAddDate").click(function () {
+
+        if ($("#exclude-time").val() == '') {
+            showToaster("error", "Required !", "Please select date !!");
+        }
+        else {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveFreelancerExcludeDate", "Home")",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ excludeDate: new Date($("#exclude-time").val()) }),
+                dataType: "json",
+                success: function (result) {
+                    showToaster("success", "Saved.", "Data has been saved.");
+                    bindFreelancerExcludeGrid();
+                    $("#exclude-time").val('');
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Failure");
+                }
+            });
+        }
+    });
+
+    function bindFreelancerExcludeGrid() {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetFreelancerExcludeDateData", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result.Result);
+                if (result.StatusCode == 200) {
+                    $('#table-excludeDate').DataTable({
+                        destroy: true,
+                        searching: false, 
+                        paging: false, 
+                        info: false,
+                        data: result.Result,
+                        "columns": [
+                            {
+                                "data": "ExcludeDate",
+                                "render": function (data, type, full, meta) {
+                                    var date = moment(data).format('DD-MM-YYYY HH:MM:SS');;
+                                    return '<span>' + date + '</span>';
+                                }
+                            },
+                            {
+                                "data": "action",
+                                "render": function (data, type, row) {
+                                    return "<button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFreelancerExclude("+row.Id+")\">Delete</button>";
+                                }
+                            }
+                        ]
+                    });
+                }
+                $("#preloader").hide();
+                $("#table-excludeDate").removeAttr("style");
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function removeFreelancerExclude(id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RemoveFreelancerExcludeDate", "Home")",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            dataType: "json",
+            success: function (result) {
+                showToaster("success", "Saved.", "Data has been saved.");
+                bindFreelancerExcludeGrid();
+                $("#exclude-time").val('');
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
     }
 </script>

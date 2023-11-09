@@ -37,4 +37,16 @@ namespace Aephy.API.DBHelper
         public string? RevTag { get; set; }
 
     }
+
+    public class FreelancerExcludeDate
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public DateTime ExcludeDate { get; set; }
+
+        public string? FreelancerId { get; set; }
+
+    }
 }

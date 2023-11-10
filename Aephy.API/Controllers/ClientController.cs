@@ -2577,6 +2577,14 @@ namespace Aephy.API.Controllers
 
                         await SaveSolutionTeamData(solutionfund, 0, 0, 0);
 
+                        var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
+                        if(clientDetails != null)
+                        {
+                            clientDetails.StartHours = DateTime.Parse(model.StartHour);
+                            clientDetails.EndHours = DateTime.Parse(model.EndHour);
+                            _db.SaveChanges();
+                        }
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
@@ -5108,6 +5116,49 @@ namespace Aephy.API.Controllers
                 }
                 _db.InvoiceList.Update(invoiceModel);
                 await _db.SaveChangesAsync();
+            }
+        }
+
+
+        //GetClientWorkingHours
+        [HttpPost]
+        [Route("GetClientWorkingHours")]
+        public async Task<IActionResult> GetClientWorkingHours([FromBody] UserIdModel model)
+        {
+
+            try
+            {
+               if(model.UserId != null)
+                {
+                    var clientData = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+                    if(clientData != null)
+                    {
+                        UserDetailsModel clientDetails = new UserDetailsModel();
+                        clientDetails.StartHour = clientData.StartHours;
+                        clientDetails.EndHour = clientData.EndHours;
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "success",
+                            Result = clientDetails
+                        });
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "User not Found"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+
             }
         }
 

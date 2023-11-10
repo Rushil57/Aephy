@@ -1161,44 +1161,6 @@
                         $("#projectOutline").val("");
                         $("#industry-ProjectDuration").val("")
                     }
-                    var htm = '';
-                    if (data.SolutionMilestone.length > 0) {
-                        for (index = 0; index < data.SolutionMilestone.length; index++) {
-                            subObj = data.SolutionMilestone[index];
-
-                            htm += '<tr>';
-                            htm += '<td>' + subObj.Id + '</td>';
-                            htm += '<td>' + subObj.Description + '</td>';
-                            htm += '<td>' + subObj.Title + '</td>';
-                            htm += '<td>' + subObj.Days + '</td>';
-                            htm += '<td><a class="text-danger" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
-                            htm += '</tr>';
-                        }
-                    }
-                    $("#MileStoneTable").find("tr:gt(0)").remove();
-                    $("#MileStoneTable tbody").append(htm);
-
-
-                    var pointsTable = '';
-                    if (data.SolutionPoints.length > 0) {
-                        for (index = 0; index < data.SolutionPoints.length; index++) {
-                            subObj = data.SolutionPoints[index];
-                            if (subObj.PointKey == null || subObj.PointKey == undefined) {
-                                subObj.PointKey = ""
-                            }
-                            if (subObj.PointValue == null || subObj.PointValue == undefined) {
-                                subObj.PointValue = ""
-                            }
-                            pointsTable += '<tr>';
-                            pointsTable += '<td>' + subObj.Id + '</td>';
-                            pointsTable += '<td>' + subObj.PointKey + '</td>';
-                            pointsTable += '<td>' + subObj.PointValue + '</td>';
-                            pointsTable += '<td><a class="text-danger" onclick=DeleteHighlightById(' + subObj.Id + ')>Delete</a></td>';
-                            pointsTable += '</tr>';
-                        }
-                    }
-                    $("#PointsTable").find("tr:gt(0)").remove();
-                    $("#PointsTable tbody").append(pointsTable);
 
                     $("#preloader").hide();
                 }

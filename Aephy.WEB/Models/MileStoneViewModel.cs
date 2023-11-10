@@ -110,6 +110,9 @@
         public string? ClientPreferredCurrency { get; set; }
         public int InvoiceId {  get; set; }
 
+        public string? StartHour { get; set; }
+        public string? EndHour { get; set; }
+
     }
 
     public class ActiveProjectDocumentViewModel

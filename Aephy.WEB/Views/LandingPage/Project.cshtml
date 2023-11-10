@@ -79,7 +79,7 @@
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div class="cls-initiate-div">
-                                            <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated(false)" style="width: 50%;">Initiate Contract</button>
+                                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Contract</button>
                                         </div>
                                     </div>
                                 </div>
@@ -397,7 +397,7 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div class="cls-initiate-div">
-                            <button type="button" class="btn btn-brand btn-contract" onclick="ProjectInitiated(false)" style="width: 50%;">Initiate Contract</button>
+                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Contract</button>
                             </div>
                         </div>
                     </div>
@@ -609,6 +609,47 @@
                                 <div class="card-body" id="feedback-list-Details">
                                     
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="modal" id="ClientWorkingePopModal" tabindex="-1" aria-labelledby="ClientWorkingePopModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Working Hours</h4>
+                    <a class="close" onclick="CloseClientWorkingHourForm();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <label class="cls-working-label"> Please confirm your working hours</label>
+                                    <div class="row">
+                                         <div class="col-md-6">
+                                            <label for="StartHours" class="form-label">Start Hours</label>
+                                            <div class="input-group">
+                                                <input type="time" id="StartHours" class="form-control" name="startHours" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="EndHours" class="form-label">End Hours</label>
+                                            <div class="input-group">
+                                                <input type="time" id="EndHours" class="form-control" name="endHours" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                       
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-brand" onclick="ProjectInitiated(false)">Continue</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -1137,7 +1178,9 @@
                 ProjectType : projectType,
                 ProjectPrice : Projectprice,
                 MileStoneId : $("#solutionFundMileStoneId").val(),
-                MileStoneCheckout : checkCheckoutType
+                MileStoneCheckout : checkCheckoutType,
+                StartHour : $("#StartHours").val(),
+                EndHour :  $("#EndHours").val()
             }
            $("#preloader").show();
             $.ajax({
@@ -1423,4 +1466,32 @@
         $("#FeedbackModal").modal('hide');
     }
 
+    function OpenClientWorkingHoursPopUp(){
+         $("#preloader").show();
+          $.ajax({
+             type: "GET",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             url: "@Url.Action("GetClientWorkingHours", "LandingPage")",
+             success: function (result) {
+                 if(result.Message == "success"){
+                     $("#ClientWorkingePopModal").modal('show');
+                     $("#StartHours").val(moment(result.Result.StartHour).format('hh:mm'));
+                     $("#EndHours").val(moment(result.Result.EndHour).format('hh:mm'));
+                 }else{
+                     showToaster("error", "Error !", result.Message);
+                 }
+              
+                 $("#preloader").hide();
+             },
+             error: function (result) {
+               $("#preloader").hide();
+               showToaster("error", "Error !", "Something went wrong !!");
+             }
+          });
+    }
+
+    function CloseClientWorkingHourForm(){
+        $("#ClientWorkingePopModal").modal('hide');
+    }
 </script>

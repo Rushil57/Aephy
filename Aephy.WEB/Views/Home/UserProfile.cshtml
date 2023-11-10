@@ -792,8 +792,8 @@
                     $(".cls-preferredCurrency").val(data.PreferredCurrency)
                     var preferredCurrency = $("#PreferredCurrency").val();
                     $(".cls-freelancer-CurrencybasedhourlyRate").html('');
-                    $(".cls-startHours").val(moment(data.StartHour).format('HH:MM:SS'));
-                    $(".cls-endHours").val(moment(data.EndHour).format('HH:MM:SS'));
+                    $(".cls-startHours").val(moment(data.StartHour).format('hh:mm'));
+                    $(".cls-endHours").val(moment(data.EndHour).format('hh:mm'));
 
                     var currencyhourlyRate = "";
                     if (preferredCurrency != '') {

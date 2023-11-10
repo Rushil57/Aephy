@@ -405,6 +405,9 @@ namespace Aephy.API.Models
             public string? TotalExpert { get; set; }
 
             public string? TotalProjectManager { get; set; }
+
+            public string? StartHour { get; set; }
+            public string? EndHour { get; set; }
         }
 
         public class SolutionDisputeViewModel

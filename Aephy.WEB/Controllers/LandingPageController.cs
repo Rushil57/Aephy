@@ -972,5 +972,20 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        //OpenClientWorkingHoursPopUp
+        [HttpGet]
+        public async Task<string> GetClientWorkingHours()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if(userId == null)
+            {
+                return "Please login to Initiate Project";
+            }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var data = await _apiRepository.MakeApiCallAsync("api/Client/GetClientWorkingHours", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

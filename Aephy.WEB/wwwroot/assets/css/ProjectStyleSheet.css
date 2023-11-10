@@ -1908,3 +1908,10 @@ progress::-webkit-progress-value {
     font-weight: bold;
     color: rgb(0, 25, 115);
 }
+
+.cls-working-label {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 18px;
+    font-weight: bold;
+}

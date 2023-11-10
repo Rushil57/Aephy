@@ -525,12 +525,12 @@ namespace Aephy.WEB.Admin.Controllers
             return jsonString;
         }
 
-        [HttpPost]
-        public async Task<string> GetSolutionDefineData([FromBody] SolutionDefineRequestViewModel model)
-        {
-            var aprroveList = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionDefineData", HttpMethod.Post, model);
-            return aprroveList;
-        }
+        //[HttpPost]
+        //public async Task<string> GetSolutionDefineData([FromBody] SolutionDefineRequestViewModel model)
+        //{
+        //    var aprroveList = await _apiRepository.MakeApiCallAsync("api/Admin/GetSolutionDefineData", HttpMethod.Post, model);
+        //    return aprroveList;
+        //}
 
         [HttpGet]
         public async Task<string> GetFreelancersName()

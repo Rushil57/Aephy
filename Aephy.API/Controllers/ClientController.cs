@@ -2248,7 +2248,7 @@ namespace Aephy.API.Controllers
                         _db.InvoiceList.Add(invoiceFunding);
                         _db.SaveChanges();
 
-                        await UpdateInvoiceNumberAsync(invoiceFunding.Id);
+                        await UpdateInvoiceNumberAsync(invoiceFunding.Id, "INV");
 
                         // Invoice 1 (Details 1) - Funding for Milestone or Project
                         var invoiceFundingDetail = new InvoiceListDetails();
@@ -2287,7 +2287,7 @@ namespace Aephy.API.Controllers
                         invoicePaymentReceipt.ContractId = contractSave.Id;
                         _db.InvoiceList.Add(invoicePaymentReceipt);
                         _db.SaveChanges();
-                        await UpdateInvoiceNumberAsync(invoicePaymentReceipt.Id);
+                        await UpdateInvoiceNumberAsync(invoicePaymentReceipt.Id, "REC");
 
                         // Payment Receipt (Details 1) - 
                         var invoicePaymentReceiptDetail_amtDue = new InvoiceListDetails();
@@ -2319,7 +2319,7 @@ namespace Aephy.API.Controllers
                         _db.InvoiceList.Add(invoiceTotalPlatformFees);
                         _db.SaveChanges();
 
-                        await UpdateInvoiceNumberAsync(invoiceTotalPlatformFees.Id);
+                        await UpdateInvoiceNumberAsync(invoiceTotalPlatformFees.Id, "PINV");
 
                         // Invoice 3 (Details 1) - Total platform fees for Milestone or Project
                         var invoiceTotalPlatformFeesDetail_total = new InvoiceListDetails();
@@ -4661,12 +4661,12 @@ namespace Aephy.API.Controllers
             invoiceCreditMemo.InvoiceDate = DateTime.Now;
             invoiceCreditMemo.TransactionType = AppConst.InvoiceTransactionType.CREDIT_MEMO;
             invoiceCreditMemo.TotalAmount = Convert.ToString((Convert.ToDecimal(inv1.TotalAmount) * -1));
-            invoiceCreditMemo.InvoiceType = "CreditMemo";
+            invoiceCreditMemo.InvoiceType = "Credit Memo";
             invoiceCreditMemo.ContractId = contract.Id;
             _db.InvoiceList.Add(invoiceCreditMemo);
             _db.SaveChanges();
 
-            await UpdateInvoiceNumberAsync(invoiceCreditMemo.Id);
+            await UpdateInvoiceNumberAsync(invoiceCreditMemo.Id, "CM");
 
             // Invoice - Credit Memo (Details 1) 
             var invoiceCreditMemoDetail_escrow = new InvoiceListDetails();
@@ -4755,7 +4755,7 @@ namespace Aephy.API.Controllers
                 _db.InvoiceList.Add(invoiceFreelancer);
                 _db.SaveChanges();
 
-                await UpdateInvoiceNumberAsync(invoiceFreelancer.Id);
+                await UpdateInvoiceNumberAsync(invoiceFreelancer.Id, "INV");
 
                 //
 
@@ -4940,7 +4940,7 @@ namespace Aephy.API.Controllers
             _db.InvoiceList.Add(invoiceCommission);
             _db.SaveChanges();
 
-            await UpdateInvoiceNumberAsync(invoiceCommission.Id);
+            await UpdateInvoiceNumberAsync(invoiceCommission.Id, "INV");
 
             // Invoice - Commisions (Details 1) 
             var invoiceplatformFees_Client = new InvoiceListDetails();
@@ -5074,12 +5074,11 @@ namespace Aephy.API.Controllers
             }
         }
 
-        private async Task UpdateInvoiceNumberAsync(int id)
+        private async Task UpdateInvoiceNumberAsync(int id, string invoicePrefix)
         {
             if (id > 0)
             {
-                string invoicePrefix = "INV-";
-                string invoiceNumber = invoicePrefix + id.ToString("D5");
+                string invoiceNumber = invoicePrefix + "-"+ id.ToString("D5");
 
                 var invoiceModel = await _db.InvoiceList.FirstOrDefaultAsync(x => x.Id == id);
                 if (invoiceModel != null)

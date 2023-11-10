@@ -434,8 +434,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var milestoneList = await _db.SolutionMilestone.Where(x => x.FreelancerId == model.UserId
-            && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+                var milestoneList = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
                && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -524,8 +523,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var pointsList = await _db.SolutionPoints.Where(x => x.FreelancerId == model.UserId
-            && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
+                var pointsList = await _db.SolutionPoints.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
                && x.ProjectType == model.ProjectType).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2490,17 +2488,29 @@ namespace Aephy.API.Controllers
                     ExcludeDate = model.ExcludeDate
                 };
 
-                await _db.FreelancerExcludeDate.AddAsync(dbmodel);
-                await _db.SaveChangesAsync();
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                var duplicate = await _db.FreelancerExcludeDate.Where(x => x.ExcludeDate == model.ExcludeDate && x.FreelancerId == model.FreelancerId).FirstOrDefaultAsync();
+                if (duplicate != null)
                 {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Success",
-                    Result = dbmodel
-                });
-            }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status302Found,
+                        Message = "Duplicate Data Found.",
+                    });
+                }
+                else
+                {
+                    await _db.FreelancerExcludeDate.AddAsync(dbmodel);
+                    await _db.SaveChangesAsync();
 
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = dbmodel
+                    });
+                }
+ 
+            }
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
                 StatusCode = StatusCodes.Status200OK,

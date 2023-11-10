@@ -1,4 +1,6 @@
-﻿namespace Aephy.WEB.Models
+﻿using Org.BouncyCastle.Asn1.X509;
+
+namespace Aephy.WEB.Models
 {
     public class RegisterNewUser
     {
@@ -28,6 +30,10 @@
         public string? TaxType { get; set; }
 
         public string? TaxNumber { get; set; }
+
+        public DateTime? StartHour { get; set; }
+
+        public DateTime? EndHour { get; set; }
 
     }
 

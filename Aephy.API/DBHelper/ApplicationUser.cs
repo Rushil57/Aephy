@@ -37,6 +37,9 @@ namespace Aephy.API.DBHelper
 
         public string? TaxNumber { get; set; }
 
+        public DateTime? StartHours { get; set; }
+
+        public DateTime? EndHours { get; set; }
         /// <summary>
         /// StripeAccountStatus
         /// </summary>

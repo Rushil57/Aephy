@@ -132,6 +132,8 @@ namespace Aephy.API.Controllers
                         UserDetails.TaxNumber = user.TaxNumber;
                         UserDetails.IsRevoultBankAccount = freelancerDetails.IsRevoultBankAccount;
                         UserDetails.RevTag = freelancerDetails.RevTag;
+                        UserDetails.StartHour = user.StartHours;
+                        UserDetails.EndHour = user.EndHours;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -233,6 +235,8 @@ namespace Aephy.API.Controllers
                     user.PreferredCurrency = model.PreferredCurrency;
                     user.TaxNumber = model.TaxNumber;
                     user.TaxType = model.TaxType;
+                    user.StartHours = model.StartHour;
+                    user.EndHours = model.EndHour;
 
                     //if(model.freelancerDetail != null)
                     //{

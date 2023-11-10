@@ -1889,8 +1889,8 @@ function getOpenRoles() {
 
 
     //getOpenRoles();
-    $("#ProjectType").change(function () {
-        GetSolutionDefineDetails()
-    });
+    //$("#ProjectType").change(function () {
+    //    GetSolutionDefineDetails()
+    //});
 }
 

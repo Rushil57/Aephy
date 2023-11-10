@@ -588,6 +588,10 @@ namespace Aephy.API.Models
             public bool IsRevoultBankAccount { get; set; }
 
             public string? RevTag { get; set; }
+
+            public DateTime? StartHour { get; set; }
+
+            public DateTime? EndHour { get; set; }
         }
 
         public class InvoiceViewModel

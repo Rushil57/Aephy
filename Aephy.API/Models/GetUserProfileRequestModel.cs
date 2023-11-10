@@ -34,6 +34,10 @@ namespace Aephy.API.Models
         public string? TaxType { get; set; }
 
         public string? TaxNumber { get; set; }
+
+        public DateTime? StartHour { get; set; }
+
+        public DateTime? EndHour { get; set; }
     }
 
     public class ChangePasswordModel

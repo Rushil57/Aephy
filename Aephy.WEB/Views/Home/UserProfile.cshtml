@@ -61,9 +61,15 @@
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
                             </li>
 
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander">calendar</button>
-                            </li>
+                            @{
+                                if(@Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                {
+                                    <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                    </li>
+                                }
+                            }
+                           
 
                         </ul>
                         <div class="tab-content pt-2">
@@ -262,6 +268,20 @@
                                     <div class="col-lg-4 col-md-6 label">Tax Number</div>
                                     <div class="col-md-8 col-lg-8">
                                         <input name="taxNumber" type="text" class="form-control cls-taxNumber" readonly>
+                                    </div>
+                                </div>
+
+                                 <div class="row">
+                                    <div class="col-lg-4 col-md-6 label">Start Hours</div>
+                                    <div class="col-md-8 col-lg-8">
+                                        <input name="startTime" type="time" class="form-control cls-startHours" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6 label">End Hours</div>
+                                    <div class="col-md-8 col-lg-8">
+                                        <input name="endHours" type="time" class="form-control cls-endHours" readonly>
                                     </div>
                                 </div>
 
@@ -491,6 +511,20 @@
                                         </div>
                                     </div>
 
+                                    <div class="row mb-3">
+                                        <label for="StartHours" class="col-md-6 col-lg-4 col-form-label">Start Hours</label>
+                                        <div class="col-md-8 col-lg-8">
+                                            <input type="time" name="startTime" class="form-control cls-startHours" id="StartHours">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="EndHours" class="col-md-6 col-lg-4 col-form-label">End Hours</label>
+                                        <div class="col-md-8 col-lg-8">
+                                            <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
+                                        </div>
+                                    </div>
+
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
@@ -530,7 +564,7 @@
 
                             <div class="tab-pane fade pt-3" id="profile-calander">
 
-                                <div class="row">
+                              @*   <div class="row">
                                     <div class="col-lg-4 col-md-4 label ">Select Date</div>
                                     <div class="col-md-4 col-lg-4">
                                         <input type="date" name="ExcludeTime" class="form-control" id="exclude-time">
@@ -538,9 +572,19 @@
                                     <div class="col-md-4 col-lg-4 text-center">
                                         <button type="submit" class="btn btn-primary" id="btnAddDate">Add</button>
                                     </div>
+                                </div> *@
+
+                                <div class="row mb-3">
+                                    <label for="renewPassword" class="col-md-3 col-lg-3 col-form-label">Select Exclude Date</label>
+                                    <div class="col-md-6 col-lg-6">
+                                        <input type="date" name="ExcludeTime" class="form-control" id="exclude-time">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <button type="submit" class="btn btn-primary" id="btnAddDate">Add</button>
+                                    </div>
                                 </div>
 
-                                <div class="row mt-5" style="max-height: 30rem;overflow: scroll;">
+                                <div class="row mt-5" style="max-height: 18rem;overflow: scroll;">
                                     <table class="table table-borderless datatable" id="table-excludeDate">
                                         <thead>
                                             <tr>
@@ -748,6 +792,9 @@
                     $(".cls-preferredCurrency").val(data.PreferredCurrency)
                     var preferredCurrency = $("#PreferredCurrency").val();
                     $(".cls-freelancer-CurrencybasedhourlyRate").html('');
+                    $(".cls-startHours").val(moment(data.StartHour).format('HH:MM:SS'));
+                    $(".cls-endHours").val(moment(data.EndHour).format('HH:MM:SS'));
+
                     var currencyhourlyRate = "";
                     if (preferredCurrency != '') {
                         if (preferredCurrency == 'USD') {
@@ -952,6 +999,8 @@
             PreferredCurrency: $("#PreferredCurrency").val(),
             TaxType: $("#TaxType").val(),
             TaxNumber: $("#TaxNumber").val(),
+            StartHour: $("#StartHours").val(),
+            EndHour: $("#EndHours").val(),
         }
 
         var formData = new FormData();
@@ -1206,9 +1255,15 @@
                 data: JSON.stringify({ excludeDate: new Date($("#exclude-time").val()) }),
                 dataType: "json",
                 success: function (result) {
-                    showToaster("success", "Saved.", "Data has been saved.");
-                    bindFreelancerExcludeGrid();
-                    $("#exclude-time").val('');
+                    if (result.StatusCode == 200) {
+                        showToaster("success", "Saved.", "Data has been saved.");
+                        bindFreelancerExcludeGrid();
+                        $("#exclude-time").val('');
+                    }
+                    else {
+                        $("#preloader").hide();
+                        showToaster("error", "Error !", result.Message);
+                    }
                 },
                 error: function (result) {
                     $("#preloader").hide();

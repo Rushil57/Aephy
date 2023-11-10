@@ -4,12 +4,14 @@
         rules: {
             customprojectoutline: { required: true },
             customprojectdescription: { required: true },
-            customProjectDuration: { required: true }
+            customProjectDuration: { required: true },
+            customPrice: { required: true }
         },
         messages: {
             customprojectoutline: { required: "Please Project outline" },
             customprojectdescription: { required: "Please enter Project description" },
-            customProjectDuration: { required: "Please enter Project Duration" }
+            customProjectDuration: { required: "Please enter Project Duration" },
+            customPrice: { required: "Please enter Price" }
         }
     });
     if (form.valid() === true) {

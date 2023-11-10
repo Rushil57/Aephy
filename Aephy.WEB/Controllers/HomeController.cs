@@ -2737,6 +2737,11 @@ namespace Aephy.WEB.Controllers
                     {
                         return "Please login to purchase solution";
                     }
+                    var userRole = HttpContext.Session.GetString("LoggedUserRole");
+                    if (userRole == "Freelancer")
+                    {
+                        return "Please login as a client to purchase solution";
+                    }
                     model.UserId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Client/SaveCustomSolutionData", HttpMethod.Post, model);
                     return data;

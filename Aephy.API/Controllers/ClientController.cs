@@ -2462,9 +2462,30 @@ namespace Aephy.API.Controllers
                             var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
                             if (Userslist.Count > 0)
                             {
-                                await SaveSolutionTeamData(solutionfund, 0, 0, 0);
-                            }
+                                if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                {
+                                    CustomProjectDetials? teamData = null;
+                                    var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionfund.SolutionId && x.IndustryId == solutionfund.IndustryId).FirstOrDefault();
+                                    if (solutionIndustryData != null)
+                                    {
+                                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == projectType).FirstOrDefault();
+                                        if (solutionDefineData != null)
+                                        {
+                                            teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                                        }
+                                    }
+                                    var experttotal = Convert.ToInt32(teamData.Expert);
+                                    var assosiatetotal = Convert.ToInt32(teamData.Associate);
+                                    var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
+                                    await SaveSolutionTeamData(solutionfund,assosiatetotal, experttotal,projectmanagertotal);
+                                }
 
+                                else
+                                {
+                                    await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+                                }
+                                
+                            }
                         }
                         catch (Exception ex)
                         {

@@ -766,7 +766,7 @@ namespace Aephy.WEB.Controllers
                 var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetMiletoneList", HttpMethod.Post, model);
                 return aprroveList;
             }
-            return "Something Went Wrong";
+            return "User not found";
         }
 
         [HttpPost]

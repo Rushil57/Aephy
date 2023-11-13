@@ -21,10 +21,11 @@
                                 <div class="col-0 col-sm-auto order-lg-last order-last right-box justify-content-center align-items-center" style="height:fit-content">
                                     <div class="row m-lg-2 d-flex justify-content-center align-center RButtons">
                                         <div class="col-6 d-flex justify-content-center">
-                                            <input type="radio" name="preferOptionmobile" label="Select Project" value="select" checked />
+                                            <input type="radio" name="preferOptionmobile" label="Select Project" value="select" class="cls-projectSelectionButton"  checked />
                                         </div>
                                         <div class="col-6 d-flex justify-content-center">
-                                            <input type="radio" name="preferOptionmobile" label="Select Freelancer" value="customize" onclick="OpenCustomisePopUp()"/>
+                                            <input type="radio" name="preferOptionmobile" label="Select Freelancer" value="customize" onclick="OpenCustomisePopUp()" class="cls-singleFreelancerbtn"/>
+                                            <input type="radio" name="preferOptionmobile" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerMobileRadioButton" class="cls-multipleFreelancerbtn"/>
                                         </div>
                                     </div>
                                     <div class="row m-lg-2 pt-4">
@@ -339,11 +340,11 @@
                     <div class="col-lg-12 rightSticky-box justify-content-center align-items-center">
                         <div class="row m-lg-2 m-4 d-flex justify-content-center align-center RButtons">
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" label="Select Project" value="select" checked  id="ProjectSelectionButton"/>
+                                <input type="radio" name="preferOption" label="Select Project" value="select" checked  id="ProjectSelectionButton" class="cls-projectSelectionButton"/>
                             </div>
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="OpenCustomisePopUp()" id="customizedradioButton"/>
-                                <input type="radio" name="preferOption" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerRadioButton"/>
+                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="OpenCustomisePopUp()" id="customizedradioButton" class="cls-singleFreelancerbtn"/>
+                                <input type="radio" name="preferOption" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerRadioButton" class="cls-multipleFreelancerbtn"/>
                             </div>
                         </div>
                         <div class="row m-lg-2 pt-4">
@@ -744,35 +745,6 @@
             }
         });
     }
-    function buySolutionCheckout(){
-        var checkweb = $("input[name='projSizeweb']:checked").val();
-        var Industryid = @ViewData["Industry"]; 
-        var Serviceid = @ViewData["Service"];
-        var Solutionid = @ViewData["Solution"];
-        var data = {
-            IndustryId : Industryid,
-            SolutionId : Solutionid,
-            ProjectType : checkweb,
-        }
-       $("#preloader").show();
-        $.ajax({
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "@Url.Action("getSolutioncheckOut", "LandingPage")",
-            data: JSON.stringify(data),
-            success: function (result) {
-                if(result.Message == "Success"){
-                    window.location.href = result.Result.checkoutLink;
-                }
-                $("#preloader").hide();
-            },
-            error: function (result) {
-                $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
-            }
-        });
-    }
 
     function GetProjectTypeValue(data){
        
@@ -781,16 +753,16 @@
             projecttype = $('input[name=projSizeweb]:checked').val()
         }
         else if (data.value == "custom"){
-            $("#freelancerRadioButton").css("display", "flex");
-            $("#customizedradioButton").css("display", "none");
-            $("#freelancerRadioButton").prop("checked", true);
+            $(".cls-multipleFreelancerbtn").css("display", "flex");
+            $(".cls-singleFreelancerbtn").css("display", "none");
+            $(".cls-multipleFreelancerbtn").prop("checked", true);
              projecttype = data.value;
         }
         else{
             projecttype = data.value;
-            $("#freelancerRadioButton").css("display", "none");
-            $("#customizedradioButton").css("display", "flex");
-            $("#ProjectSelectionButton").prop("checked", true);
+            $(".cls-multipleFreelancerbtn").css("display", "none");
+            $(".cls-singleFreelancerbtn").css("display", "flex");
+            $(".cls-projectSelectionButton").prop("checked", true);
         }
         var Industryid = @ViewData["Industry"]; 
         var Serviceid = @ViewData["Service"];
@@ -988,8 +960,7 @@
                        if(data.SolutionFund.ProjectType == "custom"){
                            $('#freelancerRadioButton').attr('disabled','disabled');
                        }
-                       
-                       $(".btn-contract").addClass('disabled');
+                        $(".btn-contract").addClass('disabled');
                        $(".btn-contract").css("background-color", "var(--brand)");
                        $(".btn-contract").css("color","black");
                    }  
@@ -997,6 +968,17 @@
                            $(".btn-contract").removeClass('disabled');
                             $(".btn-contract").css("color","white");
                        }
+
+                    if(projecttype == "custom"){
+                          $(".btn-contract").addClass('disabled');
+                       $(".btn-contract").css("background-color", "var(--brand)");
+                       $(".btn-contract").css("color","black");
+                    }
+
+                     if(data.SingleFreelancerCustomData != null){
+                     $('#freelancerRadioButton').attr('disabled','disabled');
+                     $("#customizedradioButton").attr('disabled','disabled');
+                }
                 }
 
                 var newContent = "";

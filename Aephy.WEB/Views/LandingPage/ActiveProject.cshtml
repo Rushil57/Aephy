@@ -777,7 +777,7 @@
                     $(".cls-team-size").text(teamsize)
                 }
                 if(data.MileStone != ""){
-                    BindMileStoneSection(data.MileStone);
+                    BindMileStoneSection(data.MileStone,data.ClientCurrency);
                 }
                  else{
                     $('#progress-div').empty()
@@ -1017,7 +1017,7 @@
                         $("#solutionFundMileStoneId").val(data.MileStoneData.Id);
                        BindSolutionFundData(data.ProjectDetails,data.MileStoneData,data.FundDecided,false,false,data.NextMileStonePrice,false,null,data.Currency);
                        if(data.MilestoneList != ""){
-                           BindMileStoneSection(data.MilestoneList);
+                           BindMileStoneSection(data.MilestoneList,data.Currency);
                        }
                         $("#preloader").hide();
                        return;
@@ -1046,7 +1046,7 @@
                        $(".project-progress").html("Project Completed");
                         DisabledSolutionDetailsButton();
                          if(result.Result.MilestoneList != ""){
-                           BindMileStoneSection(result.Result.MilestoneList);
+                           BindMileStoneSection(result.Result.MilestoneList,result.Result.PreferredCurrency);
                        }
                        $("#preloader").hide();
                        return;
@@ -1573,7 +1573,7 @@
         $("#ActiveProjectDocument").val("")
     }
 
-    function BindMileStoneSection(milestoneData){
+    function BindMileStoneSection(milestoneData,clientCurrency){
          var milestoneSection = "";
          var milestonePopupsection = "";
            $.each(milestoneData, function (datas, values) {
@@ -1583,7 +1583,7 @@
                    var totalamt = parseFloat(values.MilestonePrice).toFixed(2);
                     var splitamt = totalamt.toString().split(".");
                     splitamt[0] = splitamt[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                    finalamt = splitamt.join(".");
+                    finalamt = clientCurrency + splitamt.join(".");
                }
 
                milestoneSection += '<li class="progress__item">' +

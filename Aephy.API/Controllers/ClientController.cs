@@ -541,6 +541,17 @@ namespace Aephy.API.Controllers
 
                     var currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
+                    var solutionindustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    List<CustomProjectDetials>? singleFreelancerCustomProject = null;
+                    if (solutionindustryData != null)
+                    {
+                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionindustryData.Id && x.ProjectType == "custom").FirstOrDefault();
+                        if(solutionDefineData != null)
+                        {
+                            singleFreelancerCustomProject = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id && x.IsSingleFreelancer).ToList();
+                        }
+                    }
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -556,7 +567,8 @@ namespace Aephy.API.Controllers
                             FreelancerHourlyList = freelancerList,
                             MileStoneToTalDays = mileStoneToTalDays,
                             SolutionFeedback = projectReviewList,
-                            PreferredCurrency = currency
+                            PreferredCurrency = currency,
+                            SingleFreelancerCustomData = singleFreelancerCustomProject
                         }
                     });
                 }
@@ -2419,6 +2431,7 @@ namespace Aephy.API.Controllers
                     var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
                     var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                     var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
+                    var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
                     if (milestoneData.Count > 0)
                     {
@@ -2516,7 +2529,6 @@ namespace Aephy.API.Controllers
                         var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
                         var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
                         var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
-                        var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2542,6 +2554,7 @@ namespace Aephy.API.Controllers
                             Result = new
                             {
                                 MilestoneList = milestoneList,
+                                PreferredCurrency = Currency
                             }
                         });
                     }

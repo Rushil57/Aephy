@@ -1644,12 +1644,36 @@ padding-top: 5%;
         padding-top: 0%;
     }
 
-    #Projectdescription {
+    #Projectdescription, #FreelancerDetailsdescription {
         border-left: 0px;
     }
 
     #workingForm {
         border-left: 0px;
+    }
+
+    #freelancer-title{
+        width:100% !important;
+    }
+
+    #freelancer-details {
+        margin-left: 12% !important;
+    }
+
+    .cls-freelancerlvl {
+        margin-right: 15px !important;
+        font-size: 14px !important;
+    }
+
+    #freelancer-hourlyRate-details {
+        margin-left: 10% !important;
+    }
+
+    .cls-freelancerhourly {
+        margin-left: 0px !important;
+    }
+    .cls-freelancer-number{
+        padding-left:0px !important;
     }
 }
 /*------------------------------
@@ -1972,6 +1996,7 @@ padding-top: 5%;
 .cls-freelancer-number {
     width: 10%;
     margin-right: 70px;
+    padding-right: 0px !important;
 }
 
 .cls-freelancer-radio {

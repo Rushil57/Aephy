@@ -749,7 +749,7 @@ function GetMiletoneList() {
         },
         error: function (result) {
             //alert("failure");
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
     });

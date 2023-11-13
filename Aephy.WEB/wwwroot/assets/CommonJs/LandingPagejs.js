@@ -656,9 +656,11 @@ function OpenMileStonePopup() {
 }
 
 function SaveMilStoneData() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var solutionid = urlParams.get('Solution');
-    var industryid = urlParams.get('Industry');
+    var singleFreelancer = $('input[name="fav_freelancer"]:checked').val();
+    var projectType = $('input[name="projSizeweb"]:checked').val();
+    if (singleFreelancer != undefined) {
+        projectType = "custom";
+    }
 
     var MileStoneData = {
         Id: $("#MileStoneId").val(),
@@ -668,7 +670,7 @@ function SaveMilStoneData() {
         Days: $("#txtMilestoneDays").val(),
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
-        ProjectType: $('input[name="projSizeweb"]:checked').val(),
+        ProjectType: projectType,
     };
     $("#preloader").show();
     $.ajax({
@@ -705,14 +707,16 @@ function CloseMileStoneForm() {
 
 function GetMiletoneList() {
 
-    var urlParams = new URLSearchParams(window.location.search);
-    var solutionid = urlParams.get('Solution');
-    var industryid = urlParams.get('Industry');
+    var singleFreelancer = $('input[name="fav_freelancer"]:checked').val();
+    var projectType = $('input[name="projSizeweb"]:checked').val();
+    if (singleFreelancer != undefined) {
+        projectType = "custom";
+    }
 
     var data = {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
-        ProjectType: $('input[name="projSizeweb"]:checked').val(),
+        ProjectType: projectType,
     }
 
     $("#preloader").show();
@@ -826,13 +830,20 @@ function SavePointsData() {
         }
     }
 
+
+    var singleFreelancer = $('input[name="fav_freelancer"]:checked').val();
+    var projectType = $('input[name="projSizeweb"]:checked').val();
+    if (singleFreelancer != undefined) {
+        projectType = "custom";
+    }
+
     var PointsData = {
         Id: pointId,
         PointKey: $("#pointsKey-id").val(),
         PointValue: $("#pointsValue-id").val(),
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
-        ProjectType: $('input[name="projSizeweb"]:checked').val(),
+        ProjectType: projectType,
     };
 
     $("#preloader").show();
@@ -868,10 +879,16 @@ function ClosePointsForm() {
 
 function GetPointsList() {
 
+    var singleFreelancer = $('input[name="fav_freelancer"]:checked').val();
+    var projectType = $('input[name="projSizeweb"]:checked').val();
+    if (singleFreelancer != undefined) {
+        projectType = "custom";
+    }
+
     var data = {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
-        ProjectType: $('input[name="projSizeweb"]:checked').val(),
+        ProjectType: projectType,
     }
 
     $("#preloader").show();
@@ -970,6 +987,15 @@ function DeletePointsById(Id) {
 }
 
 function SaveCustomSolutionData() {
+
+    var singleFreelancer = $('input[name="fav_freelancer"]:checked').val();
+    var Issinglefreelancer = false;
+    var projectType = $('input[name="projSizeweb"]:checked').val();
+    if (singleFreelancer != undefined) {
+        Issinglefreelancer = true;
+        projectType = "custom";
+    }
+
     var data = {
         Id: 0,
         TotalAssociate: $("#total-associate").val(),
@@ -987,7 +1013,9 @@ function SaveCustomSolutionData() {
         CustomEndHour: $("#customend-hour").val(),
         SolutionId: parseInt($("#custom-solutionId").val()),
         IndustryId: parseInt($("#custom-IndustryId").val()),
-        ProjectType: $('input[name="projSizeweb"]:checked').val(),
+        ProjectType: projectType,
+        IsSingleFreelancer: Issinglefreelancer,
+        SingleFreelancer: singleFreelancer
     }
 
     $("#preloader").show();

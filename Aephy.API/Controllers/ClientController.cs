@@ -4006,8 +4006,6 @@ namespace Aephy.API.Controllers
                         }
                         if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
                         {
-                            //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-
                             if (!expertDetailsAdded)
                             {
                                 if (exprtcount < expert)
@@ -5025,6 +5023,22 @@ namespace Aephy.API.Controllers
                                               && x.SolutionId == model.SolutionId).FirstOrDefaultAsync();
                 if (solutionIndustryDetails != null)
                 {
+                    if (model.IsSingleFreelancer)
+                    {
+                        if(model.SingleFreelancer == "Expert")
+                        {
+                            model.TotalExpert = "1";
+                        }
+                        if (model.SingleFreelancer == "Associate")
+                        {
+                            model.TotalAssociate = "1";
+                        }
+                        if (model.SingleFreelancer == "ProjectManager")
+                        {
+                            model.TotalProjectManager = "1";
+                        }
+                    }
+
                     var teamSize = Convert.ToInt16(model.TotalAssociate) + Convert.ToInt16(model.TotalExpert) + Convert.ToInt16(model.TotalProjectManager);
                     var solutionDefine = new SolutionDefine()
                     {
@@ -5053,7 +5067,7 @@ namespace Aephy.API.Controllers
                         Associate = model.TotalAssociate.ToString(),
                         Expert = model.TotalExpert.ToString(),
                         ProjectManager = model.TotalProjectManager.ToString(),
-                        IsSingleFreelancer = false,
+                        IsSingleFreelancer = model.IsSingleFreelancer,
                         ProjectDuration = model.CustomProjectDuration,
                         IsExcludeWeekend = model.CustomExcludeWeekend,
                         OtherHolidays = model.CustomOtherHolidayList,

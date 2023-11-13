@@ -818,6 +818,10 @@ namespace Aephy.API.Models
 
             public string? CustomProjectDuration { get; set; }
 
+            public bool IsSingleFreelancer { get; set; }
+
+            public string? SingleFreelancer { get; set; }
+
         }
 
 

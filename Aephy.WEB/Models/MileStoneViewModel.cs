@@ -192,6 +192,10 @@
         public string? ProjectType { get; set; }
 
         public string? CustomProjectDuration { get; set; }
+
+        public bool IsSingleFreelancer { get; set; }
+
+        public string? SingleFreelancer { get; set; }
     }
 
 }

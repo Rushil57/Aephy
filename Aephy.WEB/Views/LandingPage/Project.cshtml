@@ -698,7 +698,14 @@
       $("#BrowseSolutionPreviousButton").css("display", "none");
       $("#multiple-freelancerselected").hide();
       $("#single-freelancerSelected").show();
-      $("#freelancer-title").html("Select Freelancer")
+      $("#freelancer-title").html("Select Freelancer");
+
+        var urlParams = new URLSearchParams(window.location.search);
+    var solutionid = urlParams.get('Solution');
+    var industryid = urlParams.get('Industry');
+
+    $("#custom-solutionId").val(solutionid);
+    $("#custom-IndustryId").val(industryid);
     }
 
     function CloseCustomisePopUp(){
@@ -777,10 +784,10 @@
             $("#freelancerRadioButton").css("display", "flex");
             $("#customizedradioButton").css("display", "none");
             $("#freelancerRadioButton").prop("checked", true);
-            projecttype = data.value;
+             projecttype = data.value;
         }
         else{
-             projecttype = data.value;
+            projecttype = data.value;
             $("#freelancerRadioButton").css("display", "none");
             $("#customizedradioButton").css("display", "flex");
             $("#ProjectSelectionButton").prop("checked", true);

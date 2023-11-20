@@ -3790,6 +3790,116 @@ namespace Aephy.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("SaveAdminToFreelancerReview")]
+        public async Task<IActionResult> SaveAdminToFreelancerReview([FromBody] AdminToFreelancerReviewModel model)
+        {
+            try
+            {
+                if (model != null && model.FreelancerId != null && model.FreelancerId != "none")
+                {
+                    try
+                    {
+                        var ReviewRecord = _db.AdminToFreelancerReview.Where(x => x.UserId == model.UserId && x.FreelancerId == model.FreelancerId).FirstOrDefault();
+                        if (ReviewRecord != null)
+                        {
+                            DateTime createdDate = (DateTime)model.CreateDateTime;
+
+                            ReviewRecord.Feedback_Message = model.Feedback_Message;
+                            ReviewRecord.Professionalism = model.Professionalism;
+                            ReviewRecord.HourlyRate = model.HourlyRate;
+                            ReviewRecord.Availability = model.Availability;
+                            ReviewRecord.ProjectAcceptance = model.ProjectAcceptance;
+                            ReviewRecord.Education = model.Education;
+                            ReviewRecord.SoftSkillsExperience = model.SoftSkillsExperience;
+                            ReviewRecord.HardSkillsExperience = model.HardSkillsExperience;
+                            ReviewRecord.ProjectSuccessRate = model.ProjectSuccessRate;
+                            ReviewRecord.CreateDateTime = createdDate;
+                            _db.AdminToFreelancerReview.Update(ReviewRecord);
+                            _db.SaveChanges();
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Review Submitted Successfully!."
+                            });
+                        }
+                        else
+                        {
+
+                            DateTime date = (DateTime)model.CreateDateTime;
+                            var freelancerReview = new AdminToFreelancerReview()
+                            {
+                                UserId = model.UserId,
+                                FreelancerId = model.FreelancerId,
+                                Feedback_Message = model.Feedback_Message,
+                                Professionalism = model.Professionalism,
+                                HourlyRate = model.HourlyRate,
+                                Availability = model.Availability,
+                                ProjectAcceptance = model.ProjectAcceptance,
+                                Education = model.Education,
+                                SoftSkillsExperience = model.SoftSkillsExperience,
+                                HardSkillsExperience = model.HardSkillsExperience,
+                                ProjectSuccessRate = model.ProjectSuccessRate,
+                                CreateDateTime = date
+                            };
+                            _db.AdminToFreelancerReview.Add(freelancerReview);
+                            _db.SaveChanges();
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Review Submitted Successfully!."
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    }
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+            }
+        }
+
+        //CheckAdminToFreelancerReviewExits
+        [HttpPost]
+        [Route("CheckAdminToFreelancerReviewExits")]
+        public async Task<IActionResult> CheckAdminToFreelancerReviewExits([FromBody] AdminToFreelancerReviewModel model)
+        {
+            if (model != null)
+            {
+                var checkReviewExits = await _db.AdminToFreelancerReview.Where(x => x.UserId == model.UserId && x.FreelancerId == model.FreelancerId).FirstOrDefaultAsync();
+                if (checkReviewExits != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Review Exists!",
+                        Result = checkReviewExits
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Review Not Exists!",
+                    });
+                }
+
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
     }
 }
 

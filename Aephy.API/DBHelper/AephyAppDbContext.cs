@@ -92,6 +92,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<FreelancerExcludeDate> FreelancerExcludeDate { get; set; }
 
+        public DbSet<AdminToFreelancerReview> AdminToFreelancerReview { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

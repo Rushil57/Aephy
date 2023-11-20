@@ -1757,11 +1757,22 @@ namespace Aephy.WEB.Controllers
 
         public async Task<IActionResult> DownloadInvoice(int InvoiceId)
         {
+            var invoiceDetails = "";
             SolutionFundModel solutionFund = new SolutionFundModel();
             var userId = HttpContext.Session.GetString("LoggedUser");
+            var userRole = HttpContext.Session.GetString("LoggedUserRole");
             solutionFund.InvoiceId = InvoiceId;
             solutionFund.UserId = userId;
-            var invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
+            if (userRole == "Freelancer")
+            {
+                invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerInvoiceDetails", HttpMethod.Post, solutionFund);
+
+            }
+            else
+            {
+                invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
+            }
+            //var invoiceDetails = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetInvoiceDetails", HttpMethod.Post, solutionFund);
             dynamic datas = JObject.Parse(invoiceDetails);
             var Details = datas.Result;
             var FundDetails = datas.Result.FundType;

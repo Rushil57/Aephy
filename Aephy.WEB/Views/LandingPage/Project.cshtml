@@ -662,6 +662,8 @@
 
 <script>
     $(document).ready(function () {
+        $('input[name="preferOption"][value="select"]').prop('checked','checked');
+        $('input[name="preferOptionmobile"][value="select"]').prop('checked','checked');
         $("input[name^='projSize']").change(function(){
         var $otherRadioButtons = $("input[name^='projSize'][value='" + this.value + "']").not(this);
          $otherRadioButtons.prop('checked', $(this).prop('checked'));
@@ -710,6 +712,8 @@
     }
 
     function CloseCustomisePopUp(){
+        $('input[name="preferOption"][value="select"]').prop('checked','checked');
+        $('input[name="preferOptionmobile"][value="select"]').prop('checked','checked');
         $('#CustomiseProjectPopUp').modal('hide');
     }
 
@@ -904,14 +908,21 @@
                                                                 topProfessional += '<div class="image"><div>' + firstname +''+ lastname +'</div></div>';
                                                             }
                                                             //'<div class="image"><div>' + firstname +''+ lastname +'</div></div>' +
-                                                            topProfessional += '<div class="info">' +
-                                                                '<div class="name">'+values.FreelancerId+'</div>' +
-                                                                '<div class="stars">' + 
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<i class="bi bi-star-fill"></i>' +
-                                                                    '<label> '+values.Rate+' / 5 </label>' +
-                                                                '</div>' +
+                                                             topProfessional += '<div class="info">' +
+                                                                 '<div class="name">' + values.FreelancerId + '</div>' +
+                                                                 '<div class="stars d-flex flex-column">' +
+                                                                 '<div>';
+                                                             var ratingCeilCount = Math.ceil(values.Rate);
+                                                             for (var iterator = 1; iterator <= 10; iterator++){
+                                                                 if(iterator <= ratingCeilCount){
+                                                                     topProfessional += '<i class="bi bi-star-fill checked_star"></i>';
+                                                                 }else{
+                                                                     topProfessional += '<i class="bi bi-star-fill"></i>';
+                                                                 }
+                                                             }
+                                                                   topProfessional += '</div><div>'+
+                                                                   '<label> '+values.Rate+' / 10 </label>' +
+                                                                '</div></div>' +
                                                             '</div>' +
                                                     '</div>' +
                                              '</div></div>';

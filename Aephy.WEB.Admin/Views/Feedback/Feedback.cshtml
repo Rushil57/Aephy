@@ -48,11 +48,11 @@
                                 <input type="text" class="form-control d-none" id="FreelancerID" name="FreelancerID" value="none">
 
                                 @* <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Feedback" id="feedbackMessage" name="feedbackMessage" style="height: 100px;"></textarea>
-                                        <label for="floatingTextarea" class="sub-title">Feedback</label>
-                                        <p class="sub-title" style="font-family: sans-serif; font-size:0.9rem; font-weight:200;">Please provide your feedback here</p>
-                                    </div>
+                                <div class="form-floating">
+                                <textarea class="form-control" placeholder="Feedback" id="feedbackMessage" name="feedbackMessage" style="height: 100px;"></textarea>
+                                <label for="floatingTextarea" class="sub-title">Feedback</label>
+                                <p class="sub-title" style="font-family: sans-serif; font-size:0.9rem; font-weight:200;">Please provide your feedback here</p>
+                                </div>
                                 </div> *@
 
                                 <div class="col-lg-6">
@@ -61,27 +61,28 @@
                                             <div class="p-2">Professionalism</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="professionalism-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="professionalism_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="professionalism_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="professionalism-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="professionalism-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="professionalism-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="professionalism-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="professionalism-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="professionalism-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="professionalism-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="professionalism-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="professionalism-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="professionalism-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="professionalism-rating" id="professionalism-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="professionalism_rating" id="professionalism-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -91,27 +92,28 @@
                                             <div class="p-2">Hourly Rate</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="hourlyRate-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="hourlyRate_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="hourlyRate_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="hourlyRate-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="hourlyRate-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="hourlyRate-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="hourlyRate-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="hourlyRate-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="hourlyRate-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="hourlyRate-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="hourlyRate-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="hourlyRate-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="hourlyRate-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hourlyRate-rating" id="hourlyRate-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="hourlyRate_rating" id="hourlyRate-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -121,27 +123,28 @@
                                             <div class="p-2">Availability</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="availability-rating" id="rating3-none" value="0" type="radio">
-                                                    <label aria-label="1 star" class="rating__label" for="availability-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-1" value="1" type="radio">
+                                                    <input type="hidden" name="availability_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="availability_rating" id="rating3-none" value="0" type="radio">
+                                                    <label aria-label="1 star" class="rating__label" for="availability_rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="availability-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="availability-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="availability-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="availability-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="availability-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="availability-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="availability-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="availability-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="availability-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="availability-rating" id="availability-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="availability_rating" id="availability-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -151,27 +154,28 @@
                                             <div class="p-2">Project Acceptance</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="projectAcceptance-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="projectAcceptance_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="projectAcceptance_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="projectAcceptance-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="projectAcceptance-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="projectAcceptance-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="projectAcceptance-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="projectAcceptance-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="projectAcceptance-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="projectAcceptance-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="projectAcceptance-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="projectAcceptance-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="projectAcceptance-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectAcceptance-rating" id="projectAcceptance-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="projectAcceptance_rating" id="projectAcceptance-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -181,27 +185,28 @@
                                             <div class="p-2">Education</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="education-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="education_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="education_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="education-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="education-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="education-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="education-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="education-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="education-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="education-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="education-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="education-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="education-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="education-rating" id="education-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="education_rating" id="education-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -211,27 +216,28 @@
                                             <div class="p-2">Experience(Soft skills)</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="softSkillsExperience-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="softSkillsExperience_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="softSkillsExperience_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="softSkillsExperience-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
                                                     <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="softSkillsExperience-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="softSkillsExperience-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="softSkillsExperience-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="softSkillsExperience-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-5" value="5" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="softSkillsExperience-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-6" value="6" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="softSkillsExperience-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-7" value="7" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="softSkillsExperience-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-8" value="8" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="softSkillsExperience-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-9" value="9" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="softSkillsExperience-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="softSkillsExperience-rating" id="softSkillsExperience-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="softSkillsExperience_rating" id="softSkillsExperience-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -241,27 +247,28 @@
                                             <div class="p-2">Experience(Hard skills)</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="hardSkillsExperience-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="hardSkillsExperience_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="hardSkillsExperience_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="hardSkillsExperience-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="hardSkillsExperience-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="hardSkillsExperience-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="hardSkillsExperience-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="hardSkillsExperience-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-5" value="5" type="radio">
                                                     <label aria-label="6 star" class="rating__label" for="hardSkillsExperience-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-6" value="6" type="radio">
                                                     <label aria-label="7 stars" class="rating__label" for="hardSkillsExperience-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-7" value="7" type="radio">
                                                     <label aria-label="8 stars" class="rating__label" for="hardSkillsExperience-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-8" value="8" type="radio">
                                                     <label aria-label="9 stars" class="rating__label" for="hardSkillsExperience-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-9" value="9" type="radio">
                                                     <label aria-label="10 stars" class="rating__label" for="hardSkillsExperience-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="hardSkillsExperience-rating" id="hardSkillsExperience-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="hardSkillsExperience_rating" id="hardSkillsExperience-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -271,27 +278,28 @@
                                             <div class="p-2">Project Success Rate</div>
                                             <div id="full-stars-example-two">
                                                 <div class="rating-group">
-                                                    <input disabled checked class="rating__input rating__input--none" name="projectSuccessRate-rating" id="rating3-none" value="0" type="radio">
+                                                    <input type="hidden" name="projectSuccessRate_ratingValidator" />
+                                                    <input disabled checked class="rating__input rating__input--none" name="projectSuccessRate_rating" id="rating3-none" value="0" type="radio">
                                                     <label aria-label="1 star" class="rating__label" for="projectSuccessRate-rating-1"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-1" value="1" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-1" value="1" type="radio">
                                                     <label aria-label="2 stars" class="rating__label" for="projectSuccessRate-rating-2"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-2" value="2" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-2" value="2" type="radio">
                                                     <label aria-label="3 stars" class="rating__label" for="projectSuccessRate-rating-3"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-3" value="3" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-3" value="3" type="radio">
                                                     <label aria-label="4 stars" class="rating__label" for="projectSuccessRate-rating-4"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-4" value="4" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-4" value="4" type="radio">
                                                     <label aria-label="5 stars" class="rating__label" for="projectSuccessRate-rating-5"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-5" value="5" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-5" value="5" type="radio">
                                                     <label aria-label="6 star" class="rating__label" for="projectSuccessRate-rating-6"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-6" value="6" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-6" value="6" type="radio">
                                                     <label aria-label="7 stars" class="rating__label" for="projectSuccessRate-rating-7"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-7" value="7" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-7" value="7" type="radio">
                                                     <label aria-label="8 stars" class="rating__label" for="projectSuccessRate-rating-8"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-8" value="8" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-8" value="8" type="radio">
                                                     <label aria-label="9 stars" class="rating__label" for="projectSuccessRate-rating-9"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-9" value="9" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-9" value="9" type="radio">
                                                     <label aria-label="10 stars" class="rating__label" for="projectSuccessRate-rating-10"><i class="rating__icon rating__icon--star bi bi-star-fill fs-5"></i></label>
-                                                    <input class="rating__input" name="projectSuccessRate-rating" id="projectSuccessRate-rating-10" value="10" type="radio">
+                                                    <input class="rating__input" name="projectSuccessRate_rating" id="projectSuccessRate-rating-10" value="10" type="radio">
                                                 </div>
                                             </div>
                                         </div>
@@ -317,11 +325,94 @@
     $(function () {
         GetFreelancerList()
         $("form[name='FreelancerFeedback_form']").validate({
-            rules: {},
-            messages: {},
+            ignore: [],
+            rules: {
+                professionalism_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=professionalism_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                hourlyRate_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=hourlyRate_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                availability_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=availability_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                projectAcceptance_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=projectAcceptance_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                education_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=education_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                softSkillsExperience_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=softSkillsExperience_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                hardSkillsExperience_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=hardSkillsExperience_rating][value='0']").is(":checked"));
+                        }
+                    }
+                },
+                projectSuccessRate_ratingValidator: {
+                    required: {
+                        depends: function () {
+                            return ($("input[name=projectSuccessRate_rating][value='0']").is(":checked"));
+                        }
+                    }
+                }
+            },
+            messages: {
+                professionalism_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                hourlyRate_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                availability_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                projectAcceptance_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                education_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                softSkillsExperience_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                hardSkillsExperience_ratingValidator: {
+                    required: "Please select rating.."
+                },
+                projectSuccessRate_ratingValidator: {
+                    required: "Please select rating.."
+                }
+            },
             errorElement: 'span',
             errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
+                if (element.parent('.rating-group').length) {
                     error.insertAfter(element.parent());
                 }
                 else {
@@ -371,26 +462,26 @@
 
     function resetFreelancerFeedbackForm(){
         //$('#feedbackMessage').val("");//.prop('disabled', 'disabled');
-        $('input[name=professionalism-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=hourlyRate-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=availability-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=projectAcceptance-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=education-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=softSkillsExperience-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=hardSkillsExperience-rating][value="0"]').prop('checked', 'checked');
-        $('input[name=projectSuccessRate-rating][value="0"]').prop('checked', 'checked');
+        $('input[name=professionalism_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=hourlyRate_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=availability_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=projectAcceptance_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=education_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=softSkillsExperience_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=hardSkillsExperience_rating][value="0"]').prop('checked', 'checked');
+        $('input[name=projectSuccessRate_rating][value="0"]').prop('checked', 'checked');
     }
 
     function BindAdminToFreelancerFeedbackModal(freelancerReviewData) {
         //$('#feedbackMessage').val(freelancerReviewData.Feedback_Message);//.prop('disabled', 'disabled');
-        $('input[name=professionalism-rating][value=' + freelancerReviewData.Professionalism + ']').prop('checked', 'checked');
-        $('input[name=hourlyRate-rating][value=' + freelancerReviewData.HourlyRate + ']').prop('checked', 'checked');
-        $('input[name=availability-rating][value=' + freelancerReviewData.Availability + ']').prop('checked', 'checked');
-        $('input[name=projectAcceptance-rating][value=' + freelancerReviewData.ProjectAcceptance + ']').prop('checked', 'checked');
-        $('input[name=education-rating][value=' + freelancerReviewData.Education + ']').prop('checked', 'checked');
-        $('input[name=softSkillsExperience-rating][value=' + freelancerReviewData.SoftSkillsExperience + ']').prop('checked', 'checked');
-        $('input[name=hardSkillsExperience-rating][value=' + freelancerReviewData.HardSkillsExperience + ']').prop('checked', 'checked');
-        $('input[name=projectSuccessRate-rating][value=' + freelancerReviewData.ProjectSuccessRate + ']').prop('checked', 'checked');
+        $('input[name=professionalism_rating][value=' + freelancerReviewData.Professionalism + ']').prop('checked', 'checked');
+        $('input[name=hourlyRate_rating][value=' + freelancerReviewData.HourlyRate + ']').prop('checked', 'checked');
+        $('input[name=availability_rating][value=' + freelancerReviewData.Availability + ']').prop('checked', 'checked');
+        $('input[name=projectAcceptance_rating][value=' + freelancerReviewData.ProjectAcceptance + ']').prop('checked', 'checked');
+        $('input[name=education_rating][value=' + freelancerReviewData.Education + ']').prop('checked', 'checked');
+        $('input[name=softSkillsExperience_rating][value=' + freelancerReviewData.SoftSkillsExperience + ']').prop('checked', 'checked');
+        $('input[name=hardSkillsExperience_rating][value=' + freelancerReviewData.HardSkillsExperience + ']').prop('checked', 'checked');
+        $('input[name=projectSuccessRate_rating][value=' + freelancerReviewData.ProjectSuccessRate + ']').prop('checked', 'checked');
 
         $('#freelancerReviewModalTitle').html('Update Feedback');
     }
@@ -433,15 +524,15 @@
     function SubmitFreelancerFeedback() {
 
         var freelancerId = $('#FreelancerID').val();
-        var message ='';// $('#feedbackMessage').val();
-        var Professionalism = $('input[name=professionalism-rating]:checked').val();
-        var HourlyRate = $('input[name=hourlyRate-rating]:checked').val();
-        var Availability = $('input[name=availability-rating]:checked').val();
-        var ProjectAcceptance = $('input[name=projectAcceptance-rating]:checked').val();
-        var Education = $('input[name=education-rating]:checked').val();
-        var SoftSkillsExperience = $('input[name=softSkillsExperience-rating]:checked').val();
-        var HardSkillsExperience = $('input[name=hardSkillsExperience-rating]:checked').val();
-        var ProjectSuccessRate = $('input[name=projectSuccessRate-rating]:checked').val();
+        var message = '';// $('#feedbackMessage').val();
+        var Professionalism = $('input[name=professionalism_rating]:checked').val();
+        var HourlyRate = $('input[name=hourlyRate_rating]:checked').val();
+        var Availability = $('input[name=availability_rating]:checked').val();
+        var ProjectAcceptance = $('input[name=projectAcceptance_rating]:checked').val();
+        var Education = $('input[name=education_rating]:checked').val();
+        var SoftSkillsExperience = $('input[name=softSkillsExperience_rating]:checked').val();
+        var HardSkillsExperience = $('input[name=hardSkillsExperience_rating]:checked').val();
+        var ProjectSuccessRate = $('input[name=projectSuccessRate_rating]:checked').val();
 
         var FreelancerReviewData = {
             UserId: '',

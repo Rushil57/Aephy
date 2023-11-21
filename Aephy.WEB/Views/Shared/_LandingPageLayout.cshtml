@@ -1718,6 +1718,10 @@
                 localization: ['en'],
 
             });
+            $('#CustomiseProjectPopUp').modal({
+                backdrop: 'static',
+                keyboard: false  // to prevent closing with Esc button (if you want this too)
+            });
         });
 
         $("form[name='addSolutiondescribeForm']").validate({

@@ -242,6 +242,28 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        [HttpPost]
+        public async Task<string> SaveCalenderData(string CalendarData)
+        {   
+            var calendarDataModel = JsonConvert.DeserializeObject<CalendarData>(CalendarData);
+            try
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId != null)
+                {
+                    calendarDataModel.Id = userId;
+                    var userData = await _apiRepository.MakeApiCallAsync("api/User/UpdateCalendarData", HttpMethod.Post, calendarDataModel);
+                    return userData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return "";
+        }
+
         public async Task<ImageClass> SaveImageFile(IFormFile imageFile, object Id)
         {
             ImageClass solutions = new ImageClass();

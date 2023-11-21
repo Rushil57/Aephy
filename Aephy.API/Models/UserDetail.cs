@@ -28,4 +28,20 @@
 
         public bool IsProjectArchitect { get; set; }
     }
+    public class CalendarData
+    {
+        public string? Id { get; set; }
+
+        public DateTime? StartHour { get; set; }
+
+        public DateTime? EndHour { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public bool? IsWeekendExclude { get; set; }
+
+        public bool IsNotAvailableForNextSixMonth { get; set; }
+    }
 }

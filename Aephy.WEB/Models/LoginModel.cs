@@ -1,4 +1,6 @@
-﻿namespace Aephy.WEB.Models
+﻿using Org.BouncyCastle.Asn1.X509;
+
+namespace Aephy.WEB.Models
 {
     public class LoginModel
     {
@@ -29,4 +31,22 @@
 
         public string? NewPassword { get; set; }
     }
+
+    public class CalendarData
+    {
+        public string? Id { get; set; }
+
+        public DateTime? StartHour { get; set; }
+
+        public DateTime? EndHour { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public bool? IsWeekendExclude { get; set; }
+
+        public bool IsNotAvailableForNextSixMonth { get; set; }
+    }
+
 }

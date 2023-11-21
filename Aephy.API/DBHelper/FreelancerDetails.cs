@@ -36,6 +36,13 @@ namespace Aephy.API.DBHelper
 
         public string? RevTag { get; set; }
 
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public bool? IsWeekendExclude { get; set; }
+
+        public bool? IsNotAvailableForNextSixMonth { get; set; }
     }
 
     public class FreelancerExcludeDate

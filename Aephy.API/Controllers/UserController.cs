@@ -134,6 +134,10 @@ namespace Aephy.API.Controllers
                         UserDetails.RevTag = freelancerDetails.RevTag;
                         UserDetails.StartHour = user.StartHours;
                         UserDetails.EndHour = user.EndHours;
+                        UserDetails.StartDate = freelancerDetails.StartDate;
+                        UserDetails.EndDate = freelancerDetails.EndDate;
+                        UserDetails.IsWeekendExclude = freelancerDetails.IsWeekendExclude;
+                        UserDetails.IsNotAvailableForNextSixMonth = freelancerDetails.IsNotAvailableForNextSixMonth;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -301,6 +305,68 @@ namespace Aephy.API.Controllers
                     {
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User Updated successfully!" });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "User Details not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong." });
+            }
+        }
+
+        [HttpPost]
+        [Route("UpdateCalendarData")]
+        public async Task<IActionResult> UpdateCalendarData([FromBody] CalendarData model)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(model.Id.Trim());
+                if (user != null)
+                {
+                    bool IsDataUpdated = false;
+                    if (model.IsNotAvailableForNextSixMonth)
+                    {
+                        var freelancerData = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
+                        if (freelancerData != null)
+                        {
+                            freelancerData.IsNotAvailableForNextSixMonth = model.IsNotAvailableForNextSixMonth;
+                            _db.FreelancerDetails.Update(freelancerData);
+                            _db.SaveChanges();
+                        }
+                        IsDataUpdated = true;
+                    }
+                    else
+                    {
+                        user.StartHours = model.StartHour;
+                        user.EndHours = model.EndHour;
+
+                        var result = await _userManager.UpdateAsync(user);
+
+                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
+                        if (freelancerDetails != null)
+                        {
+                            freelancerDetails.StartDate = model.StartDate;
+                            freelancerDetails.EndDate = model.EndDate;
+                            freelancerDetails.IsWeekendExclude = model.IsWeekendExclude;
+                            freelancerDetails.IsNotAvailableForNextSixMonth = model.IsNotAvailableForNextSixMonth;
+                            _db.FreelancerDetails.Update(freelancerDetails);
+                            _db.SaveChanges();
+                        }
+                        if (result.Succeeded)
+                            IsDataUpdated = true;
+                    }
+
+                    if (!IsDataUpdated)
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Failed to save data! Please check details and try again" });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Data Saved Successfully!" });
                     }
                 }
                 else

@@ -595,6 +595,16 @@ namespace Aephy.API.Models
             public DateTime? StartHour { get; set; }
 
             public DateTime? EndHour { get; set; }
+
+            public DateTime? StartDate { get; set; }
+
+            public DateTime? EndDate { get; set; }
+
+            public bool? IsWeekendExclude { get; set; }
+
+            public bool? IsNotAvailableForNextSixMonth { get; set; }
+
+
         }
 
         public class InvoiceViewModel

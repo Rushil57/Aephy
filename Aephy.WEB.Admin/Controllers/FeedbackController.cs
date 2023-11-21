@@ -48,16 +48,15 @@ namespace Aephy.WEB.Admin.Controllers
 
         //CheckAdminToFreelancerReviewExits
         [HttpPost]
-        public async Task<string> CheckAdminToFreelancerReviewExits([FromBody] string? FreelancerId)
+        public async Task<string> CheckAdminToFreelancerReviewExits([FromBody] FreelancerReview model)
         {
-            if (FreelancerId != null)
+            if (model.FreelancerId != null)
             {
                 try
                 {
                     var userId = HttpContext.Session.GetString("LoggedAdmin");
-                    FreelancerReview model = new FreelancerReview();
-                    model.UserId = userId;
-                    model.FreelancerId = FreelancerId;
+                    /*FreelancerReview model = new FreelancerReview();*/
+                    model.UserId = userId; 
                     var data = await _apiRepository.MakeApiCallAsync("api/Admin/CheckAdminToFreelancerReviewExits", HttpMethod.Post, model);
                     return data;
                 }

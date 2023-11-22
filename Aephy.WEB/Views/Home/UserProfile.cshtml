@@ -940,12 +940,12 @@
                             if ($('#IsWorkEarlier').is(':checked')) {
                                 $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
                             } else {
-                                $('#RAStartHours').prop('disabled', true);
+                                $('#RAStartHours').val('').prop('disabled', true);
                             }
                             if ($('#IsWorkLater').is(':checked')) {
                                 $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
                             } else {
-                                $('#RAEndHours').prop('disabled', true);
+                                $('#RAEndHours').val('').prop('disabled', true);
                             }
                         }else{
                             $('#unavailableNext6Months').prop('checked', false);
@@ -959,12 +959,12 @@
                             if ($('#IsWorkEarlier').is(':checked')) {
                                 $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
                             } else {
-                                $('#RAStartHours').prop('disabled', true);
+                                $('#RAStartHours').val('').prop('disabled', true);
                             }
                             if ($('#IsWorkLater').is(':checked')) {
                                 $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
                             } else {
-                                $('#RAEndHours').prop('disabled', true);
+                                $('#RAEndHours').val('').prop('disabled', true);
                             }
                         }
                     }

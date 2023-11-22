@@ -2480,15 +2480,21 @@ namespace Aephy.API.Controllers
         [Route("SaveFreelancerExcludeDate")]
         public async Task<IActionResult> SaveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
         {
-            if(model != null)
+            if (model != null)
             {
-                var dbmodel = new FreelancerExcludeDate()
+                var dbmodelList = new List<FreelancerExcludeDate>();
+                foreach (var item in model.ExcludeDateList)
                 {
-                    FreelancerId = model.FreelancerId,
-                    ExcludeDate = model.ExcludeDate
-                };
+                    var dbmodel = new FreelancerExcludeDate()
+                    {
+                        FreelancerId = model.FreelancerId,
+                        ExcludeDate = item
+                    };
 
-                var duplicate = await _db.FreelancerExcludeDate.Where(x => x.ExcludeDate == model.ExcludeDate && x.FreelancerId == model.FreelancerId).FirstOrDefaultAsync();
+                    dbmodelList.Add(dbmodel);
+                }
+
+                var duplicate = await _db.FreelancerExcludeDate.Where(x => model.ExcludeDateList.Contains(x.ExcludeDate) && x.FreelancerId == model.FreelancerId).FirstOrDefaultAsync();
                 if (duplicate != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2499,17 +2505,17 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    await _db.FreelancerExcludeDate.AddAsync(dbmodel);
+                    await _db.FreelancerExcludeDate.AddRangeAsync(dbmodelList);
                     await _db.SaveChangesAsync();
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
                         Message = "Success",
-                        Result = dbmodel
+                        Result = dbmodelList
                     });
                 }
- 
+
             }
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -2520,7 +2526,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("GetFreelancerExcludeDateData")]
-        public async Task<IActionResult> GetFreelancerExcludeDateData([FromBody] ExcludeDateModel model)
+        public async Task<IActionResult> GetFreelancerExcludeDateData([FromBody] ExcludeDateGridModel model)
         {
             var modelList = await _db.FreelancerExcludeDate.Where(x=>x.FreelancerId == model.FreelancerId).ToListAsync();
 
@@ -2534,7 +2540,7 @@ namespace Aephy.API.Controllers
 
         [HttpPost]
         [Route("RemoveFreelancerExcludeDate")]
-        public async Task<IActionResult> RemoveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        public async Task<IActionResult> RemoveFreelancerExcludeDate([FromBody] ExcludeDateGridModel model)
         {
             try
             {

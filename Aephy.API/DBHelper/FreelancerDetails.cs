@@ -43,6 +43,10 @@ namespace Aephy.API.DBHelper
         public bool? IsWeekendExclude { get; set; }
 
         public bool? IsNotAvailableForNextSixMonth { get; set; }
+
+        public bool? IsWorkEarlier { get; set; }
+
+        public bool? IsWorkLater { get; set; }
     }
 
     public class FreelancerExcludeDate

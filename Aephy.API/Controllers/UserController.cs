@@ -138,6 +138,8 @@ namespace Aephy.API.Controllers
                         UserDetails.EndDate = freelancerDetails.EndDate;
                         UserDetails.IsWeekendExclude = freelancerDetails.IsWeekendExclude;
                         UserDetails.IsNotAvailableForNextSixMonth = freelancerDetails.IsNotAvailableForNextSixMonth;
+                        UserDetails.IsWorkEarlier = freelancerDetails.IsWorkEarlier;
+                        UserDetails.IsWorkLater = freelancerDetails.IsWorkLater;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -353,6 +355,8 @@ namespace Aephy.API.Controllers
                             freelancerDetails.EndDate = model.EndDate;
                             freelancerDetails.IsWeekendExclude = model.IsWeekendExclude;
                             freelancerDetails.IsNotAvailableForNextSixMonth = model.IsNotAvailableForNextSixMonth;
+                            freelancerDetails.IsWorkEarlier = model.IsWorkEarlier;
+                            freelancerDetails.IsWorkLater = model.IsWorkLater;
                             _db.FreelancerDetails.Update(freelancerDetails);
                             _db.SaveChanges();
                         }

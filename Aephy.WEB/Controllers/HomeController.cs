@@ -2788,16 +2788,29 @@ namespace Aephy.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<string> SaveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        public async Task<string> SaveFreelancerExcludeDate([FromBody] ExcludeDateRequestModel model)
         {
             if (model != null)
             {
                 try
                 {
-                    var userId = HttpContext.Session.GetString("LoggedUser");
-                    model.FreelancerId = userId;
-                    var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, model);
-                    return data;
+                    string[] dateStrings = model.DateRange.Split(" - ");
+                    if (dateStrings.Length == 2)
+                    {
+                        if (DateTime.TryParse(dateStrings[0], out DateTime startDate) &&
+                            DateTime.TryParse(dateStrings[1], out DateTime endDate))
+                        {
+                            List<DateTime> dateRange = GenerateDateRange(startDate, endDate);
+
+                            var requestModel = new ExcludeDateModel();
+                            var userId = HttpContext.Session.GetString("LoggedUser");
+                            requestModel.FreelancerId = userId;
+                            requestModel.ExcludeDateList = dateRange;
+
+                            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, requestModel);
+                            return data;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2810,17 +2823,36 @@ namespace Aephy.WEB.Controllers
         [HttpGet]
         public async Task<string> GetFreelancerExcludeDateData()
         {
-            var model = new ExcludeDateModel();
+            var model = new ExcludeDateGridModel();
             model.FreelancerId = HttpContext.Session.GetString("LoggedUser");
             var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerExcludeDateData", HttpMethod.Post, model);
             return RolesList;
         }
         
         [HttpPost]
-        public async Task<string> RemoveFreelancerExcludeDate([FromBody] ExcludeDateModel model)
+        public async Task<string> RemoveFreelancerExcludeDate([FromBody] ExcludeDateGridModel model)
         {
             var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/RemoveFreelancerExcludeDate", HttpMethod.Post,model);
             return RolesList;
+        }
+        private static List<DateTime> GenerateDateRange(DateTime startDate, DateTime endDate)
+        {
+            List<DateTime> dateRange = new List<DateTime>();
+
+            if (startDate == endDate)
+            {
+                dateRange.Add(startDate);
+            }
+            else
+            {
+                while (startDate <= endDate)
+                {
+                    dateRange.Add(startDate);
+                    startDate = startDate.AddDays(1);
+                }
+            }
+
+            return dateRange;
         }
     }
 }

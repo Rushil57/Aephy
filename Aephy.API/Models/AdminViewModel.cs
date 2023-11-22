@@ -604,6 +604,9 @@ namespace Aephy.API.Models
 
             public bool? IsNotAvailableForNextSixMonth { get; set; }
 
+            public bool? IsWorkEarlier { get; set; }
+
+            public bool? IsWorkLater { get; set; }
 
         }
 

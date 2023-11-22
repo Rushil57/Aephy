@@ -5,7 +5,7 @@
     ViewData["ProfileImage"] = Context.Session.GetString("UserProfileImage");
     bool isStripeCompleted = Convert.ToBoolean(ViewData["IsCompleted"]); //ViewData["IsCompleted"]
 }
-
+<link href="~/assets/css/daterangepicker.css" rel="stylesheet" />
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                                    <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                                    <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -64,9 +64,9 @@
                             @{
                                 if(@Context.Session.GetString("LoggedUserRole") == "Freelancer")
                                 {
-                                            <li class="nav-item">
-                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                            </li>
+                                                        <li class="nav-item">
+                                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                                        </li>
                                 }
                             }
                            
@@ -575,14 +575,14 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="StartHours" class="col-md-6 col-lg-4 col-form-label">Start Hours</label>
+                                        <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
                                         <div class="col-md-8 col-lg-8">
                                             <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours">
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="EndHours" class="col-md-6 col-lg-4 col-form-label">End Hours</label>
+                                        <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
                                         <div class="col-md-8 col-lg-8">
                                             <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
                                         </div>
@@ -606,18 +606,48 @@
                                         <div class="col-12 mb-3">
                                             <div class="">
                                                 <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
-                                                <label for="excludeWeekends" class="form-label px-2">Is Exclude weekends</label>
+                                                <label for="excludeWeekends" class="form-label px-2">Exclude weekends</label>
                                             </div>
+                                        </div>
+                                    </div>
+                                    @* new section *@
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <div class="">
+                                                <input type="checkbox" id="IsWorkEarlier" name="IsWorkEarlier" onchange="checkWorkEarlier();" class="form-check-input" />
+                                                <label for="IsWorkEarlier" class="form-label px-2">Are you flexible to commence your 8-hour work earlier?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="RAStartHours" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
+                                        <div class="col-md-8 col-lg-8">
+                                            <input type="time" name="RAStartHours" class="form-control cls-startHours" onchange="setStartHour();" id="RAStartHours">
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="renewPassword" class="col-md-3 col-lg-3 col-form-label">Select Exclude Date</label>
+                                        <div class="col-12">
+                                            <div class="">
+                                                <input type="checkbox" id="IsWorkLater" name="IsWorkLater" onchange="checkWorkLater();" class="form-check-input" />
+                                                <label for="IsWorkLater" class="form-label px-2">Are you flexible to commence your 8-hour work later?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="RAEndHours" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
+                                        <div class="col-md-8 col-lg-8">
+                                            <input type="time" name="RAEndHours" class="form-control cls-endHours" onchange="setEndHour();" id="RAEndHours">
+                                        </div>
+                                    </div>
+                                    @* new section *@
+                                    <div class="row mb-3">
+                                        <label for="renewPassword" class="col-md-3 col-lg-3 col-form-label">Exclude Date</label>
                                         <div class="col-md-6 col-lg-6">
-                                            <input type="date" name="ExcludeTime" class="form-control" id="exclude-time">
+                                            <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
                                         </div>
                                         <div class="col-md-3 col-lg-3">
-                                            <button type="submit" class="btn btn-primary" id="btnAddDate">Add</button>
+                                            <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
                                         </div>
                                     </div>
 
@@ -721,7 +751,10 @@
         </div>
     </div>
 </div>
-
+<!-- Or specify a version -->
+<script src="~/assets/js/daterangepicker.js"></script>
+<script src="~/assets/js/countries-and-timezone.js"></script>
+@* <script src="https://cdn.jsdelivr.net/gh/manuelmhtr/countries-and-timezones@v3.5.2/dist/index.min.js" type="text/javascript"></script> *@
 <script type="text/javascript">
     $(function () {
         $("form[name='UpdateForm']").validate({
@@ -800,13 +833,17 @@
                 startDate: { required: true },
                 endDate: { required: true },
                 startHours: {required: true,},
-                endHours: { required: true }
+                endHours: { required: true },
+                RAEndHours:{ required: true },
+                RAStartHours: { required:true }
             },
             messages: {
                 startDate: { required: "Please Insert Start Date"},
                 endDate: { required: "Please Insert End Date"},
                 startHours: {required: "Please Insert Start Hours"},
-                endHours: { required: "Please Insert End Hours"}
+                endHours: { required: "Please Insert End Hours"},
+                RAEndHours: { required: "This field is required !" },
+                RAStartHours: { required: "This field is required !" }
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -822,9 +859,25 @@
             }
         });
 
+        checkWorkEarlier();
+        checkWorkLater();
         GetUserData()
 
         bindFreelancerExcludeGrid();
+        $('input[name="ExcludeTime"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="ExcludeTime"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+
+        $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
     });
 
     function GetUserData() {
@@ -862,24 +915,57 @@
                     $(".cls-preferredCurrency").val(data.PreferredCurrency)
                     var preferredCurrency = $("#PreferredCurrency").val();
                     $(".cls-freelancer-CurrencybasedhourlyRate").html('');
-                    $(".cls-startHours").val(moment(data.StartHour).format('hh:mm'));
-                    $(".cls-endHours").val(moment(data.EndHour).format('hh:mm'));
+                    $(".cls-startHours").val(moment(data.StartHour).format('HH:mm'));
+                    $(".cls-endHours").val(moment(data.EndHour).format('HH:mm'));
 
                     if (data.Role == "Freelancer") {
+                        if (data.BackCountry != null && data.BackCountry != '' && data.BackCountry != undefined){
+                            var TZone = ct.getTimezonesForCountry(data.BackCountry);
+                            var timeZone = '';
+                            if (TZone != null) {
+                                var utcOffset = TZone[0].utcOffsetStr;
+                                timeZone = ('&nbsp(GMT ' + utcOffset + ')');
+                            }
+                            $('.TimeZone').html(timeZone);
+                        }
                         if (data.IsNotAvailableForNextSixMonth){
                             $('#unavailableNext6Months').prop('checked',true);
-                            $('#StartHours').val(moment(data.StartHour).format('hh:mm')).prop('disabled', 'disabled');
-                            $('#EndHours').val(moment(data.EndHour).format('hh:mm')).prop('disabled', 'disabled');
+                            $('#StartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', 'disabled');
+                            $('#EndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', 'disabled');
                             $('#startDate').val(moment(data.StartDate).format('YYYY-MM-DD')).prop('disabled', 'disabled');
                             $('#endDate').val(moment(data.EndDate).format('YYYY-MM-DD')).prop('disabled', 'disabled');
                             $('#excludeWeekends').prop('checked', data.IsWeekendExclude).prop('disabled', 'disabled');
+                            $('#IsWorkEarlier').prop('checked', data.IsWorkEarlier).prop('disabled', 'disabled');
+                            $('#IsWorkLater').prop('checked', data.IsWorkLater).prop('disabled', 'disabled');
+                            if ($('#IsWorkEarlier').is(':checked')) {
+                                $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
+                            } else {
+                                $('#RAStartHours').prop('disabled', true);
+                            }
+                            if ($('#IsWorkLater').is(':checked')) {
+                                $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
+                            } else {
+                                $('#RAEndHours').prop('disabled', true);
+                            }
                         }else{
                             $('#unavailableNext6Months').prop('checked', false);
-                            $('#StartHours').val(moment(data.StartHour).format('hh:mm')).prop('disabled', false);
-                            $('#EndHours').val(moment(data.EndHour).format('hh:mm')).prop('disabled', false);
+                            $('#StartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
+                            $('#EndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
                             $('#startDate').val(moment(data.StartDate).format('YYYY-MM-DD')).prop('disabled', false);
                             $('#endDate').val(moment(data.EndDate).format('YYYY-MM-DD')).prop('disabled', false);
                             $('#excludeWeekends').prop('checked', data.IsWeekendExclude).prop('disabled', false);
+                            $('#IsWorkEarlier').prop('checked', data.IsWorkEarlier).prop('disabled', false);
+                            $('#IsWorkLater').prop('checked', data.IsWorkLater).prop('disabled', false);
+                            if ($('#IsWorkEarlier').is(':checked')) {
+                                $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
+                            } else {
+                                $('#RAStartHours').prop('disabled', true);
+                            }
+                            if ($('#IsWorkLater').is(':checked')) {
+                                $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
+                            } else {
+                                $('#RAEndHours').prop('disabled', true);
+                            }
                         }
                     }
 
@@ -1021,6 +1107,35 @@
         }
     }
 
+    function checkWorkEarlier(){
+        if ($('#IsWorkEarlier').is(':checked')) {
+            $('#RAStartHours').prop('disabled',false);
+        }else{
+            $('#RAStartHours').prop('disabled', true);
+        }
+    }
+    function checkWorkLater() {
+        if ($('#IsWorkLater').is(':checked')) {
+            $('#RAEndHours').prop('disabled', false);
+        } else {
+            $('#RAEndHours').prop('disabled', true);
+        }
+    }
+
+    function setStartHour(){
+        if ($('#IsWorkEarlier').is(':checked')) {
+            var RAStartHour = $('#RAStartHours').val();
+            $('#StartHours').val(RAStartHour);
+        }
+    }
+
+    function setEndHour(){
+        if ($('#IsWorkLater').is(':checked')) {
+            var RAEndHour = $('#RAEndHours').val();
+            $('#EndHours').val(RAEndHour);
+        }
+    }
+
     function unavailableNextFewMonths(){
         var isUnavailableNext6Months = $('#unavailableNext6Months').is(':checked');
         if (isUnavailableNext6Months){
@@ -1029,12 +1144,21 @@
             $('#startDate').prop('disabled', 'disabled');
             $('#endDate').prop('disabled', 'disabled');
             $('#excludeWeekends').prop('disabled', 'disabled');
+            $('#IsWorkEarlier').prop('disabled', 'disabled');
+            $('#IsWorkLater').prop('disabled', 'disabled');
+            $('#RAStartHours').prop('disabled', 'disabled');
+            $('#RAEndHours').prop('disabled', 'disabled');
+
         }else{
             $('#StartHours').prop('disabled', false);
             $('#EndHours').prop('disabled', false);
             $('#startDate').prop('disabled', false);
             $('#endDate').prop('disabled', false);
             $('#excludeWeekends').prop('disabled', false);
+            $('#IsWorkEarlier').prop('disabled', false);
+            $('#IsWorkLater').prop('disabled', false);
+            checkWorkEarlier();
+            checkWorkLater();
         }
     }
 
@@ -1046,7 +1170,9 @@
             StartHour:$('#StartHours').val(),
             EndHour: $('#EndHours').val(),
             IsWeekendExclude: $('#excludeWeekends').is(':checked'),
-            IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked')
+            IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked'),
+            IsWorkEarlier: $('#IsWorkEarlier').is(':checked'),
+            IsWorkLater: $('#IsWorkLater').is(':checked')
         };
 
         var formData = new FormData();
@@ -1391,7 +1517,7 @@
                 type: "POST",
                 url: "@Url.Action("SaveFreelancerExcludeDate", "Home")",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ excludeDate: new Date($("#exclude-time").val()) }),
+                data: JSON.stringify({ DateRange: $("#exclude-time").val() }),
                 dataType: "json",
                 success: function (result) {
                     if (result.StatusCode == 200) {
@@ -1431,7 +1557,7 @@
                             {
                                 "data": "ExcludeDate",
                                 "render": function (data, type, full, meta) {
-                                    var date = moment(data).format('DD-MM-YYYY HH:MM:SS');;
+                                    var date = moment(data).format('DD-MM-YYYY');;
                                     return '<span>' + date + '</span>';
                                 }
                             },
@@ -1462,7 +1588,7 @@
             data: JSON.stringify({ id: id }),
             dataType: "json",
             success: function (result) {
-                showToaster("success", "Saved.", "Data has been saved.");
+                showToaster("success", "Removed", "Data has been deleted.");
                 bindFreelancerExcludeGrid();
                 $("#exclude-time").val('');
             },

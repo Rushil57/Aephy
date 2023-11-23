@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -62,14 +62,14 @@
                             </li>
 
                             @{
-                                if(@Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                if (@Context.Session.GetString("LoggedUserRole") == "Freelancer")
                                 {
-                                                        <li class="nav-item">
-                                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                                        </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                    </li>
                                 }
                             }
-                           
+
 
                         </ul>
                         <div class="tab-content pt-2">
@@ -271,7 +271,7 @@
                                     </div>
                                 </div>
 
-                                 <div class="row">
+                                <div class="row">
                                     <div class="col-lg-4 col-md-6 label">Start Hours</div>
                                     <div class="col-md-8 col-lg-8">
                                         <input name="startTime" type="time" class="form-control cls-startHours" readonly>
@@ -512,17 +512,17 @@
                                     </div>
 
                                     @* <div class="row mb-3">
-                                        <label for="StartHours" class="col-md-6 col-lg-4 col-form-label">Start Hours</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="startTime" class="form-control cls-startHours" id="StartHours">
-                                        </div>
+                                    <label for="StartHours" class="col-md-6 col-lg-4 col-form-label">Start Hours</label>
+                                    <div class="col-md-8 col-lg-8">
+                                    <input type="time" name="startTime" class="form-control cls-startHours" id="StartHours">
+                                    </div>
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="EndHours" class="col-md-6 col-lg-4 col-form-label">End Hours</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
-                                        </div>
+                                    <label for="EndHours" class="col-md-6 col-lg-4 col-form-label">End Hours</label>
+                                    <div class="col-md-8 col-lg-8">
+                                    <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
+                                    </div>
                                     </div> *@
 
                                     <div class="text-center">
@@ -563,7 +563,7 @@
                             </div>
 
                             <div class="tab-pane fade" id="profile-calander">
-                                <form class="row g-3" name="CalendarDataForm">
+                                <form class="row gx-0" name="CalendarDataForm">
                                     <div class="row mb-3">
                                         <div class="col-12">
                                             <div>
@@ -571,58 +571,61 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <label>Specify the dates on which you are available to engage in projects.</label>
+                                    <div class="section-border row mx-0">
+                                        <div class="row mx-0 px-0 mb-3">
+                                            <div class="col-10">
+                                                <div class="">
+                                                    <label>Specify the dates on which you are available to engage in projects.</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="unavailableNext6Months" name="unavailableNext6Months" onchange="unavailableNextFewMonths();" class="form-check-input" />
+                                                    <label for="unavailableNext6Months" class="form-label px-2">Unavailable for the next 6 months</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="startDate" class="col-md-6 col-lg-4 col-form-label">Start Date</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="date" class="form-control" id="startDate" name="startDate" onchange="UpdateEndDate();">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="endDate" class="col-md-6 col-lg-4 col-form-label">End Date</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="date" class="form-control" id="endDate" name="endDate">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <input type="checkbox" id="unavailableNext6Months" name="unavailableNext6Months" onchange="unavailableNextFewMonths();" class="form-check-input" />
-                                                <label for="unavailableNext6Months" class="form-label px-2">Unavailable for the next 6 months</label>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0">Indicate the time range within which you can commit to an 8-hour work period.</p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <label for="startDate" class="col-md-6 col-lg-4 col-form-label">Start Date</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="date" class="form-control" id="startDate" name="startDate" onchange="UpdateEndDate();">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="endDate" class="col-md-6 col-lg-4 col-form-label">End Date</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="date" class="form-control" id="endDate" name="endDate">
-                                        </div>
-                                    </div>
-
-                                    <div class="row my-3">
-                                        <div class="col-12">
-                                            <div>
-                                                <label><p class="m-0">Indicate the time range within which you can commit to an 8-hour work period.</p></label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
-                                        </div>
-                                    </div>
-
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="">
@@ -632,71 +635,73 @@
                                         </div>
                                     </div>
                                     @* new section *@
-                                    
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <input type="checkbox" id="IsWorkEarlier" name="IsWorkEarlier" onchange="checkWorkEarlier();" class="form-check-input" />
-                                                <label for="IsWorkEarlier" class="form-label px-2">Are you flexible to commence your 8-hour work earlier?</label>
+                                    <div class="section-border row mx-0">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="IsWorkEarlier" name="IsWorkEarlier" onchange="checkWorkEarlier();" class="form-check-input" />
+                                                    <label for="IsWorkEarlier" class="form-label px-2">Are you flexible to commence your 8-hour work earlier?</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="RAStartHours" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="RAStartHours" class="form-control cls-startHours" onchange="setStartHour();" id="RAStartHours">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <label for="RAStartHours" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="RAStartHours" class="form-control cls-startHours" onchange="setStartHour();" id="RAStartHours">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <input type="checkbox" id="IsWorkLater" name="IsWorkLater" onchange="checkWorkLater();" class="form-check-input" />
-                                                <label for="IsWorkLater" class="form-label px-2">Are you flexible to commence your 8-hour work later?</label>
+                                    <div class="section-border row mx-0">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="IsWorkLater" name="IsWorkLater" onchange="checkWorkLater();" class="form-check-input" />
+                                                    <label for="IsWorkLater" class="form-label px-2">Are you flexible to commence your 8-hour work later?</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <label for="RAEndHours" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input type="time" name="RAEndHours" class="form-control cls-endHours" onchange="setEndHour();" id="RAEndHours">
+                                        <div class="row mb-3">
+                                            <label for="RAEndHours" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="RAEndHours" class="form-control cls-endHours" onchange="setEndHour();" id="RAEndHours">
+                                            </div>
                                         </div>
                                     </div>
                                     @* new section *@
-
-                                    <div class="row my-3">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row mb-3">
-                                        <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Exclude Date</label>
-                                        <div class="col-md-6 col-lg-6">
-                                            <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
+                                        <div class="row mb-3">
+                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Exclude Date</label>
+                                            <div class="col-md-6 col-lg-6">
+                                                <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-2 col-lg-2">
+                                                <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-2 col-lg-2">
-                                            <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
+
+                                        <div class="row mt-5" style="max-height: 18rem;overflow-y: scroll;">
+                                            <table class="table table-borderless datatable" id="table-excludeDate">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Exclude Date</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-
-                                    <div class="row mt-5" style="max-height: 18rem;overflow: scroll;">
-                                        <table class="table table-borderless datatable" id="table-excludeDate">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Exclude Date</th>
-                                                    <th scope="col">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
                                     <div class="text-center mt-3">
-                                        <input type="submit" class="btn btn-primary" value="Save"/>
+                                        <input type="submit" class="btn btn-primary" value="Save" />
                                     </div>
                                 </form>
                             </div>
@@ -863,16 +868,16 @@
             rules: {
                 startDate: { required: true },
                 endDate: { required: true },
-                startHours: {required: true,},
+                startHours: { required: true, },
                 endHours: { required: true },
-                RAEndHours:{ required: true },
-                RAStartHours: { required:true }
+                RAEndHours: { required: true },
+                RAStartHours: { required: true }
             },
             messages: {
-                startDate: { required: "Please Insert Start Date"},
-                endDate: { required: "Please Insert End Date"},
-                startHours: {required: "Please Insert Start Hours"},
-                endHours: { required: "Please Insert End Hours"},
+                startDate: { required: "Please Insert Start Date" },
+                endDate: { required: "Please Insert End Date" },
+                startHours: { required: "Please Insert Start Hours" },
+                endHours: { required: "Please Insert End Hours" },
                 RAEndHours: { required: "This field is required !" },
                 RAStartHours: { required: "This field is required !" }
             },
@@ -911,7 +916,7 @@
         });
     });
 
-    function UpdateEndDate(){
+    function UpdateEndDate() {
         var startDate = $('#startDate').val();
         var updatedDate = addMonths(new Date(startDate), 6);
         $('#endDate').val(moment(updatedDate).format('YYYY-MM-DD'));
@@ -965,7 +970,7 @@
                     $(".cls-endHours").val(moment(data.EndHour).format('HH:mm'));
 
                     if (data.Role == "Freelancer") {
-                        if (data.BackCountry != null && data.BackCountry != '' && data.BackCountry != undefined){
+                        if (data.BackCountry != null && data.BackCountry != '' && data.BackCountry != undefined) {
                             var TZone = ct.getTimezonesForCountry(data.BackCountry);
                             var timeZone = '';
                             if (TZone != null) {
@@ -974,8 +979,8 @@
                             }
                             $('.TimeZone').html(timeZone);
                         }
-                        if (data.IsNotAvailableForNextSixMonth){
-                            $('#unavailableNext6Months').prop('checked',true);
+                        if (data.IsNotAvailableForNextSixMonth) {
+                            $('#unavailableNext6Months').prop('checked', true);
                             $('#StartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', 'disabled');
                             $('#EndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', 'disabled');
                             $('#startDate').val(moment(data.StartDate).format('YYYY-MM-DD')).prop('disabled', 'disabled');
@@ -993,7 +998,7 @@
                             } else {
                                 $('#RAEndHours').val('').prop('disabled', true);
                             }
-                        }else{
+                        } else {
                             $('#unavailableNext6Months').prop('checked', false);
                             $('#StartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
                             $('#EndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
@@ -1153,10 +1158,10 @@
         }
     }
 
-    function checkWorkEarlier(){
+    function checkWorkEarlier() {
         if ($('#IsWorkEarlier').is(':checked')) {
-            $('#RAStartHours').prop('disabled',false);
-        }else{
+            $('#RAStartHours').prop('disabled', false);
+        } else {
             $('#RAStartHours').prop('disabled', true);
         }
     }
@@ -1168,24 +1173,24 @@
         }
     }
 
-    function setStartHour(){
+    function setStartHour() {
         if ($('#IsWorkEarlier').is(':checked')) {
             var RAStartHour = $('#RAStartHours').val();
             $('#StartHours').val(RAStartHour);
         }
     }
 
-    function setEndHour(){
+    function setEndHour() {
         if ($('#IsWorkLater').is(':checked')) {
             var RAEndHour = $('#RAEndHours').val();
             $('#EndHours').val(RAEndHour);
         }
     }
 
-    function unavailableNextFewMonths(){
+    function unavailableNextFewMonths() {
         var isUnavailableNext6Months = $('#unavailableNext6Months').is(':checked');
-        if (isUnavailableNext6Months){
-            $('#StartHours').prop('disabled','disabled');
+        if (isUnavailableNext6Months) {
+            $('#StartHours').prop('disabled', 'disabled');
             $('#EndHours').prop('disabled', 'disabled');
             $('#startDate').prop('disabled', 'disabled');
             $('#endDate').prop('disabled', 'disabled');
@@ -1195,7 +1200,7 @@
             $('#RAStartHours').prop('disabled', 'disabled');
             $('#RAEndHours').prop('disabled', 'disabled');
 
-        }else{
+        } else {
             $('#StartHours').prop('disabled', false);
             $('#EndHours').prop('disabled', false);
             $('#startDate').prop('disabled', false);
@@ -1208,12 +1213,12 @@
         }
     }
 
-    function submitCalendarData(){      
+    function submitCalendarData() {
         var calendarData = {
             Id: "",
-            StartDate:$('#startDate').val(),
+            StartDate: $('#startDate').val(),
             EndDate: $('#endDate').val(),
-            StartHour:$('#StartHours').val(),
+            StartHour: $('#StartHours').val(),
             EndHour: $('#EndHours').val(),
             IsWeekendExclude: $('#excludeWeekends').is(':checked'),
             IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked'),
@@ -1229,7 +1234,7 @@
             type: "POST",
             url: "@Url.Action("SaveCalenderData", "Home")",
             contentType: false,
-            processData:false,
+            processData: false,
             data: formData,
             success: function (result) {
                 var test = result.split(",")[1].split(":")[1]
@@ -1595,8 +1600,8 @@
                 if (result.StatusCode == 200) {
                     $('#table-excludeDate').DataTable({
                         destroy: true,
-                        searching: false, 
-                        paging: false, 
+                        searching: false,
+                        paging: false,
                         info: false,
                         data: result.Result,
                         "columns": [
@@ -1610,7 +1615,7 @@
                             {
                                 "data": "action",
                                 "render": function (data, type, row) {
-                                    return "<button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFreelancerExclude("+row.Id+")\">Delete</button>";
+                                    return "<button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFreelancerExclude(" + row.Id + ")\">Delete</button>";
                                 }
                             }
                         ]

@@ -140,6 +140,10 @@ namespace Aephy.API.Controllers
                         UserDetails.IsNotAvailableForNextSixMonth = freelancerDetails.IsNotAvailableForNextSixMonth;
                         UserDetails.IsWorkEarlier = freelancerDetails.IsWorkEarlier;
                         UserDetails.IsWorkLater = freelancerDetails.IsWorkLater;
+                        UserDetails.StartHoursEarlier = user.StartHoursEarlier;
+                        UserDetails.StartHoursLater = user.StartHoursLater;
+                        UserDetails.EndHoursEarlier = user.EndHoursEarlier;
+                        UserDetails.EndHoursLater = user.EndHoursLater;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -345,6 +349,18 @@ namespace Aephy.API.Controllers
                     {
                         user.StartHours = model.StartHour;
                         user.EndHours = model.EndHour;
+                        user.StartHoursFinal = model.StartHoursFinal;
+                        user.EndHoursFinal = model.EndHoursFinal;
+                        if (model.IsWorkEarlier)
+                        {
+                            user.StartHoursEarlier = model.StartHoursEarlier;
+                            user.EndHoursEarlier = model.EndHoursEarlier;
+                        }
+                        if (model.IsWorkLater)
+                        {
+                            user.StartHoursLater = model.StartHoursLater;
+                            user.EndHoursLater = model.EndHoursLater;
+                        }
 
                         var result = await _userManager.UpdateAsync(user);
 

@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                                    <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                                    <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -64,9 +64,9 @@
                             @{
                                 if (@Context.Session.GetString("LoggedUserRole") == "Freelancer")
                                 {
-                                    <li class="nav-item">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                    </li>
+                                                        <li class="nav-item">
+                                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                                        </li>
                                 }
                             }
 
@@ -615,7 +615,7 @@
                                         <div class="row mb-3">
                                             <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours">
+                                                <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours" onchange="setEndHour();">
                                             </div>
                                         </div>
 
@@ -645,9 +645,15 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RAStartHours" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
+                                            <label for="StartHoursEarlier" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="RAStartHours" class="form-control cls-startHours" onchange="setStartHour();" id="RAStartHours">
+                                                <input type="time" name="StartHoursEarlier" class="form-control" onchange="setEndHourEarlier();" id="StartHoursEarlier">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="EndHoursEarlier" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="EndHoursEarlier" class="form-control" id="EndHoursEarlier" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -661,9 +667,15 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RAEndHours" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
+                                            <label for="StartHoursLater" class="col-md-6 col-lg-4 col-form-label">Start Hour</label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="RAEndHours" class="form-control cls-endHours" onchange="setEndHour();" id="RAEndHours">
+                                                <input type="time" name="StartHoursLater" class="form-control" id="StartHoursLater" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="EndHoursLater" class="col-md-6 col-lg-4 col-form-label">End Hour</label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="EndHoursLater" class="form-control" onchange="setStartHourLater();" id="EndHoursLater">
                                             </div>
                                         </div>
                                     </div>
@@ -870,16 +882,21 @@
                 endDate: { required: true },
                 startHours: { required: true, },
                 endHours: { required: true },
-                RAEndHours: { required: true },
-                RAStartHours: { required: true }
+                EndHoursLater: { required: true },
+                StartHoursEarlier: { required: true },
+                EndHoursEarlier: { required: true },
+                StartHoursLater: { required: true }
+
             },
             messages: {
                 startDate: { required: "Please Insert Start Date" },
                 endDate: { required: "Please Insert End Date" },
                 startHours: { required: "Please Insert Start Hours" },
                 endHours: { required: "Please Insert End Hours" },
-                RAEndHours: { required: "This field is required !" },
-                RAStartHours: { required: "This field is required !" }
+                EndHoursLater: { required: "This field is required !" },
+                StartHoursEarlier: { required: "This field is required !" },
+                EndHoursEarlier: { required: "This field is required !" },
+                StartHoursLater: { required: "This field is required !" }
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -929,6 +946,20 @@
             date.setDate(0);
         }
         return date;
+    }
+
+    function addHours(time,hours){
+        var calcDate = new Date("1/1/1900 " + time + ':00');
+        var myDate = new Date(calcDate);
+        myDate.setHours(myDate.getHours() + hours);
+        return myDate;
+    }
+
+    function subtractHours(time, hours) {       
+        var calcDate = new Date("1/1/1900 " + time + ':00');
+        var myDate = new Date(calcDate);
+        myDate.setHours(myDate.getHours() - hours);
+        return myDate;
     }
 
     function GetUserData() {
@@ -989,15 +1020,20 @@
                             $('#IsWorkEarlier').prop('checked', data.IsWorkEarlier).prop('disabled', 'disabled');
                             $('#IsWorkLater').prop('checked', data.IsWorkLater).prop('disabled', 'disabled');
                             if ($('#IsWorkEarlier').is(':checked')) {
-                                $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
+                                $('#StartHoursEarlier').val(moment(data.StartHoursEarlier).format('HH:mm')).prop('disabled', true);
+                                $('#EndHoursEarlier').val(moment(data.EndHoursEarlier).format('HH:mm')).prop('disabled', true);
                             } else {
-                                $('#RAStartHours').val('').prop('disabled', true);
+                                $('#StartHoursEarlier').val('').prop('disabled', true);
+                                $('#EndHoursEarlier').val('').prop('disabled', true);
                             }
                             if ($('#IsWorkLater').is(':checked')) {
-                                $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
+                                $('#EndHoursLater').val(moment(data.EndHoursLater).format('HH:mm')).prop('disabled', true);
+                                $('#StartHoursLater').val(moment(data.StartHoursLater).format('HH:mm')).prop('disabled', true);
                             } else {
-                                $('#RAEndHours').val('').prop('disabled', true);
+                                $('#EndHoursLater').val('').prop('disabled', true);
+                                $('#StartHoursLater').val('').prop('disabled', true);
                             }
+
                         } else {
                             $('#unavailableNext6Months').prop('checked', false);
                             $('#StartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
@@ -1008,14 +1044,20 @@
                             $('#IsWorkEarlier').prop('checked', data.IsWorkEarlier).prop('disabled', false);
                             $('#IsWorkLater').prop('checked', data.IsWorkLater).prop('disabled', false);
                             if ($('#IsWorkEarlier').is(':checked')) {
-                                $('#RAStartHours').val(moment(data.StartHour).format('HH:mm')).prop('disabled', false);
+                                $('#StartHoursEarlier').val(moment(data.StartHoursEarlier).format('HH:mm')).prop('disabled', false);
+                                $('#EndHoursEarlier').val(moment(data.EndHoursEarlier).format('HH:mm')).prop('disabled', true);
                             } else {
-                                $('#RAStartHours').val('').prop('disabled', true);
+                                $('#StartHoursEarlier').val('').prop('disabled', true);
+                                $('#EndHoursEarlier').val('').prop('disabled', true);
+
                             }
                             if ($('#IsWorkLater').is(':checked')) {
-                                $('#RAEndHours').val(moment(data.EndHour).format('HH:mm')).prop('disabled', false);
+                                $('#EndHoursLater').val(moment(data.EndHoursLater).format('HH:mm')).prop('disabled', false);
+                                $('#StartHoursLater').val(moment(data.StartHoursLater).format('HH:mm')).prop('disabled', true);
+
                             } else {
-                                $('#RAEndHours').val('').prop('disabled', true);
+                                $('#EndHoursLater').val('').prop('disabled', true);
+                                $('#StartHoursLater').val('').prop('disabled', true);
                             }
                         }
                     }
@@ -1160,30 +1202,38 @@
 
     function checkWorkEarlier() {
         if ($('#IsWorkEarlier').is(':checked')) {
-            $('#RAStartHours').prop('disabled', false);
+            $('#StartHoursEarlier').prop('disabled', false);
         } else {
-            $('#RAStartHours').prop('disabled', true);
+            $('#StartHoursEarlier').prop('disabled', true);
         }
     }
     function checkWorkLater() {
         if ($('#IsWorkLater').is(':checked')) {
-            $('#RAEndHours').prop('disabled', false);
+            $('#EndHoursLater').prop('disabled', false);
         } else {
-            $('#RAEndHours').prop('disabled', true);
+            $('#EndHoursLater').prop('disabled', true);
         }
     }
 
-    function setStartHour() {
+    function setEndHour(){
+        var StartHour = $('#StartHours').val();
+        var calcTime = addHours(StartHour, 8);
+        $('#EndHours').val(moment(calcTime).format('HH:mm'));
+    }
+
+    function setEndHourEarlier() {
         if ($('#IsWorkEarlier').is(':checked')) {
-            var RAStartHour = $('#RAStartHours').val();
-            $('#StartHours').val(RAStartHour);
+            var StartHourEarlier = $('#StartHoursEarlier').val();
+            var calcTime = addHours(StartHourEarlier, 8);
+            $('#EndHoursEarlier').val(moment(calcTime).format('HH:mm'));
         }
     }
 
-    function setEndHour() {
+    function setStartHourLater() {
         if ($('#IsWorkLater').is(':checked')) {
-            var RAEndHour = $('#RAEndHours').val();
-            $('#EndHours').val(RAEndHour);
+            var EndHoursLater = $('#EndHoursLater').val();
+            var calcTime = subtractHours(EndHoursLater, 8);
+            $('#StartHoursLater').val(moment(calcTime).format('HH:mm'));
         }
     }
 
@@ -1197,8 +1247,9 @@
             $('#excludeWeekends').prop('disabled', 'disabled');
             $('#IsWorkEarlier').prop('disabled', 'disabled');
             $('#IsWorkLater').prop('disabled', 'disabled');
-            $('#RAStartHours').prop('disabled', 'disabled');
-            $('#RAEndHours').prop('disabled', 'disabled');
+            $('#StartHoursEarlier').prop('disabled', 'disabled');
+            $('#EndHoursLater').prop('disabled', 'disabled');
+
 
         } else {
             $('#StartHours').prop('disabled', false);
@@ -1220,10 +1271,14 @@
             EndDate: $('#endDate').val(),
             StartHour: $('#StartHours').val(),
             EndHour: $('#EndHours').val(),
-            IsWeekendExclude: $('#excludeWeekends').is(':checked'),
+            IsWeekendExclude: $ ('#excludeWeekends').is(':checked'),
             IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked'),
             IsWorkEarlier: $('#IsWorkEarlier').is(':checked'),
-            IsWorkLater: $('#IsWorkLater').is(':checked')
+            IsWorkLater: $('#IsWorkLater').is(':checked'),
+            StartHoursEarlier: $('#StartHoursEarlier').val(),
+            EndHoursEarlier: $('#EndHoursEarlier').val(),
+            StartHoursLater: $('#StartHoursLater').val(),
+            EndHoursLater: $('#EndHoursLater').val()
         };
 
         var formData = new FormData();
@@ -1615,7 +1670,7 @@
                             {
                                 "data": "action",
                                 "render": function (data, type, row) {
-                                    return "<button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFreelancerExclude(" + row.Id + ")\">Delete</button>";
+                                    return "<div class=\"link_button\" onclick=\"removeFreelancerExclude(" + row.Id + ")\">Delete</div>";
                                 }
                             }
                         ]

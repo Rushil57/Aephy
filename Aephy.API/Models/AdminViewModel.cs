@@ -608,6 +608,14 @@ namespace Aephy.API.Models
 
             public bool? IsWorkLater { get; set; }
 
+            public DateTime? StartHoursEarlier { get; set; }
+
+            public DateTime? EndHoursEarlier { get; set; }
+
+            public DateTime? StartHoursLater { get; set; }
+
+            public DateTime? EndHoursLater { get; set; }
+
         }
 
         public class InvoiceViewModel

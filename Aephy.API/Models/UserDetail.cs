@@ -44,8 +44,20 @@
 
         public bool IsNotAvailableForNextSixMonth { get; set; }
 
-        public bool? IsWorkEarlier { get; set; }
+        public bool IsWorkEarlier { get; set; }
 
-        public bool? IsWorkLater { get; set; }
+        public bool IsWorkLater { get; set; }
+
+        public DateTime? StartHoursEarlier { get; set; }
+
+        public DateTime? EndHoursEarlier { get; set; }
+
+        public DateTime? StartHoursLater { get; set; }
+
+        public DateTime? EndHoursLater { get; set; }
+
+        public DateTime? StartHoursFinal { get; set; }
+
+        public DateTime? EndHoursFinal { get; set; }
     }
 }

@@ -40,6 +40,19 @@ namespace Aephy.API.DBHelper
         public DateTime? StartHours { get; set; }
 
         public DateTime? EndHours { get; set; }
+
+        public DateTime? StartHoursEarlier { get; set; }
+
+        public DateTime? EndHoursEarlier { get; set; }
+
+        public DateTime? StartHoursLater { get; set; }
+
+        public DateTime? EndHoursLater { get; set; }
+
+        public DateTime? StartHoursFinal { get; set; }
+
+        public DateTime? EndHoursFinal { get; set; }
+
         /// <summary>
         /// StripeAccountStatus
         /// </summary>

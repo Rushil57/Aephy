@@ -343,6 +343,21 @@ h6 {
     font-size: 15px;
 }
 
+/*Feedback Link*/
+.link_button {
+    color: var(--brand);
+    text-decoration: underline;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+    .link_button:hover {
+        color: var(--aephy);
+        text-decoration: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
 /* Breadcrumbs */
 .breadcrumb {
     font-size: 14px;

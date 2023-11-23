@@ -591,7 +591,7 @@
                                     <div class="row mb-3">
                                         <label for="StartHours" class="col-md-6 col-lg-4 col-form-label">Start Date</label>
                                         <div class="col-md-8 col-lg-8">
-                                            <input type="date" class="form-control" id="startDate" name="startDate">
+                                            <input type="date" class="form-control" id="startDate" name="startDate" onchange="UpdateEndDate();">
                                         </div>
                                     </div>
 
@@ -642,11 +642,11 @@
                                     </div>
                                     @* new section *@
                                     <div class="row mb-3">
-                                        <label for="renewPassword" class="col-md-3 col-lg-3 col-form-label">Exclude Date</label>
+                                        <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Exclude Date</label>
                                         <div class="col-md-6 col-lg-6">
                                             <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
                                         </div>
                                     </div>
@@ -879,6 +879,21 @@
             $(this).val('');
         });
     });
+
+    function UpdateEndDate(){
+        var startDate = $('#startDate').val();
+        var updatedDate = addMonths(new Date(startDate), 6);
+        $('#endDate').val(moment(updatedDate).format('YYYY-MM-DD'));
+    }
+
+    function addMonths(date, months) {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +months);
+        if (date.getDate() != d) {
+            date.setDate(0);
+        }
+        return date;
+    }
 
     function GetUserData() {
         $('#preloader').show();
@@ -1545,7 +1560,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (result) {
-                console.log(result.Result);
+                //console.log(result.Result);
                 if (result.StatusCode == 200) {
                     $('#table-excludeDate').DataTable({
                         destroy: true,

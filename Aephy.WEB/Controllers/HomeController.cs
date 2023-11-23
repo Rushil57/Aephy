@@ -28,6 +28,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Elfie.Serialization;
 using static Aephy.WEB.Models.AddNonRevolutCounterpartyReq;
+using System.Globalization;
 
 namespace Aephy.WEB.Controllers
 {
@@ -244,7 +245,7 @@ namespace Aephy.WEB.Controllers
 
         [HttpPost]
         public async Task<string> SaveCalenderData(string CalendarData)
-        {   
+        {
             var calendarDataModel = JsonConvert.DeserializeObject<CalendarData>(CalendarData);
             try
             {
@@ -2373,7 +2374,7 @@ namespace Aephy.WEB.Controllers
 
         }
 
-        
+
         //GetClientInvoiceDetails
         [HttpPost]
         public async Task<string> GetFreelancerInvoiceDetails([FromBody] SolutionFundModel model)
@@ -2766,7 +2767,7 @@ namespace Aephy.WEB.Controllers
                 try
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
-                    if(userId == null)
+                    if (userId == null)
                     {
                         return "Please login to purchase solution";
                     }
@@ -2797,19 +2798,18 @@ namespace Aephy.WEB.Controllers
                     string[] dateStrings = model.DateRange.Split(" - ");
                     if (dateStrings.Length == 2)
                     {
-                        if (DateTime.TryParse(dateStrings[0], out DateTime startDate) &&
-                            DateTime.TryParse(dateStrings[1], out DateTime endDate))
-                        {
-                            List<DateTime> dateRange = GenerateDateRange(startDate, endDate);
+                        DateTime startDate = DateTime.ParseExact(dateStrings[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime endDate = DateTime.ParseExact(dateStrings[1], "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                            var requestModel = new ExcludeDateModel();
-                            var userId = HttpContext.Session.GetString("LoggedUser");
-                            requestModel.FreelancerId = userId;
-                            requestModel.ExcludeDateList = dateRange;
+                        List<DateTime> dateRange = GenerateDateRange(startDate, endDate);
 
-                            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, requestModel);
-                            return data;
-                        }
+                        var requestModel = new ExcludeDateModel();
+                        var userId = HttpContext.Session.GetString("LoggedUser");
+                        requestModel.FreelancerId = userId;
+                        requestModel.ExcludeDateList = dateRange;
+
+                        var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SaveFreelancerExcludeDate", HttpMethod.Post, requestModel);
+                        return data;
                     }
                 }
                 catch (Exception ex)
@@ -2828,11 +2828,11 @@ namespace Aephy.WEB.Controllers
             var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetFreelancerExcludeDateData", HttpMethod.Post, model);
             return RolesList;
         }
-        
+
         [HttpPost]
         public async Task<string> RemoveFreelancerExcludeDate([FromBody] ExcludeDateGridModel model)
         {
-            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/RemoveFreelancerExcludeDate", HttpMethod.Post,model);
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/RemoveFreelancerExcludeDate", HttpMethod.Post, model);
             return RolesList;
         }
         private static List<DateTime> GenerateDateRange(DateTime startDate, DateTime endDate)

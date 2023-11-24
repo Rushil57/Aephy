@@ -80,7 +80,8 @@
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div class="cls-initiate-div">
-                                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
+                                            <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
+                                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="OpenFreelancerPopUp()" style="display:none; width: 50%;">Customize Project</button>
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +399,9 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div class="cls-initiate-div">
-                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
+                            <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
+                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="OpenFreelancerPopUp()" style="display:none; width: 50%;">Customize Project</button>
+
                             </div>
                         </div>
                     </div>
@@ -757,9 +760,11 @@
             projecttype = $('input[name=projSizeweb]:checked').val()
         }
         else if (data.value == "custom"){
-            $(".cls-multipleFreelancerbtn").css("display", "flex");
-            $(".cls-singleFreelancerbtn").css("display", "none");
-            $(".cls-multipleFreelancerbtn").prop("checked", true);
+            //$(".cls-multipleFreelancerbtn").css("display", "flex");
+            //$(".cls-singleFreelancerbtn").css("display", "none");
+            $('.btn-InitiateProject').css('display', 'none');
+            $('.btn-CustomizeProject').css('display', 'block');
+            //$(".cls-multipleFreelancerbtn").prop("checked", true);
              projecttype = data.value;
         }
         else{
@@ -767,6 +772,8 @@
             $(".cls-multipleFreelancerbtn").css("display", "none");
             $(".cls-singleFreelancerbtn").css("display", "flex");
             $(".cls-projectSelectionButton").prop("checked", true);
+            $('.btn-InitiateProject').css('display', 'block');
+            $('.btn-CustomizeProject').css('display', 'none');
         }
         var Industryid = @ViewData["Industry"]; 
         var Serviceid = @ViewData["Service"];

@@ -80,7 +80,7 @@
                                  
                                     <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
                                         <div class="cls-initiate-div">
-                                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Contract</button>
+                                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +398,7 @@
                         </div>
                         <div class="row d-flex justify-content-center align-center">
                             <div class="cls-initiate-div">
-                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Contract</button>
+                            <button type="button" class="btn btn-brand btn-contract" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
                             </div>
                         </div>
                     </div>
@@ -809,10 +809,17 @@
                         if(projecttype == "small"){
                             teamsize = 2;
                         }
+                        if(projecttype == "custom"){
+                            teamsize = '-';
+                        }
                         $(".cls-team-size").text(teamsize)
                     }
                     else{
-                        $(".cls-team-size").text(data.SolutionDefine.TeamSize)
+                        var teamSize = data.SolutionDefine.TeamSize;
+                        if(projecttype == "custom"){
+                            teamSize = '-';
+                        }
+                        $(".cls-team-size").text(teamSize);
                     }
                     
                 }
@@ -829,6 +836,9 @@
                     }
                     if(projecttype == "small"){
                         teamsize = 2
+                    }
+                    if(projecttype == "custom"){
+                            teamsize = '-';
                     }
                     $(".cls-team-size").text(teamsize)
                 }

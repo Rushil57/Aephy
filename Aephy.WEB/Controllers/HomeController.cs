@@ -250,88 +250,104 @@ namespace Aephy.WEB.Controllers
             try
             {
                 var userId = HttpContext.Session.GetString("LoggedUser");
+                var userRole = HttpContext.Session.GetString("LoggedUserRole");
+
                 if (userId != null)
                 {
                     model.Id = userId;
-
-                    if (model.IsWorkEarlier && model.IsWorkLater && !model.IsNotAvailableForNextSixMonth)
+                    if (userRole == "Freelancer")
                     {
-                        DateTime startHourEarlier = model.StartHoursEarlier ?? DateTime.Now;
-                        DateTime startHourLater = model.StartHoursLater ?? DateTime.Now;
-                        DateTime endHourEarlier = model.EndHoursEarlier ?? DateTime.Now;
-                        DateTime endHourLater = model.EndHoursLater ?? DateTime.Now;
+                        if (model.IsWorkEarlier && model.IsWorkLater && !model.IsNotAvailableForNextSixMonth)
+                        {
+                            DateTime startHourEarlier = model.StartHoursEarlier ?? DateTime.Now;
+                            DateTime startHourLater = model.StartHoursLater ?? DateTime.Now;
+                            DateTime endHourEarlier = model.EndHoursEarlier ?? DateTime.Now;
+                            DateTime endHourLater = model.EndHoursLater ?? DateTime.Now;
 
-                        if (model.StartHour <= startHourEarlier && model.StartHour <= startHourLater)
-                        {
-                            model.StartHoursFinal = model.StartHour;
-                        }else if (startHourEarlier <= startHourLater)
-                        {
-                            model.StartHoursFinal = startHourEarlier;
-                        }
-                        else
-                        {
-                            model.StartHoursFinal = startHourLater;
-                        }
+                            if (model.StartHour <= startHourEarlier && model.StartHour <= startHourLater)
+                            {
+                                model.StartHoursFinal = model.StartHour;
+                            }
+                            else if (startHourEarlier <= startHourLater)
+                            {
+                                model.StartHoursFinal = startHourEarlier;
+                            }
+                            else
+                            {
+                                model.StartHoursFinal = startHourLater;
+                            }
 
-                        if (model.EndHour >= endHourEarlier && model.EndHour >= endHourLater)
-                        {
-                            model.EndHoursFinal = model.EndHour;
+                            if (model.EndHour >= endHourEarlier && model.EndHour >= endHourLater)
+                            {
+                                model.EndHoursFinal = model.EndHour;
+                            }
+                            else if (endHourEarlier >= endHourLater)
+                            {
+                                model.EndHoursFinal = endHourEarlier;
+                            }
+                            else
+                            {
+                                model.EndHoursFinal = endHourLater;
+                            }
                         }
-                        else if (endHourEarlier >= endHourLater)
+                        else if (!model.IsNotAvailableForNextSixMonth && model.IsWorkEarlier)
                         {
-                            model.EndHoursFinal = endHourEarlier;
+                            DateTime startHourEarlier = model.StartHoursEarlier ?? DateTime.Now;
+                            DateTime endHourEarlier = model.EndHoursEarlier ?? DateTime.Now;
+
+                            if (model.StartHour <= startHourEarlier)
+                            {
+                                model.StartHoursFinal = model.StartHour;
+                            }
+                            else
+                            {
+                                model.StartHoursFinal = startHourEarlier;
+                            }
+
+                            if (model.EndHour >= endHourEarlier)
+                            {
+                                model.EndHoursFinal = model.EndHour;
+                            }
+                            else
+                            {
+                                model.EndHoursFinal = endHourEarlier;
+                            }
+
                         }
-                        else
+                        else if (!model.IsNotAvailableForNextSixMonth && model.IsWorkLater)
                         {
-                            model.EndHoursFinal = endHourLater;
+                            DateTime startHourLater = model.StartHoursLater ?? DateTime.Now;
+                            DateTime endHourLater = model.EndHoursLater ?? DateTime.Now;
+
+                            if (model.StartHour >= startHourLater)
+                            {
+                                model.StartHoursFinal = model.StartHour;
+                            }
+                            else
+                            {
+                                model.StartHoursFinal = startHourLater;
+                            }
+
+                            if (model.EndHour >= endHourLater)
+                            {
+                                model.EndHoursFinal = model.EndHour;
+                            }
+                            else
+                            {
+                                model.EndHoursFinal = endHourLater;
+                            }
                         }
                     }
-                    else if(!model.IsNotAvailableForNextSixMonth && model.IsWorkEarlier)
+                    else
                     {
-                        DateTime startHourEarlier = model.StartHoursEarlier ?? DateTime.Now;
-                        DateTime endHourEarlier = model.EndHoursEarlier ?? DateTime.Now;
-
-                        if (model.StartHour <= startHourEarlier)
-                        {
-                            model.StartHoursFinal = model.StartHour;
-                        }
-                        else
-                        {
-                            model.StartHoursFinal = startHourEarlier;
-                        }
-
-                        if (model.EndHour >= endHourEarlier)
-                        {
-                            model.EndHoursFinal = model.EndHour;
-                        }
-                        else
-                        {
-                            model.EndHoursFinal = endHourEarlier;
-                        }
-
-                    }
-                    else if(!model.IsNotAvailableForNextSixMonth && model.IsWorkLater)
-                    {
-                        DateTime startHourLater = model.StartHoursLater ?? DateTime.Now;
-                        DateTime endHourLater = model.EndHoursLater ?? DateTime.Now;
-
-                        if (model.StartHour >= startHourLater)
-                        {
-                            model.StartHoursFinal = model.StartHour;
-                        }
-                        else
-                        {
-                            model.StartHoursFinal = startHourLater;
-                        }
-
-                        if (model.EndHour >= endHourLater)
-                        {
-                            model.EndHoursFinal = model.EndHour;
-                        }
-                        else
-                        {
-                            model.EndHoursFinal = endHourLater;
-                        }
+                        model.StartHoursEarlier = null;
+                        model.StartHoursLater = null;
+                        model.EndHoursEarlier = null;
+                        model.EndHoursLater = null;
+                        model.StartHoursFinal = null;
+                        model.EndHoursFinal = null;
+                        model.IsWorkEarlier = true;
+                        model.IsWorkLater = true;
                     }
 
                     var userData = await _apiRepository.MakeApiCallAsync("api/User/UpdateCalendarData", HttpMethod.Post, model);

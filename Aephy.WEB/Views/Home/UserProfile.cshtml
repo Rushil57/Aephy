@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                                    <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                                        <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                                    <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                                        <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -62,11 +62,11 @@
                             </li>
 
                             @{
-                                if (@Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                if (@Context.Session.GetString("LoggedUserRole") == "Freelancer" || @Context.Session.GetString("LoggedUserRole") == "Client")
                                 {
-                                                        <li class="nav-item">
-                                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                                        </li>
+                                                            <li class="nav-item">
+                                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                                            </li>
                                 }
                             }
 
@@ -571,7 +571,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section-border row mx-0">
+                                    <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row mx-0 px-0 mb-3">
                                             <div class="col-10">
                                                 <div class="">
@@ -626,7 +626,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row freelancer-Only">
                                         <div class="col-12">
                                             <div class="">
                                                 <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
@@ -635,7 +635,7 @@
                                         </div>
                                     </div>
                                     @* new section *@
-                                    <div class="section-border row mx-0">
+                                    <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row mb-3">
                                             <div class="col-12">
                                                 <div class="">
@@ -657,7 +657,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section-border row mx-0">
+                                    <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row mb-3">
                                             <div class="col-12">
                                                 <div class="">
@@ -680,7 +680,7 @@
                                         </div>
                                     </div>
                                     @* new section *@
-                                    <div class="section-border row mx-0">
+                                    <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row my-3">
                                             <div class="col-12">
                                                 <div class="">
@@ -964,6 +964,9 @@
 
     function GetUserData() {
         $('#preloader').show();
+        if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
+            $('.freelancer-Only').css('display', 'none');
+        }
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -1000,7 +1003,7 @@
                     $(".cls-startHours").val(moment(data.StartHour).format('HH:mm'));
                     $(".cls-endHours").val(moment(data.EndHour).format('HH:mm'));
 
-                    if (data.Role == "Freelancer") {
+                    if (data.Role == "Freelancer" || data.Role == "Client") {
                         if (data.BackCountry != null && data.BackCountry != '' && data.BackCountry != undefined) {
                             var TZone = ct.getTimezonesForCountry(data.BackCountry);
                             var timeZone = '';

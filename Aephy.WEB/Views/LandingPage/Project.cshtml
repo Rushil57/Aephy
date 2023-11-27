@@ -635,8 +635,16 @@
                             <div class="card">
                                 <div class="card-body">
 
-                                    <label class="cls-working-label"> Please confirm your working hours</label>
-                                    <div class="row">
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0">Please confirm your working hours</p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
                                          <div class="col-md-6">
                                             <label for="StartHours" class="form-label">Start Hours</label>
                                             <div class="input-group">
@@ -647,6 +655,62 @@
                                             <label for="EndHours" class="form-label">End Hours</label>
                                             <div class="input-group">
                                                 <input type="time" id="EndHours" class="form-control" name="endHours" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="section-border row mx-0 client-only">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0"><b>Working Days</b></p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onMonday" name="onMonday" class="form-check-input" />
+                                                    <label for="onMonday" class="form-label px-2">Monday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onTuesday" name="onTuesday" class="form-check-input" />
+                                                    <label for="onTuesday" class="form-label px-2">Tuesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onWednesday" name="onWednesday" class="form-check-input" />
+                                                    <label for="onWednesday" class="form-label px-2">Wednesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onThursday" name="onThursday" class="form-check-input" />
+                                                    <label for="onThursday" class="form-label px-2">Thursday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onFriday" name="onFriday" class="form-check-input" />
+                                                    <label for="onFriday" class="form-label px-2">Friday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSaturday" name="onSaturday" class="form-check-input" />
+                                                    <label for="onSaturday" class="form-label px-2">Saturday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSunday" name="onSunday" class="form-check-input" />
+                                                    <label for="onSunday" class="form-label px-2">Sunday</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1197,7 +1261,14 @@
                 MileStoneId : $("#solutionFundMileStoneId").val(),
                 MileStoneCheckout : checkCheckoutType,
                 StartHour : $("#StartHours").val(),
-                EndHour :  $("#EndHours").val()
+                EndHour :  $("#EndHours").val(),
+                onMonday: $('#onMonday').is(':checked'),
+            onTuesday: $('#onTuesday').is(':checked'),
+            onWednesday: $('#onWednesday').is(':checked'),
+            onThursday: $('#onThursday').is(':checked'),
+            onFriday: $('#onFriday').is(':checked'),
+            onSaturday: $('#onSaturday').is(':checked'),
+            onSunday: $('#onSunday').is(':checked')
             }
            $("#preloader").show();
             $.ajax({
@@ -1493,8 +1564,15 @@
              success: function (result) {
                  if(result.Message == "success"){
                      $("#ClientWorkingePopModal").modal('show');
-                     $("#StartHours").val(moment(result.Result.StartHour).format('hh:mm'));
-                     $("#EndHours").val(moment(result.Result.EndHour).format('hh:mm'));
+                     $("#StartHours").val(moment(result.Result.StartHour).format('HH:mm'));
+                     $("#EndHours").val(moment(result.Result.EndHour).format('HH:mm'));
+                     $('#onMonday').prop('checked', result.Result.onMonday);
+                    $('#onTuesday').prop('checked', result.Result.onTuesday);
+                    $('#onWednesday').prop('checked', result.Result.onWednesday);
+                    $('#onThursday').prop('checked', result.Result.onThursday);
+                    $('#onFriday').prop('checked', result.Result.onFriday);
+                    $('#onSaturday').prop('checked', result.Result.onSaturday);
+                    $('#onSunday').prop('checked', result.Result.onSunday);
                  }else{
                      showToaster("error", "Error !", result.Message);
                  }

@@ -748,6 +748,7 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> SaveProjectInitiated([FromBody] SolutionFundModel model)
         {
+            
             var userId = HttpContext.Session.GetString("LoggedUser");
             var preferredcurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
             if (userId == null)
@@ -774,7 +775,23 @@ namespace Aephy.WEB.Controllers
                     HttpContext.Session.SetString("SolutionFundId", SolutionFundId);
                 }
             }
+
             return userData;
+        }
+
+        [HttpPost]
+        public async Task<string> UpdateUserActiveData([FromBody]CalendarData model)
+        {
+            
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            model.Id = userId;
+            var Response = await _apiRepository.MakeApiCallAsync("api/User/UpdateUserActiveDetails", HttpMethod.Post, model);
+
+            return Response;
         }
 
         //RaiseDispute

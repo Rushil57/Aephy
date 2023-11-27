@@ -144,6 +144,14 @@ namespace Aephy.API.Controllers
                         UserDetails.StartHoursLater = user.StartHoursLater;
                         UserDetails.EndHoursEarlier = user.EndHoursEarlier;
                         UserDetails.EndHoursLater = user.EndHoursLater;
+                        UserDetails.onMonday = user.onMonday;
+                        UserDetails.onTuesday = user.onTuesday;
+                        UserDetails.onWednesday = user.onWednesday;
+                        UserDetails.onThursday = user.onThursday;
+                        UserDetails.onFriday = user.onFriday;
+                        UserDetails.onSaturday = user.onSaturday;
+                        UserDetails.onSunday = user.onSunday;
+
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -361,6 +369,15 @@ namespace Aephy.API.Controllers
                             user.StartHoursLater = model.StartHoursLater;
                             user.EndHoursLater = model.EndHoursLater;
                         }
+
+                        user.onSunday = model.onSunday;
+                        user.onMonday = model.onMonday;
+                        user.onTuesday = model.onTuesday;
+                        user.onWednesday = model.onWednesday;
+                        user.onThursday = model.onThursday;
+                        user.onFriday = model.onFriday;
+                        user.onSaturday = model.onSaturday;
+
 
                         var result = await _userManager.UpdateAsync(user);
 

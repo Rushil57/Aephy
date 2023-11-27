@@ -21,11 +21,11 @@
                         @{
                             if (ViewData["ProfileImage"] != "")
                             {
-                                                        <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
+                                                            <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
                             }
                             else
                             {
-                                                        <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                                                            <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                             }
                         }
 
@@ -64,9 +64,9 @@
                             @{
                                 if (@Context.Session.GetString("LoggedUserRole") == "Freelancer" || @Context.Session.GetString("LoggedUserRole") == "Client")
                                 {
-                                                            <li class="nav-item">
-                                                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                                            </li>
+                                                                <li class="nav-item">
+                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                                                </li>
                                 }
                             }
 
@@ -626,6 +626,61 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="section-border row mx-0 client-only" style="display:none;">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0"><b>Working Days</b></p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onMonday" name="onMonday" class="form-check-input" />
+                                                    <label for="onMonday" class="form-label px-2">Monday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onTuesday" name="onTuesday" class="form-check-input" />
+                                                    <label for="onTuesday" class="form-label px-2">Tuesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onWednesday" name="onWednesday" class="form-check-input" />
+                                                    <label for="onWednesday" class="form-label px-2">Wednesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onThursday" name="onThursday" class="form-check-input" />
+                                                    <label for="onThursday" class="form-label px-2">Thursday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onFriday" name="onFriday" class="form-check-input" />
+                                                    <label for="onFriday" class="form-label px-2">Friday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSaturday" name="onSaturday" class="form-check-input" />
+                                                    <label for="onSaturday" class="form-label px-2">Saturday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSunday" name="onSunday" class="form-check-input" />
+                                                    <label for="onSunday" class="form-label px-2">Sunday</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     
                                     @* new section *@
                                     <div class="section-border row mx-0 freelancer-Only">
@@ -969,6 +1024,7 @@
         bindFreelancerExcludeGrid();
         if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
             $('.freelancer-Only').css('display', 'none');
+            $('.client-only').css('display', 'block');
         }
         $.ajax({
             type: "POST",
@@ -1005,6 +1061,13 @@
                     $(".cls-freelancer-CurrencybasedhourlyRate").html('');
                     $(".cls-startHours").val(moment(data.StartHour).format('HH:mm'));
                     $(".cls-endHours").val(moment(data.EndHour).format('HH:mm'));
+                    $('#onMonday').prop('checked', data.onMonday);
+                    $('#onTuesday').prop('checked', data.onTuesday);
+                    $('#onWednesday').prop('checked', data.onWednesday);
+                    $('#onThursday').prop('checked', data.onThursday);
+                    $('#onFriday').prop('checked', data.onFriday);
+                    $('#onSaturday').prop('checked', data.onSaturday);
+                    $('#onSunday').prop('checked', data.onSunday);
 
                     if (data.Role == "Freelancer" || data.Role == "Client") {
                         if (data.BackCountry != null && data.BackCountry != '' && data.BackCountry != undefined) {
@@ -1305,14 +1368,21 @@
             EndDate: $('#endDate').val(),
             StartHour: $('#StartHours').val(),
             EndHour: $('#EndHours').val(),
-            IsWeekendExclude: $ ('#excludeWeekends').is(':checked'),
+            IsWeekendExclude: $('#excludeWeekends').is(':checked'),
             IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked'),
             IsWorkEarlier: $('#IsWorkEarlier').is(':checked'),
             IsWorkLater: $('#IsWorkLater').is(':checked'),
             StartHoursEarlier: $('#StartHoursEarlier').val(),
             EndHoursEarlier: $('#EndHoursEarlier').val(),
             StartHoursLater: $('#StartHoursLater').val(),
-            EndHoursLater: $('#EndHoursLater').val()
+            EndHoursLater: $('#EndHoursLater').val(),
+            onMonday: $('#onMonday').is(':checked'),
+            onTuesday: $('#onTuesday').is(':checked'),
+            onWednesday: $('#onWednesday').is(':checked'),
+            onThursday: $('#onThursday').is(':checked'),
+            onFriday: $('#onFriday').is(':checked'),
+            onSaturday: $('#onSaturday').is(':checked'),
+            onSunday: $('#onSunday').is(':checked')
         };
 
         var formData = new FormData();

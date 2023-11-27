@@ -53,6 +53,20 @@ namespace Aephy.API.DBHelper
 
         public DateTime? EndHoursFinal { get; set; }
 
+        public bool? onMonday { get; set; }
+
+        public bool? onTuesday { get; set; }
+
+        public bool? onWednesday { get; set; }
+
+        public bool? onThursday { get; set; }
+
+        public bool? onFriday { get; set; }
+
+        public bool? onSaturday { get; set; }
+
+        public bool? onSunday { get; set; }
+
         /// <summary>
         /// StripeAccountStatus
         /// </summary>

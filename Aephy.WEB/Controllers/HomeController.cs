@@ -337,9 +337,17 @@ namespace Aephy.WEB.Controllers
                                 model.EndHoursFinal = endHourLater;
                             }
                         }
+                        model.onMonday = null;
+                        model.onTuesday = null;
+                        model.onWednesday = null;
+                        model.onThursday = null;
+                        model.onFriday = null;
+                        model.onSaturday = null;
+                        model.onSunday = null;
                     }
                     else
                     {
+                        model.IsNotAvailableForNextSixMonth = false;
                         model.StartHoursEarlier = null;
                         model.StartHoursLater = null;
                         model.EndHoursEarlier = null;

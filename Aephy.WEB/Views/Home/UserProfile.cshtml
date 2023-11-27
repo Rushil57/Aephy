@@ -622,18 +622,11 @@
                                         <div class="row mb-3">
                                             <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours">
+                                                <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours" onchange="validateWorkingTime();">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row freelancer-Only">
-                                        <div class="col-12">
-                                            <div class="">
-                                                <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
-                                                <label for="excludeWeekends" class="form-label px-2">Exclude weekends</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     @* new section *@
                                     <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row mb-3">
@@ -662,7 +655,7 @@
                                             <div class="col-12">
                                                 <div class="">
                                                     <input type="checkbox" id="IsWorkLater" name="IsWorkLater" onchange="checkWorkLater();" class="form-check-input" />
-                                                    <label for="IsWorkLater" class="form-label px-2">Are you flexible to commence your 8-hour work later?</label>
+                                                    <label for="IsWorkLater" class="form-label px-2">Are you flexible to complete your 8-hour work later?</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -689,8 +682,17 @@
                                             </div>
                                         </div>
 
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />
+                                                    <label for="excludeWeekends" class="form-label px-2">Exclude weekends</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row mb-3">
-                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Exclude Date</label>
+                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Excluded Dates</label>
                                             <div class="col-md-6 col-lg-6">
                                                 <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
                                             </div>
@@ -964,6 +966,7 @@
 
     function GetUserData() {
         $('#preloader').show();
+        bindFreelancerExcludeGrid();
         if ('@Context.Session.GetString("LoggedUserRole")' == "Client") {
             $('.freelancer-Only').css('display', 'none');
         }
@@ -1222,6 +1225,33 @@
         var StartHour = $('#StartHours').val();
         var calcTime = addHours(StartHour, 8);
         $('#EndHours').val(moment(calcTime).format('HH:mm'));
+
+        validateWorkingTime();
+    }
+
+    function validateWorkingTime(){
+        var StartHour = $('#StartHours').val();
+        var EndHour = $('#EndHours').val();
+
+        var splitted1 = StartHour.split(":");
+        var splitted2 = EndHour.split(":");
+
+        var time1 = splitted1[0] + splitted1[1];
+        var time2 = splitted2[0] + splitted2[1]; 
+
+        var calcDifference = 0;
+        if (time1 < time2) {
+            var diff = time2 - time1;
+            calcDifference = diff / 100;
+        } else {
+            var diff1 = 2400 - time1;
+            var diff2 = time2 - 0;
+            calcDifference= (diff1 + diff2) / 100;
+        };
+        if(calcDifference < 8){
+            var EndHour = $('#EndHours').val('');
+            alert("Working period must be minimum 8 hours!")
+        }
     }
 
     function setEndHourEarlier() {
@@ -1268,6 +1298,7 @@
     }
 
     function submitCalendarData() {
+        validateWorkingTime();
         var calendarData = {
             Id: "",
             StartDate: $('#startDate').val(),
@@ -1298,7 +1329,6 @@
                 var test = result.split(",")[1].split(":")[1]
                 showToaster("success", "Success", test.replace(/\"/g, ""));
                 GetUserData();
-                //showToaster("success", "Success", result.Message);
                 $('#preloader').hide();
             },
             error: function (result) {

@@ -40,7 +40,7 @@
 
         public DateTime? EndDate { get; set; }
 
-        public bool? IsWeekendExclude { get; set; }
+        public bool IsWeekendExclude { get; set; }
 
         public bool IsNotAvailableForNextSixMonth { get; set; }
 

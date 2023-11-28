@@ -4,6 +4,7 @@
 }
 
 <link href="../assets/css/projectstylesheet.css" rel="stylesheet" />
+<link href="~/assets/css/daterangepicker.css" rel="stylesheet" />
 <main class="main cls-fixed-common" id="main">
 
     <div class="container">
@@ -78,11 +79,9 @@
 
                                         </div>
                                  
-                                    <div class="row d-flex justify-content-center align-center" style="font-size: 16px;">
-                                        <div class="cls-initiate-div">
-                                            <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
-                                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="OpenFreelancerPopUp()" style="display:none; width: 50%;">Customize Project</button>
-                                        </div>
+                                    <div class="row d-flex justify-content-center align-center client-only" style="font-size: 16px;">
+                                        <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
+                                        <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="OpenFreelancerPopUp()" style="display:none; width: 50%;">Customize Project</button>
                                     </div>
                                 </div>
                             </div>
@@ -397,11 +396,10 @@
                         <div class="projectPoints-div">
 
                         </div>
-                        <div class="row d-flex justify-content-center align-center">
+                        <div class="row d-flex justify-content-center align-center client-only">
                             <div class="cls-initiate-div">
                             <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
                             <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="OpenFreelancerPopUp()" style="display:none; width: 50%;">Customize Project</button>
-
                             </div>
                         </div>
                     </div>
@@ -717,15 +715,54 @@
                                                 <input type="time" id="EndHours" class="form-control" name="endHours" />
                                             </div>
                                         </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    @{
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                                        {
+                                                                    <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                        }
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Client")
+                                                        {
+                                                                    <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
+                                                        }
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Excluded Dates</label>
+                                            <div class="col-md-6 col-lg-6">
+                                                <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-2 col-lg-2">
+                                                <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-5" style="max-height: 18rem;overflow-y: scroll;">
+                                            <table class="table table-borderless datatable" id="table-excludeDate">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Exclude Date</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                     </div>
-                                    
-                                    
-                                       
                                         <div class="text-center">
                                             <button type="button" class="btn btn-brand" onclick="ProjectInitiated(false)">Continue</button>
                                         </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -734,8 +771,12 @@
         </div>
     </div>
 
+<script src="~/assets/js/daterangepicker.js"></script>
 <script>
     $(document).ready(function () {
+        if ('@Context.Session.GetString("LoggedUserRole")' == "Freelancer") {
+            $('.client-only').addClass('d-none');
+        }
         $('input[name="preferOption"][value="select"]').prop('checked','checked');
         $('input[name="preferOptionmobile"][value="select"]').prop('checked','checked');
         $("input[name^='projSize']").change(function(){
@@ -1591,9 +1632,120 @@
                showToaster("error", "Error !", "Something went wrong !!");
              }
           });
+        bindFreelancerExcludeGrid();
+        $('input[name="ExcludeTime"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="ExcludeTime"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+
+        $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
     }
 
     function CloseClientWorkingHourForm(){
         $("#ClientWorkingePopModal").modal('hide');
     }
+
+    let excludeData = [];
+
+    $("#btnAddDate").click(function () {
+
+        if ($("#exclude-time").val() == '') {
+            showToaster("error", "Required !", "Please select date !!");
+        }
+        else {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveFreelancerExcludeDate", "Home")",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ DateRange: $("#exclude-time").val() }),
+                dataType: "json",
+                success: function (result) {
+                    if (result.StatusCode == 200) {
+                        showToaster("success", "Saved.", "Data has been saved.");
+                        bindFreelancerExcludeGrid();
+                        $("#exclude-time").val('');
+                    }
+                    else {
+                        $("#preloader").hide();
+                        showToaster("error", "Error !", result.Message);
+                    }
+                },
+                error: function (result) {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", "Failure");
+                }
+            });
+        }
+    });
+
+    function bindFreelancerExcludeGrid() {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetFreelancerExcludeDateData", "Home")",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                //console.log(result.Result);
+                if (result.StatusCode == 200) {
+                    $('#table-excludeDate').DataTable({
+                        destroy: true,
+                        searching: false,
+                        paging: false,
+                        info: false,
+                        data: result.Result,
+                        "columns": [
+                            {
+                                "data": "ExcludeDate",
+                                "render": function (data, type, full, meta) {
+                                    var date = moment(data).format('DD-MM-YYYY');;
+                                    return '<span>' + date + '</span>';
+                                }
+                            },
+                            {
+                                "data": "action",
+                                "render": function (data, type, row) {
+                                    return "<div class=\"link_button\" onclick=\"removeFreelancerExclude(" + row.Id + ")\">Delete</div>";
+                                }
+                            }
+                        ]
+                    });
+                }
+                $("#preloader").hide();
+                $("#table-excludeDate").removeAttr("style");
+            },
+            error: function (result) {
+                showToaster("error", "Error !", "Failure");
+                $("#preloader").hide();
+            }
+        });
+    }
+
+    function removeFreelancerExclude(id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RemoveFreelancerExcludeDate", "Home")",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            dataType: "json",
+            success: function (result) {
+                showToaster("success", "Removed", "Data has been deleted.");
+                bindFreelancerExcludeGrid();
+                $("#exclude-time").val('');
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+
 </script>

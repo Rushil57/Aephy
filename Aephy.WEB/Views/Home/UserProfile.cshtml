@@ -603,35 +603,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section-border row mx-0">
-                                        <div class="row my-3">
-                                            <div class="col-12">
-                                                <div>
-                                                    <label><p class="m-0">Indicate the time range within which you can commit to an 8-hour work period.</p></label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
-                                            <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours" onchange="setEndHour();">
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
-                                            <div class="col-md-8 col-lg-8">
-                                                <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours" onchange="validateWorkingTime();">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="section-border row mx-0 client-only" style="display:none;">
                                         <div class="row my-3">
                                             <div class="col-12">
                                                 <div>
-                                                    <label><p class="m-0"><b>Working Days</b></p></label>
+                                                    <label><p class="m-0">Please specify the days you typically work.</p></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -681,6 +657,42 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    @{
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                                        {
+                                                            <label><p class="m-0">Indicate the time range within which you can commit to an 8-hour work period.</p></label>
+                                                        }
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Client")
+                                                        {
+                                                            <label><p class="m-0">Please indicate the hours you typically work, including the hours during which you could potentially collaborate with freelancers.</p></label>
+                                                        }
+                                                    }
+                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="StartHours" class="col-md-6 col-lg-4 col-form-label d-flex">Start Hour<div class="TimeZone"></div></label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="startHours" class="form-control cls-startHours" id="StartHours" onchange="setEndHour();">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="EndHours" class="col-md-6 col-lg-4 col-form-label d-flex">End Hour<div class="TimeZone"></div></label>
+                                            <div class="col-md-8 col-lg-8">
+                                                <input type="time" name="endHours" class="form-control cls-endHours" id="EndHours" onchange="validateWorkingTime();">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
                                     
                                     @* new section *@
                                     <div class="section-border row mx-0 freelancer-Only">
@@ -728,16 +740,26 @@
                                         </div>
                                     </div>
                                     @* new section *@
-                                    <div class="section-border row mx-0 freelancer-Only">
+                                    <div class="section-border row mx-0">
                                         <div class="row my-3">
                                             <div class="col-12">
                                                 <div class="">
-                                                    <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                    @{
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                                        {
+                                                            <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                        }
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Client")
+                                                        {
+                                                            <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
+                                                        }
+                                                    }
+                                                    
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row">
+                                        <div class="row freelancer-Only">
                                             <div class="col-12">
                                                 <div class="">
                                                     <input type="checkbox" id="excludeWeekends" name="excludeWeekends" class="form-check-input" />

@@ -626,7 +626,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title main-title">Working Hours</h4>
+                    <h4 class="modal-title main-title">Calendar</h4>
                     <a class="close" onclick="CloseClientWorkingHourForm();"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
@@ -634,37 +634,18 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-
-                                    <div class="section-border row mx-0">
-                                        <div class="row my-3">
+                                    <div class="row my-3">
                                             <div class="col-12">
                                                 <div>
-                                                    <label><p class="m-0">Please confirm your working hours</p></label>
+                                                    <label><p class="m-0">Please confirm the current status of your calendar. If it is not up to date, kindly update it to ensure the smooth initiation of your project.</p></label>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-                                         <div class="col-md-6">
-                                            <label for="StartHours" class="form-label">Start Hours</label>
-                                            <div class="input-group">
-                                                <input type="time" id="StartHours" class="form-control" name="startHours" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="EndHours" class="form-label">End Hours</label>
-                                            <div class="input-group">
-                                                <input type="time" id="EndHours" class="form-control" name="endHours" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
                                     <div class="section-border row mx-0 client-only">
                                         <div class="row my-3">
                                             <div class="col-12">
                                                 <div>
-                                                    <label><p class="m-0"><b>Working Days</b></p></label>
+                                                    <label><p class="m-0">Please specify the days you typically work.</p></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -714,6 +695,32 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0">Please indicate the hours you typically work, including the hours during which you could potentially collaborate with freelancers.</p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                         <div class="col-md-6">
+                                            <label for="StartHours" class="form-label">Start Hours</label>
+                                            <div class="input-group">
+                                                <input type="time" id="StartHours" class="form-control" name="startHours" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="EndHours" class="form-label">End Hours</label>
+                                            <div class="input-group">
+                                                <input type="time" id="EndHours" class="form-control" name="endHours" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                                    
                                        
                                         <div class="text-center">
                                             <button type="button" class="btn btn-brand" onclick="ProjectInitiated(false)">Continue</button>

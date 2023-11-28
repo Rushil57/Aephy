@@ -94,6 +94,10 @@ namespace Aephy.API.DBHelper
 
         public DbSet<AdminToFreelancerReview> AdminToFreelancerReview { get; set; }
 
+        public DbSet<FreelancerFindProcessHeader> FreelancerFindProcessHeader { get; set; }
+
+        public DbSet<FreelancerFindProcessDetails> FreelancerFindProcessDetails { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

@@ -1,4 +1,5 @@
-﻿using Aephy.API.DBHelper;
+﻿using Aephy.API.AlgorithumHelper;
+using Aephy.API.DBHelper;
 using Aephy.API.Models;
 using Aephy.API.Revoult;
 using Aephy.API.Stripe;
@@ -2424,6 +2425,9 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
+            FreelancerFinderHelper helper = new FreelancerFinderHelper();
+            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId);
+
             if (model != null)
             {
                 if (model.GetNextMileStoneData)

@@ -1794,9 +1794,10 @@
              data: JSON.stringify(data),
              success: function (result) {
                  $("#FreelancerFeedbackModal").modal('show');
-                 var reviewData = "";
+                 var reviewData = "No Data Available";
                  $.each(result.Result, function (data, value) {
-                     reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
+
+                     reviewData = '<div class="card info-card cls-mainreviewdiv-card">' +
                          '<div class="cls-review-card">' +
                          '<div class="d-flex align-items-center">' +
                          '<div class="ps-3">' +

@@ -2585,7 +2585,11 @@ namespace Aephy.API.Controllers
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
                             freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
-                            freelancerReviewList.Add(freelanceReview);
+                            if(freelanceReview.Feedback_Message != null && freelanceReview.Feedback_Message != "")
+                            {
+                                freelancerReviewList.Add(freelanceReview);
+                            }
+                            
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel

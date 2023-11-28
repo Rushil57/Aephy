@@ -471,6 +471,7 @@ namespace Aephy.API.Controllers
                         foreach (var topdata in topProfessionalData)
                         {
                             SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
+                            solutionTop.ID = topdata.FreelancerId;
                             solutionTop.Description = topdata.Description;
                             solutionTop.Title = topdata.TopProfessionalTitle;
                             var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();

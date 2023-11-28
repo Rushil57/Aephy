@@ -1004,5 +1004,13 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        //TopProfessionalsFeedback
+        [HttpPost]
+        public async Task<string> GetTopProfessionalsFeedback([FromBody] TopProfessionalReviews model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetTopProfessionalsFeedback", HttpMethod.Post, model);
+            return data;
+        }
+
     }
 }

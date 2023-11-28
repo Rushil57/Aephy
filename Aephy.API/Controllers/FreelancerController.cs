@@ -2565,5 +2565,51 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+        //GetTopProfessionalsFeedback
+        [HttpPost]
+        [Route("GetTopProfessionalsFeedback")]
+        public async Task<IActionResult> GetTopProfessionalsFeedback([FromBody] TopProfessionalReviews model)
+        {
+            if (model != null)
+            {
+                try
+                {
+                    var feedbackData = await _db.FreelancerReview.Where(x => x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                    List<TopProfessionalReviews> freelancerReviewList = new List<TopProfessionalReviews>(); 
+                    if (feedbackData != null && feedbackData.Count > 0)
+                    {
+                        foreach (var feedbackdata in feedbackData)
+                        {
+                            TopProfessionalReviews freelanceReview = new TopProfessionalReviews();
+                            var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
+                            freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            freelancerReviewList.Add(freelanceReview);
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = freelancerReviewList
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = ex.Message + ex.InnerException,
+                    });
+                }
+
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data Not Found",
+            });
+        }
     }
 }

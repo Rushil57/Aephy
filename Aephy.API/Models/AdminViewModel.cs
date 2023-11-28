@@ -330,6 +330,7 @@ namespace Aephy.API.Models
 
         public class SolutionTopProfessionalModel
         {
+            public string? ID { get; set; }
             public int IndustryId { get; set; }
 
             public int SolutionId { get; set; }

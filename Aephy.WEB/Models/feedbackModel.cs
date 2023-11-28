@@ -52,4 +52,17 @@
 
         public DateTime? CreateDateTime { get; set; }
     }
+
+    public class TopProfessionalReviews
+    {
+        public string? FreelancerId { get; set; }
+        public string? ClientId { get; set; }
+        public int? SolutionId { get; set; }
+        public int? IndustryId { get; set; }
+        public string? Feedback_Message { get; set; }
+
+        public string? ClientName { get; set; }
+
+        public string? FreelancerName { get; set; }
+    }
 }

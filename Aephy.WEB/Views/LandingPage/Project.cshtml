@@ -620,6 +620,29 @@
         </div>
     </div>
 
+    <!-- Top Professionals Feedback Modal -->
+    <div class="modal" id="FreelancerFeedbackModal" tabindex="-1" aria-labelledby="FeedbackPopModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Client Feedback List</h4>
+                    <a class="close" onclick="CloseFreelancerFeedbackPopUp();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body" id="freelancer-feedback-Details">
+                                    No Data Available
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
      <div class="modal" id="ClientWorkingePopModal" tabindex="-1" aria-labelledby="ClientWorkingePopModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
@@ -1038,7 +1061,7 @@
                                                             }
                                                             //'<div class="image"><div>' + firstname +''+ lastname +'</div></div>' +
                                                              topProfessional += '<div class="info">' +
-                                                                 '<div class="name">' + values.FreelancerId + '</div>' +
+                                                                 '<div class="name link_button" onclick="openRatingListModal('+Solutionid+','+Industryid+",'"+values.ID+"'"+');">' + values.FreelancerId + '</div>' +
                                                                  '<div class="stars d-flex flex-column">' +
                                                                  '<div>';
                                                              var ratingCeilCount = Math.ceil(values.Rate);
@@ -1602,6 +1625,11 @@
         $("#FeedbackModal").modal('hide');
     }
 
+    
+    function CloseFreelancerFeedbackPopUp(){
+        $("#FreelancerFeedbackModal").modal('hide');
+    }
+
     function OpenClientWorkingHoursPopUp(){
          $("#preloader").show();
           $.ajax({
@@ -1746,6 +1774,48 @@
                 showToaster("error", "Error !", "Failure");
             }
         });
+    }
+
+    function openRatingListModal(Solutionid,Industryid,FreelancerID){
+        var Industryid = @ViewData["Industry"]; 
+          var Solutionid = @ViewData["Solution"];
+
+          var data = {
+              FreelancerId: FreelancerID,
+            SolutionId : Solutionid,
+            IndustryId : Industryid,
+          }
+          $("#preloader").show();
+          $.ajax({
+             type: "POST",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             url: "@Url.Action("GetTopProfessionalsFeedback", "LandingPage")",
+             data: JSON.stringify(data),
+             success: function (result) {
+                 $("#FreelancerFeedbackModal").modal('show');
+                 var reviewData = "";
+                 $.each(result.Result, function (data, value) {
+                     reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
+                         '<div class="cls-review-card">' +
+                         '<div class="d-flex align-items-center">' +
+                         '<div class="ps-3">' +
+                         '<h6 class="cls-feedback-clientname">' + value.ClientName + '</h6>' +
+                         '<div>' +
+                         '<p>' + value.Feedback_Message + '</p>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div></div>';
+                 });
+                 $('#freelancer-feedback-Details').html(reviewData)
+                 $("#preloader").hide();
+             },
+             error: function (result) {
+               $("#preloader").hide();
+               showToaster("error", "Error !", "Something went wrong !!");
+             }
+          });
     }
 
 </script>

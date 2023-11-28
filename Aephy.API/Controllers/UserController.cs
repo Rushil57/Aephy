@@ -144,6 +144,14 @@ namespace Aephy.API.Controllers
                         UserDetails.StartHoursLater = user.StartHoursLater;
                         UserDetails.EndHoursEarlier = user.EndHoursEarlier;
                         UserDetails.EndHoursLater = user.EndHoursLater;
+                        UserDetails.onMonday = user.onMonday;
+                        UserDetails.onTuesday = user.onTuesday;
+                        UserDetails.onWednesday = user.onWednesday;
+                        UserDetails.onThursday = user.onThursday;
+                        UserDetails.onFriday = user.onFriday;
+                        UserDetails.onSaturday = user.onSaturday;
+                        UserDetails.onSunday = user.onSunday;
+
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -362,11 +370,110 @@ namespace Aephy.API.Controllers
                             user.EndHoursLater = model.EndHoursLater;
                         }
 
+                        user.onSunday = model.onSunday;
+                        user.onMonday = model.onMonday;
+                        user.onTuesday = model.onTuesday;
+                        user.onWednesday = model.onWednesday;
+                        user.onThursday = model.onThursday;
+                        user.onFriday = model.onFriday;
+                        user.onSaturday = model.onSaturday;
+
+
                         var result = await _userManager.UpdateAsync(user);
 
                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
                         if (freelancerDetails != null)
                         {
+                            if (model.IsWeekendExclude)
+                            {
+                                DateTime firstDay = model.StartDate ?? DateTime.Now;
+                                DateTime lastDay = model.EndDate ?? DateTime.Now;
+                                var dbmodelList = new List<FreelancerExcludeDate>();
+                                var freelancerExcludatesList = _db.FreelancerExcludeDate.ToList();
+                                var checkStartDate = freelancerDetails.StartDate ?? null;
+                                var checkEndDate = freelancerDetails.EndDate ?? null;
+                                var isOldWeekendExcluded = freelancerDetails.IsWeekendExclude ?? false;
+
+                                if ((freelancerDetails.EndDate > lastDay && checkEndDate != null) || (freelancerDetails.StartDate < firstDay && checkStartDate != null) && isOldWeekendExcluded)
+                                {
+                                    DateTime StartDay = freelancerDetails.StartDate ?? DateTime.Now;
+                                    DateTime EndDay = freelancerDetails.EndDate ?? DateTime.Now;
+
+                                    var RdbmodelList = new List<FreelancerExcludeDate>();
+                                    var RfreelancerExcludatesList = _db.FreelancerExcludeDate.ToList();
+
+                                    if (StartDay != null && EndDay != null)
+                                    {
+                                        for (DateTime date = StartDay; date <= EndDay; date = date.AddDays(1))
+                                        {
+                                            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                                            {
+                                                var dataRecord = RfreelancerExcludatesList.Where(x => x.ExcludeDate == date && x.FreelancerId == freelancerDetails.UserId).FirstOrDefault();
+                                                if (dataRecord != null)
+                                                {
+                                                    _db.FreelancerExcludeDate.Remove(dataRecord);
+                                                }
+                                            }
+                                        }
+                                        await _db.SaveChangesAsync();
+                                    }
+                                }
+
+                                if (firstDay != null && lastDay != null)
+                                {
+                                    for (DateTime date = firstDay; date <= lastDay; date = date.AddDays(1))
+                                    {
+                                        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                                            var duplicate = await _db.FreelancerExcludeDate.Where(x => x.ExcludeDate == date && x.FreelancerId == freelancerDetails.UserId).FirstOrDefaultAsync();
+                                            if (duplicate == null)
+                                            {
+                                                var dbmodel = new FreelancerExcludeDate()
+                                                {
+                                                    FreelancerId = freelancerDetails.UserId,
+                                                    ExcludeDate = date
+                                                };
+                                                dbmodelList.Add(dbmodel);
+                                            }
+                                        }
+                                    }
+                                }
+                                await _db.FreelancerExcludeDate.AddRangeAsync(dbmodelList);
+                                await _db.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                DateTime firstDay = model.StartDate ?? DateTime.Now;
+                                DateTime lastDay = model.EndDate ?? DateTime.Now;
+                                var checkStartDate = model.StartDate ?? null;
+                                var checkEndDate = model.EndDate ?? null;
+
+                                if ((freelancerDetails.EndDate > lastDay && checkEndDate != null) || (freelancerDetails.StartDate < firstDay && checkStartDate != null))
+                                {
+                                    firstDay = freelancerDetails.StartDate ?? DateTime.Now;
+                                    lastDay = freelancerDetails.EndDate ?? DateTime.Now;
+                                }
+
+                                var dbmodelList = new List<FreelancerExcludeDate>();
+                                var freelancerExcludatesList = _db.FreelancerExcludeDate.ToList();
+                                int days = 0;
+
+                                if (firstDay != null && lastDay != null)
+                                {
+                                    for (DateTime date = firstDay; date <= lastDay; date = date.AddDays(1))
+                                    {
+                                        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                                            var dataRecord = freelancerExcludatesList.Where(x => x.ExcludeDate == date && x.FreelancerId == freelancerDetails.UserId).FirstOrDefault();
+                                            if (dataRecord != null)
+                                            {
+                                                _db.FreelancerExcludeDate.Remove(dataRecord);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             freelancerDetails.StartDate = model.StartDate;
                             freelancerDetails.EndDate = model.EndDate;
                             freelancerDetails.IsWeekendExclude = model.IsWeekendExclude;
@@ -374,7 +481,7 @@ namespace Aephy.API.Controllers
                             freelancerDetails.IsWorkEarlier = model.IsWorkEarlier;
                             freelancerDetails.IsWorkLater = model.IsWorkLater;
                             _db.FreelancerDetails.Update(freelancerDetails);
-                            _db.SaveChanges();
+                            await _db.SaveChangesAsync();
                         }
                         if (result.Succeeded)
                             IsDataUpdated = true;

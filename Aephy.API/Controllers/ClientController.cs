@@ -2597,9 +2597,19 @@ namespace Aephy.API.Controllers
                         var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
                         if(clientDetails != null)
                         {
-                            clientDetails.StartHours = DateTime.Parse(model.StartHour);
-                            clientDetails.EndHours = DateTime.Parse(model.EndHour);
-                            _db.SaveChanges();
+                            if (clientDetails.UserType == "Client")
+                            {
+                                clientDetails.StartHours = DateTime.Parse(model.StartHour);
+                                clientDetails.EndHours = DateTime.Parse(model.EndHour);
+                                clientDetails.onMonday = model.onMonday;
+                                clientDetails.onThursday = model.onTuesday;
+                                clientDetails.onWednesday = model.onWednesday;
+                                clientDetails.onThursday = model.onThursday;
+                                clientDetails.onFriday = model.onFriday;
+                                clientDetails.onSaturday = model.onSaturday;
+                                clientDetails.onSunday = model.onSunday;
+                                _db.SaveChanges();
+                            }
                         }
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -5167,6 +5177,13 @@ namespace Aephy.API.Controllers
                         UserDetailsModel clientDetails = new UserDetailsModel();
                         clientDetails.StartHour = clientData.StartHours;
                         clientDetails.EndHour = clientData.EndHours;
+                        clientDetails.onSunday = clientData.onSunday;
+                        clientDetails.onMonday = clientData.onMonday;
+                        clientDetails.onTuesday = clientData.onTuesday;
+                        clientDetails.onWednesday = clientData.onWednesday;
+                        clientDetails.onThursday = clientData.onThursday;
+                        clientDetails.onFriday = clientData.onFriday;
+                        clientDetails.onSaturday = clientData.onSaturday;
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {

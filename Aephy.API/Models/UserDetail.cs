@@ -40,7 +40,7 @@
 
         public DateTime? EndDate { get; set; }
 
-        public bool? IsWeekendExclude { get; set; }
+        public bool IsWeekendExclude { get; set; }
 
         public bool IsNotAvailableForNextSixMonth { get; set; }
 
@@ -59,5 +59,19 @@
         public DateTime? StartHoursFinal { get; set; }
 
         public DateTime? EndHoursFinal { get; set; }
+
+        public bool? onMonday { get; set; }
+
+        public bool? onTuesday { get; set; }
+
+        public bool? onWednesday { get; set; }
+
+        public bool? onThursday { get; set; }
+
+        public bool? onFriday { get; set; }
+
+        public bool? onSaturday { get; set; }
+
+        public bool? onSunday { get; set; }
     }
 }

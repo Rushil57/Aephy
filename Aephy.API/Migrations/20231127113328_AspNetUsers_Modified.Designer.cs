@@ -4,6 +4,7 @@ using Aephy.API.DBHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aephy.API.Migrations
 {
     [DbContext(typeof(AephyAppDbContext))]
-    partial class AephyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231127113328_AspNetUsers_Modified")]
+    partial class AspNetUsers_Modified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -871,83 +874,6 @@ namespace Aephy.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FreelancerExcludeDate");
-                });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.FreelancerFindProcessDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlgorithumStage")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ApproveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FreelancerFindProcessHeaderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FreelancerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FreelancerType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FreelancerFindProcessDetails");
-                });
-
-            modelBuilder.Entity("Aephy.API.DBHelper.FreelancerFindProcessHeader", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CurrentAlgorithumStage")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ExecuteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IndustryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsTeamCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ProjectType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SolutionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TotalAssociate")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalExpert")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalProjectManager")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FreelancerFindProcessHeader");
                 });
 
             modelBuilder.Entity("Aephy.API.DBHelper.FreelancerPool", b =>

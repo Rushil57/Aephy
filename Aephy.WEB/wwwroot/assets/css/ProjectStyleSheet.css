@@ -1947,17 +1947,3 @@ progress::-webkit-progress-value {
     font-size: 18px;
     font-weight: bold;
 }
-
-.link_button {
-    color: var(--brand);
-    text-decoration: underline;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-    .link_button:hover {
-        color: var(--aephy);
-        text-decoration: none;
-        font-size: 15px;
-        cursor: pointer;
-    }

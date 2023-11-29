@@ -1169,7 +1169,6 @@ function removeFreelancerExclude(id) {
 
 function OpenClientWorkingHoursPopUp() {
     $("#preloader").show();
-    if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
         $.ajax({
             type: "GET",
             contentType: "application/json; charset=utf-8",
@@ -1212,11 +1211,7 @@ function OpenClientWorkingHoursPopUp() {
 
         $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
-        });
-    } else {
-        showToaster("warning", "Warning !", "Login as a client to purchase project !!");
-        $("#preloader").hide();
-    }
+        });   
 }
 
 function InitiateOrUpdate() {

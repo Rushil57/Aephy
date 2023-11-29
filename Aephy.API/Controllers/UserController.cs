@@ -380,6 +380,7 @@ namespace Aephy.API.Controllers
 
 
                         var result = await _userManager.UpdateAsync(user);
+                        await _db.SaveChangesAsync();
 
                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
                         if (freelancerDetails != null)

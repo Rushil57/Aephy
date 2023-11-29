@@ -2882,6 +2882,12 @@ namespace Aephy.WEB.Controllers
                         return "Please login as a client to purchase solution";
                     }
                     model.UserId = userId;
+                    model.CustomStartDate = DateTime.Now.ToString();
+                    model.CustomEndDate = DateTime.Now.ToString();
+                    model.CustomStartHour = DateTime.Now.ToString();
+                    model.CustomEndHour = DateTime.Now.ToString();
+                    model.CustomProjectDuration = "0";
+
                     var data = await _apiRepository.MakeApiCallAsync("api/Client/SaveCustomSolutionData", HttpMethod.Post, model);
                     return data;
                 }

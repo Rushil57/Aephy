@@ -1886,8 +1886,6 @@ function getOpenRoles() {
         }
     });
 
-
-
     //getOpenRoles();
     //$("#ProjectType").change(function () {
     //    GetSolutionDefineDetails()

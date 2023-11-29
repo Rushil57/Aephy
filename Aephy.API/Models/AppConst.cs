@@ -10,8 +10,8 @@ namespace Aephy.API.Models
             public static int PLATFORM_COMM_FROM_CLIENT_SMALL = 10;
             public static int PLATFORM_COMM_FROM_CLIENT_MEDIUM = 7;
             public static int PLATFORM_COMM_FROM_CLIENT_LARGE = 7;
-            public static int PLATFORM_COMM_FROM_CLIENT_CUSTOM = 10;
-            public static int PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS = 14;
+            public static int PLATFORM_COMM_FROM_CLIENT_CUSTOM = 7;
+            public static int PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS = 10;
 
             //PROJACT MANAGER FEES  (%)
             //public static int PROJECT_MANAGER_SMALL = 4;

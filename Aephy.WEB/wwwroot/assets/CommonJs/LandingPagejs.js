@@ -1169,49 +1169,54 @@ function removeFreelancerExclude(id) {
 
 function OpenClientWorkingHoursPopUp() {
     $("#preloader").show();
-    $.ajax({
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        url: "/LandingPage/GetClientWorkingHours",
-        success: function (result) {
-            if (result.Message == "success") {
-                $("#ClientWorkingePopModal").modal('show');
-                $("#StartHours").val(moment(result.Result.StartHour).format('HH:mm'));
-                $("#EndHours").val(moment(result.Result.EndHour).format('HH:mm'));
-                $('#onMonday').prop('checked', result.Result.onMonday);
-                $('#onTuesday').prop('checked', result.Result.onTuesday);
-                $('#onWednesday').prop('checked', result.Result.onWednesday);
-                $('#onThursday').prop('checked', result.Result.onThursday);
-                $('#onFriday').prop('checked', result.Result.onFriday);
-                $('#onSaturday').prop('checked', result.Result.onSaturday);
-                $('#onSunday').prop('checked', result.Result.onSunday);
-            } else {
-                showToaster("error", "Error !", result.Message);
+    if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "/LandingPage/GetClientWorkingHours",
+            success: function (result) {
+                if (result.Message == "success") {
+                    $("#ClientWorkingePopModal").modal('show');
+                    $("#StartHours").val(moment(result.Result.StartHour).format('HH:mm'));
+                    $("#EndHours").val(moment(result.Result.EndHour).format('HH:mm'));
+                    $('#onMonday').prop('checked', result.Result.onMonday);
+                    $('#onTuesday').prop('checked', result.Result.onTuesday);
+                    $('#onWednesday').prop('checked', result.Result.onWednesday);
+                    $('#onThursday').prop('checked', result.Result.onThursday);
+                    $('#onFriday').prop('checked', result.Result.onFriday);
+                    $('#onSaturday').prop('checked', result.Result.onSaturday);
+                    $('#onSunday').prop('checked', result.Result.onSunday);
+                } else {
+                    showToaster("error", "Error !", result.Message);
+                }
+
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
             }
+        });
+        bindFreelancerExcludeGrid();
+        $('input[name="ExcludeTime"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
 
-            $("#preloader").hide();
-        },
-        error: function (result) {
-            $("#preloader").hide();
-            showToaster("error", "Error !", "Something went wrong !!");
-        }
-    });
-    bindFreelancerExcludeGrid();
-    $('input[name="ExcludeTime"]').daterangepicker({
-        autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }
-    });
+        $('input[name="ExcludeTime"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
 
-    $('input[name="ExcludeTime"]').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-    });
-
-    $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-    });
+        $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+    } else {
+        showToaster("warning", "Warning !", "Login as a client to purchase project !!");
+        $("#preloader").hide();
+    }
 }
 
 function InitiateOrUpdate() {

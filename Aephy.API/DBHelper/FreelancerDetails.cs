@@ -47,6 +47,8 @@ namespace Aephy.API.DBHelper
         public bool? IsWorkEarlier { get; set; }
 
         public bool? IsWorkLater { get; set; }
+
+        public decimal Score { get; set; }
     }
 
     public class FreelancerExcludeDate

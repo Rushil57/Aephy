@@ -98,6 +98,8 @@ namespace Aephy.API.DBHelper
 
         public DbSet<FreelancerFindProcessDetails> FreelancerFindProcessDetails { get; set; }
 
+        public DbSet<FeatureWiseRanking> FeatureWiseRanking { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{

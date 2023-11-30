@@ -180,7 +180,8 @@ namespace Aephy.API.Controllers
                             FreelancerDetails freelancer = new()
                             {
                                 UserId = getUserDetail.Id.ToString(),
-                                FreelancerLevel = model.FreelancerLevel
+                                FreelancerLevel = model.FreelancerLevel,
+                                Score = (decimal)0.1
                             };
                             _db.FreelancerDetails.Add(freelancer);
                             _db.SaveChanges();

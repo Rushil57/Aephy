@@ -1921,7 +1921,7 @@
         function CustomizeProject() {
             if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
                 OpenClientWorkingHoursPopUp()
-                $('#btn-ProjectInitiateOrSubmit').data('isInitiate', 'false');
+                $('#btn-ProjectInitiateOrSubmit').data('isInitiate', false);
             }else{
                 showToaster("error", "Error !", "Please Login as a client !!");
             }

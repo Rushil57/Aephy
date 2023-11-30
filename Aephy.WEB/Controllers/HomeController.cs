@@ -140,6 +140,7 @@ namespace Aephy.WEB.Controllers
                         HttpContext.Session.SetString("LoggedUserLevel", Level);
                     }
                     HttpContext.Session.SetString("LoggedUser", UserId);
+                    if(ClientCurrency != null)
                     HttpContext.Session.SetString("ClientPreferredCurrency", ClientCurrency);
 
                     string imagepath = jsonObj.Result.ImagePath;

@@ -1069,6 +1069,7 @@ function ResetCustomeForm() {
 function CloseCustomisePopUp() {
     $('input[name="preferOption"][value="select"]').prop('checked', 'checked');
     $('input[name="preferOptionmobile"][value="select"]').prop('checked', 'checked');
+    $('#btn-ProjectInitiateOrSubmit').data('isInitiate', true);
     $('#CustomiseProjectPopUp').modal('hide');
 }
 
@@ -1216,7 +1217,7 @@ function OpenClientWorkingHoursPopUp() {
 
 function InitiateOrUpdate() {
     var isInitiate = $('#btn-ProjectInitiateOrSubmit').data('isInitiate');
-    if (isInitiate == 'true') {
+    if (isInitiate == true) {
         ProjectInitiated(false);
     } else {
         var calendarData = {
@@ -1269,7 +1270,7 @@ function InitiateOrUpdate() {
 }
 
 function CloseClientWorkingHourForm() {
-    $('#btn-ProjectInitiateOrSubmit').data('isInitiate', 'true');
+    $('#btn-ProjectInitiateOrSubmit').data('isInitiate', true);
     $('input[name="preferOption"][value="select"]').prop('checked', 'checked');
     $('input[name="preferOptionmobile"][value="select"]').prop('checked', 'checked');
     $("#ClientWorkingePopModal").modal('hide');

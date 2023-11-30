@@ -78,6 +78,20 @@ h6 {
     margin-bottom:10px;
     /* margin: 10px; */
 }
+
+.link_button {
+    color: var(--brand);
+    text-decoration: underline;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+    .link_button:hover {
+        color: var(--aephy);
+        text-decoration: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
 /*--------------------------------------------------------------
 # Main
 --------------------------------------------------------------*/

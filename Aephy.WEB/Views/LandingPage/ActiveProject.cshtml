@@ -730,6 +730,8 @@
             success: function (result) {
                 var data = result.Result
                 var projecttype = data.SolutionFund.ProjectType;
+                var SolutionFundID = sessionStorage.getItem("SolutionFundId");
+                console.log("SolutionFundID : "+SolutionFundID);
                 if(data.SolutionDefine != null){
                     $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
                     $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
@@ -1613,11 +1615,14 @@
 
     function BindSolutionTeamData(solutionTeamData){
          var solutionTeam = "";
+         var IndustryID = 0;
+        var SolutionID = 0;
          $.each(solutionTeamData, function (solutiondata, solutionValue) {
             var name =solutionValue.FreelancerName.split(" ")
             var firstname = name[0].charAt(0);
             var lastname = name[1].charAt(0);
-
+            IndustryID = solutionValue.IndustryId;
+            SolutionID = solutionValue.SolutionId;
             solutionTeam += '<div class="col-xxl-4 col-md-6">' +
                 '<div class="card info-card cls-solutionTeam-card">' +
                     '<div class="card-body cls-solution-card">' +
@@ -1639,6 +1644,54 @@
                    '</div>' +
                  '</div>';
          })
+        if ("@Context.Session.GetString("LoggedUserRole")" == "Client") {
+            var currentUser = "@Context.Session.GetString("LoggedUser")";
+            solutionTeam += '<div class="col-xxl-4 col-md-6">' +
+                '<div class="card info-card cls-solutionTeam-card">' +
+                '<div class="card-body cls-solution-card">' +
+                '<div class="d-flex align-items-center">' +
+                '<div class="ps-3">' +
+                '<h6 style="margin-bottom: 0; !important">Group chat with client</h6>' +
+                //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
+                "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openGroupChatModal(" + sessionStorage.getItem("SolutionFundId") + ")></i></div>" +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        } else if ("@Context.Session.GetString("LoggedUserRole")" == "Freelancer") {
+            var currentUser = "@Context.Session.GetString("LoggedUser")";
+            solutionTeam += '<div class="col-xxl-4 col-md-6">' +
+                '<div class="card info-card cls-solutionTeam-card">' +
+                '<div class="card-body cls-solution-card">' +
+                '<div class="d-flex align-items-center">' +
+                '<div class="ps-3">' +
+                '<h6 style="margin-bottom: 0; !important">Group chat with </br>client</h6>' +
+                //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
+                "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openGroupChatModal(" + sessionStorage.getItem("SolutionFundId") + ")></i></div>" +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            solutionTeam += '<div class="col-xxl-4 col-md-6">' +
+                '<div class="card info-card cls-solutionTeam-card">' +
+                    '<div class="card-body cls-solution-card">' +
+                        '<div class="d-flex align-items-center">' +
+                          '<div class="ps-3">' +
+                          '<h6 style="margin-bottom: 0; !important">Group chat with </br>freelancers</h6>' +
+                          //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
+                          "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openFreelancersGroupChatModal("+sessionStorage.getItem("SolutionFundId")+")></i></div>" + 
+                          '</div>' +
+                        '</div>' +
+                       '</div>' +
+                     '</div>' +
+                   '</div>' +
+                 '</div>';
+        }
         $('#solutionTeamSection').html(solutionTeam);
         $(".cls-temp").remove();
     }
@@ -1771,6 +1824,33 @@
                 showToaster("error", "Error !", "Something went wrong !!");
             }
         });
+
+    }
+
+    function openGroupChatModal(ID){
+        var html = '';
+        html += "<div class='chat_list' id='groupchat' onclick=\"onPeopleClick(" + ID + ",'groupchat');\">"
+                        + "<div class='chat_people'>"
+                        + "<div class='chat_no_img'>GRP</div>"
+                        + "<div class='chat_no_ib'><h5>Group Chat</h5></div>"
+                        + "</div>";
+
+        $("#inboxPeople .chat_list").remove();
+        $("#inboxPeople").append(html);
+        $('#chatModal').modal('show');
+    }
+
+    function openFreelancersGroupChatModal(ID){
+        var html = '';
+        html += "<div class='chat_list' id='groupchat' onclick=\"onPeopleClick(" + ID + ",'freelancersgroupchat');\">"
+                        + "<div class='chat_people'>"
+                        + "<div class='chat_no_img'>GRP</div>"
+                        + "<div class='chat_no_ib'><h5>Group Chat</h5></div>"
+                        + "</div>";
+
+        $("#inboxPeople .chat_list").remove();
+        $("#inboxPeople").append(html);
+        $('#chatModal').modal('show');
     }
 
        function onPeopleClick(id,name)
@@ -1778,66 +1858,73 @@
         reciverToken = null;
 
         $('#chatModal').modal('show');
+        $("#inboxPeople .chat_list").removeClass("active_chat");
+        $("#"+id).addClass("active_chat");
         //$("#freelancer-name").html(name);
         $("#type-chat").removeClass("d-none");
+
         let currentUser = "@Context.Session.GetString("LoggedUser")";
         let role = "@Context.Session.GetString("LoggedUserRole")";
 
-        if(role == "Client")
-        {
-            //username = name;
-            //chatroom = currentUser +"-join-"+ id ;
-            //bindMessage();
-            //console.log(chatroom);
+           if (name == "groupchat" || name == "freelancersgroupchat") {
+               $("#groupchat").addClass("active_chat");
+               $("#freelancer-name").html("Group Chat");
+               username = name;
+               chatroom = "dynamic" + name + "-join-" + id;
+               bindMessage();
+           }
+           else {
+               $("#freelancer-name").html(name);
+               if (role == "Client") {
+                   //username = name;
+                   //chatroom = currentUser +"-join-"+ id ;
+                   //bindMessage();
+                   //console.log(chatroom);
 
-            var testchatroom = currentUser + "-join-" + id;
-            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
-            findRoom.on("value", function(data) {
+                   var testchatroom = currentUser + "-join-" + id;
+                   var findRoom = firebase.database().ref("ChatRoom/" + testchatroom + "/").limitToFirst(1);
+                   findRoom.on("value", function (data) {
 
-                if(data.val() != undefined)
-                {
-                    username = name;
-                    chatroom = testchatroom;
-                }
-                else
-                {
-                    username = name;
-                    chatroom = id + "-join-" + currentUser;
-                }
+                       if (data.val() != undefined) {
+                           username = name;
+                           chatroom = testchatroom;
+                       }
+                       else {
+                           username = name;
+                           chatroom = id + "-join-" + currentUser;
+                       }
 
-                console.log(chatroom);
+                       console.log(chatroom);
 
-                bindMessage();
+                       bindMessage();
 
-            }, function (error) {
-                return false;
-            });
-        }
-        else
-        {
-            var testchatroom = currentUser + "-join-" + id;
-            var findRoom = firebase.database().ref("ChatRoom/"+testchatroom+"/").limitToFirst(1);
-            findRoom.on("value", function(data) {
+                   }, function (error) {
+                       return false;
+                   });
+               }
+               else {
+                   var testchatroom = currentUser + "-join-" + id;
+                   var findRoom = firebase.database().ref("ChatRoom/" + testchatroom + "/").limitToFirst(1);
+                   findRoom.on("value", function (data) {
 
-                if(data.val() != undefined)
-                {
-                    username = name;
-                    chatroom = testchatroom;
-                }
-                else
-                {
-                    username = name;
-                    chatroom = id + "-join-" + currentUser;
-                }
+                       if (data.val() != undefined) {
+                           username = name;
+                           chatroom = testchatroom;
+                       }
+                       else {
+                           username = name;
+                           chatroom = id + "-join-" + currentUser;
+                       }
 
-                console.log(chatroom);
+                       console.log(chatroom);
 
-                bindMessage();
+                       bindMessage();
 
-            }, function (error) {
-                return false;
-            });
-        }
+                   }, function (error) {
+                       return false;
+                   });
+               }
+           }
     }
 
         function closeChatModal(){

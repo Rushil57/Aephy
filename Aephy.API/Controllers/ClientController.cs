@@ -471,6 +471,7 @@ namespace Aephy.API.Controllers
                         foreach (var topdata in topProfessionalData)
                         {
                             SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
+                            solutionTop.ID = topdata.FreelancerId;
                             solutionTop.Description = topdata.Description;
                             solutionTop.Title = topdata.TopProfessionalTitle;
                             var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
@@ -2425,8 +2426,8 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
-            FreelancerFinderHelper helper = new FreelancerFinderHelper();
-            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId);
+            //FreelancerFinderHelper helper = new FreelancerFinderHelper();
+            //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId);
 
             if (model != null)
             {

@@ -4,22 +4,23 @@
         rules: {
             customprojectoutline: { required: true },
             customprojectdescription: { required: true },
-            customProjectDuration: { required: true },
+            //customProjectDuration: { required: true },
             customPrice: { required: true }
         },
         messages: {
             customprojectoutline: { required: "Please Project outline" },
             customprojectdescription: { required: "Please enter Project description" },
-            customProjectDuration: { required: "Please enter Project Duration" },
+            //customProjectDuration: { required: "Please enter Project Duration" },
             customPrice: { required: "Please enter Price" }
         }
     });
     if (form.valid() === true) {
-        GetWorkingOurForm(this);
+        //GetWorkingOurForm(this);
+        SaveCustomSolutionData();
     }
 });
 
-$('#WorkingFormbtn').on('click', function () {
+/*$('#WorkingFormbtn').on('click', function () {
     var form = $("form[name='CustomWorkingInfoForm']");
     form.validate({
         rules: {
@@ -38,7 +39,7 @@ $('#WorkingFormbtn').on('click', function () {
     if (form.valid() === true) {
         SaveCustomSolutionData();
     }
-});
+});*/
 
 $('#postProjectInfo').on('click', function () {
     var form = $("form[name='ProjectInfoForm']");
@@ -1003,14 +1004,17 @@ function SaveCustomSolutionData() {
         TotalProjectManager: $("#total-projectmanager").val(),
         CustomProjectOutline: $("#custom-ProjectOutline").val(),
         CustomProjectDetail: $("#custom-ProjectDescription").val(),
-        CustomProjectDuration: $("#Customproject-Duartion").val(),
+        CustomProjectDuration: '0',
         CustomPrice: $("#custom-price").val(),
-        CustomStartDate: $("#Customstart-date").val(),
-        CustomEndDate: $("#Customend-date").val(),
-        CustomExcludeWeekend: $('#CustomexcludeWeekends').is(':checked'),
+        //CustomStartDate: $("#Customstart-date").val(),
+        //CustomEndDate: $("#Customend-date").val(),
+        CustomStartDate: '',
+        CustomEndDate: '',
+        //CustomExcludeWeekend: $('#CustomexcludeWeekends').is(':checked'),
+        CustomExcludeWeekend: false,
         CustomOtherHolidayList: $("#CustomholidaysLst").val(),
-        CustomStartHour: $("#customstart-hour").val(),
-        CustomEndHour: $("#customend-hour").val(),
+        CustomStartHour: '',
+        CustomEndHour: '',
         SolutionId: parseInt($("#custom-solutionId").val()),
         IndustryId: parseInt($("#custom-IndustryId").val()),
         ProjectType: projectType,
@@ -1060,4 +1064,213 @@ function ResetCustomeForm() {
     $("#custom-solutionId").val("");
     $("#custom-IndustryId").val("");
     $("#CustomiseProjectPopUp").modal('hide')
+}
+
+function CloseCustomisePopUp() {
+    $('input[name="preferOption"][value="select"]').prop('checked', 'checked');
+    $('input[name="preferOptionmobile"][value="select"]').prop('checked', 'checked');
+    $('#CustomiseProjectPopUp').modal('hide');
+}
+
+let excludeData = [];
+
+$("#btnAddDate").click(function () {
+
+    if ($("#exclude-time").val() == '') {
+        showToaster("error", "Required !", "Please select date !!");
+    }
+    else {
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/SaveFreelancerExcludeDate",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ DateRange: $("#exclude-time").val() }),
+            dataType: "json",
+            success: function (result) {
+                if (result.StatusCode == 200) {
+                    showToaster("success", "Saved.", "Data has been saved.");
+                    bindFreelancerExcludeGrid();
+                    $("#exclude-time").val('');
+                }
+                else {
+                    $("#preloader").hide();
+                    showToaster("error", "Error !", result.Message);
+                }
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+});
+
+function bindFreelancerExcludeGrid() {
+    $.ajax({
+        type: "GET",
+        url: "/Home/GetFreelancerExcludeDateData",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            //console.log(result.Result);
+            if (result.StatusCode == 200) {
+                $('#table-excludeDate').DataTable({
+                    destroy: true,
+                    searching: false,
+                    paging: false,
+                    info: false,
+                    data: result.Result,
+                    "columns": [
+                        {
+                            "data": "ExcludeDate",
+                            "render": function (data, type, full, meta) {
+                                var date = moment(data).format('DD-MM-YYYY');;
+                                return '<span>' + date + '</span>';
+                            }
+                        },
+                        {
+                            "data": "action",
+                            "render": function (data, type, row) {
+                                return "<div class=\"link_button\" onclick=\"removeFreelancerExclude(" + row.Id + ")\">Delete</div>";
+                            }
+                        }
+                    ]
+                });
+            }
+            $("#preloader").hide();
+            $("#table-excludeDate").removeAttr("style");
+        },
+        error: function (result) {
+            showToaster("error", "Error !", "Failure");
+            $("#preloader").hide();
+        }
+    });
+}
+
+function removeFreelancerExclude(id) {
+    $.ajax({
+        type: "POST",
+        url: "/Home/RemoveFreelancerExcludeDate",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ id: id }),
+        dataType: "json",
+        success: function (result) {
+            showToaster("success", "Removed", "Data has been deleted.");
+            bindFreelancerExcludeGrid();
+            $("#exclude-time").val('');
+        },
+        error: function (result) {
+            $("#preloader").hide();
+            showToaster("error", "Error !", "Failure");
+        }
+    });
+}
+
+function OpenClientWorkingHoursPopUp() {
+    $("#preloader").show();
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "/LandingPage/GetClientWorkingHours",
+            success: function (result) {
+                if (result.Message == "success") {
+                    $("#ClientWorkingePopModal").modal('show');
+                    $("#StartHours").val(moment(result.Result.StartHour).format('HH:mm'));
+                    $("#EndHours").val(moment(result.Result.EndHour).format('HH:mm'));
+                    $('#onMonday').prop('checked', result.Result.onMonday);
+                    $('#onTuesday').prop('checked', result.Result.onTuesday);
+                    $('#onWednesday').prop('checked', result.Result.onWednesday);
+                    $('#onThursday').prop('checked', result.Result.onThursday);
+                    $('#onFriday').prop('checked', result.Result.onFriday);
+                    $('#onSaturday').prop('checked', result.Result.onSaturday);
+                    $('#onSunday').prop('checked', result.Result.onSunday);
+                } else {
+                    showToaster("error", "Error !", result.Message);
+                }
+
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", "Something went wrong !!");
+            }
+        });
+        bindFreelancerExcludeGrid();
+        $('input[name="ExcludeTime"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="ExcludeTime"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+
+        $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });   
+}
+
+function InitiateOrUpdate() {
+    var isInitiate = $('#btn-ProjectInitiateOrSubmit').data('isInitiate');
+    if (isInitiate == 'true') {
+        ProjectInitiated(false);
+    } else {
+        var calendarData = {
+            Id: "",
+            StartDate: $('#startDate').val(),
+            EndDate: $('#endDate').val(),
+            StartHour: $('#StartHours').val(),
+            EndHour: $('#EndHours').val(),
+            IsWeekendExclude: $('#excludeWeekends').is(':checked'),
+            IsNotAvailableForNextSixMonth: $('#unavailableNext6Months').is(':checked'),
+            IsWorkEarlier: $('#IsWorkEarlier').is(':checked'),
+            IsWorkLater: $('#IsWorkLater').is(':checked'),
+            StartHoursEarlier: $('#StartHoursEarlier').val(),
+            EndHoursEarlier: $('#EndHoursEarlier').val(),
+            StartHoursLater: $('#StartHoursLater').val(),
+            EndHoursLater: $('#EndHoursLater').val(),
+            onMonday: $('#onMonday').is(':checked'),
+            onTuesday: $('#onTuesday').is(':checked'),
+            onWednesday: $('#onWednesday').is(':checked'),
+            onThursday: $('#onThursday').is(':checked'),
+            onFriday: $('#onFriday').is(':checked'),
+            onSaturday: $('#onSaturday').is(':checked'),
+            onSunday: $('#onSunday').is(':checked')
+        };
+
+        var formData = new FormData();
+        formData.append("CalendarData", JSON.stringify(calendarData));
+
+        $('#preloader').show();
+        $.ajax({
+            type: "POST",
+            url: "/Home/SaveCalenderData",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                var test = result.split(",")[1].split(":")[1]
+                showToaster("success", "Success", test.replace(/\"/g, ""));
+                //GetUserData();
+                CloseClientWorkingHourForm();
+                OpenFreelancerPopUp();
+                $('#preloader').hide();
+            },
+            error: function (result) {
+                $('#preloader').hide();
+                showToaster("error", "Error !", "Failure");
+            }
+        });
+    }
+}
+
+function CloseClientWorkingHourForm() {
+    $('#btn-ProjectInitiateOrSubmit').data('isInitiate', 'true');
+    $('input[name="preferOption"][value="select"]').prop('checked', 'checked');
+    $('input[name="preferOptionmobile"][value="select"]').prop('checked', 'checked');
+    $("#ClientWorkingePopModal").modal('hide');
 }

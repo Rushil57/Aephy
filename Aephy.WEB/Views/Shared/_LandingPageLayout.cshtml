@@ -31,6 +31,7 @@
     <link href="~/assets/css/landingpagestyle.css" rel="stylesheet" />
     <link href="~/assets/css/open-accessibility.min.css" rel="stylesheet" />
     <link href="~/assets/css/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/assets/css/daterangepicker.css" rel="stylesheet" />
 </head>
 <body>
     <!-- ======= Header ======= -->
@@ -86,7 +87,7 @@
                                                 </li>
 
                                                 <li class="dropdown-item">
-                                                    <a href="#" onclick="OpenFreelancerPopUp()" style="text-decoration: none;" class="nav-link">
+                                                    <a href="#" onclick="CustomizeProject()" style="text-decoration: none;" class="nav-link">
                                                         Select Freelancers
                                                     </a>
                                                 </li>
@@ -126,49 +127,49 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                    </li>
                                             }
                                             else
                                             {
-                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                    <i class="bi bi-bell cls-navicon nav-link"></i>
-                                                </li>
-                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                    <i class="ri-mail-line cls-navicon nav-link"></i>
-                                                </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <i class="bi bi-bell cls-navicon nav-link"></i>
+                                                    </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <i class="ri-mail-line cls-navicon nav-link"></i>
+                                                    </li>
 
                                                 if (Context.Session.GetString("LoggedUserRole") != "Client")
                                                 {
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                    </li>
+                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                            <i class="bi bi-heart cls-navicon nav-link"></i>
+                                                        </li>
                                                 }
                                                 else
                                                 {
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
-                                                    </li>
+                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                            <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
+                                                        </li>
                                                 }
 
 
-                                                <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
-                                                </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                    </li>
 
                                                 if (@Context.Session.GetString("UserProfileImage") != "")
                                                 {
-                                                    <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
-                                                        <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
-                                                    </div>
+                                                        <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                            <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                        </div>
                                                 }
                                                 else
                                                 {
-                                                    <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
+                                                        <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
                                                 }
                                             }
 
@@ -1342,7 +1343,7 @@
                                             <a class="col-sm-4 cls-cutomDetails" onclick="OpenPointsPopup()">Add Highlights</a>
                                         </div>
 
-                                        <div class="col d-flex flex-column pt-2">
+                                        <div class="col d-flex flex-column pt-2 d-none">
                                             <label data-aos="fade-up">Project Duartion</label>
                                             <input type="date" class="form-control" id="Customproject-Duartion" name="customProjectDuration">
                                         </div>
@@ -1354,15 +1355,16 @@
 
                                         <div class="col d-flex justify-content-end">
                                             <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
-                                            <a class="btn btn-brand my-3 mx-0" id="ProjectDetailsbtn">Next</a>
-                                          @*   <button type="submit" class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn"></button> *@
+                                            <a class="btn btn-brand my-3 mx-0" id="ProjectDetailsbtn">Confirm</a>
+                                            @* <a class="btn btn-brand my-3 mx-0" id="WorkingFormbtn">Confirm</a> *@
+                                            @*   <button type="submit" class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn"></button> *@
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="border-radius:10px;display:none;" id="customisedProjectWorkingForm">
+                        <div class="d-none" style="border-radius:10px;display:none;" id="customisedProjectWorkingForm">
                             <div class="row gy-4 mt-4 mx-lg-4" style="padding:2%">
                                 <div class="col-lg-6 order-1 order-lg-1 ClientIntro">
                                     <h3 data-aos="fade-up">
@@ -1567,6 +1569,157 @@
         </div>
     </div>
 
+    <div class="modal" id="ClientWorkingePopModal" tabindex="-1" aria-labelledby="ClientWorkingePopModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Calendar</h4>
+                    <a class="close" onclick="CloseClientWorkingHourForm();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row my-3">
+                                        <div class="col-12">
+                                            <div>
+                                                <label><p class="m-0">Please confirm the current status of your calendar. If it is not up to date, kindly update it to ensure the smooth initiation of your project.</p></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-border row mx-0 client-only">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0">Please specify the days you typically work.</p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onMonday" name="onMonday" class="form-check-input" />
+                                                    <label for="onMonday" class="form-label px-2">Monday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onTuesday" name="onTuesday" class="form-check-input" />
+                                                    <label for="onTuesday" class="form-label px-2">Tuesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onWednesday" name="onWednesday" class="form-check-input" />
+                                                    <label for="onWednesday" class="form-label px-2">Wednesday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onThursday" name="onThursday" class="form-check-input" />
+                                                    <label for="onThursday" class="form-label px-2">Thursday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onFriday" name="onFriday" class="form-check-input" />
+                                                    <label for="onFriday" class="form-label px-2">Friday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSaturday" name="onSaturday" class="form-check-input" />
+                                                    <label for="onSaturday" class="form-label px-2">Saturday</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-3 col-12">
+                                                <div class="">
+                                                    <input type="checkbox" id="onSunday" name="onSunday" class="form-check-input" />
+                                                    <label for="onSunday" class="form-label px-2">Sunday</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div>
+                                                    <label><p class="m-0">Please indicate the hours you typically work, including the hours during which you could potentially collaborate with freelancers.</p></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="StartHours" class="form-label">Start Hours</label>
+                                                <div class="input-group">
+                                                    <input type="time" id="StartHours" class="form-control" name="startHours" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="EndHours" class="form-label">End Hours</label>
+                                                <div class="input-group">
+                                                    <input type="time" id="EndHours" class="form-control" name="endHours" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-border row mx-0">
+                                        <div class="row my-3">
+                                            <div class="col-12">
+                                                <div class="">
+                                                    @{
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
+                                                        {
+                                                                <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                        }
+                                                        if (Context.Session.GetString("LoggedUserRole") == "Client")
+                                                        {
+                                                                <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
+                                                        }
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Excluded Dates</label>
+                                            <div class="col-md-6 col-lg-6">
+                                                <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-2 col-lg-2">
+                                                <button type="button" class="btn btn-primary" id="btnAddDate">Add</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-5" style="max-height: 18rem;overflow-y: scroll;">
+                                            <table class="table table-borderless datatable" id="table-excludeDate">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Exclude Date</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-brand" id="btn-ProjectInitiateOrSubmit" data-is-initiate="true" onclick="InitiateOrUpdate();">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Vendor JS Files -->
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
@@ -1579,6 +1732,7 @@
     <script src="~/assets/js/open-accessibility.min.js"></script>
     <script src="~/assets/js/locale.min.js"></script>
     <script src="~/assets/js/sweetalert2.min.js"></script>
+    <script src="~/assets/js/daterangepicker.js"></script>
     <script src="~/assets/commonjs/landingpagejs.js"></script>
 
 
@@ -1722,6 +1876,10 @@
                 backdrop: 'static',
                 keyboard: false  // to prevent closing with Esc button (if you want this too)
             });
+            $('#ClientWorkingePopModal').modal({
+                backdrop: 'static',
+                keyboard: false  // to prevent closing with Esc button (if you want this too)
+            });
         });
 
         $("form[name='addSolutiondescribeForm']").validate({
@@ -1760,6 +1918,14 @@
                 },
             }
         });
+        function CustomizeProject() {
+            if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
+                OpenClientWorkingHoursPopUp()
+                $('#btn-ProjectInitiateOrSubmit').data('isInitiate', 'false');
+            }else{
+                showToaster("error", "Error !", "Please Login as a client !!");
+            }
+        }
     </script>
 </body>
 </html>

@@ -241,7 +241,7 @@ function SaveRequestedProposal() {
 }
 
 function GetClientForm(data) {
-    if (checkFromWhereClick == "SelectAFreelancer") {
+    if (checkFromWhereClick == "SelectAFreelancer" || checkFromWhereClick == "SelectAFreelancerMenu") {
         $("#confirmation").modal('hide');
         $('#CustomiseProjectPopUp').modal('show');
         $("#FreelancerDetailsForm").css("display", "block")

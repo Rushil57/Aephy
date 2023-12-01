@@ -87,7 +87,7 @@
                                                 </li>
 
                                                 <li class="dropdown-item">
-                                                    <a href="#" onclick="CustomizeProject()" style="text-decoration: none;" class="nav-link">
+                                                    <a href="#" onclick="CustomizeProject('SelectAFreelancerMenu')" style="text-decoration: none;" class="nav-link">
                                                         Select Freelancer
                                                     </a>
                                                 </li>
@@ -1929,6 +1929,9 @@
                 //window.location = "../LandingPage/BrowseSolutions?solution=" + searchData;
                 if (txt == 'CustomizeProject'){
                     OpenPostModalPopup('CustomizeProject');
+                }
+                else if (txt == 'SelectAFreelancerMenu') {
+                    OpenPostModalPopup('SelectAFreelancerMenu');
                 }
                 else{
                     OpenPostModalPopup('SelectAFreelancer');

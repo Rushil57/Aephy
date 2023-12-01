@@ -1,4 +1,5 @@
-﻿$('#ProjectDetailsbtn').on('click', function () {
+﻿let TotalDaysCount = 0;
+$('#ProjectDetailsbtn').on('click', function () {
     var form = $("form[name='ProjectDetailsForm']");
     form.validate({
         rules: {
@@ -614,6 +615,7 @@ function GetWorkingOurForm(data) {
     // }
     if (data.text == "Next") {
         if ($("#FreelancerDetailsForm").is(":visible")) {
+            GetMiletoneList();
             $("#FreelancerDetailsForm").css("display", "none")
             $("#customisedDetailsForm").css("display", "block")
             $("#customisedProjectWorkingForm").css("display", "none")
@@ -728,13 +730,15 @@ function GetMiletoneList() {
         dataType: "json",
         data: JSON.stringify(data),
         success: function (result) {
+            console.log(result);
+            TotalDaysCount = 0;
             var data = result.Result
             var index = 0;
             var subObj = '';
             var htm = '';
             for (index = 0; index < data.length; index++) {
                 subObj = data[index];
-
+                console.log(subObj)
                 htm += '<tr>';
                 //htm += '<td class="" >' + subObj.Id + '</td>';
                 htm += '<td onclick=EditMiletoneData(' + subObj.Id + ') class=cls-editnum>' + subObj.Id + '</td>';
@@ -743,9 +747,14 @@ function GetMiletoneList() {
                 htm += '<td>' + subObj.Days + '</td>';
                 htm += '<td><a class="btn btn-danger btn-sm" onclick=DeleteMileStoneById(' + subObj.Id + ')>Delete</a></td>';
                 htm += '</tr>';
+
+                if (subObj.Days != null && subObj.Days != 0) {
+                    TotalDaysCount += subObj.Days;
+                }
             }
             $("#MileStoneTable").find("tr:gt(0)").remove();
             $("#MileStoneTable tbody").append(htm);
+            $("#customProjectDuration").val(TotalDaysCount);
             $("#preloader").hide();
         },
         error: function (result) {

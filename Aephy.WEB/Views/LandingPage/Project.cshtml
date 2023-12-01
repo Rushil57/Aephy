@@ -346,7 +346,7 @@
                                 <input type="radio" name="preferOption" label="Select Project" value="select" checked  id="ProjectSelectionButton" class="cls-projectSelectionButton"/>
                             </div>
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="CustomizeProject()" id="customizedradioButton" class="cls-singleFreelancerbtn"/>
+                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="CustomizeProject('SelectAFreelancer')" id="customizedradioButton" class="cls-singleFreelancerbtn"/>
                                 <input type="radio" name="preferOption" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerRadioButton" class="cls-multipleFreelancerbtn"/>
                             </div>
                         </div>
@@ -402,7 +402,7 @@
                         <div class="row d-flex justify-content-center align-center client-only">
                             <div class="cls-initiate-div">
                             <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
-                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="CustomizeProject();" style="display:none; width: 50%;">Customize Project</button>
+                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="CustomizeProject('CustomizeProject');" style="display:none; width: 50%;">Customize Project</button>
                             </div>
                         </div>
                     </div>

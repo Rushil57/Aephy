@@ -23,5 +23,8 @@ namespace Aephy.API.DBHelper
 
         public string? ProjectType { get; set; }
         public int Days { get; set; }
+
+        public int CustomProjectDetialsId { get; set; }
+        public string? ClientId { get; set; }
     }
 }

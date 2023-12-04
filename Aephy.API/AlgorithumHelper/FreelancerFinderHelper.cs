@@ -7,36 +7,17 @@ namespace Aephy.API.AlgorithumHelper;
 
 public class FreelancerFinderHelper
 {
-    public async Task FindFreelancersAsync(AephyAppDbContext db, string? clientId, string? projectType, int solutionId, int IndustryId)
+    public async Task FindFreelancersAsync(AephyAppDbContext db, string? clientId, string? projectType, int solutionId, int IndustryId, int totalProjectManager, int totalExpert, int totalAssociate)
     {
-        //=== Check Algorithum stage.
+        //=== Check Stage for header and detail data ===//
         var freelancerFindProcessHeader = db.FreelancerFindProcessHeader.Where(x => x.ClientId == clientId && x.ProjectType == projectType && x.IndustryId == IndustryId && x.SolutionId == solutionId).FirstOrDefault();
+        var freelancerFindProcessDetail = db.FreelancerFindProcessDetails.ToList();
         if (freelancerFindProcessHeader?.IsTeamCompleted == false || freelancerFindProcessHeader?.IsTeamCompleted == null)
         {
             //=== Update Score baised on review for freelancer ===//
             await GetRankedWiseFreeLancerList(db);
             try
             {
-                //=== Count for project wise freelancer requirements. ====//
-                int projectManager = 0, associate = 0, expert = 0;
-                if (projectType == "small")
-                {
-                    associate = 1;
-                    expert = 1;
-                }
-                else if (projectType == "medium")
-                {
-                    projectManager = 1;
-                    associate = 1;
-                    expert = 1;
-                }
-                else if (projectType == "large")
-                {
-                    projectManager = 1;
-                    associate = 2;
-                    expert = 1;
-                }
-
                 //=== Find All users with details and merge it. ====//
                 var users = await db.Users.ToArrayAsync();
                 var details = await db.FreelancerDetails.ToArrayAsync();
@@ -54,10 +35,78 @@ public class FreelancerFinderHelper
                 var clientDetails = users.Where(x => x.Id == clientId).FirstOrDefault();
                 if (clientDetails != null)
                 {
-                    Label:
-                    var freelancers = mergedArray.Where(x => x.StartHoursFinal.HasValue ? x.StartHoursFinal.Value.TimeOfDay == clientDetails.StartHoursFinal.Value.TimeOfDay : false &&
-                                                       x.EndHoursFinal.HasValue ? x.EndHoursFinal.Value.TimeOfDay == clientDetails.EndHoursFinal.Value.TimeOfDay : false).ToArray();
-                    if (freelancers != null)
+                    //=== Lable for make loop when add hours in client time ===//
+                    int runningStatus = 0;
+                Label:
+                    //=== Count for project wise freelancer requirements. ====//
+                    int projectManager = 0, associate = 0, expert = 0;
+                    int projectManagerOld = 0, associateOld = 0, expertOld = 0;
+                    if (projectType == "small")
+                    {
+                        associate = 1;
+                        expert = 1;
+                        associateOld = 1;
+                        expertOld = 1;
+                    }
+                    else if (projectType == "medium")
+                    {
+                        projectManager = 1;
+                        associate = 1;
+                        expert = 1;
+                        projectManagerOld = 1;
+                        associateOld = 1;
+                        expertOld = 1;
+                    }
+                    else if (projectType == "large")
+                    {
+                        projectManager = 1;
+                        associate = 2;
+                        expert = 2;
+                        projectManagerOld = 1;
+                        associateOld = 2;
+                        expertOld = 2;
+                    }
+                    else if(projectType == "custom")
+                    {
+                        projectManager = totalProjectManager;
+                        associate = totalAssociate;
+                        expert = totalExpert;
+                        projectManagerOld = totalProjectManager;
+                        associateOld = totalAssociate;
+                        expertOld = totalExpert;
+                    }
+
+                    //=== Genrate freelancers list depend on client working time and exclude alrady approve project ===//
+                    var approvedDetailIds = freelancerFindProcessDetail.Where(x => x.ApproveStatus > 0).Select(x => x.FreelancerId).ToList();
+                    var freelancers = mergedArray.Where(x => x.StartHoursFinal.HasValue ? x.StartHoursFinal.Value.TimeOfDay == clientDetails.StartHours.Value.TimeOfDay : false &&
+                                                       x.EndHoursFinal.HasValue ? x.EndHoursFinal.Value.TimeOfDay == clientDetails.EndHours.Value.TimeOfDay : false).ToArray();
+                    if (approvedDetailIds.Any())
+                    {
+                        freelancers = freelancers.Where(x => !approvedDetailIds.Contains(x.UserId)).ToArray();
+                    }
+
+                    //=== Genrate Project Startdate and End Date Baised on Milestone ===//
+                    int projectCompletedTime = db.SolutionMilestone.Where(x => x.IndustryId == IndustryId && x.SolutionId == solutionId && x.ProjectType == projectType).Select(x => x.Days).Sum();
+                    DateTime startDate = DateTime.Now;
+                    DateTime endDate = startDate.AddDays(projectCompletedTime);
+
+                    //=== Find Freelancer which is alrady in leave baised on duration ===//
+                    var excludeDateFreelancer = db.FreelancerExcludeDate.Where(exclude => exclude.ExcludeDate < startDate || exclude.ExcludeDate > endDate).ToList();
+                    int maxLeaveDays = 4;
+                    if (excludeDateFreelancer.Any())
+                    {
+                        //=== Find Freelancers leave count baised on exclude date data ===//
+                        var invalidFreelancerIds = excludeDateFreelancer.GroupBy(exclude => exclude.FreelancerId)
+                            .Where(group => group.Count() >= maxLeaveDays).Select(group => group.Key).ToList();
+                        
+                        //=== Remove freelancer which is alrady more then 4 leave during given timeline ===//
+                        if(invalidFreelancerIds.Any())
+                        {
+                            freelancers = freelancers.Where(x => !invalidFreelancerIds.Contains(x.UserId)).ToArray();
+                        }
+                    }
+
+                    if (freelancers.Count() > 0)
                     {
                         //=== Find Algorithum Current stage and according stage find freelancer ===//
 
@@ -81,11 +130,11 @@ public class FreelancerFinderHelper
                             associate = associate * 10;
                             expert = expert * 10;
                         }
-                        else
+                        else if (algorithumStage > 0)
                         {
-                            projectManager = freelancers.Count();
-                            associate = freelancers.Count();
-                            expert = freelancers.Count();
+                            projectManager = freelancers.Where(x => x.FreelancerDetail.FreelancerLevel == "Project Manager").Count();
+                            expert = freelancers.Where(x => x.FreelancerDetail.FreelancerLevel == "Expert").Count();
+                            associate = freelancers.Where(x => x.FreelancerDetail.FreelancerLevel == "Associate").Count();
                         }
 
                         //=== Getting freelancers baised on ratting score ====//
@@ -138,7 +187,8 @@ public class FreelancerFinderHelper
                                 TotalExpert = expert,
                                 StartDate = DateTime.Now,
                                 ExecuteDate = DateTime.Now,
-                                IsTeamCompleted = false
+                                IsTeamCompleted = false,
+                                CurrentStatus = 0
                             };
 
                             var headerModel = await db.FreelancerFindProcessHeader.AddAsync(header);
@@ -194,12 +244,13 @@ public class FreelancerFinderHelper
                         else
                         {
                             //=== Update header with algorithum stage ====//
+                            var headerDetailData = freelancerFindProcessDetail.Where(x => x.FreelancerFindProcessHeaderId == freelancerFindProcessHeader.Id).ToList();
+
                             freelancerFindProcessHeader.CurrentAlgorithumStage = algorithumStage + 1;
                             freelancerFindProcessHeader.ExecuteDate = DateTime.Now;
 
-                            var oldFreelancerInDetails = db.FreelancerFindProcessDetails.Where(x => x.FreelancerFindProcessHeaderId == freelancerFindProcessHeader.Id).Select(x => x.FreelancerId).ToList();
+                            var oldFreelancerInDetails = headerDetailData.Select(x => x.FreelancerId).ToList();
                             var detailModelList = new List<FreelancerFindProcessDetails>();
-
 
                             //=== Remove freelancer which is alrady in detail section ===//
                             rankedProjectManager = rankedProjectManager.Where(rp => !oldFreelancerInDetails.Contains(rp.UserId)).Take(projectManager).ToList();
@@ -210,56 +261,78 @@ public class FreelancerFinderHelper
                             await db.SaveChangesAsync();
 
                             //=== Save header details with algorithum stage ====//
-                            foreach (var item in rankedProjectManager)
+                            int currentPCount = headerDetailData.Where(pc => pc.FreelancerType == "Project Manager" && pc.ApproveStatus == 1).Count();
+                            int currentECount = headerDetailData.Where(pc => pc.FreelancerType == "Expert" && pc.ApproveStatus == 1).Count();
+                            int currentACount = headerDetailData.Where(pc => pc.FreelancerType == "Associate" && pc.ApproveStatus == 1).Count();
+
+                            if (currentPCount != projectManagerOld)
                             {
-                                var pmodel = new FreelancerFindProcessDetails
+                                foreach (var item in rankedProjectManager)
                                 {
-                                    FreelancerFindProcessHeaderId = headerModel.Entity.Id,
-                                    AlgorithumStage = algorithumStage + 1,
-                                    FreelancerType = "Project Manager",
-                                    FreelancerId = item.UserId,
-                                    ApproveStatus = 0,
-                                    CreatedDate = DateTime.Now,
-                                };
-                                detailModelList.Add(pmodel);
+                                    var pmodel = new FreelancerFindProcessDetails
+                                    {
+                                        FreelancerFindProcessHeaderId = headerModel.Entity.Id,
+                                        AlgorithumStage = algorithumStage + 1,
+                                        FreelancerType = "Project Manager",
+                                        FreelancerId = item.UserId,
+                                        ApproveStatus = 0,
+                                        CreatedDate = DateTime.Now,
+                                    };
+                                    detailModelList.Add(pmodel);
+                                }
                             }
-                            foreach (var item in rankedExpertsArray)
+
+                            if (currentECount != expertOld)
                             {
-                                var emodel = new FreelancerFindProcessDetails
+                                foreach (var item in rankedExpertsArray)
                                 {
-                                    FreelancerFindProcessHeaderId = headerModel.Entity.Id,
-                                    AlgorithumStage = algorithumStage + 1,
-                                    FreelancerType = "Expert",
-                                    FreelancerId = item.UserId,
-                                    ApproveStatus = 0,
-                                    CreatedDate = DateTime.Now,
-                                };
-                                detailModelList.Add(emodel);
+                                    var emodel = new FreelancerFindProcessDetails
+                                    {
+                                        FreelancerFindProcessHeaderId = headerModel.Entity.Id,
+                                        AlgorithumStage = algorithumStage + 1,
+                                        FreelancerType = "Expert",
+                                        FreelancerId = item.UserId,
+                                        ApproveStatus = 0,
+                                        CreatedDate = DateTime.Now,
+                                    };
+                                    detailModelList.Add(emodel);
+                                }
                             }
-                            foreach (var item in rankedAssociatesArray)
+
+                            if (currentACount != associateOld)
                             {
-                                var amodel = new FreelancerFindProcessDetails
+                                foreach (var item in rankedAssociatesArray)
                                 {
-                                    FreelancerFindProcessHeaderId = headerModel.Entity.Id,
-                                    AlgorithumStage = algorithumStage + 1,
-                                    FreelancerType = "Associate",
-                                    FreelancerId = item.UserId,
-                                    ApproveStatus = 0,
-                                    CreatedDate = DateTime.Now,
-                                };
-                                detailModelList.Add(amodel);
+                                    var amodel = new FreelancerFindProcessDetails
+                                    {
+                                        FreelancerFindProcessHeaderId = headerModel.Entity.Id,
+                                        AlgorithumStage = algorithumStage + 1,
+                                        FreelancerType = "Associate",
+                                        FreelancerId = item.UserId,
+                                        ApproveStatus = 0,
+                                        CreatedDate = DateTime.Now,
+                                    };
+                                    detailModelList.Add(amodel);
+                                }
                             }
 
                             await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
                             await db.SaveChangesAsync();
+
+                            //After save send mail to freelancer.
                         }
                     }
                     else
                     {
                         clientDetails.StartHours.Value.AddHours(2);
                         clientDetails.EndHours.Value.AddHours(2);
-                        goto Label;
-                        // 5 time loop repeat.
+
+                        runningStatus++;
+
+                        if (runningStatus <= 5)
+                        {
+                            goto Label;
+                        }
                     }
                 }
             }

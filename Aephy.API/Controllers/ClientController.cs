@@ -548,7 +548,7 @@ namespace Aephy.API.Controllers
                     if (solutionindustryData != null)
                     {
                         var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionindustryData.Id && x.ProjectType == "custom").FirstOrDefault();
-                        if(solutionDefineData != null)
+                        if (solutionDefineData != null)
                         {
                             singleFreelancerCustomProject = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id && x.IsSingleFreelancer).ToList();
                         }
@@ -1985,10 +1985,10 @@ namespace Aephy.API.Controllers
                     if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
                         var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
-                        if(solutionIndustryData != null)
+                        if (solutionIndustryData != null)
                         {
                             var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
-                            if(solutionDefineData != null)
+                            if (solutionDefineData != null)
                             {
                                 teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
                             }
@@ -2239,7 +2239,7 @@ namespace Aephy.API.Controllers
                         }
                         else if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                         {
-                            if(teamList.Count <= 3)
+                            if (teamList.Count <= 3)
                             {
                                 clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
                             }
@@ -2247,7 +2247,7 @@ namespace Aephy.API.Controllers
                             {
                                 clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
                             }
-                            
+
                         }
                         clientAndFLfees = flFees + clientFees;
 
@@ -2426,8 +2426,8 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
-            //FreelancerFinderHelper helper = new FreelancerFinderHelper();
-            //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId);
+            FreelancerFinderHelper helper = new FreelancerFinderHelper();
+            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
 
             if (model != null)
             {
@@ -2495,14 +2495,14 @@ namespace Aephy.API.Controllers
                                     var experttotal = Convert.ToInt32(teamData.Expert);
                                     var assosiatetotal = Convert.ToInt32(teamData.Associate);
                                     var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
-                                    await SaveSolutionTeamData(solutionfund,assosiatetotal, experttotal,projectmanagertotal);
+                                    await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
                                 }
 
                                 else
                                 {
                                     await SaveSolutionTeamData(solutionfund, 0, 0, 0);
                                 }
-                                
+
                             }
                         }
                         catch (Exception ex)
@@ -2596,7 +2596,7 @@ namespace Aephy.API.Controllers
                         await SaveSolutionTeamData(solutionfund, 0, 0, 0);
 
                         var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
-                        if(clientDetails != null)
+                        if (clientDetails != null)
                         {
                             if (clientDetails.UserType == "Client")
                             {
@@ -4327,7 +4327,7 @@ namespace Aephy.API.Controllers
                 }
                 if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                 {
-                    if(solutionTeamdata.Count <= 3)
+                    if (solutionTeamdata.Count <= 3)
                     {
                         clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS)) / 100;
                     }
@@ -4773,7 +4773,7 @@ namespace Aephy.API.Controllers
             }
             else if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
             {
-                if(fullTeam.Count <= 3)
+                if (fullTeam.Count <= 3)
                 {
                     clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
                 }
@@ -4781,7 +4781,7 @@ namespace Aephy.API.Controllers
                 {
                     clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
                 }
-                
+
                 freelancerFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
             }
             var revolutFees = contract.RevolutFee;
@@ -5053,7 +5053,7 @@ namespace Aephy.API.Controllers
                 {
                     if (model.IsSingleFreelancer)
                     {
-                        if(model.SingleFreelancer == "Expert")
+                        if (model.SingleFreelancer == "Expert")
                         {
                             model.TotalExpert = "1";
                         }
@@ -5066,6 +5066,10 @@ namespace Aephy.API.Controllers
                             model.TotalProjectManager = "1";
                         }
                     }
+
+                    FreelancerFinderHelper helper = new FreelancerFinderHelper();
+                    await helper.FindFreelancersAsync(_db, model.UserId, model.ProjectType, model.SolutionId, model.IndustryId, Convert.ToInt32(model.TotalProjectManager), Convert.ToInt32(model.TotalExpert), Convert.ToInt32(model.TotalAssociate));
+
 
                     var teamSize = Convert.ToInt16(model.TotalAssociate) + Convert.ToInt16(model.TotalExpert) + Convert.ToInt16(model.TotalProjectManager);
                     var solutionDefine = new SolutionDefine()
@@ -5149,7 +5153,7 @@ namespace Aephy.API.Controllers
         {
             if (id > 0)
             {
-                string invoiceNumber = invoicePrefix + "-"+ id.ToString("D5");
+                string invoiceNumber = invoicePrefix + "-" + id.ToString("D5");
 
                 var invoiceModel = await _db.InvoiceList.FirstOrDefaultAsync(x => x.Id == id);
                 if (invoiceModel != null)
@@ -5170,10 +5174,10 @@ namespace Aephy.API.Controllers
 
             try
             {
-               if(model.UserId != null)
+                if (model.UserId != null)
                 {
                     var clientData = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
-                    if(clientData != null)
+                    if (clientData != null)
                     {
                         UserDetailsModel clientDetails = new UserDetailsModel();
                         clientDetails.StartHour = clientData.StartHours;

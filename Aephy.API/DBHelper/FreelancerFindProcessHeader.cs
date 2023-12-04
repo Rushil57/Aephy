@@ -19,4 +19,5 @@ public class FreelancerFindProcessHeader
     public DateTime StartDate { get; set; }
     public DateTime ExecuteDate { get; set; }
     public bool IsTeamCompleted { get; set; }
+    public int CurrentStatus { get; set; }
 }

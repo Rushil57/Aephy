@@ -271,6 +271,29 @@
                         </div>
                     </div>
 
+                    <div class="col-12 only_freelancer" id="RequestListSection">
+                        <div class="card top-selling overflow-auto material_scroll">
+                            <div class="card-body pb-0" style="height:303px;">
+                                <h5 class="card-title">Project Request - Approve for be a part of Team</h5>
+                                <table class="table table-borderless" id="RequestList">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" id="hidden_item">Id</th>
+                                            <th scope="col">Solution</th>
+                                            <th scope="col">Industry</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+
                       <div class="col-12" id="activeProjects">
                         <div class="card">
                             <div class="card-body pb-0">
@@ -2085,11 +2108,13 @@ Automated Price Estimation: Our platform uses the inputs provided by the Project
                 $(".cls-freelancerField").hide();
                 $("#RecentOpening").hide();
                  $("#ApprovedListSection").hide();
+                 $("#RequestListSection").hide();
                  $("#FreelancerActiveProjectInvoices").hide();
                  getClientProjectExpense();
             }else{
                 getOpenRoles();
                  GetApprovedList();
+                 GetFreelancerRequestList();
                 GetFreelancerActiveProjectList();
                  GetFreelancerInvoices();
                 $("#savedProjects").hide();

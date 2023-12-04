@@ -436,6 +436,60 @@ function GetApprovedList() {
     });
 }
 
+function GetFreelancerRequestList() {
+    $("#preloader").show();
+    $.ajax({
+        type: "Get",
+        url: "/Home/GetRequestedList",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            var index = 0;
+            var subObj = '';
+            var htm = '';
+            var resultLength = result.Result.length;
+            if (resultLength > 0) {
+                for (index = 0; index < resultLength; index++) {
+                    subObj = result.Result[index];
+
+                    htm += '<tr>';
+                    htm += '<td class="cls-RolesId" id="hidden_item">' + subObj.ID + '</td>';
+                    htm += '<td>' + subObj.SolutionName + '</td>';
+                    htm += '<td>' + subObj.IndustriesName + '</td>';
+                    if (subObj.ApproveStatus == 0) {
+                        htm += '<td><a class="btn btn-success pt-0 pb-1" style="color: white;" onclick=RequestApproveReject(' + subObj.DetailId + ',1)>Approve</a> &nbsp;' +
+                            '<a class="btn btn-danger pt-0 pb-1" style="color: white;" onclick=RequestApproveReject(' + subObj.DetailId + ',2)>Reject</a></td>';
+                    }
+                    else {
+                        if (subObj.ApproveStatus == 1) {
+                            htm += '<td><span class="badge bg-success">Accept</span></td>';
+                        }
+                        else if (subObj.ApproveStatus == 2) {
+                            htm += '<td><span class="badge bg-danger">Rejected</span></td>';
+                        }
+                        else {
+                            htm += '<td></td>';
+                        }
+                    }
+                    htm += '</tr>';
+                }
+            } else {
+                htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+            }
+            $("#RequestList").find("tr:gt(0)").remove();
+            $("#RequestList tbody").append(htm);
+            $("#preloader").hide();
+        },
+        error: function (result) {
+            var htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
+            $("#ApprovedList").find("tr:gt(0)").remove();
+            $("#ApprovedList tbody").append(htm);
+            showToaster("error", "Error !", result);
+            $("#preloader").hide();
+        }
+    });
+}
+
 function DeleteFreelancerAppliedSolution(data, SolutionId, IndustryId) {
     var Freelancerlevel = $(data).closest('tr').find('.cls-level').text();
     Swal.fire({
@@ -470,6 +524,43 @@ function DeleteFreelancerAppliedSolution(data, SolutionId, IndustryId) {
                 showToaster("error", "Error !", result);
             }
         });
+    });
+}
+
+function RequestApproveReject(id, status) {
+
+    Swal.fire({
+        title: 'Are you sure ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, do it!'
+    }).then(function (t) {
+        if (!t.isConfirmed) return;
+        var data = {
+            Id: id,
+            RequestStatus: status,
+        };
+
+        $("#preloader").show();
+        $.ajax({
+            type: "POST",
+            url: "/Home/FreelancerRequest",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                showToaster("success", "Success", result.Message);
+                GetFreelancerRequestList();
+                $("#preloader").hide();
+            },
+            error: function (result) {
+                $("#preloader").hide();
+                showToaster("error", "Error !", result);
+            }
+        });
+
     });
 }
 

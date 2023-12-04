@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
@@ -276,6 +277,65 @@ namespace Aephy.API.Controllers
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
                     Result = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetRequestList")]
+        public async Task<IActionResult> GetRequestList([FromBody] GetUserProfileRequestModel model)
+        {
+            try
+            {
+                var requestdetails = await _db.FreelancerFindProcessDetails.Where(x => x.FreelancerId == model.UserId).ToListAsync();
+                var solutionList = await _db.Solutions.ToListAsync();
+                var industryList = await _db.Industries.ToListAsync();
+
+                if (requestdetails.Any())
+                {
+                    var ids = requestdetails.Select(x => x.FreelancerFindProcessHeaderId).ToList();
+                    var headers = await _db.FreelancerFindProcessHeader.Where(x => ids.Contains(x.Id)).ToListAsync();
+
+
+                    List<dynamic> detailList = new List<dynamic>();
+
+                    foreach (var item in headers)
+                    {
+                        var detailObject = requestdetails.Where(x => x.FreelancerFindProcessHeaderId == item.Id).FirstOrDefault();
+                        var obj = new
+                        {
+                            FreelancerId = detailObject.FreelancerId,
+                            SolutionName = solutionList.Where(x=>x.Id == item.SolutionId).Select(x=>x.Title).FirstOrDefault(),
+                            IndustriesName = industryList.Where(x=>x.Id == item.IndustryId).Select(x=>x.IndustryName).FirstOrDefault(),
+                            Id = item.Id,
+                            ApproveStatus = detailObject.ApproveStatus,
+                            DetailId = detailObject.Id
+                        };
+
+                        detailList.Add(obj);
+                    }
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Success",
+                        Result = detailList
+                    });
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = null
                 });
             }
             catch (Exception ex)
@@ -2528,7 +2588,7 @@ namespace Aephy.API.Controllers
         [Route("GetFreelancerExcludeDateData")]
         public async Task<IActionResult> GetFreelancerExcludeDateData([FromBody] ExcludeDateGridModel model)
         {
-            var modelList = await _db.FreelancerExcludeDate.Where(x=>x.FreelancerId == model.FreelancerId).ToListAsync();
+            var modelList = await _db.FreelancerExcludeDate.Where(x => x.FreelancerId == model.FreelancerId).ToListAsync();
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -2576,7 +2636,7 @@ namespace Aephy.API.Controllers
                 try
                 {
                     var feedbackData = await _db.FreelancerReview.Where(x => x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
-                    List<TopProfessionalReviews> freelancerReviewList = new List<TopProfessionalReviews>(); 
+                    List<TopProfessionalReviews> freelancerReviewList = new List<TopProfessionalReviews>();
                     if (feedbackData != null && feedbackData.Count > 0)
                     {
                         foreach (var feedbackdata in feedbackData)
@@ -2585,11 +2645,11 @@ namespace Aephy.API.Controllers
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
                             freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
-                            if(freelanceReview.Feedback_Message != null && freelanceReview.Feedback_Message != "")
+                            if (freelanceReview.Feedback_Message != null && freelanceReview.Feedback_Message != "")
                             {
                                 freelancerReviewList.Add(freelanceReview);
                             }
-                            
+
                         }
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2614,6 +2674,35 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Data Not Found",
             });
+        }
+
+        [HttpPost]
+        [Route("FreelancerRequest")]
+        public async Task<IActionResult> FreelancerRequest([FromBody] FreelancerRequestModel model)
+        {
+            try
+            {
+                var dbModel = await _db.FreelancerFindProcessDetails.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                if (dbModel != null)
+                {
+                    dbModel.ApproveStatus = model.RequestStatus;
+                    _db.FreelancerFindProcessDetails.Update(dbModel);
+                    await _db.SaveChangesAsync();
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Action Succesfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
         }
     }
 }

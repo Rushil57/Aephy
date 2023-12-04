@@ -845,6 +845,20 @@ namespace Aephy.WEB.Controllers
             return "Something Went Wrong";
         }
 
+        [HttpGet]
+        public async Task<string> GetRequestedList()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId != null)
+            {
+                GetUserProfileRequestModel UserId = new GetUserProfileRequestModel();
+                UserId.UserId = userId;
+                var aprroveList = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetRequestList", HttpMethod.Get, UserId);
+                return aprroveList;
+            }
+            return "Something Went Wrong";
+        }
+
 
         [HttpPost]
         public async Task<string> SaveMileStone([FromBody] MileStoneViewModel mileStone)
@@ -2965,6 +2979,13 @@ namespace Aephy.WEB.Controllers
             }
 
             return dateRange;
+        }
+
+        [HttpPost]
+        public async Task<string> FreelancerRequest([FromBody] FreelancerRequestModel model)
+        {
+            var RolesList = await _apiRepository.MakeApiCallAsync("api/Freelancer/FreelancerRequest", HttpMethod.Post, model);
+            return RolesList;
         }
     }
 }

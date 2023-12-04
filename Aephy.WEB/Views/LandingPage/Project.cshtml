@@ -118,14 +118,17 @@
                                     <hr />
                                     <h2 class="justify-content-start align-items-center"><label style="background-color:#fff; padding:0 1.3em 0 1.3em;">Project</label></h2>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 d-flex justify-content-center">
+                                    <div class="col-lg-3 col-md-3 d-flex justify-content-center">
                                         <input type="radio" id="projSize" name="projSize" label="Small" value="small" checked onchange="GetProjectTypeValue(this)"/>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 d-flex justify-content-center">
+                                    <div class="col-lg-3 col-md-3 d-flex justify-content-center">
                                         <input type="radio" id="projSize" name="projSize" label="Medium" value="medium" onchange="GetProjectTypeValue(this)"/>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 d-flex justify-content-center">
+                                    <div class="col-lg-3 col-md-3 d-flex justify-content-center">
                                         <input type="radio" id="projSize" name="projSize" label="Large" value="large" onchange="GetProjectTypeValue(this)"/>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 d-flex justify-content-center">
+                                        <input type="radio" id="projSize" name="projSize" label="Custom" value="custom" onchange="GetProjectTypeValue(this)"/>
                                     </div>
                                 </div>
 
@@ -343,7 +346,7 @@
                                 <input type="radio" name="preferOption" label="Select Project" value="select" checked  id="ProjectSelectionButton" class="cls-projectSelectionButton"/>
                             </div>
                             <div class="col-lg-6 col-md-6 d-flex justify-content-center">
-                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="CustomizeProject()" id="customizedradioButton" class="cls-singleFreelancerbtn"/>
+                                <input type="radio" name="preferOption" value="customize" label="Select Freelancer" onclick="CustomizeProject('SelectAFreelancer')" id="customizedradioButton" class="cls-singleFreelancerbtn"/>
                                 <input type="radio" name="preferOption" value="freelancer" label="Select Freelancers" onclick="OpenFreelancerPopUp()" style="display:none" id="freelancerRadioButton" class="cls-multipleFreelancerbtn"/>
                             </div>
                         </div>
@@ -372,7 +375,7 @@
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Large</h4>
-                                    <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectprice"></h5>
+                                    <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectpfrice"></h5>
                                 </label>
                             </div>
                             <div class="col-3">
@@ -399,7 +402,7 @@
                         <div class="row d-flex justify-content-center align-center client-only">
                             <div class="cls-initiate-div">
                             <button type="button" class="btn btn-brand btn-contract btn-InitiateProject" onclick="OpenClientWorkingHoursPopUp()" style="width: 50%;">Initiate Project</button>
-                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="CustomizeProject();" style="display:none; width: 50%;">Customize Project</button>
+                            <button type="button" class="btn btn-brand btn-CustomizeProject" onclick="CustomizeProject('CustomizeProject');" style="display:none; width: 50%;">Customize Project</button>
                             </div>
                         </div>
                     </div>
@@ -929,8 +932,14 @@
                 var data = result.Result
                 
                 if(data.SolutionDefine != null){
-                    $("#project-outline-div").text(data.SolutionDefine.ProjectOutline)
-                    $("#project-details-div").text(data.SolutionDefine.ProjectDetails)
+                    var projectOutline = data.SolutionDefine.ProjectOutline;
+                    var projectDetails = data.SolutionDefine.ProjectDetails;
+                    if(projecttype == "custom"){
+                        var projectOutline = "Create Custom Project Outline";
+                    var projectDetails = "Create Custom Project Details";
+                    }
+                    $("#project-outline-div").text(projectOutline)
+                    $("#project-details-div").text(projectDetails)
                     
                     if(data.SolutionDefine.Duration != null){
                         $(".cls-duration").text(data.SolutionDefine.Duration)
@@ -965,8 +974,13 @@
                     
                 }
                 else{
-                   $("#project-outline-div").text("No Data Available")
-                   $("#project-details-div").text("No Data Available")
+                    if(projecttype == "custom"){
+                        $("#project-outline-div").text("Create Custom Project Outline")
+                        $("#project-details-div").text("Create Custom Project Details")
+                    }else{
+                        $("#project-outline-div").text("No Data Available")
+                        $("#project-details-div").text("No Data Available")
+                    }                    
                     $(".cls-duration").text("-")
                     var teamsize = 0;
                     if(projecttype == "medium"){
@@ -987,35 +1001,52 @@
                      var milestoneSection = "";
                      var milestonePopupsection = "";
                      var TotalMileStoneDays = 0;
-                     $.each(data.MileStone, function (datas, values) {
-                       milestoneSection +=  '<li class="progress__item">' +
-                                        '<p class="progress__title Project-title-size">' +values.Title+'</p>' +
-                                        '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' +values.Days+' (Days)</p>' +
-                                    '</li>'
-                         
-                        milestonePopupsection +=  '<li class="progress__item">' +
-                                '<p class="progress__title">'+ values.Title+'</p>' +
-                                '<p class="progress__info">'+values.Description+'</p>' +
-                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
-                            '</li>';
+                     
+                    if (projecttype == "custom") {
+                        $('#progress-div').empty();
+                        $(".cls-mileStone").remove();
+                        $("<p class='cls-mileStone'>Create Custom Milestones</p>").insertAfter("#progress-div");
+                        $(".cls-mileStone").css("fontSize", "16px");
+                        $(".cls-mileStone").css("padding-left", "14px");
+                        $(".cls-milestone-popup").css("display","none")
+                    } else {
 
-                      TotalMileStoneDays += values.Days;
-                    })
-                    $('#progress-div').html(milestoneSection);
-                    $('#milestone-Popup-div').html(milestonePopupsection);
-                    $('#progress-div li:first').addClass('progress__item--active');
-                    $('#milestone-Popup-div li:first').addClass('progress__item--active');
-                    $(".cls-milestone-popup").css("display","block")
-                    $("#MilestoneDays").val(TotalMileStoneDays);
-                    $(".cls-mileStone").remove()
+                        $.each(data.MileStone, function (datas, values) {
+                            milestoneSection += '<li class="progress__item">' +
+                                '<p class="progress__title Project-title-size">' + values.Title + '</p>' +
+                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' + values.Days + ' (Days)</p>' +
+                                '</li>'
+
+                            milestonePopupsection += '<li class="progress__item">' +
+                                '<p class="progress__title">' + values.Title + '</p>' +
+                                '<p class="progress__info">' + values.Description + '</p>' +
+                                '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>' + values.Days + ' (Days)</p>' +
+                                '</li>';
+
+                            TotalMileStoneDays += values.Days;
+                        })
+                        $('#progress-div').html(milestoneSection);
+                        $('#milestone-Popup-div').html(milestonePopupsection);
+                        $('#progress-div li:first').addClass('progress__item--active');
+                        $('#milestone-Popup-div li:first').addClass('progress__item--active');
+                        $(".cls-milestone-popup").css("display", "block")
+                        $("#MilestoneDays").val(TotalMileStoneDays);
+                        $(".cls-mileStone").remove()
+                    }
                 }
                  else{
-                    $('#progress-div').empty()
-                   $(".cls-mileStone").remove()
-                   $( "<p class='cls-mileStone'>No Data Available</p>" ).insertAfter("#progress-div");
-                    $(".cls-mileStone").css("fontSize", "16px");
-                    $(".cls-mileStone").css("padding-left", "14px");
-                    $(".cls-milestone-popup").css("display","none")
+                    var milestoneSection = ""; 
+                    if (projecttype == "custom") {
+                        milestoneSection = "<p class='cls-mileStone'>Create Custom Milestones</p>";
+                    } else {
+                        milestoneSection = "<p class='cls-mileStone'>No Data Available</p>";
+                    }
+                    $('#progress-div').empty();
+                        $(".cls-mileStone").remove();
+                        $(milestoneSection).insertAfter("#progress-div");
+                        $(".cls-mileStone").css("fontSize", "16px");
+                        $(".cls-mileStone").css("padding-left", "14px");
+                        $(".cls-milestone-popup").css("display", "none");
                 }
                 if(data.PointsData != ""){
                     var pointsSection = "";

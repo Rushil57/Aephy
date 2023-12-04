@@ -22,5 +22,8 @@ namespace Aephy.API.DBHelper
         public string? PointKey { get; set; }
 
         public string? PointValue { get; set; }
+
+        public int CustomProjectDetialsId { get; set; }
+        public string? ClientId { get; set; }
     }
 }

@@ -81,14 +81,14 @@
                                                 </li>
 
                                                 <li class="dropdown-item">
-                                                    <a href="#" onclick="OpenPostModalPopup()" style="text-decoration: none;" class="nav-link">
+                                                    <a href="#" onclick="OpenPostModalPopup('ReuestAProposal')" style="text-decoration: none;" class="nav-link">
                                                         Request a Proposal
                                                     </a>
                                                 </li>
 
                                                 <li class="dropdown-item">
-                                                    <a href="#" onclick="CustomizeProject()" style="text-decoration: none;" class="nav-link">
-                                                        Select Freelancers
+                                                    <a href="#" onclick="CustomizeProject('SelectAFreelancerMenu')" style="text-decoration: none;" class="nav-link">
+                                                        Select Freelancer
                                                     </a>
                                                 </li>
                                             </ul>
@@ -127,49 +127,49 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                    </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                        </li>
                                             }
                                             else
                                             {
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="bi bi-bell cls-navicon nav-link"></i>
-                                                    </li>
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="ri-mail-line cls-navicon nav-link"></i>
-                                                    </li>
+                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                            <i class="bi bi-bell cls-navicon nav-link"></i>
+                                                        </li>
+                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                            <i class="ri-mail-line cls-navicon nav-link"></i>
+                                                        </li>
 
                                                 if (Context.Session.GetString("LoggedUserRole") != "Client")
                                                 {
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                        </li>
+                                                            <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                                <i class="bi bi-heart cls-navicon nav-link"></i>
+                                                            </li>
                                                 }
                                                 else
                                                 {
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
-                                                        </li>
+                                                            <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                                <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
+                                                            </li>
                                                 }
 
 
-                                                    <li class="nav-item">
-                                                        <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
-                                                    </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                        </li>
 
                                                 if (@Context.Session.GetString("UserProfileImage") != "")
                                                 {
-                                                        <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
-                                                            <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
-                                                        </div>
+                                                            <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                                <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                            </div>
                                                 }
                                                 else
                                                 {
-                                                        <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
+                                                            <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
                                                 }
                                             }
 
@@ -1306,7 +1306,7 @@
                                         </div>
                                         <div class="col d-flex justify-content-end">
                                             @* <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" style="display:none" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp; *@
-                                            <a class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn" onclick="GetWorkingOurForm(this)">Next</a>
+                                            <a class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn" onclick="OpenClientWorkingHoursPopUp()">Next</a>
                                         </div>
                                     </form>
                                 </div>
@@ -1346,6 +1346,11 @@
                                         <div class="col d-flex flex-column pt-2 d-none">
                                             <label data-aos="fade-up">Project Duartion</label>
                                             <input type="date" class="form-control" id="Customproject-Duartion" name="customProjectDuration">
+                                        </div>
+
+                                        <div class="col d-flex flex-column pt-2">
+                                            <label data-aos="fade-up">Project Duration(Days)</label>
+                                            <input type="text" class="form-control" id="customProjectDuration" name="customProjectDuration" disabled>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
@@ -1673,11 +1678,11 @@
                                                     @{
                                                         if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
                                                         {
-                                                                <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                                    <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
                                                         }
                                                         if (Context.Session.GetString("LoggedUserRole") == "Client")
                                                         {
-                                                                <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
+                                                                    <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
                                                         }
                                                     }
 
@@ -1918,9 +1923,21 @@
                 },
             }
         });
-        function CustomizeProject() {
+        var checkFromWhereClick = "";
+        function CustomizeProject(txt) {
             if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
-                OpenClientWorkingHoursPopUp()
+                //window.location = "../LandingPage/BrowseSolutions?solution=" + searchData;
+                if (txt == 'CustomizeProject'){
+                    OpenPostModalPopup('CustomizeProject');
+                }
+                else if (txt == 'SelectAFreelancerMenu') {
+                    OpenPostModalPopup('SelectAFreelancerMenu');
+                }
+                else{
+                    OpenPostModalPopup('SelectAFreelancer');
+                }
+                
+                //OpenClientWorkingHoursPopUp()
                 $('#btn-ProjectInitiateOrSubmit').data('isInitiate', false);
             }else{
                 showToaster("error", "Error !", "Please Login as a client !!");

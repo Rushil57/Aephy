@@ -242,21 +242,62 @@ function SaveRequestedProposal() {
 
 function GetClientForm(data) {
     if (checkFromWhereClick == "SelectAFreelancer" || checkFromWhereClick == "SelectAFreelancerMenu") {
-        $("#confirmation").modal('hide');
-        $('#CustomiseProjectPopUp').modal('show');
-        $("#FreelancerDetailsForm").css("display", "block")
-        $("#customisedDetailsForm").css("display", "none")
-        $("#customisedProjectWorkingForm").css("display", "none")
-        //$("#BrowseSolutionPostButton").text("Next")
-        $("#BrowseSolutionPreviousButton").css("display", "none");
-        $("#multiple-freelancerselected").hide();
-        $("#single-freelancerSelected").show();
-        $("#freelancer-title").html("Select Freelancer");
-        var solutionid = $('#drp-popSolutions').val();
-        var industryid = $('#drp-popIndustries').val();
-        $("#custom-solutionId").val(solutionid);
-        $("#custom-IndustryId").val(industryid);
-        return;
+
+        if (checkFromWhereClick == "SelectAFreelancerMenu") {
+            $('#SelectFreelancerPreviousButton').css('display', 'block');
+        } else {
+            $('#SelectFreelancerPreviousButton').css('display', 'none');
+        }
+        var serviceValidator = $('#service-validate');
+        var solutionValidator = $('#solution-validate');
+        var industryalidator = $('#industry-validate');
+        if ($("#drp-popServices").val() == "All" || $("#drp-popSolutions").val() == "All" || $("#drp-popIndustries").val() == "All") {
+            if ($("#drp-popServices").val() == "All") {
+                serviceValidator.text('This field is required.');
+                serviceValidator.css('display', 'inline-block');
+            } else {
+                serviceValidator.text('');
+                serviceValidator.css('display', 'none');
+            }
+            if ($("#drp-popSolutions").val() == "All") {
+                solutionValidator.text('This field is required.');
+                solutionValidator.css('display', 'inline-block');
+            } else {
+                solutionValidator.text('');
+                solutionValidator.css('display', 'none');
+            }
+
+            if ($("#drp-popIndustries").val() == "All") {
+                industryalidator.text('This field is required.');
+                industryalidator.css('display', 'inline-block');
+            } else {
+                industryalidator.text('');
+                industryalidator.css('display', 'none');
+            }
+
+        }
+        else {
+            industryalidator.css('display', 'none');
+            solutionValidator.css('display', 'none');
+            serviceValidator.css('display', 'none');
+
+
+            $("#confirmation").modal('hide');
+            $('#CustomiseProjectPopUp').modal('show');
+            $("#FreelancerDetailsForm").css("display", "block")
+            $("#customisedDetailsForm").css("display", "none")
+            $("#customisedProjectWorkingForm").css("display", "none")
+            //$("#BrowseSolutionPostButton").text("Next")
+            $("#BrowseSolutionPreviousButton").css("display", "none");
+            $("#multiple-freelancerselected").hide();
+            $("#single-freelancerSelected").show();
+            $("#freelancer-title").html("Select Freelancer");
+            var solutionid = $('#drp-popSolutions').val();
+            var industryid = $('#drp-popIndustries').val();
+            $("#custom-solutionId").val(solutionid);
+            $("#custom-IndustryId").val(industryid);
+            return;
+        }
     }
 
     var Buttonclickvalue = $('#PostButton').text();
@@ -359,6 +400,11 @@ function GetClientForm(data) {
 
 }
 
+$('#SelectFreelancerPreviousButton').on('click', function () {
+    $('#CustomiseProjectPopUp').modal('hide');
+    CustomizeProject('SelectAFreelancerMenu');
+});
+
 function ClosePostRequestModalPopup() {
     $("#confirmation").modal('hide')
 }
@@ -377,10 +423,14 @@ function clearForm() {
 
 function OpenPostModalPopup(clickPlace) {
     checkFromWhereClick = clickPlace;
+    sessionStorage.setItem("FromWhereClicked", clickPlace);
     if (checkFromWhereClick == "CustomizeProject") {
         OpenFreelancerPopUp();
+        $('#SelectFreelancerPreviousButton').css('display', 'none');
+
     }
     else if (checkFromWhereClick == "SelectAFreelancer") {
+        $('#SelectFreelancerPreviousButton').css('display', 'none');
         $('#CustomiseProjectPopUp').modal('show');
         $("#FreelancerDetailsForm").css("display", "block")
         $("#customisedDetailsForm").css("display", "none")
@@ -423,6 +473,23 @@ function OpenPostModalPopup(clickPlace) {
     }
     
 }
+
+$('#ProjectDescriptionPreviousButton').on('click', function () {
+    var fromWhereClicked = sessionStorage.getItem("FromWhereClicked");
+    if (checkFromWhereClick == "CustomizeProject") {
+        $('#CustomiseProjectPopUp').modal('hide');
+        CustomizeProject('CustomizeProject')
+    }
+    else if (checkFromWhereClick == "SelectAFreelancer") {
+        $('#CustomiseProjectPopUp').modal('hide');
+        OpenPostModalPopup("SelectAFreelancer");
+    }
+    else {
+        $('#CustomiseProjectPopUp').modal('hide');
+        checkFromWhereClick == "SelectAFreelancerMenu";
+        GetClientForm(this);
+    }
+});
 
 function BindIndustries() {
     $.ajax({
@@ -1220,7 +1287,12 @@ function removeFreelancerExclude(id) {
     });
 }
 
-function OpenClientWorkingHoursPopUp() {
+function OpenClientWorkingHoursPopUp(data) {
+    if (data == "UpdateData") {
+        $('#btn-ProjectInitiateOrSubmit').data('isInitiate', false);
+    } else {
+        $('#btn-ProjectInitiateOrSubmit').data('isInitiate', true);
+    }
     $("#preloader").show();
         $.ajax({
             type: "GET",

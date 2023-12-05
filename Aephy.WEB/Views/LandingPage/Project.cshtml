@@ -375,7 +375,7 @@
                                 <label class="radio-inline" style="text-align:center;">
                                     <input class="form-check-input" type="radio" name="projSizeweb" value="large" onchange="GetProjectTypeValue(this)"/>
                                     <h4>Large</h4>
-                                    <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectpfrice"></h5>
+                                    <h5 style="opacity:0.5;" id="large-projectPrice" class="cls-largeProjectprice"></h5>
                                 </label>
                             </div>
                             <div class="col-3">
@@ -1142,6 +1142,7 @@
                 }
 
                 if(data.FreelancerHourlyList != ""){
+                    debugger;
                     BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays,data.PreferredCurrency)
                 }
 
@@ -1402,6 +1403,10 @@
 
     function BindProjectPricingBasedOnFreelancerHourlyRate(hourlyrateData,TotalMilestoneDays,CurrentCurrency){
 
+        console.log(hourlyrateData);
+        console.log(TotalMilestoneDays);
+        console.log(CurrentCurrency);
+
        // var TotalMilestoneDays = $("#MilestoneDays").val();
         var HoursPerDay = 8;
         var countPricing = 0;
@@ -1410,6 +1415,7 @@
         var IsLargePriceAvailable = false;
 
          $.each(TotalMilestoneDays, function (milestonedata, milestonevalue) {
+             debugger;
                 // small project price counting
                 if(milestonevalue.ProjectType == "SMALL"){
                     IsSmallPriceAvailable = true;
@@ -1455,6 +1461,7 @@
                // large project price counting
                 countPricing = 0;
                 if(milestonevalue.ProjectType == "LARGE"){
+                    debugger;
                     IsLargePriceAvailable = true
                     if(milestonevalue.Days > 0){
                          var LargeTotalMilestoneDays = milestonevalue.Days

@@ -22,6 +22,8 @@
 
         public bool MileStoneCheckout { get; set; }
 
+        public int CustomProjectDetailId { get; set; }
+
     }
 
     public class MileStoneDetailsViewModel
@@ -41,6 +43,8 @@
         public int SolutionFundId { get; set; }
 
         public string? ClientPreferredCurrency { get; set; }
+
+        public int CustomProjectDetailId { get; set; }
     }
     public class MileStoneIdViewModel
     {

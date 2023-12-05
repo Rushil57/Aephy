@@ -241,6 +241,8 @@ namespace Aephy.API.Models
 
             public decimal MilestonePrice { get; set; }
 
+            public int CustomProjectDetailId { get; set; }
+
         }
 
         public class SolutionIndustryDetailsModel
@@ -302,6 +304,8 @@ namespace Aephy.API.Models
             public string? ClientPreferredCurrency { get; set; }
 
             public int SolutionIndustryId { get; set; }
+
+            public int CustomProjectDetailId { get; set; }
         }
 
         public class UserCvFileModel

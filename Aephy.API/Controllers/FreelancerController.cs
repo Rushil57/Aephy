@@ -313,8 +313,8 @@ namespace Aephy.API.Controllers
                         var obj = new
                         {
                             FreelancerId = detailObject.FreelancerId,
-                            SolutionName = solutionList.Where(x=>x.Id == item.SolutionId).Select(x=>x.Title).FirstOrDefault(),
-                            IndustriesName = industryList.Where(x=>x.Id == item.IndustryId).Select(x=>x.IndustryName).FirstOrDefault(),
+                            SolutionName = solutionList.Where(x => x.Id == item.SolutionId).Select(x => x.Title).FirstOrDefault(),
+                            IndustriesName = industryList.Where(x => x.Id == item.IndustryId).Select(x => x.IndustryName).FirstOrDefault(),
                             Id = item.Id,
                             ApproveStatus = detailObject.ApproveStatus,
                             DetailId = detailObject.Id
@@ -366,8 +366,11 @@ namespace Aephy.API.Controllers
                         DueDate = DateTime.MinValue,
                         FreelancerId = model.UserId,
                         ProjectType = model.ProjectType,
-                        Days = model.Days
+                        Days = model.Days,
+                        CustomProjectDetialsId = model.CustomProjectDetailId,
+                        ClientId = model.UserId
                     };
+
                     _db.SolutionMilestone.Add(milestone);
                     _db.SaveChanges();
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -495,7 +498,13 @@ namespace Aephy.API.Controllers
             try
             {
                 var milestoneList = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-               && x.ProjectType == model.ProjectType).ToListAsync();
+                                    && x.ProjectType == model.ProjectType
+                                    ).ToListAsync();
+
+                if (model.ProjectType == "custom")
+                {
+                    milestoneList = milestoneList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
+                }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -548,7 +557,9 @@ namespace Aephy.API.Controllers
                         IndustryId = model.IndustryId,
                         SolutionId = model.SolutionId,
                         FreelancerId = model.FreelancerId,
-                        ProjectType = model.ProjectType
+                        ProjectType = model.ProjectType,
+                        ClientId = model.ClientId,
+                        CustomProjectDetialsId = model.CustomProjectDetialsId
                     };
                     _db.SolutionPoints.Add(points);
                     _db.SaveChanges();
@@ -584,7 +595,12 @@ namespace Aephy.API.Controllers
             try
             {
                 var pointsList = await _db.SolutionPoints.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
-               && x.ProjectType == model.ProjectType).ToListAsync();
+                                 && x.ProjectType == model.ProjectType).ToListAsync();
+
+                if (model.ProjectType == "custom")
+                {
+                    pointsList = pointsList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
+                }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {

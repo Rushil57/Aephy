@@ -127,49 +127,49 @@
                                         @{
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
-                                                        <li class="nav-item">
-                                                            <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
-                                                        </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
+                                                </li>
                                             }
                                             else
                                             {
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <i class="bi bi-bell cls-navicon nav-link"></i>
-                                                        </li>
-                                                        <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                            <i class="ri-mail-line cls-navicon nav-link"></i>
-                                                        </li>
+                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                    <i class="bi bi-bell cls-navicon nav-link"></i>
+                                                </li>
+                                                <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                    <i class="ri-mail-line cls-navicon nav-link"></i>
+                                                </li>
 
                                                 if (Context.Session.GetString("LoggedUserRole") != "Client")
                                                 {
-                                                            <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                                <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                            </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
+                                                    </li>
                                                 }
                                                 else
                                                 {
-                                                            <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                                <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
-                                                            </li>
+                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
+                                                        <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
+                                                    </li>
                                                 }
 
 
-                                                        <li class="nav-item">
-                                                            <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
-                                                        </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                </li>
 
                                                 if (@Context.Session.GetString("UserProfileImage") != "")
                                                 {
-                                                            <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
-                                                                <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
-                                                            </div>
+                                                    <div id="name-initial" class="name-initial-image" style="border: 0px;outline: 0px;align-self:center;">
+                                                        <img src="@Context.Session.GetString("UserProfileImage")" class="rounded-circle profile-img" />
+                                                    </div>
                                                 }
                                                 else
                                                 {
-                                                            <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
+                                                    <div id="name-initial" class="profile-img name-initial-image" style="align-self:center;">@Context.Session.GetString("ShortName")</div>
                                                 }
                                             }
 
@@ -1277,6 +1277,7 @@
                                         <span id="freelancer-title">Select Freelancers</span>
                                     </div>
                                     <form name="freelancerDetailForm">
+                                        
                                         <div id="number-of-freelancer">
                                             <div id="single-freelancerSelected" class="row">
                                                 <input type="radio" class="col cls-freelancer-radio" name="fav_freelancer" value="Associate">
@@ -1290,17 +1291,21 @@
                                                 <input type="number" class="col cls-freelancer-number" min="0" value="0" id="total-projectmanager" name="projectmanagertxt">
                                             </div>
 
+                                            <div id="multiple-freelancerselected">
+                                                <label class="cls-freelancerlvl">Associate</label>
+                                                <label class="cls-freelancerlvl">Expert</label>
+                                                <label class="cls-freelancerlvl">Project Manager</label>
+                                            </div>
                                         </div>
-                                        <div id="freelancer-details">
-                                            <label class="cls-freelancerlvl">Associate</label>
-                                            <label class="cls-freelancerlvl">Expert</label>
-                                            <label class="cls-freelancerlvl">Project Manager</label>
-                                        </div>
-                                        <div id="freelancer-hourlyRate-details" class="row">
+
+                                        
+
+                                        <div id="multiple-freelancerselected" class="row">
                                             <label class="col cls-freelancerhourly">$10/h</label>
                                             <label class="col cls-freelancerhourly">$20/h</label>
                                             <label class="col cls-freelancerhourly">$30/h</label>
                                         </div>
+
                                         <div id="freelancer-info-icon">
                                             <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Displayed hourly rates are an estimated average and may vary based on the selected freelancer's individual hourly rate and availability."><i class="bi bi-info-circle-fill cls-freelancer-info-icon" style="cursor:pointer;"></i></a>
                                         </div>
@@ -1338,11 +1343,6 @@
                                             <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50" name="customprojectdescription"></textarea>
                                         </div>
 
-                                        <div class="row p-3">
-                                            <a class="col-sm-4 cls-cutomDetails" onclick="OpenMileStonePopup()">Add Milestone</a>
-                                            <a class="col-sm-4 cls-cutomDetails" onclick="OpenPointsPopup()">Add Highlights</a>
-                                        </div>
-
                                         <div class="col d-flex flex-column pt-2 d-none">
                                             <label data-aos="fade-up">Project Duartion</label>
                                             <input type="date" class="form-control" id="Customproject-Duartion" name="customProjectDuration">
@@ -1358,9 +1358,15 @@
                                             <input type="text" class="form-control" placeholder='1,50,000' id="custom-price" name="customPrice">
                                         </div>
 
+                                        <div class="row p-3">
+                                            <a class="col-sm-12 btn btn-brand my-3 mx-0" id="ProjectDetailsbtn">Save</a>
+                                            <a class="col-sm-5 btn btn-brand cls-cutomDetails disabled" onclick="OpenMileStonePopup()" id="AddMileStonebtn">Add Milestone</a>
+                                            <a class="col-sm-5 btn btn-brand cls-cutomDetails disabled" onclick="OpenPointsPopup()" id="AddHighlightsbtn">Add Highlights</a>
+                                        </div>
+
                                         <div class="col d-flex justify-content-end">
                                             <a class="btn btn-brand my-3 mx-0" id="ProjectDescriptionPreviousButton">Previous</a> &nbsp;&nbsp;
-                                            <a class="btn btn-brand my-3 mx-0" id="ProjectDetailsbtn">Confirm</a>
+                                            <a class="btn btn-brand my-3 mx-0 disabled" id="ProjectContinuebtn">Confirm</a>
                                             @* <a class="btn btn-brand my-3 mx-0" id="WorkingFormbtn">Confirm</a> *@
                                             @*   <button type="submit" class="btn btn-brand my-3 mx-0" id="FreelancerFormbtn"></button> *@
                                         </div>
@@ -1427,9 +1433,9 @@
                                             </div>
 
                                             <div class="col d-flex justify-content-end">
-                                            <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
-                                            <a class="btn btn-brand my-3 mx-0" id="WorkingFormbtn">Confirm</a>
-                                        </div>
+                                                <a class="btn btn-brand my-3 mx-0" id="BrowseSolutionPreviousButton" onclick="GetWorkingOurForm(this)">Previous</a> &nbsp;&nbsp;
+                                                <a class="btn btn-brand my-3 mx-0" id="WorkingFormbtn">Confirm</a>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -1678,11 +1684,11 @@
                                                     @{
                                                         if (Context.Session.GetString("LoggedUserRole") == "Freelancer")
                                                         {
-                                                                    <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
+                                                            <label><p class="m-0">Indicate any days you are unavailable within the specified time frame. If on a particular day you are unable to commit to an 8-hour workday, kindly mark that day as unavailable.</p></label>
                                                         }
                                                         if (Context.Session.GetString("LoggedUserRole") == "Client")
                                                         {
-                                                                    <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
+                                                            <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
                                                         }
                                                     }
 
@@ -1927,19 +1933,19 @@
         function CustomizeProject(txt) {
             if ('@Context.Session.GetString("LoggedUserRole")' == 'Client') {
                 //window.location = "../LandingPage/BrowseSolutions?solution=" + searchData;
-                if (txt == 'CustomizeProject'){
+                if (txt == 'CustomizeProject') {
                     OpenPostModalPopup('CustomizeProject');
                 }
                 else if (txt == 'SelectAFreelancerMenu') {
                     OpenPostModalPopup('SelectAFreelancerMenu');
                 }
-                else{
+                else {
                     OpenPostModalPopup('SelectAFreelancer');
                 }
-                
+
                 //OpenClientWorkingHoursPopUp()
                 $('#btn-ProjectInitiateOrSubmit').data('isInitiate', false);
-            }else{
+            } else {
                 showToaster("error", "Error !", "Please Login as a client !!");
             }
         }

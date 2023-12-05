@@ -1,4 +1,5 @@
 ﻿let TotalDaysCount = 0;
+let CustomProjectDetialsId = 0;
 $('#ProjectDetailsbtn').on('click', function () {
     var form = $("form[name='ProjectDetailsForm']");
     form.validate({
@@ -19,6 +20,11 @@ $('#ProjectDetailsbtn').on('click', function () {
         //GetWorkingOurForm(this);
         SaveCustomSolutionData();
     }
+});
+
+$('#ProjectContinuebtn').on('click', function () {
+    ResetCustomeForm();
+    window.location.href = '/Home/Dashboard#activeProjects'
 });
 
 /*$('#WorkingFormbtn').on('click', function () {
@@ -784,6 +790,7 @@ function SaveMilStoneData() {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
         ProjectType: projectType,
+        CustomProjectDetailId: CustomProjectDetialsId
     };
     $("#preloader").show();
     $.ajax({
@@ -830,6 +837,7 @@ function GetMiletoneList() {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
         ProjectType: projectType,
+        CustomProjectDetailId: CustomProjectDetialsId
     }
 
     $("#preloader").show();
@@ -964,6 +972,7 @@ function SavePointsData() {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
         ProjectType: projectType,
+        CustomProjectDetialsId: CustomProjectDetialsId
     };
 
     $("#preloader").show();
@@ -1009,6 +1018,7 @@ function GetPointsList() {
         SolutionId: $("#custom-solutionId").val(),
         IndustryId: $("#custom-IndustryId").val(),
         ProjectType: projectType,
+        CustomProjectDetailId: CustomProjectDetialsId
     }
 
     $("#preloader").show();
@@ -1151,8 +1161,13 @@ function SaveCustomSolutionData() {
         data: JSON.stringify(data),
         success: function (result) {
             if (result.Message == "Project Initated Successfully!") {
-                ResetCustomeForm();
-                window.location.href = '/Home/Dashboard#activeProjects'
+                //ResetCustomeForm();
+                //window.location.href = '/Home/Dashboard#activeProjects'
+                $("#ProjectContinuebtn").removeClass("disabled");
+                $("#AddHighlightsbtn").removeClass("disabled");
+                $("#AddMileStonebtn").removeClass("disabled");
+                $("#ProjectDetailsbtn").addClass("disabled");
+                CustomProjectDetialsId = result.Result;
             } else {
                 showToaster("error", "Error !", result.Message);
             }
@@ -1183,6 +1198,9 @@ function ResetCustomeForm() {
     $("#custom-solutionId").val("");
     $("#custom-IndustryId").val("");
     $("#CustomiseProjectPopUp").modal('hide')
+    $("#ProjectContinuebtn").addClass("disabled");
+    $("#AddHighlightsbtn").addClass("disabled");
+    $("#AddMileStonebtn").addClass("disabled");
 }
 
 function CloseCustomisePopUp() {

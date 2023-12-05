@@ -5106,7 +5106,7 @@ namespace Aephy.API.Controllers
 
                     };
 
-                    _db.CustomProjectDetials.Add(customsolution);
+                    var customDetail = _db.CustomProjectDetials.Add(customsolution);
                     _db.SaveChanges();
 
                     var solutionfund = new SolutionFund()
@@ -5128,7 +5128,8 @@ namespace Aephy.API.Controllers
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Project Initated Successfully!"
+                            Message = "Project Initated Successfully!",
+                            Result = customDetail.Entity.Id
                         });
                     }
                 }

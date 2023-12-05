@@ -970,6 +970,7 @@ namespace Aephy.WEB.Controllers
                 {
                     var userId = HttpContext.Session.GetString("LoggedUser");
                     model.FreelancerId = userId;
+                    model.ClientId = userId;
                     var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/SavePointsData", HttpMethod.Post, model);
                     return test;
                 }

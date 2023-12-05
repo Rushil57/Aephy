@@ -1142,7 +1142,6 @@
                 }
 
                 if(data.FreelancerHourlyList != ""){
-                    debugger;
                     BindProjectPricingBasedOnFreelancerHourlyRate(data.FreelancerHourlyList, data.MileStoneToTalDays,data.PreferredCurrency)
                 }
 
@@ -1402,11 +1401,6 @@
     }
 
     function BindProjectPricingBasedOnFreelancerHourlyRate(hourlyrateData,TotalMilestoneDays,CurrentCurrency){
-
-        console.log(hourlyrateData);
-        console.log(TotalMilestoneDays);
-        console.log(CurrentCurrency);
-
        // var TotalMilestoneDays = $("#MilestoneDays").val();
         var HoursPerDay = 8;
         var countPricing = 0;
@@ -1415,7 +1409,6 @@
         var IsLargePriceAvailable = false;
 
          $.each(TotalMilestoneDays, function (milestonedata, milestonevalue) {
-             debugger;
                 // small project price counting
                 if(milestonevalue.ProjectType == "SMALL"){
                     IsSmallPriceAvailable = true;
@@ -1461,7 +1454,6 @@
                // large project price counting
                 countPricing = 0;
                 if(milestonevalue.ProjectType == "LARGE"){
-                    debugger;
                     IsLargePriceAvailable = true
                     if(milestonevalue.Days > 0){
                          var LargeTotalMilestoneDays = milestonevalue.Days

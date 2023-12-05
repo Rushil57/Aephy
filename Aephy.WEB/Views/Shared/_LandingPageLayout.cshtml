@@ -1277,7 +1277,6 @@
                                         <span id="freelancer-title">Select Freelancers</span>
                                     </div>
                                     <form name="freelancerDetailForm">
-                                        
                                         <div id="number-of-freelancer">
                                             <div id="single-freelancerSelected" class="row">
                                                 <input type="radio" class="col cls-freelancer-radio" name="fav_freelancer" value="Associate">
@@ -1286,26 +1285,22 @@
                                             </div>
 
                                             <div id="multiple-freelancerselected" class="row">
-                                                <input type="number" class="col cls-freelancer-number" min="0" value="0" id="total-associate" name="associatetxt">
-                                                <input type="number" class="col cls-freelancer-number" min="0" value="0" id="total-expert" name="experttxt">
-                                                <input type="number" class="col cls-freelancer-number" min="0" value="0" id="total-projectmanager" name="projectmanagertxt">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-associate" name="associatetxt">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-expert" name="experttxt">
+                                                <input type="number" class="cls-freelancer-number" min="0" value="0" id="total-projectmanager" name="projectmanagertxt">
                                             </div>
 
-                                            <div id="multiple-freelancerselected">
-                                                <label class="cls-freelancerlvl">Associate</label>
-                                                <label class="cls-freelancerlvl">Expert</label>
-                                                <label class="cls-freelancerlvl">Project Manager</label>
-                                            </div>
                                         </div>
-
-                                        
-
-                                        <div id="multiple-freelancerselected" class="row">
-                                            <label class="col cls-freelancerhourly">$10/h</label>
-                                            <label class="col cls-freelancerhourly">$20/h</label>
-                                            <label class="col cls-freelancerhourly">$30/h</label>
+                                        <div id="freelancer-details">
+                                            <label class="cls-freelancerlvl">Associate</label>
+                                            <label class="cls-freelancerlvl">Expert</label>
+                                            <label class="cls-freelancerlvl" style="margin-left: 15px;">Project Manager</label>
                                         </div>
-
+                                        <div id="freelancer-hourlyRate-details">
+                                            <label class="cls-freelancerhourly">$10/h</label>
+                                            <label class="cls-freelancerhourly">$20/h</label>
+                                            <label class="cls-freelancerhourly">$30/h</label>
+                                        </div>
                                         <div id="freelancer-info-icon">
                                             <a data-toggle="popover" class="freelancer-info-popover" data-bs-content="Displayed hourly rates are an estimated average and may vary based on the selected freelancer's individual hourly rate and availability."><i class="bi bi-info-circle-fill cls-freelancer-info-icon" style="cursor:pointer;"></i></a>
                                         </div>

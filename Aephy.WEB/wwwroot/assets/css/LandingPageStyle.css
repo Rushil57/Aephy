@@ -2013,11 +2013,11 @@ padding-top: 5%;
 }
 
 #freelancer-hourlyRate-details {
-    padding-top: 1%;
+    padding-top: 0%;
 }
 
 .cls-freelancerhourly {
-    margin-left: 95px;
+    margin-left: 83px;
     font-family: serif;
 }
 
@@ -2025,6 +2025,7 @@ padding-top: 5%;
     width: 10%;
     margin-right: 70px;
     padding-right: 0px !important;
+    width: 50px;
 }
 
 .cls-freelancer-radio {
@@ -2037,7 +2038,7 @@ padding-top: 5%;
     /*padding-top: 4%;*/
     /*margin-left: 20%;*/
     margin-left: 17%;
-    text-align: center;
+    /*text-align: center;*/
 }
 
 #freelancer-info-icon {

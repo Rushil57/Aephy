@@ -1227,6 +1227,10 @@ function CloseCustomisePopUp() {
     $('input[name="preferOptionmobile"][value="select"]').prop('checked', 'checked');
     $('#btn-ProjectInitiateOrSubmit').data('isInitiate', true);
     $('#CustomiseProjectPopUp').modal('hide');
+
+    $("#custom-ProjectOutline").val('');
+    $("#custom-ProjectDescription").val('');
+    $("#custom-price").val('');
 }
 
 let excludeData = [];

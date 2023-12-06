@@ -247,7 +247,8 @@ function SaveRequestedProposal() {
 }
 
 function GetClientForm(data) {
-    if (checkFromWhereClick == "SelectAFreelancer" || checkFromWhereClick == "SelectAFreelancerMenu") {
+    if (checkFromWhereClick == "SelectAFreelancer" || checkFromWhereClick == "SelectAFreelancerMenu"
+        || checkFromWhereClick == "ReuestAProposal") {
 
         if (checkFromWhereClick == "SelectAFreelancerMenu") {
             $('#SelectFreelancerPreviousButton').css('display', 'block');
@@ -290,13 +291,22 @@ function GetClientForm(data) {
 
             $("#confirmation").modal('hide');
             $('#CustomiseProjectPopUp').modal('show');
-            $("#FreelancerDetailsForm").css("display", "block")
-            $("#customisedDetailsForm").css("display", "none")
-            $("#customisedProjectWorkingForm").css("display", "none")
-            //$("#BrowseSolutionPostButton").text("Next")
+            $("#FreelancerDetailsForm").css("display", "block");
+            $("#customisedDetailsForm").css("display", "none");
+            $("#customisedProjectWorkingForm").css("display", "none");
+            if (checkFromWhereClick == "ReuestAProposal") {
+                $("#multiple-freelancerselected").show();
+                $("#single-freelancerSelected").hide();
+            }
+            else {
+                $("#multiple-freelancerselected").hide();
+                $("#single-freelancerSelected").show();
+            }
+
+
+
             $("#BrowseSolutionPreviousButton").css("display", "none");
-            $("#multiple-freelancerselected").hide();
-            $("#single-freelancerSelected").show();
+
             $("#freelancer-title").html("Select Freelancer");
             var solutionid = $('#drp-popSolutions').val();
             var industryid = $('#drp-popIndustries').val();
@@ -504,6 +514,9 @@ function BindIndustries() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (result) {
+
+            $("#drp-popIndustries").empty();
+            $("#drp-popIndustries").append($("<option/>").val("All").text("All Industries"));
             $.each(result.Result, function (data, value) {
                 $("#drp-popIndustries").append($("<option     />").val(value.Id).text(value.IndustryName));
             })
@@ -522,6 +535,9 @@ function BindServices() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (result) {
+
+            $("#drp-popServices").empty();
+            $("#drp-popServices").append($("<option/>").val("All").text("All Services"));
             $.each(result.Result, function (data, value) {
                 $("#drp-popServices").append($("<option     />").val(value.Id).text(value.ServicesName));
             })
@@ -540,6 +556,9 @@ function BindSolution() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (result) {
+
+            $("#drp-popSolutions").empty();
+            $("#drp-popSolutions").append($("<option/>").val("All").text("All Solutions"));
             $.each(result.Result, function (data, value) {
                 $("#drp-popSolutions").append($("<option     />").val(value.Id).text(value.Title));
             })

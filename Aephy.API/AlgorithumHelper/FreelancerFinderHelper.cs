@@ -394,31 +394,31 @@ public class FreelancerFinderHelper
                     //=== Feature wise rating sum and score ===//
                     if (item.Feature == "Communication skills")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.CommunicationRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.CommunicationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CommunicationRating)) ?? 9;
                     }
                     else if (item.Feature == "Collaboration skills")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.CollaborationRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.CollaborationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CommunicationRating)) ?? 9;
                     }
                     else if (item.Feature == "Professionalism")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.ProfessionalismRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.ProfessionalismRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ProfessionalismRating)) ?? 9;
                     }
                     else if (item.Feature == "Technical Skills")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.TechnicalRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.TechnicalRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.TechnicalRating)) ?? 9;
                     }
                     else if (item.Feature == "Client Satisfaction")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.SatisfactionRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.SatisfactionRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.SatisfactionRating)) ?? 9;
                     }
                     else if (item.Feature == "Responsiveness")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.ResponsivenessRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.ResponsivenessRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ResponsivenessRating)) ?? 9;
                     }
                     else if (item.Feature == "Freelancer Like To Work")
                     {
-                        item.RatingSum = freeLancerReviews.Sum(x => x.LikeToWorkRating) ?? 1;
+                        item.RatingSum = (freeLancerReviews.Sum(x => x.LikeToWorkRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.LikeToWorkRating)) ?? 9;
                     }
 
                     //=== Getting old score from database and use in calculation if null then default 0 ===//
@@ -452,19 +452,7 @@ public class FreelancerFinderHelper
             finalRankedListData.Add(finalData);
         }
 
-        //=== Group by Final Score and Assign Ranking and return this list (finally got our rank wise freelancer) ===//
-        //var rankedItems = finalRankedListData.GroupBy(b => b.FinalScore)
-        //    .OrderByDescending(g => g.Key)
-        //    .SelectMany((item, index) => item.Select(inner =>
-        //        new FeatureWiseClientReviewsSumDto
-        //        {
-        //            FreeLanceId = inner.FreeLanceId,
-        //            FreeLanceName = inner.FreeLanceName,
-        //            FinalScore = item.Key,
-        //            Ranking = index + 1
-        //        })).ToList();
-
-        ////=== Save FreeLance wise score list ===// 
+        //=== Save FreeLance wise score list ===// 
         var modelList = new List<FreelancerDetails>();
         foreach (var item in finalRankedListData)
         {

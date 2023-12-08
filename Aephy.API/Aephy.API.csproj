@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AlgorithumHelper\NotificationTemplate.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="AlgorithumHelper\NotificationTemplate.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
     <PackageReference Include="Azure.Storage.Common" Version="12.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
@@ -28,6 +39,10 @@
   <ItemGroup>
     <Folder Include="DBModels\" />
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aephy.Helper\Aephy.Helper.csproj" />
   </ItemGroup>
 
 </Project>

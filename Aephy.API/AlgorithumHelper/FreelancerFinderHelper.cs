@@ -1,6 +1,9 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.Helper.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
+using System.Net.Mail;
 using System.Reflection.Emit;
 
 namespace Aephy.API.AlgorithumHelper;
@@ -27,7 +30,8 @@ public class FreelancerFinderHelper
                         UserId = user.Id,
                         StartHoursFinal = user.StartHoursFinal,
                         EndHoursFinal = user.EndHoursFinal,
-                        FreelancerDetail = detail
+                        FreelancerDetail = detail,
+                        Email = user.Email
                     }).ToArray();
 
 
@@ -66,7 +70,7 @@ public class FreelancerFinderHelper
                         associateOld = 2;
                         expertOld = 2;
                     }
-                    else if(projectType == "custom")
+                    else if (projectType == "custom")
                     {
                         projectManager = totalProjectManager;
                         associate = totalAssociate;
@@ -90,6 +94,19 @@ public class FreelancerFinderHelper
                     DateTime startDate = DateTime.Now;
                     DateTime endDate = startDate.AddDays(projectCompletedTime);
 
+                    //=== Find Solution and Industry details for email and Genrate Email body baised on html template ===//
+                    var solutionTitle = await db.Solutions.Where(x=>x.Id == solutionId).Select(x=>x.Title).FirstOrDefaultAsync();
+                    var industryName = await db.Industries.Where(x=>x.Id == IndustryId).Select(x=>x.IndustryName).FirstOrDefaultAsync();
+
+                    string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                    string fileName = "NotificationTemplate.html";
+                    string filePath = Path.Combine(currentDirectory.Replace("\\bin\\Debug\\net7.0", "\\AlgorithumHelper"), fileName);
+                    string body = File.ReadAllText(filePath);
+                    body = body.Replace("{{ project_name }}", solutionTitle);
+                    body = body.Replace("{{ industry_name }}", industryName);
+                    body = body.Replace("{{ duration }}", Convert.ToString(projectCompletedTime) + "Days");
+                    body = body.Replace("{{ size }}", projectType);
+
                     //=== Find Freelancer which is alrady in leave baised on duration ===//
                     var excludeDateFreelancer = db.FreelancerExcludeDate.Where(exclude => exclude.ExcludeDate < startDate || exclude.ExcludeDate > endDate).ToList();
                     int maxLeaveDays = 4;
@@ -98,9 +115,9 @@ public class FreelancerFinderHelper
                         //=== Find Freelancers leave count baised on exclude date data ===//
                         var invalidFreelancerIds = excludeDateFreelancer.GroupBy(exclude => exclude.FreelancerId)
                             .Where(group => group.Count() >= maxLeaveDays).Select(group => group.Key).ToList();
-                        
+
                         //=== Remove freelancer which is alrady more then 4 leave during given timeline ===//
-                        if(invalidFreelancerIds.Any())
+                        if (invalidFreelancerIds.Any())
                         {
                             freelancers = freelancers.Where(x => !invalidFreelancerIds.Contains(x.UserId)).ToArray();
                         }
@@ -146,7 +163,8 @@ public class FreelancerFinderHelper
                                 {
                                     UserId = inner.UserId,
                                     Score = item.Key,
-                                    Ranking = index + 1
+                                    Ranking = index + 1,
+                                    Email = inner.Email
                                 })).Take(projectManager).ToList();
 
                         var expertsArray = freelancers.Where(x => x.FreelancerDetail.FreelancerLevel == "Expert").ToArray();
@@ -157,7 +175,8 @@ public class FreelancerFinderHelper
                                 {
                                     UserId = inner.UserId,
                                     Score = item.Key,
-                                    Ranking = index + 1
+                                    Ranking = index + 1,
+                                    Email = inner.Email
                                 })).Take(expert).ToList();
 
                         var associatesArray = freelancers.Where(x => x.FreelancerDetail.FreelancerLevel == "Associate").Take(associate).ToArray();
@@ -168,7 +187,8 @@ public class FreelancerFinderHelper
                                 {
                                     UserId = inner.UserId,
                                     Score = item.Key,
-                                    Ranking = index + 1
+                                    Ranking = index + 1,
+                                    Email = inner.Email
                                 })).Take(associate).ToList();
 
                         //=== Save and Update Header and Header Details ===//
@@ -196,6 +216,8 @@ public class FreelancerFinderHelper
 
                             //=== Save header details with algorithum stage ====//
                             var detailModelList = new List<FreelancerFindProcessDetails>();
+                            var emailIds = new List<string>();
+
                             foreach (var item in rankedProjectManager)
                             {
                                 var pmodel = new FreelancerFindProcessDetails
@@ -208,6 +230,7 @@ public class FreelancerFinderHelper
                                     CreatedDate = DateTime.Now,
                                 };
                                 detailModelList.Add(pmodel);
+                                emailIds.Add(item.Email);
                             }
                             foreach (var item in rankedExpertsArray)
                             {
@@ -221,6 +244,7 @@ public class FreelancerFinderHelper
                                     CreatedDate = DateTime.Now,
                                 };
                                 detailModelList.Add(emodel);
+                                emailIds.Add(item.Email);
                             }
                             foreach (var item in rankedAssociatesArray)
                             {
@@ -234,12 +258,20 @@ public class FreelancerFinderHelper
                                     CreatedDate = DateTime.Now,
                                 };
                                 detailModelList.Add(amodel);
+                                emailIds.Add(item.Email);
                             }
 
-                            await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
-                            await db.SaveChangesAsync();
+                            if(detailModelList.Any())
+                            {
+                                await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
+                                await db.SaveChangesAsync();
 
-                            //After save send mail to freelancer.
+                                //After save send mail to freelancer.
+                                foreach (var item in emailIds)
+                                {
+                                    bool send = SendEmailHelper.SendEmail(item, "Project Invitation - Time Sensitive", body);
+                                }
+                            }
                         }
                         else
                         {
@@ -251,6 +283,7 @@ public class FreelancerFinderHelper
 
                             var oldFreelancerInDetails = headerDetailData.Select(x => x.FreelancerId).ToList();
                             var detailModelList = new List<FreelancerFindProcessDetails>();
+                            var emailIds = new List<string>();
 
                             //=== Remove freelancer which is alrady in detail section ===//
                             rankedProjectManager = rankedProjectManager.Where(rp => !oldFreelancerInDetails.Contains(rp.UserId)).Take(projectManager).ToList();
@@ -279,6 +312,7 @@ public class FreelancerFinderHelper
                                         CreatedDate = DateTime.Now,
                                     };
                                     detailModelList.Add(pmodel);
+                                    emailIds.Add(item.Email);
                                 }
                             }
 
@@ -296,6 +330,7 @@ public class FreelancerFinderHelper
                                         CreatedDate = DateTime.Now,
                                     };
                                     detailModelList.Add(emodel);
+                                    emailIds.Add(item.Email);
                                 }
                             }
 
@@ -313,13 +348,21 @@ public class FreelancerFinderHelper
                                         CreatedDate = DateTime.Now,
                                     };
                                     detailModelList.Add(amodel);
+                                    emailIds.Add(item.Email);
                                 }
                             }
 
-                            await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
-                            await db.SaveChangesAsync();
+                            if(detailModelList.Any())
+                            {
+                                await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
+                                await db.SaveChangesAsync();
 
-                            //After save send mail to freelancer.
+                                //After save send mail to freelancer.
+                                foreach (var item in emailIds)
+                                {
+                                    bool send = SendEmailHelper.SendEmail(item, "Project Invitation - Time Sensitive", body);
+                                }
+                            }
                         }
                     }
                     else

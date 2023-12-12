@@ -109,7 +109,7 @@ namespace Aephy.WEB.Controllers
                 var ClientCurrency = string.Empty;
 
                 dynamic jsonObj = JsonConvert.DeserializeObject(test);
-                if (jsonObj["StatusCode"] == 200)
+                if (jsonObj["Message"] == "Login Success")
                 {
                     FirstName = jsonObj.Result.FirstName;
                     LastName = jsonObj.Result.LastName;

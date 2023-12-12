@@ -1460,14 +1460,27 @@ namespace Aephy.API.Controllers
                 {
                     foreach (var topdata in topProfessionalData)
                     {
+                        int? sumofReview = 0;
+                        double finalRate = 0.0;
                         SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
                         solutionTop.Description = topdata.Description;
                         solutionTop.Title = topdata.TopProfessionalTitle;
                         var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
 
-                        solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
+                        solutionTop.FreelancerName = fullname.FirstName + " " + fullname.LastName;
+                        solutionTop.FreelancerId = topdata.FreelancerId;
                         solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
-                        solutionTop.Rate = topdata.Rate;
+
+                        var freelancerReviewByclient = _db.FreelancerReview.Where(x => x.FreelancerId == topdata.FreelancerId).ToList();
+                        if(freelancerReviewByclient.Count > 0)
+                        {
+                            foreach(var freelancerReview in freelancerReviewByclient)
+                            {
+                                sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                            }
+                            finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
+                        }
+                        solutionTop.Rate = finalRate.ToString();
                         professionalData.Add(solutionTop);
                     }
                 }
@@ -2428,755 +2441,766 @@ namespace Aephy.API.Controllers
         {
             //FreelancerFinderHelper helper = new FreelancerFinderHelper();
             //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
-
-            if (model != null)
+            try
             {
-                if (model.GetNextMileStoneData)
+                if (model != null)
                 {
-                    var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
-                    var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
-                    var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
-                    var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
-                    List<MileStoneModel> milestoneList = new List<MileStoneModel>();
-                    if (milestoneData.Count > 0)
+                    if (model.GetNextMileStoneData)
                     {
-                        var mileStoneToTalDays = milestoneData.Sum(x => x.Days);
-                        foreach (var stonedata in milestoneData)
+                        var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
+                        var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                        var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
+                        var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
+                        List<MileStoneModel> milestoneList = new List<MileStoneModel>();
+                        if (milestoneData.Count > 0)
                         {
-                            MileStoneModel milestonData = new MileStoneModel();
-                            milestonData.Id = stonedata.Id;
-                            milestonData.Days = stonedata.Days;
-                            milestonData.Title = stonedata.Title;
-                            milestonData.Description = stonedata.Description;
-                            milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.ClientId).Select(x => x.MilestoneStatus).FirstOrDefault();
-                            if (mileStoneToTalDays > 0)
+                            var mileStoneToTalDays = milestoneData.Sum(x => x.Days);
+                            foreach (var stonedata in milestoneData)
                             {
-                                milestonData.MilestonePrice = (Convert.ToDecimal(checkType.ProjectPrice) / mileStoneToTalDays) * stonedata.Days;
-                            }
-                            milestoneList.Add(milestonData);
-                        }
-                    }
-                    if (mileStoneData != null)
-                    {
-                        var solutionfund = new SolutionFund()
-                        {
-                            SolutionId = model.SolutionId,
-                            IndustryId = model.IndustryId,
-                            ClientId = model.ClientId,
-                            ProjectType = model.ProjectType.ToLower(),
-                            ProjectPrice = checkType.ProjectPrice,
-                            ProjectStatus = "INITIATED",
-                            FundType = checkType.FundType,
-                            MileStoneId = mileStoneData.Id
-                        };
-                        _db.SolutionFund.Add(solutionfund);
-                        _db.SaveChanges();
-
-                        List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
-
-                        var projectType = model.ProjectType.ToLower();
-                        try
-                        {
-                            var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                            if (Userslist.Count > 0)
-                            {
-                                if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                MileStoneModel milestonData = new MileStoneModel();
+                                milestonData.Id = stonedata.Id;
+                                milestonData.Days = stonedata.Days;
+                                milestonData.Title = stonedata.Title;
+                                milestonData.Description = stonedata.Description;
+                                milestonData.MilestoneStatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == stonedata.Id && x.UserId == model.ClientId).Select(x => x.MilestoneStatus).FirstOrDefault();
+                                if (mileStoneToTalDays > 0)
                                 {
-                                    CustomProjectDetials? teamData = null;
-                                    var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionfund.SolutionId && x.IndustryId == solutionfund.IndustryId).FirstOrDefault();
-                                    if (solutionIndustryData != null)
-                                    {
-                                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == projectType).FirstOrDefault();
-                                        if (solutionDefineData != null)
-                                        {
-                                            teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
-                                        }
-                                    }
-                                    var experttotal = Convert.ToInt32(teamData.Expert);
-                                    var assosiatetotal = Convert.ToInt32(teamData.Associate);
-                                    var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
-                                    await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
+                                    milestonData.MilestonePrice = (Convert.ToDecimal(checkType.ProjectPrice) / mileStoneToTalDays) * stonedata.Days;
                                 }
-
-                                else
-                                {
-                                    await SaveSolutionTeamData(solutionfund, 0, 0, 0);
-                                }
-
+                                milestoneList.Add(milestonData);
                             }
                         }
-                        catch (Exception ex)
+                        if (mileStoneData != null)
                         {
-
-                        }
-
-
-                        var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
-                        decimal calculateProjectPrice = 0;
-                        if (MilestoneTotalDaysByProjectType.Count > 0)
-                        {
-                            SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
-                           .GroupBy(l => l.ProjectType)
-                           .Select(cl => new SolutionMilestone
-                           {
-                               ProjectType = cl.First().ProjectType,
-                               Days = cl.Sum(c => c.Days),
-                           }).FirstOrDefault();
-
-                            if (mileStoneToTalDays.Days > 0)
+                            var solutionfund = new SolutionFund()
                             {
-
-                                //var finalPrice = await CountFinalProjectPricing(solutionfund);
-                                calculateProjectPrice = (Convert.ToDecimal(solutionfund.ProjectPrice) / mileStoneToTalDays.Days) * mileStoneData.Days;
-                            }
-                        }
-
-                        var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
-                        var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
-                        var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
-
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "projectDetails",
-                            Result = new
-                            {
-                                ProjectDetails = data,
-                                MileStoneData = mileStone,
-                                FundDecided = Funddecided,
-                                NextMileStonePrice = calculateProjectPrice,
-                                MilestoneList = milestoneList,
-                                Currency = Currency
-                            }
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "NoFurtherMileStone",
-                            Result = new
-                            {
-                                MilestoneList = milestoneList,
-                                PreferredCurrency = Currency
-                            }
-                        });
-                    }
-                }
-                if (model.Id == 0)
-                {
-                    var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
-
-                    if (mileStoneData != null)
-                    {
-                        if (model.MileStoneCheckout)
-                        {
-                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
-                        }
-                        else
-                        {
-                            model.FundType = SolutionFund.FundTypes.ProjectFund;
-                        }
-
-                        var solutionfund = new SolutionFund()
-                        {
-                            SolutionId = model.SolutionId,
-                            IndustryId = model.IndustryId,
-                            ClientId = model.ClientId,
-                            ProjectType = model.ProjectType.ToLower(),
-                            ProjectPrice = model.ProjectPrice,
-                            ProjectStatus = "INITIATED",
-                            FundType = model.FundType
-                        };
-                        _db.SolutionFund.Add(solutionfund);
-                        _db.SaveChanges();
-
-
-                        await SaveSolutionTeamData(solutionfund, 0, 0, 0);
-
-                        var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
-                        if (clientDetails != null)
-                        {
-                            if (clientDetails.UserType == "Client")
-                            {
-                                clientDetails.StartHours = DateTime.Parse(model.StartHour);
-                                clientDetails.EndHours = DateTime.Parse(model.EndHour);
-                                clientDetails.onMonday = model.onMonday;
-                                clientDetails.onThursday = model.onTuesday;
-                                clientDetails.onWednesday = model.onWednesday;
-                                clientDetails.onThursday = model.onThursday;
-                                clientDetails.onFriday = model.onFriday;
-                                clientDetails.onSaturday = model.onSaturday;
-                                clientDetails.onSunday = model.onSunday;
-                                _db.SaveChanges();
-                            }
-                        }
-
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Project Initiated Successfully !",
-                        });
-                    }
-
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "EmptyMilestoneData",
-                        });
-                    }
-                }
-                else
-                {
-                    var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED").FirstOrDefault();
-                    if (data != null)
-                    {
-                        bool mileStoneCheckout = false;
-                        if (model.MileStoneCheckout)
-                        {
-                            model.FundType = SolutionFund.FundTypes.MilestoneFund;
-                            mileStoneCheckout = true;
-                        }
-                        else
-                        {
-                            model.FundType = SolutionFund.FundTypes.ProjectFund;
-                        }
-
-                        if (mileStoneCheckout)
-                        {
-                            List<SolutionTeam> solutionTeamsList = new List<SolutionTeam>();
-                            var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == data.Id).ToList();
-                            //
-                            var clientPreferedCurrency = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault().PreferredCurrency;
-                            if (string.IsNullOrEmpty(clientPreferedCurrency))
-                            {
-                                clientPreferedCurrency = "EUR";
-                            }
-                            //
-                            if (solutionTeamData.Count > 0)
-                            {
-                                if (data.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
-                                {
-                                    foreach (var item in solutionTeamData)
-                                    {
-
-                                        var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
-                                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == item.FreelancerId).FirstOrDefault();
-                                        // ######
-                                        var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == item.FreelancerId).FirstOrDefault().PreferredCurrency;
-                                        if (string.IsNullOrEmpty(freelancerPreferedCurrency))
-                                        {
-                                            freelancerPreferedCurrency = "EUR";
-                                        }
-                                        var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
-                                                && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
-                                        var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                        decimal ExchangeHourlyRate = hourlyRate;
-                                        if (exchangeRate != null)
-                                        {
-                                            ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
-                                        }
-                                        // ######
-                                        decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
-                                        var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
-                                        item.Amount = contractAmount;
-                                        item.PlatformFees = Platformfees;
-                                        _db.SaveChanges();
-                                    }
-
-
-                                }
-                                if (data.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
-                                {
-                                    if (solutionTeamData.Count > 0)
-                                    {
-                                        var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
-                                        foreach (var teamData in solutionTeamData)
-                                        {
-                                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
-                                            // ######
-                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
-                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
-                                            {
-                                                freelancerPreferedCurrency = "EUR";
-                                            }
-                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
-                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
-                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                            decimal ExchangeHourlyRate = hourlyRate;
-                                            if (exchangeRate != null)
-                                            {
-                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
-                                            }
-                                            // ######
-                                            decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
-                                            var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
-                                            teamData.Amount = contractAmount;
-                                            teamData.PlatformFees = Platformfees;
-                                            _db.SaveChanges();
-                                        }
-                                    }
-                                }
-                                if (data.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
-                                {
-                                    if (solutionTeamData.Count > 0)
-                                    {
-                                        var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
-                                        foreach (var teamData in solutionTeamData)
-                                        {
-                                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
-                                            // ######
-                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
-                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
-                                            {
-                                                freelancerPreferedCurrency = "EUR";
-                                            }
-                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
-                                                && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
-                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                            decimal ExchangeHourlyRate = hourlyRate;
-                                            if (exchangeRate != null)
-                                            {
-                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
-                                            }
-                                            // ######
-                                            var contractAmount = singlemilestoneDay * 8 * ExchangeHourlyRate;
-                                            var PlatformFees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
-                                            teamData.Amount = contractAmount;
-                                            teamData.PlatformFees = PlatformFees;
-                                            _db.SaveChanges();
-                                        }
-                                    }
-                                }
-                                if (data.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
-                                {
-                                    if (solutionTeamData.Count > 0)
-                                    {
-                                        var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
-                                        foreach (var teamData in solutionTeamData)
-                                        {
-                                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
-                                            // ######
-                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
-                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
-                                            {
-                                                freelancerPreferedCurrency = "EUR";
-                                            }
-                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
-                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
-                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
-                                            decimal ExchangeHourlyRate = hourlyRate;
-                                            if (exchangeRate != null)
-                                            {
-                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
-                                            }
-                                            // ######
-                                            decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
-                                            var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
-                                            teamData.Amount = contractAmount;
-                                            teamData.PlatformFees = Platformfees;
-                                            _db.SaveChanges();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (data.ProjectStatus == "INITIATED")
-                        {
-                            data.ProjectStatus = "INPROGRESS";
-                            data.MileStoneId = model.MileStoneId;
-                            data.FundType = model.FundType;
+                                SolutionId = model.SolutionId,
+                                IndustryId = model.IndustryId,
+                                ClientId = model.ClientId,
+                                ProjectType = model.ProjectType.ToLower(),
+                                ProjectPrice = checkType.ProjectPrice,
+                                ProjectStatus = "INITIATED",
+                                FundType = checkType.FundType,
+                                MileStoneId = mileStoneData.Id
+                            };
+                            _db.SolutionFund.Add(solutionfund);
                             _db.SaveChanges();
 
-                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+                            List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
 
-                            var getRevoultToken = await CheckOutUsingRevoult(data);
+                            var projectType = model.ProjectType.ToLower();
+                            try
+                            {
+                                var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                                if (Userslist.Count > 0)
+                                {
+                                    if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                    {
+                                        CustomProjectDetials? teamData = null;
+                                        var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionfund.SolutionId && x.IndustryId == solutionfund.IndustryId).FirstOrDefault();
+                                        if (solutionIndustryData != null)
+                                        {
+                                            var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == projectType).FirstOrDefault();
+                                            if (solutionDefineData != null)
+                                            {
+                                                teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                                            }
+                                        }
+                                        var experttotal = Convert.ToInt32(teamData.Expert);
+                                        var assosiatetotal = Convert.ToInt32(teamData.Associate);
+                                        var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
+                                        await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
+                                    }
+
+                                    else
+                                    {
+                                        await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+
+
+                            var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                            decimal calculateProjectPrice = 0;
+                            if (MilestoneTotalDaysByProjectType.Count > 0)
+                            {
+                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                               .GroupBy(l => l.ProjectType)
+                               .Select(cl => new SolutionMilestone
+                               {
+                                   ProjectType = cl.First().ProjectType,
+                                   Days = cl.Sum(c => c.Days),
+                               }).FirstOrDefault();
+
+                                if (mileStoneToTalDays.Days > 0)
+                                {
+
+                                    //var finalPrice = await CountFinalProjectPricing(solutionfund);
+                                    calculateProjectPrice = (Convert.ToDecimal(solutionfund.ProjectPrice) / mileStoneToTalDays.Days) * mileStoneData.Days;
+                                }
+                            }
+
+                            var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
+                            var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
+                            var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
+
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "CompleteProcess",
+                                Message = "projectDetails",
                                 Result = new
                                 {
                                     ProjectDetails = data,
-                                    MileStoneData = mileStoneData,
-                                    RevoultToken = getRevoultToken,
-                                    SolutionFundId = data.Id
+                                    MileStoneData = mileStone,
+                                    FundDecided = Funddecided,
+                                    NextMileStonePrice = calculateProjectPrice,
+                                    MilestoneList = milestoneList,
+                                    Currency = Currency
                                 }
                             });
                         }
-                        if (data.ProjectStatus == "INPROGRESS")
+                        else
                         {
-                            //data.ProjectStatus = "COMPLETED";
-                            //_db.SaveChanges();
-                            var getRevoultToken = await CheckOutUsingRevoult(data);
-                            var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "CompleteProcess",
+                                Message = "NoFurtherMileStone",
                                 Result = new
                                 {
-                                    ProjectDetails = data,
-                                    MileStoneData = mileStoneData,
-                                    RevoultToken = getRevoultToken,
-                                    SolutionFundId = data.Id
+                                    MilestoneList = milestoneList,
+                                    PreferredCurrency = Currency
                                 }
                             });
                         }
                     }
-
-                    var completedData = _db.SolutionFund.Where(x => x.Id == model.Id && x.ProjectStatus == "COMPLETED").FirstOrDefault();
-                    if (completedData != null)
+                    if (model.Id == 0)
                     {
-                        if (completedData.ProjectStatus == "COMPLETED")
-                        {
-                            var SolutionTitle = string.Empty;
-                            var contract = _db.Contract.Where(x => x.SolutionFundId == model.Id).Include("ContractUsers").FirstOrDefault();
+                        var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).FirstOrDefaultAsync();
 
-                            if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                        if (mileStoneData != null)
+                        {
+                            if (model.MileStoneCheckout)
                             {
-                                SolutionTitle = _db.SolutionMilestone.Where(x => x.Id == completedData.MileStoneId).Select(x => x.Title).FirstOrDefault();
+                                model.FundType = SolutionFund.FundTypes.MilestoneFund;
                             }
                             else
                             {
-                                SolutionTitle = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                model.FundType = SolutionFund.FundTypes.ProjectFund;
                             }
 
-                            if (contract != null)
+                            var solutionfund = new SolutionFund()
                             {
-                                var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
-                                //var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+                                SolutionId = model.SolutionId,
+                                IndustryId = model.IndustryId,
+                                ClientId = model.ClientId,
+                                ProjectType = model.ProjectType.ToLower(),
+                                ProjectPrice = model.ProjectPrice,
+                                ProjectStatus = "INITIATED",
+                                FundType = model.FundType
+                            };
+                            _db.SolutionFund.Add(solutionfund);
+                            _db.SaveChanges();
 
-                                var allAccounts = await _revoultService.RetrieveAllAccounts();
-                                double totalAmt = 0;
-                                foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
+
+                            await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+
+                            var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
+                            if (clientDetails != null)
+                            {
+                                if (clientDetails.UserType == "Client")
                                 {
-                                    var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
+                                    clientDetails.StartHours = DateTime.Parse(model.StartHour);
+                                    clientDetails.EndHours = DateTime.Parse(model.EndHour);
+                                    clientDetails.onMonday = model.onMonday;
+                                    clientDetails.onThursday = model.onTuesday;
+                                    clientDetails.onWednesday = model.onWednesday;
+                                    clientDetails.onThursday = model.onThursday;
+                                    clientDetails.onFriday = model.onFriday;
+                                    clientDetails.onSaturday = model.onSaturday;
+                                    clientDetails.onSunday = model.onSunday;
+                                    _db.SaveChanges();
+                                }
+                            }
 
-                                    if (user != null && user.RevolutStatus == true)
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Project Initiated Successfully !",
+                            });
+                        }
+
+                        else
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "EmptyMilestoneData",
+                            });
+                        }
+                    }
+                    else
+                    {
+                        var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED").FirstOrDefault();
+                        if (data != null)
+                        {
+                            bool mileStoneCheckout = false;
+                            if (model.MileStoneCheckout)
+                            {
+                                model.FundType = SolutionFund.FundTypes.MilestoneFund;
+                                mileStoneCheckout = true;
+                            }
+                            else
+                            {
+                                model.FundType = SolutionFund.FundTypes.ProjectFund;
+                            }
+
+                            if (mileStoneCheckout)
+                            {
+                                List<SolutionTeam> solutionTeamsList = new List<SolutionTeam>();
+                                var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == data.Id).ToList();
+                                //
+                                var clientPreferedCurrency = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault().PreferredCurrency;
+                                if (string.IsNullOrEmpty(clientPreferedCurrency))
+                                {
+                                    clientPreferedCurrency = "EUR";
+                                }
+                                //
+                                if (solutionTeamData.Count > 0)
+                                {
+                                    if (data.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                                     {
-                                        //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
-                                        if (user.PreferredCurrency == null)
+                                        foreach (var item in solutionTeamData)
                                         {
-                                            user.PreferredCurrency = "EUR";
-                                        }
-                                        double priceToTransfer = 0;
-                                        var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
-                                        //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
-                                        priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
-                                        //var getExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
-                                        //if (getExchangeRate == null)
-                                        //{
-                                        //    priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
-                                        //}
-                                        //else
-                                        //{
-                                        //    priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
-                                        //}
-                                        var getCounterParties = await _revoultService.GetCounterparties();
-                                        // When Pay Amount button click
-                                        totalAmt += (double)priceToTransfer;
 
-                                        CreatePaymentReq createPaymentReq = new CreatePaymentReq
-                                        {
-                                            AccountId = allAccounts.Where(x => x.Currency == model.ClientPreferredCurrency
-                                            && x.Balance >= (double)totalAmt).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
-                                            RequestId = Guid.NewGuid().ToString(),
-                                            Amount = (double)priceToTransfer, // ##### actual amount - solutionteam.transferamount 
-                                            Currency = model.ClientPreferredCurrency,
-                                            Reference = "Payment For- " + SolutionTitle,
-                                            Receiver = new CreatePaymentReq.ReceiverData()
+                                            var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
+                                            var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == item.FreelancerId).FirstOrDefault();
+                                            // ######
+                                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == item.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
                                             {
-                                                CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
-                                                AccountId = user.RevolutAccountId // freelancer RevolutAccountId
+                                                freelancerPreferedCurrency = "EUR";
                                             }
-                                        };
-
-                                        var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
-                                        //CreatePaymentRsp.State = "completed";
-                                        //Possible values: [created, pending, completed, declined, failed, reverted]
-                                        if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
-                                        {
-                                            var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
-                                            if (TranscationFeesDetails.IsSuccessStatusCode)
+                                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                            var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                            decimal ExchangeHourlyRate = hourlyRate;
+                                            if (exchangeRate != null)
                                             {
-                                                decimal paymentFee = 0;
-                                                var content = TranscationFeesDetails.Content;
-                                                dynamic parseContent = JObject.Parse(content);
-                                                JArray legsArray = (JArray)parseContent["legs"];
-                                                foreach (JObject item in legsArray)
-                                                {
-                                                    paymentFee = (decimal)item["fee"];
-                                                }
-                                                contractUser.PaymentFees = paymentFee.ToString();
+                                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
                                             }
-                                            contractUser.StripeTranferId = CreatePaymentRsp.Id;
-                                            contractUser.IsTransfered = true;
-                                            contractUser.PaymentAmount = priceToTransfer.ToString();
-                                            contractUser.TransferDateTime = DateTime.Now;
-                                            _db.ContractUser.Update(contractUser);
+                                            // ######
+                                            decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
+                                            var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                                            item.Amount = contractAmount;
+                                            item.PlatformFees = Platformfees;
                                             _db.SaveChanges();
-
-
-
-
-                                        }
-                                        else
-                                        {
-                                            //Please check the status and place logic accordingly.
                                         }
 
-                                        //if (teamMember.IsProjectManager)
-                                        //{
-                                        //    // ########## same logic as above - but it will update PaymentAmountProjectMgr and PaymentFeesProjectMgr in Contractuser table
 
-                                        //    decimal pmpriceToTransfer = 0;
-                                        //    var pmExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
-                                        //    if (pmExchangeRate == null)
-                                        //    {
-                                        //        pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees));
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees)) * (Convert.ToDecimal(pmExchangeRate.Rate));
-                                        //    }
-                                        //    var getpmCounterParties = await _revoultService.GetCounterparties();
-
-                                        //    CreatePaymentReq createpmPaymentReq = new CreatePaymentReq
-                                        //    {
-                                        //        AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
-                                        //        RequestId = Guid.NewGuid().ToString(),
-                                        //        Amount = 2, // ##### actual amount  Solutionteam.ProjectManagerPlatformFees
-                                        //        Currency = user.PreferredCurrency,
-                                        //        Reference = "Payment For- " + SolutionTitle,
-                                        //        Receiver = new CreatePaymentReq.ReceiverData()
-                                        //        {
-                                        //            CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
-                                        //            AccountId = user.RevolutAccountId // freelancer RevolutAccountId
-                                        //        }
-                                        //    };
-
-                                        //    var CreatepmPaymentRsp = await _revoultService.CreatePayment(createpmPaymentReq);
-                                        //    //Possible values: [created, pending, completed, declined, failed, reverted]
-                                        //    if (CreatepmPaymentRsp.State == "completed" || CreatepmPaymentRsp.State == "pending")
-                                        //    {
-                                        //        var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
-                                        //        if (TranscationFeesDetails.IsSuccessStatusCode)
-                                        //        {
-                                        //            decimal paymentFee = 0;
-                                        //            var content = TranscationFeesDetails.Content;
-                                        //            dynamic parseContent = JObject.Parse(content);
-                                        //            JArray legsArray = (JArray)parseContent["legs"];
-                                        //            foreach (JObject item in legsArray)
-                                        //            {
-                                        //                paymentFee = (decimal)item["fee"];
-                                        //            }
-                                        //            contractUser.PaymentFeesProjectMgr = paymentFee;
-                                        //        }
-                                        //        contractUser.PaymentAmountProjectMgr = pmpriceToTransfer;
-                                        //        _db.ContractUser.Update(contractUser);
-                                        //        _db.SaveChanges();
-                                        //    }
-
-
-                                        //    ////
-                                        //}
                                     }
-                                    else
+                                    if (data.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                                     {
-                                        // this User(freelabncer or architect) has not completed his Stripe account please 
-                                    }
-                                }
-
-                                // Ephylinklog section
-                                var ephylinkaccountDetails = _db.EphylinkRevolutAccount.FirstOrDefault();
-                                if (ephylinkaccountDetails != null)
-                                {
-                                    if (ephylinkaccountDetails.IsEnable)
-                                    {
-                                        var fullTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
-                                        decimal totalamountTotransfer = 0;
-                                        decimal clientFees = 0;
-                                        decimal revolutFees = contract.RevolutFee;
-                                        decimal platfomrFromClient = 0; // I8 - J8
-                                        // I8 = clientFees = fullTeam.Sum(y => y.Amount) * const / 100;
-                                        // J8 = (revolutFees * clientFees) / solutionTeamSum;
-                                        if (completedData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                                        if (solutionTeamData.Count > 0)
                                         {
-                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
-                                        }
-                                        else if (completedData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
-                                        {
-                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
-                                        }
-                                        else if (completedData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
-                                        {
-                                            clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
-                                        }
-                                        else if (completedData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
-                                        {
-                                            if (fullTeam.Count <= 3)
+                                            var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
+                                            foreach (var teamData in solutionTeamData)
                                             {
-                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
-                                            }
-                                            else
-                                            {
-                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
-                                            }
-                                        }
-                                        var solutionTeamSum = fullTeam.Sum(x => x.Amount)
-                                                            //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
-                                                            + clientFees;
-                                        decimal j8 = (revolutFees * clientFees) / solutionTeamSum;
-                                        platfomrFromClient = clientFees - j8;
-                                        totalamountTotransfer += platfomrFromClient;
-                                        foreach (var teamMember in fullTeam)
-                                        {
-                                            decimal checkoutRevolutFees = (revolutFees * teamMember.PlatformFees) / solutionTeamSum;
-                                            decimal amountToBeTransfered = teamMember.PlatformFees - checkoutRevolutFees;
-                                            totalamountTotransfer += amountToBeTransfered;
-                                        }
-                                        CreatePaymentReq createephylinkPaymentReq = new CreatePaymentReq
-                                        {
-                                            AccountId = allAccounts.Where(x => x.Currency == ephylinkaccountDetails.Currency
-                                            && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(),
-                                            RequestId = Guid.NewGuid().ToString(),
-                                            Amount = (double)totalamountTotransfer,
-                                            Currency = ephylinkaccountDetails.Currency,
-                                            Reference = "Payment to Ephylink",
-                                            Receiver = new CreatePaymentReq.ReceiverData()
-                                            {
-                                                CounterpartyId = ephylinkaccountDetails.RevolutConnectId,
-                                                AccountId = ephylinkaccountDetails.RevolutAccountId
-                                            }
-                                        };
-
-                                        var CreateephylinkPaymentRsp = await _revoultService.CreatePayment(createephylinkPaymentReq);
-                                        if (CreateephylinkPaymentRsp.State == "completed" || CreateephylinkPaymentRsp.State == "pending")
-                                        {
-                                            var ephylinkFeesDetails = await _revoultService.GetTranscationFeesDetails(CreateephylinkPaymentRsp.Id);
-                                            if (ephylinkFeesDetails.IsSuccessStatusCode)
-                                            {
-                                                decimal paymentFee = 0;
-                                                var content = ephylinkFeesDetails.Content;
-                                                dynamic parseContent = JObject.Parse(content);
-                                                JArray legsArray = (JArray)parseContent["legs"];
-                                                foreach (JObject item in legsArray)
+                                                var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
+                                                // ######
+                                                var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                                if (string.IsNullOrEmpty(freelancerPreferedCurrency))
                                                 {
-                                                    paymentFee = (decimal)item["fee"];
+                                                    freelancerPreferedCurrency = "EUR";
                                                 }
-
-                                                var accountLog = new EphylinkRevolutAccountTransferLog()
+                                                var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                        && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                                var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                                decimal ExchangeHourlyRate = hourlyRate;
+                                                if (exchangeRate != null)
                                                 {
-                                                    ContractId = contract.Id,
-                                                    TransferAmount = totalamountTotransfer,
-                                                    RevoultFee = paymentFee,
-                                                    TransferDateTime = DateTime.Now
-                                                };
-                                                _db.EphylinkRevolutAccountTransferLog.Add(accountLog);
+                                                    ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                                }
+                                                // ######
+                                                decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
+                                                var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
+                                                teamData.Amount = contractAmount;
+                                                teamData.PlatformFees = Platformfees;
                                                 _db.SaveChanges();
-
                                             }
                                         }
-
+                                    }
+                                    if (data.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                                    {
+                                        if (solutionTeamData.Count > 0)
+                                        {
+                                            var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
+                                            foreach (var teamData in solutionTeamData)
+                                            {
+                                                var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
+                                                // ######
+                                                var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                                if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                                {
+                                                    freelancerPreferedCurrency = "EUR";
+                                                }
+                                                var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                    && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                                var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                                decimal ExchangeHourlyRate = hourlyRate;
+                                                if (exchangeRate != null)
+                                                {
+                                                    ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                                }
+                                                // ######
+                                                var contractAmount = singlemilestoneDay * 8 * ExchangeHourlyRate;
+                                                var PlatformFees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                                                teamData.Amount = contractAmount;
+                                                teamData.PlatformFees = PlatformFees;
+                                                _db.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                    if (data.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                    {
+                                        if (solutionTeamData.Count > 0)
+                                        {
+                                            var singlemilestoneDay = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).Select(x => x.Days).FirstOrDefault();
+                                            foreach (var teamData in solutionTeamData)
+                                            {
+                                                var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamData.FreelancerId).FirstOrDefault();
+                                                // ######
+                                                var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamData.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                                if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                                {
+                                                    freelancerPreferedCurrency = "EUR";
+                                                }
+                                                var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                                                        && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                                                var hourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                                decimal ExchangeHourlyRate = hourlyRate;
+                                                if (exchangeRate != null)
+                                                {
+                                                    ExchangeHourlyRate = Convert.ToDecimal((decimal)(hourlyRate * exchangeRate.Rate));
+                                                }
+                                                // ######
+                                                decimal contractAmount = (singlemilestoneDay * 8 * ExchangeHourlyRate);
+                                                var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+                                                teamData.Amount = contractAmount;
+                                                teamData.PlatformFees = Platformfees;
+                                                _db.SaveChanges();
+                                            }
+                                        }
                                     }
                                 }
+                            }
 
+                            if (data.ProjectStatus == "INITIATED")
+                            {
+                                data.ProjectStatus = "INPROGRESS";
+                                data.MileStoneId = model.MileStoneId;
+                                data.FundType = model.FundType;
+                                _db.SaveChanges();
+
+                                var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+
+                                var getRevoultToken = await CheckOutUsingRevoult(data);
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "CompleteProcess",
+                                    Result = new
+                                    {
+                                        ProjectDetails = data,
+                                        MileStoneData = mileStoneData,
+                                        RevoultToken = getRevoultToken,
+                                        SolutionFundId = data.Id
+                                    }
+                                });
+                            }
+                            if (data.ProjectStatus == "INPROGRESS")
+                            {
+                                //data.ProjectStatus = "COMPLETED";
+                                //_db.SaveChanges();
+                                var getRevoultToken = await CheckOutUsingRevoult(data);
+                                var mileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "CompleteProcess",
+                                    Result = new
+                                    {
+                                        ProjectDetails = data,
+                                        MileStoneData = mileStoneData,
+                                        RevoultToken = getRevoultToken,
+                                        SolutionFundId = data.Id
+                                    }
+                                });
+                            }
+                        }
+
+                        var completedData = _db.SolutionFund.Where(x => x.Id == model.Id && x.ProjectStatus == "COMPLETED").FirstOrDefault();
+                        if (completedData != null)
+                        {
+                            if (completedData.ProjectStatus == "COMPLETED")
+                            {
+                                var SolutionTitle = string.Empty;
+                                var contract = _db.Contract.Where(x => x.SolutionFundId == model.Id).Include("ContractUsers").FirstOrDefault();
 
                                 if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
                                 {
-                                    var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
-                                    if (updatemilestonestatus != null)
-                                    {
-                                        updatemilestonestatus.MilestoneStatus = "Milestone Completed";
-                                        _db.SaveChanges();
-                                    }
-                                }
-
-                                // 4 Invoice Generate 
-                                try
-                                {
-                                    await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, completedData.ProjectType);
-                                }
-                                catch (Exception exInvoice)
-                                {
-
-                                    //#####
-                                }
-
-
-                                var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
-                                var transfertoFreelancer = false;
-                                if (transferredcount == contract.ContractUsers.Count())
-                                {
-                                    contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
-                                    _db.Contract.Update(contract);
-                                    _db.SaveChanges();
-                                    var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
-                                    transfertoFreelancer = true;
-                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                    {
-                                        StatusCode = StatusCodes.Status200OK,
-                                        Message = message,
-                                        Result = new
-                                        {
-                                            IsTransfer = transfertoFreelancer,
-                                            FundType = completedData.FundType
-                                        }
-
-                                    });
-                                }
-                                else if (transferredcount > 0)
-                                {
-                                    contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
-                                    _db.Contract.Update(contract);
-                                    _db.SaveChanges();
-                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(revoult)", transferredcount);
-                                    transfertoFreelancer = true;
-                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                    {
-                                        StatusCode = StatusCodes.Status200OK,
-                                        Message = message,
-                                        Result = new
-                                        {
-                                            IsTransfer = transfertoFreelancer
-                                        }
-
-                                    });
+                                    SolutionTitle = _db.SolutionMilestone.Where(x => x.Id == completedData.MileStoneId).Select(x => x.Title).FirstOrDefault();
                                 }
                                 else
                                 {
-                                    var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(revoult)", transferredcount);
-                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                    {
-                                        StatusCode = StatusCodes.Status200OK,
-                                        Message = message,
-                                        Result = new
-                                        {
-                                            IsTransfer = transfertoFreelancer
-                                        }
-
-                                    });
+                                    SolutionTitle = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
                                 }
 
+                                if (contract != null)
+                                {
+                                    var mileStone = _db.SolutionMilestone.FirstOrDefault(x => x.Id == contract.MilestoneDataId);
+                                    //var checkoutSession = _stripeAccountService.GetCheckOutSesssion(contract.SessionId);
+
+                                    var allAccounts = await _revoultService.RetrieveAllAccounts();
+                                    double totalAmt = 0;
+                                    foreach (var contractUser in contract.ContractUsers.Where(x => !x.IsTransfered))
+                                    {
+                                        var user = _db.Users.FirstOrDefault(x => x.Id == contractUser.ApplicationUserId);
+
+                                        if (user != null && user.RevolutStatus == true)
+                                        {
+                                            //var paymentIntent = _stripeAccountService.GetPaymentIntent(contract.PaymentIntentId);
+                                            if (user.PreferredCurrency == null)
+                                            {
+                                                user.PreferredCurrency = "EUR";
+                                            }
+                                            double priceToTransfer = 0;
+                                            var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
+                                            //var priceToTransfer = (long)(Convert.ToDecimal(contractUser.Percentage) / 100 * 200 * 100);
+                                            priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+                                            //var getExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
+                                            //if (getExchangeRate == null)
+                                            //{
+                                            //    priceToTransfer = (long)(Convert.ToDecimal(teamMember?.Amount));
+                                            //}
+                                            //else
+                                            //{
+                                            //    priceToTransfer = (Convert.ToDecimal(teamMember?.Amount)) * (Convert.ToDecimal(getExchangeRate.Rate));
+                                            //}
+                                            var getCounterParties = await _revoultService.GetCounterparties();
+                                            // When Pay Amount button click
+                                            totalAmt += (double)priceToTransfer;
+
+                                            CreatePaymentReq createPaymentReq = new CreatePaymentReq
+                                            {
+                                                AccountId = allAccounts.Where(x => x.Currency == model.ClientPreferredCurrency
+                                                && x.Balance >= (double)totalAmt).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                                RequestId = Guid.NewGuid().ToString(),
+                                                Amount = (double)priceToTransfer, // ##### actual amount - solutionteam.transferamount 
+                                                Currency = model.ClientPreferredCurrency,
+                                                Reference = "Payment For- " + SolutionTitle,
+                                                Receiver = new CreatePaymentReq.ReceiverData()
+                                                {
+                                                    CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
+                                                    AccountId = user.RevolutAccountId // freelancer RevolutAccountId
+                                                }
+                                            };
+
+                                            var CreatePaymentRsp = await _revoultService.CreatePayment(createPaymentReq);
+                                            //CreatePaymentRsp.State = "completed";
+                                            //Possible values: [created, pending, completed, declined, failed, reverted]
+                                            if (CreatePaymentRsp.State == "completed" || CreatePaymentRsp.State == "pending")
+                                            {
+                                                var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
+                                                if (TranscationFeesDetails.IsSuccessStatusCode)
+                                                {
+                                                    decimal paymentFee = 0;
+                                                    var content = TranscationFeesDetails.Content;
+                                                    dynamic parseContent = JObject.Parse(content);
+                                                    JArray legsArray = (JArray)parseContent["legs"];
+                                                    foreach (JObject item in legsArray)
+                                                    {
+                                                        paymentFee = (decimal)item["fee"];
+                                                    }
+                                                    contractUser.PaymentFees = paymentFee.ToString();
+                                                }
+                                                contractUser.StripeTranferId = CreatePaymentRsp.Id;
+                                                contractUser.IsTransfered = true;
+                                                contractUser.PaymentAmount = priceToTransfer.ToString();
+                                                contractUser.TransferDateTime = DateTime.Now;
+                                                _db.ContractUser.Update(contractUser);
+                                                _db.SaveChanges();
 
 
+
+
+                                            }
+                                            else
+                                            {
+                                                //Please check the status and place logic accordingly.
+                                            }
+
+                                            //if (teamMember.IsProjectManager)
+                                            //{
+                                            //    // ########## same logic as above - but it will update PaymentAmountProjectMgr and PaymentFeesProjectMgr in Contractuser table
+
+                                            //    decimal pmpriceToTransfer = 0;
+                                            //    var pmExchangeRate = _db.ExchangeRates.Where(q => q.FromCurrency == model.ClientPreferredCurrency && q.ToCurrency == user.PreferredCurrency).FirstOrDefault();
+                                            //    if (pmExchangeRate == null)
+                                            //    {
+                                            //        pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees));
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        pmpriceToTransfer = (Convert.ToDecimal(teamMember?.ProjectManagerPlatformFees)) * (Convert.ToDecimal(pmExchangeRate.Rate));
+                                            //    }
+                                            //    var getpmCounterParties = await _revoultService.GetCounterparties();
+
+                                            //    CreatePaymentReq createpmPaymentReq = new CreatePaymentReq
+                                            //    {
+                                            //        AccountId = allAccounts.Where(x => x.Currency == user.PreferredCurrency).Select(x => x.Id).FirstOrDefault(), // ##### Freelancer PreferredCurrency
+                                            //        RequestId = Guid.NewGuid().ToString(),
+                                            //        Amount = 2, // ##### actual amount  Solutionteam.ProjectManagerPlatformFees
+                                            //        Currency = user.PreferredCurrency,
+                                            //        Reference = "Payment For- " + SolutionTitle,
+                                            //        Receiver = new CreatePaymentReq.ReceiverData()
+                                            //        {
+                                            //            CounterpartyId = user.RevolutConnectId, // freelancer RevolutConnectId
+                                            //            AccountId = user.RevolutAccountId // freelancer RevolutAccountId
+                                            //        }
+                                            //    };
+
+                                            //    var CreatepmPaymentRsp = await _revoultService.CreatePayment(createpmPaymentReq);
+                                            //    //Possible values: [created, pending, completed, declined, failed, reverted]
+                                            //    if (CreatepmPaymentRsp.State == "completed" || CreatepmPaymentRsp.State == "pending")
+                                            //    {
+                                            //        var TranscationFeesDetails = await _revoultService.GetTranscationFeesDetails(CreatePaymentRsp.Id);
+                                            //        if (TranscationFeesDetails.IsSuccessStatusCode)
+                                            //        {
+                                            //            decimal paymentFee = 0;
+                                            //            var content = TranscationFeesDetails.Content;
+                                            //            dynamic parseContent = JObject.Parse(content);
+                                            //            JArray legsArray = (JArray)parseContent["legs"];
+                                            //            foreach (JObject item in legsArray)
+                                            //            {
+                                            //                paymentFee = (decimal)item["fee"];
+                                            //            }
+                                            //            contractUser.PaymentFeesProjectMgr = paymentFee;
+                                            //        }
+                                            //        contractUser.PaymentAmountProjectMgr = pmpriceToTransfer;
+                                            //        _db.ContractUser.Update(contractUser);
+                                            //        _db.SaveChanges();
+                                            //    }
+
+
+                                            //    ////
+                                            //}
+                                        }
+                                        else
+                                        {
+                                            // this User(freelabncer or architect) has not completed his Stripe account please 
+                                        }
+                                    }
+
+                                    // Ephylinklog section
+                                    var ephylinkaccountDetails = _db.EphylinkRevolutAccount.FirstOrDefault();
+                                    if (ephylinkaccountDetails != null)
+                                    {
+                                        if (ephylinkaccountDetails.IsEnable)
+                                        {
+                                            var fullTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
+                                            decimal totalamountTotransfer = 0;
+                                            decimal clientFees = 0;
+                                            decimal revolutFees = contract.RevolutFee;
+                                            decimal platfomrFromClient = 0; // I8 - J8
+                                                                            // I8 = clientFees = fullTeam.Sum(y => y.Amount) * const / 100;
+                                                                            // J8 = (revolutFees * clientFees) / solutionTeamSum;
+                                            if (completedData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                                            {
+                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE) / 100;
+                                            }
+                                            else if (completedData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
+                                            {
+                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL) / 100;
+                                            }
+                                            else if (completedData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                                            {
+                                                clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
+                                            }
+                                            else if (completedData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                            {
+                                                if (fullTeam.Count <= 3)
+                                                {
+                                                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS) / 100;
+                                                }
+                                                else
+                                                {
+                                                    clientFees = (fullTeam.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM) / 100;
+                                                }
+                                            }
+                                            var solutionTeamSum = fullTeam.Sum(x => x.Amount)
+                                                                //+ fullTeam.Sum(y => y.PlatformFees) // not include because x.Amount already includes this
+                                                                + clientFees;
+                                            decimal j8 = (revolutFees * clientFees) / solutionTeamSum;
+                                            platfomrFromClient = clientFees - j8;
+                                            totalamountTotransfer += platfomrFromClient;
+                                            foreach (var teamMember in fullTeam)
+                                            {
+                                                decimal checkoutRevolutFees = (revolutFees * teamMember.PlatformFees) / solutionTeamSum;
+                                                decimal amountToBeTransfered = teamMember.PlatformFees - checkoutRevolutFees;
+                                                totalamountTotransfer += amountToBeTransfered;
+                                            }
+                                            CreatePaymentReq createephylinkPaymentReq = new CreatePaymentReq
+                                            {
+                                                AccountId = allAccounts.Where(x => x.Currency == ephylinkaccountDetails.Currency
+                                                && x.Balance >= (double)totalamountTotransfer).Select(x => x.Id).FirstOrDefault(),
+                                                RequestId = Guid.NewGuid().ToString(),
+                                                Amount = (double)totalamountTotransfer,
+                                                Currency = ephylinkaccountDetails.Currency,
+                                                Reference = "Payment to Ephylink",
+                                                Receiver = new CreatePaymentReq.ReceiverData()
+                                                {
+                                                    CounterpartyId = ephylinkaccountDetails.RevolutConnectId,
+                                                    AccountId = ephylinkaccountDetails.RevolutAccountId
+                                                }
+                                            };
+
+                                            var CreateephylinkPaymentRsp = await _revoultService.CreatePayment(createephylinkPaymentReq);
+                                            if (CreateephylinkPaymentRsp.State == "completed" || CreateephylinkPaymentRsp.State == "pending")
+                                            {
+                                                var ephylinkFeesDetails = await _revoultService.GetTranscationFeesDetails(CreateephylinkPaymentRsp.Id);
+                                                if (ephylinkFeesDetails.IsSuccessStatusCode)
+                                                {
+                                                    decimal paymentFee = 0;
+                                                    var content = ephylinkFeesDetails.Content;
+                                                    dynamic parseContent = JObject.Parse(content);
+                                                    JArray legsArray = (JArray)parseContent["legs"];
+                                                    foreach (JObject item in legsArray)
+                                                    {
+                                                        paymentFee = (decimal)item["fee"];
+                                                    }
+
+                                                    var accountLog = new EphylinkRevolutAccountTransferLog()
+                                                    {
+                                                        ContractId = contract.Id,
+                                                        TransferAmount = totalamountTotransfer,
+                                                        RevoultFee = paymentFee,
+                                                        TransferDateTime = DateTime.Now
+                                                    };
+                                                    _db.EphylinkRevolutAccountTransferLog.Add(accountLog);
+                                                    _db.SaveChanges();
+
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+
+                                    if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                    {
+                                        var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
+                                        if (updatemilestonestatus != null)
+                                        {
+                                            updatemilestonestatus.MilestoneStatus = "Milestone Completed";
+                                            _db.SaveChanges();
+                                        }
+                                    }
+
+                                    // 4 Invoice Generate 
+                                    try
+                                    {
+                                        await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, completedData.ProjectType);
+                                    }
+                                    catch (Exception exInvoice)
+                                    {
+
+                                        //#####
+                                    }
+
+
+                                    var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
+                                    var transfertoFreelancer = false;
+                                    if (transferredcount == contract.ContractUsers.Count())
+                                    {
+                                        contract.PaymentStatus = Contract.PaymentStatuses.Splitted;
+                                        _db.Contract.Update(contract);
+                                        _db.SaveChanges();
+                                        var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
+                                        transfertoFreelancer = true;
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                            Result = new
+                                            {
+                                                IsTransfer = transfertoFreelancer,
+                                                FundType = completedData.FundType
+                                            }
+
+                                        });
+                                    }
+                                    else if (transferredcount > 0)
+                                    {
+                                        contract.PaymentStatus = Contract.PaymentStatuses.PartiallySplitted;
+                                        _db.Contract.Update(contract);
+                                        _db.SaveChanges();
+                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(revoult)", transferredcount);
+                                        transfertoFreelancer = true;
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                            Result = new
+                                            {
+                                                IsTransfer = transfertoFreelancer
+                                            }
+
+                                        });
+                                    }
+                                    else
+                                    {
+                                        var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is not changed from previous. Please press transfer again and make sure all users(freelancers) are onboard(revoult)", transferredcount);
+                                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                        {
+                                            StatusCode = StatusCodes.Status200OK,
+                                            Message = message,
+                                            Result = new
+                                            {
+                                                IsTransfer = transfertoFreelancer
+                                            }
+
+                                        });
+                                    }
+
+
+
+                                }
                             }
                         }
+
                     }
 
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data Not Found"
+                    });
                 }
-
+            }
+            catch(Exception ex)
+            {
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "Data Not Found"
+                    Message = ex.Message + ex.InnerException
                 });
             }
+            
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -5214,6 +5238,52 @@ namespace Aephy.API.Controllers
                 });
 
             }
+        }
+
+        //GetPopularAiSolution
+        [HttpGet]
+        [Route("GetPopularAiSolution")]
+        public async Task<IActionResult> GetPopularAiSolution()
+        {
+
+            try
+            {
+                List<Solutions> FinalSolutionList = new List<Solutions>();
+                var solutionList = await _db.SolutionFund.ToListAsync();
+                if(solutionList.Count > 0)
+                {
+                    
+                    var solutionGroupBy = solutionList.GroupBy(x => new { x.SolutionId, x.IndustryId }).Select(cl => new SolutionFund { SolutionId = cl.Key.SolutionId, IndustryId = cl.Key.IndustryId });
+                    foreach(var solutions in solutionGroupBy)
+                    {
+                        var solutionData = _db.Solutions.Where(x => x.Id == solutions.SolutionId).FirstOrDefault();
+                        if(solutionData != null )
+                        {
+                            FinalSolutionList.Add(solutionData);
+                        }
+                    }
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = FinalSolutionList
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException
+                });
+
+            }
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "No data found"
+            });
         }
 
     }

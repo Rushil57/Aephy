@@ -126,7 +126,6 @@
                                                     <th>Id</th>
                                                     <th>Title</th>
                                                     <th>Description</th>
-                                                    <th>Rate</th>
                                                     <th>Delete</th>
                                                 </tr>
                                             </thead>
@@ -354,10 +353,10 @@
                                         <textarea type="text" id="TopDescription" class="form-control" name="topDescription" rows="4" cols="50"></textarea>
                                     </div>
 
-                                    <div class="col-12">
+                                   @*  <div class="col-12">
                                         <label for="projectRate" class="form-label">Rate</label>
                                         <input type="text" id="projectRate" class="form-control" name="projectrate" />
-                                    </div>
+                                    </div> *@
 
                                     <div class="col-12">
                                         <label for="freelancerprofile" class="form-label">Profile Upload</label>
@@ -1305,7 +1304,6 @@
 
                             }
                         },
-                        { "data": "Rate" },
                         {
                             "data": "Id",
                             "render": function (data, type, row) {

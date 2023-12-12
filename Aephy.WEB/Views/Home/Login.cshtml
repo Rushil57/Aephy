@@ -140,7 +140,7 @@
             error: function (result) {
                 $("#preloader").hide();
                 //alert("Something went wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -167,7 +167,7 @@
             error: function (result) {
                 $("#preloader").hide();
                 //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

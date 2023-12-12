@@ -2102,3 +2102,42 @@ padding-top: 5%;
 .blueLink {
     color: #0932e9 !important;
 }
+
+li.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+    transition: 0.3s;
+}
+
+li.notification-item i{
+    margin: 0 20px 0 10px;
+    font-size: 24px;
+}
+
+    li.notification-item h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+li.notification-item p {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: #919191
+}
+
+#notification-section, #freelancer-feedback-Details {
+    /*max-height: 23.5em;*/
+    max-height: 33.5em;
+    overflow-y: auto;
+}
+
+.cls-mainreviewdiv-card {
+    margin-top: 3%;
+    border: 1px solid #d38b4e;
+}
+
+.cls-review-card {
+    padding-top: 2%;
+}

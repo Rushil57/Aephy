@@ -1012,5 +1012,53 @@ namespace Aephy.WEB.Controllers
             return data;
         }
 
+        [HttpPost]
+        public async Task<string> GetIndexPageTopProfessionalsFeedback([FromBody] TopProfessionalReviews model)
+        {
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetIndexPageTopProfessionalsFeedback", HttpMethod.Post, model);
+            return data;
+        }
+
+        [HttpGet]
+        public async Task<string> GetPopularAiSolution()
+        {
+            var userId = HttpContext.Session.GetString("LoggedUser");
+            if (userId == null)
+            {
+                userId = "";
+            }
+            GetUserProfileRequestModel model = new GetUserProfileRequestModel();
+            model.UserId = userId;
+            var Solutiondata = await _apiRepository.MakeApiCallAsync("api/Client/GetPopularAiSolution", HttpMethod.Get);
+            if (Solutiondata != null)
+            {
+                dynamic data = JsonConvert.DeserializeObject(Solutiondata);
+                try
+                {
+                    if (data["Message"] == "success")
+                    {
+                        foreach (var service in data.Result)
+                        {
+                            string imagepath = service.ImagePath;
+                            string sasToken = GenerateImageSasToken(imagepath);
+                            string imageUrlWithSas = $"{service.ImagePath}?{sasToken}";
+                            service.ImageUrlWithSas = imageUrlWithSas;
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message + ex.InnerException;
+                }
+                string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+                return jsonString;
+            }
+            return Solutiondata;
+
+        }
+
     }
 }

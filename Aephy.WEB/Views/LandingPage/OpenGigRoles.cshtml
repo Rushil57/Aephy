@@ -281,6 +281,9 @@
                 $('#table-OpenRoles').DataTable({
                     destroy: true,
                     data: result.Result,
+                    "columnDefs": [
+                        { "visible": false, "targets": 0 }
+                    ],
                     "columns": [
                         {
                             "data": "ID",
@@ -321,6 +324,9 @@
                 $('#table-OpenRoles').DataTable({
                     destroy: true,
                     data: result.Result,
+                    "columnDefs": [
+                        { "visible": false, "targets": 0 }
+                    ],
                     "columns": [
                         {
                             "data": "ID",

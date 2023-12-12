@@ -19,24 +19,27 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         @{
-                            if (ViewData["ProfileImage"] != "")
-                            {
-                                                            <img src="@ViewData["ProfileImage"]" alt="Profile" class="rounded-circle profile-img">
-                            }
-                            else
-                            {
-                                                            <div id="name-initial" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
-                            }
+                            // if (ViewData["ProfileImage"] != "")
+                            // {
+                            //     <img src="@ViewData["ProfileImage"]" alt="Profile" id="top-right-profile" class="rounded-circle profile-img">
+                            // }
+                            // else
+                            // {
+                            //     <div id="name-initial" class="top-right-profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
+                            // }
+
+                            <img src="@ViewData["ProfileImage"]" alt="Profile" id="top-right-profile" class="rounded-circle profile-img">
+                            <div id="top-right-profile-pic" class="profile-pic profile-img">@Context.Session.GetString("ShortName")</div>
                         }
 
                         <h2 id="fullName"></h2>
                         <h3 id="userRole"></h3>
-                        <div class="social-links mt-2">
+                        @* <div class="social-links mt-2">
                             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
                             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                             <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                             <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
 
@@ -64,9 +67,9 @@
                             @{
                                 if (@Context.Session.GetString("LoggedUserRole") == "Freelancer" || @Context.Session.GetString("LoggedUserRole") == "Client")
                                 {
-                                                                <li class="nav-item">
-                                                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
-                                                                </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-calander" id="calendar-Menu">Calendar</button>
+                                    </li>
                                 }
                             }
 
@@ -115,12 +118,12 @@
 
 
                                 <div class="ClientFields" style="display:none;">
-                                    <div class="row">
+                                    @* <div class="row">
                                         <div class="col-lg-4 col-md-6 label">Description</div>
                                         <div class="col-md-8 col-lg-8">
                                             <textarea name="Description" type="text" class="form-control description" rows="4" cols="50" readonly></textarea>
                                         </div>
-                                    </div>
+                                    </div> *@
                                     <div class="row">
                                         <div class="col-lg-4 col-md-6 label">Company Name</div>
                                         <div class="col-md-8 col-lg-8">
@@ -167,7 +170,10 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-lg-4 col-md-6 label">Revoult Bank Account</div>
+                                        <div class="col-lg-4 col-md-6 label">
+                                            Revoult Bank Account
+                                            <a data-toggle="popover" style="color: #c37814;" class="revolute-popover" data-bs-content="Revolut account is recommended for lower fees and faster transfers."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
+                                        </div>
                                         <div class="col-md-8 col-lg-8">
                                             <input type="radio" class="cls-bankaccount_Yes" name="readonly_revoult_BankAccount" value="YES" onclick="return false">
                                             <label for="yes">Yes</label>&nbsp;&nbsp;&nbsp;
@@ -176,7 +182,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3 cls-revtagSection" style="display:none;">
+                                    <div class="row mb-3 cls-revtagSection">
+                                        @* style="display:none;" *@
                                         <label for="RevTag" class="col-lg-4 col-md-6 col-form-label">Rev Tag</label>
                                         <div class="col-md-8 col-lg-8">
                                             <input name="RevTag" type="text" class="form-control cls-revTag" readonly />
@@ -271,7 +278,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                @* <div class="row">
                                     <div class="col-lg-4 col-md-6 label">Start Hours</div>
                                     <div class="col-md-8 col-lg-8">
                                         <input name="startTime" type="time" class="form-control cls-startHours" readonly>
@@ -283,7 +290,7 @@
                                     <div class="col-md-8 col-lg-8">
                                         <input name="endHours" type="time" class="form-control cls-endHours" readonly>
                                     </div>
-                                </div>
+                                </div> *@
 
                             </div>
 
@@ -401,7 +408,10 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="RevoultBankAccount" class="col-md-6 col-lg-4 col-form-label">Revoult Bank Account</label>
+                                            <label for="RevoultBankAccount" class="col-md-6 col-lg-4 col-form-label">
+                                                Revoult Bank Account
+                                                <a data-toggle="popover" style="color: #c37814;" class="revolute-popover" data-bs-content="Revolut account is recommended for lower fees and faster transfers."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
+                                            </label>
                                             <div class="col-md-8 col-lg-8">
                                                 <input type="radio" id="revoultBankYes" name="revoult_BankAccount" value="YES" onclick="ShowRevField()" class="cls-bankaccount_Yes">
                                                 <label for="yes">Yes</label>&nbsp;&nbsp;&nbsp;
@@ -410,10 +420,10 @@
                                             </div>
                                         </div>
 
-                                        <div class="row mb-3 cls-revtagSection" style="display:none;">
+                                        <div class="row mb-3 cls-revtagSection">
                                             <label for="RevTag" class="col-md-6 col-lg-4 col-form-label">Rev Tag</label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input name="RevTag" type="text" class="form-control cls-revTag" id="RevTag" />
+                                                <input name="RevTag" type="text" class="form-control cls-revTag" id="RevTag" disabled="true" />
                                             </div>
                                         </div>
 
@@ -575,7 +585,7 @@
                                         <div class="row mx-0 px-0 mb-3">
                                             <div class="col-10">
                                                 <div class="">
-                                                    <label>Specify the dates on which you are available to engage in projects.</label>
+                                                    <label>Specify the dates on which you are available to engage in projects. While plans may change, it is recommended to provide a schedule for at least the next six months.</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -671,8 +681,8 @@
                                                             <label><p class="m-0">Please indicate the hours you typically work, including the hours during which you could potentially collaborate with freelancers.</p></label>
                                                         }
                                                     }
-                                                    
-                                                    
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -692,8 +702,8 @@
                                         </div>
                                     </div>
 
-                                    
-                                    
+
+
                                     @* new section *@
                                     <div class="section-border row mx-0 freelancer-Only">
                                         <div class="row mb-3">
@@ -754,7 +764,7 @@
                                                             <label><p class="m-0">Kindly indicate any days within the next 3 months when you will be unavailable for work. This information will help us send you timely notifications for actions when you are available to respond.</p></label>
                                                         }
                                                     }
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -1010,6 +1020,8 @@
         $('input[name="ExcludeTime"]').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
         });
+
+        $(".revolute-popover").popover();
     });
 
     function UpdateEndDate() {
@@ -1027,14 +1039,14 @@
         return date;
     }
 
-    function addHours(time,hours){
+    function addHours(time, hours) {
         var calcDate = new Date("1/1/1900 " + time + ':00');
         var myDate = new Date(calcDate);
         myDate.setHours(myDate.getHours() + hours);
         return myDate;
     }
 
-    function subtractHours(time, hours) {       
+    function subtractHours(time, hours) {
         var calcDate = new Date("1/1/1900 " + time + ':00');
         var myDate = new Date(calcDate);
         myDate.setHours(myDate.getHours() - hours);
@@ -1197,11 +1209,18 @@
                         $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#Freelancer-profile").val("");
 
+                        $("#top-right-profile").removeClass("d-none");
+                        $("#top-right-profile").attr("src", data.ImageUrlWithSas);
+                        $("#top-right-profile-pic").addClass("d-none");
+
                     } else {
                         $("#Freelancer-profile").val("");
                         $('.profile-img').attr("src", data.ImageUrlWithSas);
                         $("#profile-image").css("display", "none")
                         $("#profile-intial").css("display", "flex")
+
+                        $("#top-right-profile").addClass("d-none");
+                        $("#top-right-profile-pic").removeClass("d-none");
                     }
                     if (data.RevoultStatus) {
                         $(".RevolutPending").hide();
@@ -1306,7 +1325,7 @@
         }
     }
 
-    function setEndHour(){
+    function setEndHour() {
         var StartHour = $('#StartHours').val();
         var calcTime = addHours(StartHour, 8);
         $('#EndHours').val(moment(calcTime).format('HH:mm'));
@@ -1314,7 +1333,7 @@
         validateWorkingTime();
     }
 
-    function validateWorkingTime(){
+    function validateWorkingTime() {
         var StartHour = $('#StartHours').val();
         var EndHour = $('#EndHours').val();
 
@@ -1322,7 +1341,7 @@
         var splitted2 = EndHour.split(":");
 
         var time1 = splitted1[0] + splitted1[1];
-        var time2 = splitted2[0] + splitted2[1]; 
+        var time2 = splitted2[0] + splitted2[1];
 
         var calcDifference = 0;
         if (time1 < time2) {
@@ -1331,9 +1350,9 @@
         } else {
             var diff1 = 2400 - time1;
             var diff2 = time2 - 0;
-            calcDifference= (diff1 + diff2) / 100;
+            calcDifference = (diff1 + diff2) / 100;
         };
-        if(calcDifference < 8){
+        if (calcDifference < 8) {
             var EndHour = $('#EndHours').val('');
             alert("Working period must be minimum 8 hours!")
         }
@@ -1446,15 +1465,18 @@
         var profile = $("#Freelancer-profile").get(0);
         var profileFiles = profile.files;
 
-        var RevoultBankAccount = false;
-        var RevoultBank = $('input[name="revoult_BankAccount"]:checked').val();
-        if (RevoultBank == "YES") {
-            var RevData = $("#RevTag").val();
-            if (RevData == "") {
-                showToaster("error", "Error !", "Please fill rev tag field!");
-                return
+        if('@ViewData["Role"]' == 'Freelancer')
+        {
+            var RevoultBankAccount = false;
+            var RevoultBank = $('input[name="revoult_BankAccount"]:checked').val();
+            if (RevoultBank == "YES" || RevoultBank == "NO") {
+                var RevData = $("#RevTag").val();
+                if (RevData == "") {
+                    showToaster("error", "Error !", "Please fill rev tag field!");
+                    return
+                }
+                RevoultBankAccount = true;
             }
-            RevoultBankAccount = true;
         }
 
         var preferredCurrency = $("#PreferredCurrency").val();
@@ -1612,12 +1634,17 @@
     }
 
     function ShowUserImage(value) {
-        $("#profile-intial").css("display", "none")
-        $("#profile-image").css("display", "block")
+        $("#profile-intial").css("display", "none");
+        $("#profile-image").css("display", "block");
+
+        $("#top-right-profile").removeClass("d-none");
+        $("#top-right-profile-pic").addClass("d-none");
+
         if (value.files && value.files[0]) {
             var reader = new FileReader();
             reader.onload = (function (e) {
                 $("#profile-image").attr("src", e.target.result);
+                $("#top-right-profile").attr("src", e.target.result);
             });
 
             reader.readAsDataURL(value.files[0]);
@@ -1727,11 +1754,13 @@
     function ShowRevField() {
         var Revoultbankaccount = $('input[name="revoult_BankAccount"]:checked').val();
         if (Revoultbankaccount == "YES") {
-            $(".cls-revtagSection").show();
-            $(".RevoultStatusSection").hide();
+            //$(".cls-revtagSection").show();
+            //$(".RevoultStatusSection").hide();
+            $("#RevTag").removeAttr("disabled");
         } else {
-            $(".cls-revtagSection").hide();
-            $(".RevoultStatusSection").show();
+            // $(".cls-revtagSection").hide();
+            // $(".RevoultStatusSection").show();
+            $("#RevTag").attr("disabled", "true");
         }
     }
 

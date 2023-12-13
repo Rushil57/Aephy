@@ -495,11 +495,26 @@ namespace Aephy.WEB.Controllers
             return "";
         }
 
+        //[HttpPost]
+        //public async Task<string> getSavedLevelsdataByName([FromBody] LevelRangeModel level)
+        //{
+        //    try
+        //    {
+        //        var Response = await _apiRepository.MakeApiCallAsync("api/Admin/GetSavedLevelByName", HttpMethod.Post, level);
+        //        return Response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        
         [HttpPost]
-        public async Task<string> getSavedLevelsdataByName([FromBody] LevelRangeModel level)
+        public async Task<string> getSavedLevelsdataByName([FromBody] FindExchangeRateModel level)
         {
             try
             {
+                level.FreelancerId = HttpContext.Session.GetString("LoggedUser");
                 var Response = await _apiRepository.MakeApiCallAsync("api/Admin/GetSavedLevelByName", HttpMethod.Post, level);
                 return Response;
             }

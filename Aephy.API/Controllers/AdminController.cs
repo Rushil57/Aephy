@@ -34,7 +34,7 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRevoultService _revoultService;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager,  IRevoultService revoultService)
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService)
         {
             _db = dbContext;
             _userManager = userManager;
@@ -1548,7 +1548,7 @@ namespace Aephy.API.Controllers
                         }
 
                         var freelancerTopprofessionalData = _db.SolutionTopProfessionals.Where(x => x.FreelancerId == model.Id).ToList();
-                        if(freelancerTopprofessionalData.Count > 0)
+                        if (freelancerTopprofessionalData.Count > 0)
                         {
                             _db.SolutionTopProfessionals.RemoveRange(freelancerTopprofessionalData);
                             _db.SaveChanges();
@@ -2645,19 +2645,89 @@ namespace Aephy.API.Controllers
             }
         }
 
+        //[HttpPost]
+        //[Route("GetSavedLevelByName")]
+        //public async Task<IActionResult> GetSavedLevelByName([FromBody] LevelRange obj)
+        //{
+        //    try
+        //    {
+        //        LevelRange levelRange = await _db.LevelRanges.Where(l => l.Level == obj.Level).FirstOrDefaultAsync();
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status200OK,
+        //            Message = "Success",
+        //            Result = levelRange
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+        //        {
+        //            StatusCode = StatusCodes.Status403Forbidden,
+        //            Message = ex.Message + ex.InnerException
+        //        });
+        //    }
+        //}
+
         [HttpPost]
         [Route("GetSavedLevelByName")]
-        public async Task<IActionResult> GetSavedLevelByName([FromBody] LevelRange obj)
+        public async Task<IActionResult> GetSavedLevelByName([FromBody] FindExchangeRateModel obj)
         {
             try
             {
+                //LevelRange levelRange = await _db.LevelRanges.Where(l => l.Level == obj.Level).FirstOrDefaultAsync();
+                //return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                //{
+                //    StatusCode = StatusCodes.Status200OK,
+                //    Message = "Success",
+                //    Result = levelRange
+                //});
+
                 LevelRange levelRange = await _db.LevelRanges.Where(l => l.Level == obj.Level).FirstOrDefaultAsync();
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+
+                if (levelRange.minLevel <= obj.hourlyRate && levelRange.maxLevel >= obj.hourlyRate)
                 {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Success",
-                    Result = levelRange
-                });
+                    var exchangeRate = await _db.ExchangeRates.Where(x => x.FromCurrency == "EUR" && x.ToCurrency == obj.CurrencyType).FirstOrDefaultAsync();
+                    if (exchangeRate != null)
+                    {
+                        var price = obj.hourlyRate * exchangeRate.Rate;
+                        if (levelRange.minLevel <= price && levelRange.maxLevel >= price)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Success",
+                                Result = levelRange
+                            });
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Error",
+                            Result = levelRange
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Success",
+                            Result = levelRange
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Error",
+                        Result = levelRange
+                    });
+                }
+
             }
             catch (Exception ex)
             {
@@ -3007,12 +3077,12 @@ namespace Aephy.API.Controllers
 
                         var solutionTitle = string.Empty;
                         var getsolutionFundId = _db.Contract.Where(x => x.Id == model.ContractId).Select(x => x.SolutionFundId).FirstOrDefault();
-                        if(getsolutionFundId != 0)
+                        if (getsolutionFundId != 0)
                         {
                             var solutionFundData = _db.SolutionFund.Where(x => x.Id == getsolutionFundId).FirstOrDefault();
-                            if(solutionFundData != null)
+                            if (solutionFundData != null)
                             {
-                                if(solutionFundData.FundType == SolutionFund.FundTypes.ProjectFund)
+                                if (solutionFundData.FundType == SolutionFund.FundTypes.ProjectFund)
                                 {
                                     solutionTitle = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                                 }
@@ -3061,7 +3131,7 @@ namespace Aephy.API.Controllers
                             });
 
                         }
-                       
+
                     }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -3599,7 +3669,7 @@ namespace Aephy.API.Controllers
                             }
                         }
                     }
-                    
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,

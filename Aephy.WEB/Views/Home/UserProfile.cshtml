@@ -1577,6 +1577,8 @@
         var range = {
             ID: 0,
             Level: $('#level').val(),
+            hourlyRate:parseFloat($("#HourlyRate").val()).toFixed(2),
+            CurrencyType:$("#PreferredCurrency").val()
         }
         var hourlyRate = parseFloat($("#HourlyRate").val()).toFixed(2);
         $('#preloader').show();
@@ -1588,17 +1590,21 @@
             data: JSON.stringify(range),
             success: function (result) {
                 $('#preloader').hide();
-                if (result.Result != null) {
-                    if (result.Result.ID != 0) {
-                        if (result.Result.minLevel <= hourlyRate && result.Result.maxLevel >= hourlyRate) {
-                            UpdateUserData();
-                        } else {
-                            showToaster("error", "Error !", "Hourly rate must be between $" + parseFloat(result.Result.minLevel).toFixed(2) + " to $" + parseFloat(result.Result.maxLevel).toFixed(2));
-                            return false;
-                        }
-                    }
+                if (result.Message != "Error") {
+                    // if (result.Result.ID != 0) {
+                    //     if (result.Result.minLevel <= hourlyRate && result.Result.maxLevel >= hourlyRate) {
+                    //         UpdateUserData();
+                    //     } else {
+                    //         showToaster("error", "Error !", "Hourly rate must be between $" + parseFloat(result.Result.minLevel).toFixed(2) + " to $" + parseFloat(result.Result.maxLevel).toFixed(2));
+                    //         return false;
+                    //     }
+                    // }
+                    UpdateUserData();
                 }
-
+                else {
+                    showToaster("error", "Error !", "Hourly rate must be between $" + parseFloat(result.Result.minLevel).toFixed(2) + " to $" + parseFloat(result.Result.maxLevel).toFixed(2));
+                    return false;
+                }
             },
             error: function (result) {
                 $('#preloader').hide();

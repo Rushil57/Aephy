@@ -497,6 +497,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
+                decimal customPrice = 0;
                 var milestoneList = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId
                                     && x.ProjectType == model.ProjectType
                                     ).ToListAsync();
@@ -504,13 +505,21 @@ namespace Aephy.API.Controllers
                 if (model.ProjectType == "custom")
                 {
                     milestoneList = milestoneList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
+                    var solutionFundData = _db.SolutionFund.Where(x => x.CustomProjectDetialsId == model.CustomProjectDetailId).FirstOrDefault();
+                    if(solutionFundData != null)
+                    {
+                        customPrice = await _clientcontroller.CountFinalProjectPricing(solutionFundData);
+                    }
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = milestoneList
+                    Result = new { 
+                        MileStoneList = milestoneList,
+                        Customprice = customPrice
+                    }
                 });
             }
             catch (Exception ex)

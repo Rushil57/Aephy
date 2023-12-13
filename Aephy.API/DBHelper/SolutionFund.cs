@@ -44,6 +44,8 @@ namespace Aephy.API.DBHelper
         public DateTime? StoppedProjectDateTime { get; set; }
 
         public bool IsProjectPriceAlreadyCount { get; set; }
+
+        public int CustomProjectDetialsId { get; set; }
     }
 
     public class SolutionDispute

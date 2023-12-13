@@ -1472,9 +1472,9 @@ namespace Aephy.API.Controllers
                         solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
 
                         var freelancerReviewByclient = _db.FreelancerReview.Where(x => x.FreelancerId == topdata.FreelancerId).ToList();
-                        if(freelancerReviewByclient.Count > 0)
+                        if (freelancerReviewByclient.Count > 0)
                         {
-                            foreach(var freelancerReview in freelancerReviewByclient)
+                            foreach (var freelancerReview in freelancerReviewByclient)
                             {
                                 sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
                             }
@@ -2924,7 +2924,14 @@ namespace Aephy.API.Controllers
                                                     JArray legsArray = (JArray)parseContent["legs"];
                                                     foreach (JObject item in legsArray)
                                                     {
-                                                        paymentFee = (decimal)item["fee"];
+                                                        try
+                                                        {
+                                                            paymentFee = (decimal)item["fee"];
+                                                        }
+                                                        catch
+                                                        {
+                                                            // sometime "fees" property not found from Api
+                                                        }
                                                     }
                                                     contractUser.PaymentFees = paymentFee.ToString();
                                                 }
@@ -3192,7 +3199,7 @@ namespace Aephy.API.Controllers
                     });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
@@ -3200,7 +3207,7 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException
                 });
             }
-            
+
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
             {
@@ -5251,14 +5258,14 @@ namespace Aephy.API.Controllers
             {
                 List<Solutions> FinalSolutionList = new List<Solutions>();
                 var solutionList = await _db.SolutionFund.ToListAsync();
-                if(solutionList.Count > 0)
+                if (solutionList.Count > 0)
                 {
-                    
+
                     var solutionGroupBy = solutionList.GroupBy(x => new { x.SolutionId, x.IndustryId }).Select(cl => new SolutionFund { SolutionId = cl.Key.SolutionId, IndustryId = cl.Key.IndustryId });
-                    foreach(var solutions in solutionGroupBy)
+                    foreach (var solutions in solutionGroupBy)
                     {
                         var solutionData = _db.Solutions.Where(x => x.Id == solutions.SolutionId).FirstOrDefault();
-                        if(solutionData != null )
+                        if (solutionData != null)
                         {
                             FinalSolutionList.Add(solutionData);
                         }

@@ -141,7 +141,7 @@ namespace Aephy.WEB.Controllers
                     }
                     HttpContext.Session.SetString("LoggedUser", UserId);
                     if(ClientCurrency != null)
-                    HttpContext.Session.SetString("ClientPreferredCurrency", ClientCurrency);
+                        HttpContext.Session.SetString("ClientPreferredCurrency", ClientCurrency);
 
                     string imagepath = jsonObj.Result.ImagePath;
                     if (imagepath != null)
@@ -508,7 +508,7 @@ namespace Aephy.WEB.Controllers
         //        throw ex;
         //    }
         //}
-        
+
         [HttpPost]
         public async Task<string> getSavedLevelsdataByName([FromBody] FindExchangeRateModel level)
         {
@@ -2816,6 +2816,29 @@ namespace Aephy.WEB.Controllers
                 }
             }
             return "";
+        }
+
+        //DeleteFreelancerRevolutAccount
+        [HttpGet]
+        public async Task<string> DeleteFreelancerRevolutAccount()
+        {
+
+            try
+            {
+                var userId = HttpContext.Session.GetString("LoggedUser");
+                if (userId == null)
+                {
+                    return "Please login to delete account";
+                }
+                AddNonRevolutCounterpartyReq model = new AddNonRevolutCounterpartyReq();
+                model.UserId = userId;
+                var data = await _apiRepository.MakeApiCallAsync("api/Revoult/DeleteFreelancerRevolutAccount", HttpMethod.Post,model);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+            }
         }
 
 

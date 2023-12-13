@@ -266,5 +266,46 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+        //DeleteFreelancerRevolutAccount
+        [HttpPost]
+        [Route("DeleteFreelancerRevolutAccount")]
+        public async Task<IActionResult> DeleteFreelancerRevolutAccount([FromBody] AddNonRevolutCounterpartyReq model)
+        {
+
+            try
+            {
+                var userDetails = await _db.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
+                if (userDetails != null)
+                {
+                    userDetails.RevolutAccountId = "";
+                    userDetails.RevolutConnectId = "";
+                    userDetails.RevolutStatus = false;
+                    _db.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Account Deleted Successfully!",
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Data not found",
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+        }
     }
 }

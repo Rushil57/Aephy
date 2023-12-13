@@ -1193,15 +1193,21 @@
     }
 
     function FreelancerList() {
+        var data = {
+            SolutionId: parseInt($("#SolutionId").val()),
+            IndustryId: parseInt($("#IndustryId").val()),
+        };
+
         $.ajax({
-            type: "Get",
+            type: "POST",
             url: "@Url.Action("GetFreelancersName", "Solutions")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            data: JSON.stringify(data),
             success: function (result) {
                 $("#drp-FreeLancer option:not(:first)").remove()
                 $.each(result.Result, function (data, value) {
-                    $("#drp-FreeLancer").append($("<option     />").val(value.Id).text(value.FirstName + " " + value.LastName));
+                    $("#drp-FreeLancer").append($("<option     />").val(value.Id).text(value.UserName));
                 });
             },
             error: function (err) {

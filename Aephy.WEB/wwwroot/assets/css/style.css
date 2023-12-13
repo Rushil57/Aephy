@@ -1459,6 +1459,12 @@ textarea.form-control {
     cursor: pointer;
 }
 
+.cls-stripe-delete-link {
+    color: #dc3545 !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+
 .cls-milestone {
     color: #e85f09 !important;
     text-decoration: underline;

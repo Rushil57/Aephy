@@ -532,10 +532,10 @@ namespace Aephy.WEB.Admin.Controllers
         //    return aprroveList;
         //}
 
-        [HttpGet]
-        public async Task<string> GetFreelancersName()
+        [HttpPost]
+        public async Task<string> GetFreelancersName([FromBody] SolutionTopProfessionalViewModel data)
         {
-            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancersNameList", HttpMethod.Get);
+            var freelancerList = await _apiRepository.MakeApiCallAsync("api/Admin/GetTopProffessionalFreelancersNameList", HttpMethod.Post,data);
             return freelancerList;
         }
 

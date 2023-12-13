@@ -35,10 +35,10 @@
                         <h2 id="fullName"></h2>
                         <h3 id="userRole"></h3>
                         @* <div class="social-links mt-2">
-                            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
                         </div> *@
                     </div>
                 </div>
@@ -119,10 +119,10 @@
 
                                 <div class="ClientFields" style="display:none;">
                                     @* <div class="row">
-                                        <div class="col-lg-4 col-md-6 label">Description</div>
-                                        <div class="col-md-8 col-lg-8">
-                                            <textarea name="Description" type="text" class="form-control description" rows="4" cols="50" readonly></textarea>
-                                        </div>
+                                    <div class="col-lg-4 col-md-6 label">Description</div>
+                                    <div class="col-md-8 col-lg-8">
+                                    <textarea name="Description" type="text" class="form-control description" rows="4" cols="50" readonly></textarea>
+                                    </div>
                                     </div> *@
                                     <div class="row">
                                         <div class="col-lg-4 col-md-6 label">Company Name</div>
@@ -279,17 +279,17 @@
                                 </div>
 
                                 @* <div class="row">
-                                    <div class="col-lg-4 col-md-6 label">Start Hours</div>
-                                    <div class="col-md-8 col-lg-8">
-                                        <input name="startTime" type="time" class="form-control cls-startHours" readonly>
-                                    </div>
+                                <div class="col-lg-4 col-md-6 label">Start Hours</div>
+                                <div class="col-md-8 col-lg-8">
+                                <input name="startTime" type="time" class="form-control cls-startHours" readonly>
+                                </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-6 label">End Hours</div>
-                                    <div class="col-md-8 col-lg-8">
-                                        <input name="endHours" type="time" class="form-control cls-endHours" readonly>
-                                    </div>
+                                <div class="col-lg-4 col-md-6 label">End Hours</div>
+                                <div class="col-md-8 col-lg-8">
+                                <input name="endHours" type="time" class="form-control cls-endHours" readonly>
+                                </div>
                                 </div> *@
 
                             </div>
@@ -440,6 +440,8 @@
                                                 <label for="StripeStatus" class="col-md-6 col-lg-4 col-form-label">Other Bank Account</label>
                                                 <div class="col-md-8 col-lg-8">
                                                     <span class="badge bg-success">COMPLETED</span>
+                                                    <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Edit</a></span>
+                                                    <span style="padding-left: 2%"><a onclick="DeleteRevolutAccount()" class="cls-stripe-delete-link">Delete</a></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -779,7 +781,7 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Excluded Dates</label>
+                                            <label for="renewPassword" class="col-md-6 col-lg-4 col-form-label">Exclude days</label>
                                             <div class="col-md-6 col-lg-6">
                                                 <input type="text" name="ExcludeTime" class="form-control" id="exclude-time" placeholder="DD/MM/YYYY - DD/MM/YYYY" autocomplete="off">
                                             </div>
@@ -792,7 +794,7 @@
                                             <table class="table table-borderless datatable" id="table-excludeDate">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Exclude Date</th>
+                                                        <th scope="col">Excluded Dates</th>
                                                         <th scope="col">Action</th>
                                                     </tr>
                                                 </thead>
@@ -1863,5 +1865,38 @@
                 showToaster("error", "Error !", "Failure");
             }
         });
+    }
+
+    function DeleteRevolutAccount() {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you sure want to delete bank account?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (t) {
+            if (!t.isConfirmed) return;
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("DeleteFreelancerRevolutAccount", "Home")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    showToaster("success", "Removed !", result.Message);
+                    GetUserData();
+                    $("#preloader").hide();
+                },
+                error: function (result) {
+                    showToaster("error", "Error !", result.responseText);
+                    $("#preloader").hide();
+                }
+            });
+
+        });
+
     }
 </script>

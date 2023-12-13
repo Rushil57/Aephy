@@ -1271,7 +1271,7 @@ function resetSolutionFeedbackForm() {
     $('.rating__input').prop('disabled', false);
 }
 
-function openFreelancerFeedbackPopup(freelancerName, FreelancerID, IndustryID, SolutionID, ServiceId) {
+function openFreelancerFeedbackPopup(freelancerName, freelancerLevel, FreelancerID, IndustryID, SolutionID, ServiceId) {
     $('#freelancerReviewListModal').modal('hide');
     resetFreelancerFeedbackForm();
     $('#Industry_Id').val(IndustryID);
@@ -1307,7 +1307,7 @@ function openFreelancerFeedbackPopup(freelancerName, FreelancerID, IndustryID, S
     });
     $('#preloader').hide();
 
-    $('.freelancer-name').html(freelancerName);
+    $('.freelancer-name').html(freelancerName + " (" + freelancerLevel + ")");
     $('#FreelancerID').val(FreelancerID);
 }
 
@@ -1350,7 +1350,7 @@ function bindteamList(ID, ServiceID, SolutionID, IndusryID) {
                         subObj = data.SolutionTeam[index];
 
                         htm += '<tr>';
-                        htm += '<td><a onclick="openFreelancerFeedbackPopup(' + "'" + subObj.FreelancerName + "'," + "'" + subObj.FreelancerId + "'," + Industryid + "," + Solutionid + "," + Serviceid + ');" class="feedback-link">' + subObj.FreelancerName + '</a></td>';
+                        htm += '<td><a onclick="openFreelancerFeedbackPopup(' + "'" + subObj.FreelancerName + "'," + "'" + subObj.FreelancerLevel + "'," +"'" + subObj.FreelancerId + "'," + Industryid + "," + Solutionid + "," + Serviceid + ');" class="feedback-link">' + subObj.FreelancerName + '</a></td>';
                         htm += '</tr>';
                     }
                 }

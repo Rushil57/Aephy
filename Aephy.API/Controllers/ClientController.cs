@@ -733,7 +733,7 @@ namespace Aephy.API.Controllers
                             solutionTeam.SolutionId = solutionFunddata.SolutionId;
                             solutionTeam.IndustryId = solutionFunddata.IndustryId;
                             solutionTeam.ClientId = solutionFunddata.ClientId;
-                            var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            var fullname = _db.Users.Where(x => x.Id == soltiondata.FreelancerId).Select(x => new { x.FirstName, x.LastName, x.Id }).FirstOrDefault();
                             solutionTeam.FreelancerId = soltiondata.FreelancerId;
                             solutionTeam.FreelancerName = fullname.FirstName + " " + fullname.LastName;
                             var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == soltiondata.FreelancerId).FirstOrDefault();
@@ -3088,7 +3088,14 @@ namespace Aephy.API.Controllers
                                                     JArray legsArray = (JArray)parseContent["legs"];
                                                     foreach (JObject item in legsArray)
                                                     {
+                                                        try
+                                                        {
                                                         paymentFee = (decimal)item["fee"];
+                                                        }
+                                                        catch
+                                                        {
+                                                            // sometime "fees" property not found from Api
+                                                        }
                                                     }
 
                                                     var accountLog = new EphylinkRevolutAccountTransferLog()

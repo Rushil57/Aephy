@@ -474,6 +474,8 @@ namespace Aephy.API.Models
             public string? Address { get; set; }
 
             public string? RevoultOrderId { get; set; }
+
+            public string? PreferredCurrency { get; set; }
         }
         public class CustomSolutionsModel
         {

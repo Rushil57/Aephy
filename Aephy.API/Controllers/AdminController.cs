@@ -34,11 +34,13 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRevoultService _revoultService;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService)
+        private readonly ClientController _clientcontroller;
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService, ClientController clientcontroller)
         {
             _db = dbContext;
             _userManager = userManager;
             _revoultService = revoultService;
+            _clientcontroller = clientcontroller;
         }
         //[HttpPost]
         //[Route("OrderWebhookTest")]
@@ -1989,6 +1991,47 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
+        [Route("GetTopProffessionalFreelancersNameList")]
+        public async Task<IActionResult> GetTopProffessionalFreelancersNameList([FromBody] SolutionDefineRequestViewModel model)
+        {
+            try
+            {
+                var freelancerPoollist = await _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
+                List<UserModel> userList = new List<UserModel>();
+                if(freelancerPoollist.Count > 0)
+                {
+                    foreach(var data in freelancerPoollist)
+                    {
+                        UserModel userData = new UserModel();
+                        var freelancerDetails = _db.Users.Where(x => x.Id == data.FreelancerID).FirstOrDefault();
+                        if(freelancerDetails != null)
+                        {
+                            userData.UserName = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
+                            userData.Id = freelancerDetails.Id;
+                            userList.Add(userData);
+                        }
+                    }
+                    
+
+                }
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Success",
+                    Result = userList
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = ex.Message + ex.InnerException
+                });
+            }
+        }
+
+        [HttpPost]
         [Route("AddTopProfessionalData")]
         public async Task<IActionResult> AddTopProfessionalData([FromBody] SolutionTopProfessionals model)
         {
@@ -2903,8 +2946,8 @@ namespace Aephy.API.Controllers
                             disputeViewModel.Id = data.Id;
                             disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == solutionFundData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                            var fullname = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            var clientDetails = _db.Users.Where(x => x.Id == solutionFundData.ClientId).FirstOrDefault();
+                            disputeViewModel.ClientName = clientDetails.FirstName + " " + clientDetails.LastName;
                             disputeViewModel.CreatedDate = data.CreatedDateTime;
                             var disputeResolved = data.Status;
                             if (disputeResolved == "RESOLVED")
@@ -2915,8 +2958,9 @@ namespace Aephy.API.Controllers
                             {
                                 disputeViewModel.IsDisputeResolved = false;
                             }
+                            var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                             disputeViewModel.ContractId = data.ContractId;
-                            disputeViewModel.ProjectPrice = solutionFundData.ProjectPrice;
+                            disputeViewModel.ProjectPrice = CurrencySign + solutionFundData.ProjectPrice;
                             disputeList.Add(disputeViewModel);
                         }
                     }
@@ -3296,8 +3340,9 @@ namespace Aephy.API.Controllers
                             disputeViewModel.ContractId = data.Id;
                             disputeViewModel.SolutionName = _db.Solutions.Where(x => x.Id == data.SolutionId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                            var fullname = _db.Users.Where(x => x.Id == data.ClientUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            disputeViewModel.ClientName = fullname.FirstName + " " + fullname.LastName;
+                            var ClientDetails = _db.Users.Where(x => x.Id == data.ClientUserId).FirstOrDefault();
+                            disputeViewModel.ClientName = ClientDetails.FirstName + " " + ClientDetails.LastName;
+                            var CurrencySign = await _clientcontroller.ConvertToCurrencySign(ClientDetails.PreferredCurrency);
                             disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IsClientRefund = data.IsClientRefund;
                             disputeViewModel.IsFreelancerRefund = _db.ContractUser.Where(x => x.ContractId == data.Id).Select(x => x.IsRefund).FirstOrDefault();
@@ -3312,7 +3357,8 @@ namespace Aephy.API.Controllers
                             {
                                 disputeViewModel.IsPaymentStop = PaymentStopped;
                             }
-                            disputeViewModel.ProjectPrice = _db.SolutionFund.Where(x => x.Id == data.SolutionFundId).Select(x => x.ProjectPrice).FirstOrDefault();
+                            var projectPrice = _db.SolutionFund.Where(x => x.Id == data.SolutionFundId).Select(x => x.ProjectPrice).FirstOrDefault();
+                            disputeViewModel.ProjectPrice = CurrencySign + projectPrice;
 
                             successProjectList.Add(disputeViewModel);
                         }

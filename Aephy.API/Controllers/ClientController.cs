@@ -5142,6 +5142,7 @@ namespace Aephy.API.Controllers
                         ProjectPrice = model.CustomPrice.ToString(),
                         ProjectStatus = "INITIATED",
                         FundType = SolutionFund.FundTypes.ProjectFund,
+                        CustomProjectDetialsId = customsolution.Id
                     };
                     _db.SolutionFund.Add(solutionfund);
                     _db.SaveChanges();

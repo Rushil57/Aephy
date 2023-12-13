@@ -7,13 +7,13 @@ $('#ProjectDetailsbtn').on('click', function () {
             customprojectoutline: { required: true },
             customprojectdescription: { required: true },
             //customProjectDuration: { required: true },
-            customPrice: { required: true }
+            /*customPrice: { required: true }*/
         },
         messages: {
             customprojectoutline: { required: "Please Project outline" },
             customprojectdescription: { required: "Please enter Project description" },
             //customProjectDuration: { required: "Please enter Project Duration" },
-            customPrice: { required: "Please enter Price" }
+           /* customPrice: { required: "Please enter Price" }*/
         }
     });
     if (form.valid() === true) {
@@ -840,7 +840,11 @@ function ResetMileStoneForm() {
 }
 
 function CloseMileStoneForm() {
-    ResetMileStoneForm();
+    $("#MileStoneId").val(0);
+    $("#mileStoneDescription").val("");
+    $("#mileStoneTitle").val("");
+    $("#txtMilestoneDays").val("0");
+    $("#mileStonedueDate").val("");
     $("#MileStonePopModal").modal('hide');
 }
 
@@ -869,7 +873,7 @@ function GetMiletoneList() {
         success: function (result) {
             console.log(result);
             TotalDaysCount = 0;
-            var data = result.Result
+            var data = result.Result.MileStoneList
             var index = 0;
             var subObj = '';
             var htm = '';
@@ -892,6 +896,7 @@ function GetMiletoneList() {
             $("#MileStoneTable").find("tr:gt(0)").remove();
             $("#MileStoneTable tbody").append(htm);
             $("#customProjectDuration").val(TotalDaysCount);
+            $("#custom-price").val(result.Result.Customprice);
             $("#preloader").hide();
         },
         error: function (result) {

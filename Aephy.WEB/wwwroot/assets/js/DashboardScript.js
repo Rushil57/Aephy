@@ -683,7 +683,7 @@ function getClientProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.Projects);
-                $('#expense_amount').html(Data.CurrentCurrency + Data.Expense.toFixed());
+                $('#expense_amount').html(Data.CurrentCurrency + formatNumber(Data.Expense.toFixed()));
                 $('#Project_Duartion').html(Data.ProjectDuartion + " Days");
             }
             $("#preloader").hide();
@@ -707,7 +707,7 @@ function getFreelancerProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.FreelancerActiveProject);
-                $('#revenue_amount').html(Data.FreelancerCurrency + Data.RevenueAmount);
+                $('#revenue_amount').html(Data.FreelancerCurrency + formatNumber(Data.RevenueAmount));
                 $('#Project_Duartion').html(Data.ProjectDuration + " Days");
             } else {
                 $("#ContractUser-Value").html(0);
@@ -721,6 +721,10 @@ function getFreelancerProjectExpense() {
             $("#preloader").hide();
         }
     });
+}
+
+function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 function GetActiveProjectInvoices() {

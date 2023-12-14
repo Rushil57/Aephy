@@ -1578,8 +1578,7 @@ namespace Aephy.API.Controllers
                 // [-- Method Needs To Be Update --]
                 // [-- This Method Needs to be updated for generating freelancers list --]
                 var userList = await _db.Users.ToListAsync();
-                var ids = await _db.FreelancerPool.Where(x => x.IndustryId == model.IndustryId &&
-                x.SolutionID == model.SolutionID).Select(x => x.FreelancerID).ToListAsync();
+                var ids = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.FreelancerId).ToListAsync();
 
                 if (model.UserRole != "Client")
                 {

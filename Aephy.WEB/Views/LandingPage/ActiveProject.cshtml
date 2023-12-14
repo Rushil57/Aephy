@@ -110,7 +110,7 @@
                                 <p style="display:block;" id="project-outline-div">
 
                                 </p>
-                                <textarea id="ProjectOutline" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50"></textarea>
+                                <textarea id="ProjectOutline" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50" maxlength="330"></textarea>
                             </div>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
                                 <p class="section-detail-size" id="project-details-div">
 
                                 </p>
-                                <textarea id="ProjectDetails" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50"></textarea>
+                                <textarea id="ProjectDetails" class="form-control cls-solution-details" style="display:none;border:1px solid rgb(211, 139, 78);" rows="4" cols="50" maxlength="330"></textarea>
                             </div>
                         </div>
 
@@ -1636,7 +1636,11 @@
                           solutionTeam +='<div class="ps-3">' +
                           '<h6 style="margin-bottom: 0; !important">'+solutionValue.FreelancerName+'</h6>' +
                           '<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
-                          "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openChatModal("+solutionValue.IndustryId+","+solutionValue.SolutionId+",'"+solutionValue.ClientId+"')></i></div>" + 
+                          '<div class="d-flex align-items-center">' + 
+                           "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openChatModal("+solutionValue.SolutionFundId+")></i></div>" + 
+                          '<div class="cls-review-div d-flex"><i class="bi bi-clipboard-data cls-review-icon"></i><label class="cls-review-lbl">'+solutionValue.Rate+'/10</label></div>' + 
+                          '</div>' +
+                         
                           '</div>' +
                         '</div>' +
                        '</div>' +
@@ -1647,11 +1651,12 @@
         if ("@Context.Session.GetString("LoggedUserRole")" == "Client") {
             var currentUser = "@Context.Session.GetString("LoggedUser")";
             solutionTeam += '<div class="col-xxl-4 col-md-6">' +
-                '<div class="card info-card cls-solutionTeam-card">' +
+                '<div class="card info-card cls-solutionTeam-card" style="height:99px;">' +
                 '<div class="card-body cls-solution-card">' +
                 '<div class="d-flex align-items-center">' +
+                '<div class="cls-freelancerImage" style="font-size: 13px;">GCC</div>' +
                 '<div class="ps-3">' +
-                '<h6 style="margin-bottom: 0; !important">Group chat with client</h6>' +
+                '<h6 style="margin-bottom: 0; !important">Client Group Chat</h6>' +
                 //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
                 "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openGroupChatModal(" + sessionStorage.getItem("SolutionFundId") + ")></i></div>" +
                 '</div>' +
@@ -1663,13 +1668,14 @@
         } else if ("@Context.Session.GetString("LoggedUserRole")" == "Freelancer") {
             var currentUser = "@Context.Session.GetString("LoggedUser")";
             solutionTeam += '<div class="col-xxl-4 col-md-6">' +
-                '<div class="card info-card cls-solutionTeam-card">' +
+                '<div class="card info-card cls-solutionTeam-card" style="height:99px;">' +
                 '<div class="card-body cls-solution-card">' +
                 '<div class="d-flex align-items-center">' +
+                '<div class="cls-freelancerImage" style="font-size: 13px;">GCC</div>' +
                 '<div class="ps-3">' +
-                '<h6 style="margin-bottom: 0; !important">Group chat with </br>client</h6>' +
+                '<h6 style="margin-bottom: 0; !important">Client Group Chat</h6>' +
                 //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
-                "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openGroupChatModal(" + sessionStorage.getItem("SolutionFundId") + ")></i></div>" +
+                     "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openGroupChatModal(" + sessionStorage.getItem("SolutionFundId") + ")></i></div>" +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -1678,11 +1684,12 @@
                 '</div>';
 
             solutionTeam += '<div class="col-xxl-4 col-md-6">' +
-                '<div class="card info-card cls-solutionTeam-card">' +
+                '<div class="card info-card cls-solutionTeam-card" style="height:99px;">' +
                     '<div class="card-body cls-solution-card">' +
                         '<div class="d-flex align-items-center">' +
+                        '<div class="cls-freelancerImage" style="font-size: 13px;">GCF</div>' +
                           '<div class="ps-3">' +
-                          '<h6 style="margin-bottom: 0; !important">Group chat with </br>freelancers</h6>' +
+                          '<h6 style="margin-bottom: 0; !important">Freelancer Group Chat</h6>' +
                           //'<span class="text-muted small pt-2">'+solutionValue.FreelancerLevel+'</span>' +
                           "<div style='padding-top: 5%;'><i class='bi bi-chat-left-dots cls-chat-icon' onclick=openFreelancersGroupChatModal("+sessionStorage.getItem("SolutionFundId")+")></i></div>" + 
                           '</div>' +
@@ -1754,12 +1761,9 @@
         });
       }
 
-      function openChatModal(IndustryId,SolutionID,ClietnId) {
+      function openChatModal(Solutionfundid) {
         let model = {
-            IndustryId : IndustryId,
-            SolutionID : SolutionID,
-            UserId: ClietnId,
-            UserRole:''
+            SolutionFundId : Solutionfundid
         };
 
         $.ajax({

@@ -18,7 +18,7 @@ public class FreelancerFinderHelper
         if (freelancerFindProcessHeader?.IsTeamCompleted == false || freelancerFindProcessHeader?.IsTeamCompleted == null)
         {
             //=== Update Score baised on review for freelancer ===//
-            await GetRankedWiseFreeLancerList(db);
+            await GetRankedWiseFreeLancerList(db, solutionId, IndustryId, clientId);
             try
             {
                 //=== Find All users with details and merge it. ====//
@@ -95,8 +95,8 @@ public class FreelancerFinderHelper
                     DateTime endDate = startDate.AddDays(projectCompletedTime);
 
                     //=== Find Solution and Industry details for email and Genrate Email body baised on html template ===//
-                    var solutionTitle = await db.Solutions.Where(x=>x.Id == solutionId).Select(x=>x.Title).FirstOrDefaultAsync();
-                    var industryName = await db.Industries.Where(x=>x.Id == IndustryId).Select(x=>x.IndustryName).FirstOrDefaultAsync();
+                    var solutionTitle = await db.Solutions.Where(x => x.Id == solutionId).Select(x => x.Title).FirstOrDefaultAsync();
+                    var industryName = await db.Industries.Where(x => x.Id == IndustryId).Select(x => x.IndustryName).FirstOrDefaultAsync();
 
                     string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
                     string fileName = "NotificationTemplate.html";
@@ -261,7 +261,7 @@ public class FreelancerFinderHelper
                                 emailIds.Add(item.Email);
                             }
 
-                            if(detailModelList.Any())
+                            if (detailModelList.Any())
                             {
                                 await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
                                 await db.SaveChangesAsync();
@@ -352,7 +352,7 @@ public class FreelancerFinderHelper
                                 }
                             }
 
-                            if(detailModelList.Any())
+                            if (detailModelList.Any())
                             {
                                 await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
                                 await db.SaveChangesAsync();
@@ -386,7 +386,7 @@ public class FreelancerFinderHelper
         }
     }
 
-    public async Task GetRankedWiseFreeLancerList(AephyAppDbContext db)
+    public async Task GetRankedWiseFreeLancerList(AephyAppDbContext db, int solutionId, int IndustryId, string? clientId)
     {
         //== Get RowData from Table ==//
         var rowData = await db.FeatureWiseRanking.Where(x => x.FeatureChildId == null).Select(x => new FeatureWiseRankingModel
@@ -400,7 +400,8 @@ public class FreelancerFinderHelper
                 Id = y.Id,
                 Feature = y.Feature,
                 FeatureChildId = y.FeatureChildId,
-                Ranking = y.Ranking
+                Ranking = y.Ranking,
+                ParantFeature = x.Feature
             }).ToList(),
         }).ToListAsync();
 
@@ -425,7 +426,13 @@ public class FreelancerFinderHelper
         foreach (var freelance in freeLancers)
         {
             var oldScore = await db.FreelancerDetails.Where(x => x.UserId == freelance.UserId).ToListAsync();
+
+            //=== Find Review which is given by client ===//
             var freeLancerReviews = await db.FreelancerReview.Where(x => x.FreelancerId == freelance.UserId).ToListAsync();
+            var projectReview = await db.ProjectReview.Where(x => x.ClientId == clientId).ToListAsync();
+            var freelancerTofreelancerReviews = await db.FreelancerToFreelancerReview.Where(x => x.FromFreelancerId == freelance.UserId).ToListAsync();
+            var adminToFreelancerReview = await db.AdminToFreelancerReview.Where(x => x.FreelancerId == freelance.UserId).ToListAsync();
+
             int currentClientReview = 25;
             int newClientReview = currentClientReview + 1;
 
@@ -435,33 +442,150 @@ public class FreelancerFinderHelper
                 foreach (var item in row.FeatureChild)
                 {
                     //=== Feature wise rating sum and score ===//
-                    if (item.Feature == "Communication skills")
+
+                    if (item.ParantFeature.TrimEnd() == "Customer Reviews / score assigned by client")
                     {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.CommunicationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CommunicationRating)) ?? 9;
+                        if (item.Feature == "Communication skills")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.CommunicationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CommunicationRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Collaboration skills")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.CollaborationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CollaborationRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Professionalism")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.ProfessionalismRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ProfessionalismRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Technical Skills")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.TechnicalRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.TechnicalRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Client Satisfaction")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.SatisfactionRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.SatisfactionRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Responsiveness")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.ResponsivenessRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ResponsivenessRating)) ?? 9;
+                        }
+                        else if (item.Feature == "Freelancer Like To Work")
+                        {
+                            item.RatingSum = (freeLancerReviews.Sum(x => x.LikeToWorkRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.LikeToWorkRating)) ?? 9;
+                        }
                     }
-                    else if (item.Feature == "Collaboration skills")
+
+                    if (item.ParantFeature.TrimEnd() == "Project Reviews / score assigned by client")
                     {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.CollaborationRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.CommunicationRating)) ?? 9;
+                        if (item.Feature == "Well-Defined Project Scope")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.WellDefinedProjectScope) == 0 ? 9 : projectReview.Sum(x => x.WellDefinedProjectScope)) ?? 9;
+                        }
+                        else if (item.Feature == "Adherence to Project Scope")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.AdherenceToProjectScope) == 0 ? 9 : projectReview.Sum(x => x.AdherenceToProjectScope)) ?? 9;
+                        }
+                        else if (item.Feature == "Quality of Deliverables")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.DeliverablesQuality) == 0 ? 9 : projectReview.Sum(x => x.DeliverablesQuality)) ?? 9;
+                        }
+                        else if (item.Feature == "Meeting Timeliness")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.MeetingTimeliness) == 0 ? 9 : projectReview.Sum(x => x.MeetingTimeliness)) ?? 9;
+                        }
+                        else if (item.Feature == "Client Satisfaction")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.Clientsatisfaction) == 0 ? 9 : projectReview.Sum(x => x.Clientsatisfaction)) ?? 9;
+                        }
+                        else if (item.Feature == "Adherence to Budget")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.AdherenceToBudget) == 0 ? 9 : projectReview.Sum(x => x.AdherenceToBudget)) ?? 9;
+                        }
+                        else if (item.Feature == "Would you recommend the project to a partner/affiliate company?")
+                        {
+                            item.RatingSum = (projectReview.Sum(x => x.LikeToRecommend) == 0 ? 9 : projectReview.Sum(x => x.LikeToRecommend)) ?? 9;
+                        }
+                        //else if (item.Feature == "Number of reviews")
+                        //{
+                        //    item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.Clientsatisfaction) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.Clientsatisfaction)) ?? 9;
+                        //}
                     }
-                    else if (item.Feature == "Professionalism")
+
+                    if (item.ParantFeature.TrimEnd() == "Score between freelancers")
                     {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.ProfessionalismRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ProfessionalismRating)) ?? 9;
+                        if (item.Feature == "Collaboration and Teamwork")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.CollaborationAndTeamWork) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.CollaborationAndTeamWork));
+                        }
+                        else if (item.Feature == "Communication Skills")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.Communication) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.Communication));
+                        }
+                        else if (item.Feature == "Professionalism")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.Professionalism) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.Professionalism));
+                        }
+                        else if (item.Feature == "Technical Skills")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.TechnicalSkills) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.TechnicalSkills));
+                        }
+                        else if (item.Feature == "Project Management")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.ProjectManagement) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.ProjectManagement));
+                        }
+                        else if (item.Feature == "Responsiveness")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.Responsiveness) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.Responsiveness));
+                        }
+                        else if (item.Feature == "Well-Defined Project Scope")
+                        {
+                            item.RatingSum = (freelancerTofreelancerReviews.Sum(x => x.WellDefinedProjectScope) == 0 ? 9 : freelancerTofreelancerReviews.Sum(x => x.WellDefinedProjectScope));
+                        }
                     }
-                    else if (item.Feature == "Technical Skills")
+
+                    if (item.ParantFeature.TrimEnd() == "Score assigned by the Platform")
                     {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.TechnicalRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.TechnicalRating)) ?? 9;
-                    }
-                    else if (item.Feature == "Client Satisfaction")
-                    {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.SatisfactionRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.SatisfactionRating)) ?? 9;
-                    }
-                    else if (item.Feature == "Responsiveness")
-                    {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.ResponsivenessRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.ResponsivenessRating)) ?? 9;
-                    }
-                    else if (item.Feature == "Freelancer Like To Work")
-                    {
-                        item.RatingSum = (freeLancerReviews.Sum(x => x.LikeToWorkRating) == 0 ? 9 : freeLancerReviews.Sum(x => x.LikeToWorkRating)) ?? 9;
+                        if (item.Feature == "Professionalism")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.Professionalism) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.Professionalism)) ?? 9;
+                        }
+                        else if (item.Feature == "Hourly Rate")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.HourlyRate) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.HourlyRate)) ?? 9;
+                        }
+                        else if (item.Feature == "Availability")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.Availability) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.Availability)) ?? 9;
+                        }
+                        else if (item.Feature == "Project Acceptance")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.ProjectAcceptance) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.ProjectAcceptance)) ?? 9;
+                        }
+                        else if (item.Feature == "Education")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.Education) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.Education)) ?? 9;
+                        }
+                        else if (item.Feature == "Experience (Soft skills)")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.SoftSkillsExperience) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.SoftSkillsExperience)) ?? 9;
+                        }
+                        else if (item.Feature == "Experience (Hard skills)")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.HardSkillsExperience) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.HardSkillsExperience)) ?? 9;
+                        }
+                        else if (item.Feature == "Project Success Rate")
+                        {
+                            item.RatingSum = (adminToFreelancerReview.Sum(x => x.ProjectSuccessRate) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.ProjectSuccessRate)) ?? 9;
+                        }
+
+                        //else if (item.Feature == "Response Time")
+                        //{
+                        //    item.RatingSum = (adminToFreelancerReview.Sum(x => x.T) == 0 ? 9 : adminToFreelancerReview.Sum(x => x.Professionalism)) ?? 9;
+                        //}
+                        //else if (item.Feature == "Well-Defined Project Scope")
+                        //{
+
+                        //}
                     }
 
                     //=== Getting old score from database and use in calculation if null then default 0 ===//

@@ -14,6 +14,8 @@ public class FeatureWiseRankingModel
 
     public List<FeatureWiseRankingModel> FeatureChild { get; set; }
 
+    public string ParantFeature { get; set; }
+
     public int RatingSum { get; set; }
     public int FreeLanceId { get; set; }
     public decimal TempScore { get; set; }

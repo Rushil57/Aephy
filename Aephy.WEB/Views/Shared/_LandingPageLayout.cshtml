@@ -94,20 +94,20 @@
                                             </ul>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link blueLink" href="~/LandingPage/Services">Services</a>
+                                            <a class="nav-link" href="~/LandingPage/Services">Services</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link blueLink" href="~/LandingPage/Industries">Industries</a>
+                                            <a class="nav-link" href="~/LandingPage/Industries">Industries</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link blueLink" href="~/LandingPage/WhyAephy">Why Ephylink</a>
+                                            <a class="nav-link" href="~/LandingPage/WhyAephy">Why Ephylink</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link blueLink" href="~/LandingPage/GigOpenings">Gig Openings</a>
+                                            <a class="nav-link" href="~/LandingPage/GigOpenings">Gig Openings</a>
                                         </li>
                                         <li class="nav-item dropdown">
                                             <a class="nav-link" href="~/LandingPage/AboutUs" data-bs-toggle="dropdown">
-                                                <span class="blueLink">About</span> <i class="bi bi-chevron-down dropdown-indicator blueLink"></i>
+                                                <span>About</span> <i class="bi bi-chevron-down dropdown-indicator"></i>
                                             </a><!-- End Profile Iamge Icon -->
 
                                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -128,10 +128,10 @@
                                             if (Context.Session.GetString("LoggedUser") == null)
                                             {
                                                 <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3 blueLink" href="/Home/Login">Login</a>
+                                                    <a class="nav-link ms-lg-3" href="/Home/Login">Login</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3 blueLink" href="/Home/Register">Sign Up</a>
+                                                    <a class="nav-link ms-lg-3" href="/Home/Register">Sign Up</a>
                                                 </li>
                                             }
                                             else
@@ -143,7 +143,7 @@
                                                 <li class="nav-item">
 
                                                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                                                        <i class="bi bi-bell blueLink"></i>
+                                                        <i class="bi bi-bell"></i>
                                                     </a><!-- End Notification Icon -->
 
                                                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" id="notification-section">
@@ -157,25 +157,25 @@
 
                                                 </li>
                                                 <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                    <i class="ri-mail-line cls-navicon nav-link blueLink"></i>
+                                                    <a href="/Home/Dashboard#activeProjects" class="nav-link"> <i class="ri-mail-line cls-navicon nav-link"></i></a>
                                                 </li>
 
                                                 if (Context.Session.GetString("LoggedUserRole") != "Client")
                                                 {
                                                     <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="bi bi-heart cls-navicon nav-link blueLink"></i>
+                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
                                                     </li>
                                                 }
                                                 else
                                                 {
                                                     <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link blueLink"></i></a>
+                                                        <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
                                                     </li>
                                                 }
 
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link ms-lg-3 blueLink" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
+                                                    <a class="nav-link ms-lg-3" href="/Home/Dashboard" style="color: var(--brand);">Dashboard</a>
                                                 </li>
 
                                                 if (@Context.Session.GetString("UserProfileImage") != "")

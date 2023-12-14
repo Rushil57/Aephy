@@ -207,7 +207,97 @@
             </div>
 
             <div class="row" id="successfull-project-section">
+                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box cls-main-content">
+                        <div class="icon-msg d-flex">
+                            <i class="bi-chat-right-quote"> </i>
+                            <h3>James</h3>
+                        </div>
+                        <div class="description section-detail-size">We partnered with Ephylink to integrate AI into our environmental monitoring systems. The results exceeded our expectations. Their model development for image recognition has significantly improved our ability to monitor and protect fragile ecosystems</div>
+                        <div class="child col-10 mx-2 cls-result">
+                            <div class="title border-bottom">Results</div>
+                            <div class="content">
+                                <div class="info" style=width:150px;>
+                                    <div class="name">25% ↑ </div>
+                                    <div class="sub">
+                                        <div class="sub-title">Accuracy</div>
+                                    </div>
+                                </div>
+
+                                <div class="right-info" style=width:150px;width:175px;>
+                                    <div class="name">20% ↑ </div>
+                                    <div class="sub">
+                                        <div class="sub-title">Preservation of Forests</div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box cls-main-content">
+                        <div class="icon-msg d-flex">
+                            <i class="bi-chat-right-quote"> </i>
+                            <h3>Johannes</h3>
+                        </div>
+                        <div class="description section-detail-size">Working with Ephylink was extremely beneficial for us. Their freelancers assisted us in organizing and comprehending our data. The data visualization dashboard they developed plays a crucial role in our decision-making process.</div>
+                        <div class="child col-10 mx-2 cls-result">
+                            <div class="title border-bottom">Results</div>
+                            <div class="content">
+                                <div class="info" style=width:150px;>
+                                    <div class="name">20% ↑</div>
+                                    <div class="sub">
+                                        <div class="sub-title">Productivity</div>
+                                    </div>
+                                </div>
+
+                                <div class="right-info" style=width:150px;>
+                                    <div class="name">$40,000 ↓</div>
+                                    <div class="sub">
+                                        <div class="sub-title">Cost </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 px-0 cls-trusted-viewmore cls-main-div" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box cls-main-content">
+                        <div class="icon-msg d-flex">
+                            <i class="bi-chat-right-quote"> </i>
+                            <h3>Olivia</h3>
+                        </div>
+                        <div class="description section-detail-size">Ephylink demonstrated a deep understanding of our technology needs. They developed a chatbot for us and their work was exceptional.</div>
+                        <div class="child col-10 mx-2 cls-result">
+                            <div class="title border-bottom">Results</div>
+                            <div class="content">
+                                <div class="info" style=width:150px;>
+                                    <div class="name">30% ↑ </div>
+                                    <div class="sub">
+                                        <div class="sub-title">Accuracy </div>
+                                    </div>
+                                </div>
+
+                                <div class="right-info" style=width:150px;>
+                                    <div class="name">$10,000 ↓ </div>
+                                    <div class="sub">
+                                        <div class="sub-title">Employment costs</div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <a class="cls-trusted-btn" onclick="TrustedViewMore()" id="TrustedViewMore">View More <i class="bi bi-triangle-fill"></i></a>
             <a class="cls-trusted-lessbtn" href="#shortreviews" onclick="TrustedViewLess()" id="TrustedViewLess">View Less <i class="bi bi-triangle-fill"></i></a>
 
@@ -397,17 +487,17 @@
 
         $("#preloader").show();
         GetPopularSolution();
-        GetSuccessfullProjects();
+       // GetSuccessfullProjects();
         GetTopProfessionalDetails();
         $("#preloader").hide();
     })
 
-    function searchFromSolutions(){
+    function searchFromSolutions() {
         searchData = $('[data-solution-search]').val();
-        if (searchData != ''){
+        if (searchData != '') {
             var compareData = '';
             compareData = $('[data-solution-item][data-solution-name*="' + searchData.toLowerCase() + '"]').data('solutionName');
-            if (compareData != ''){
+            if (compareData != '') {
                 window.location = "../LandingPage/BrowseSolutions?solution=" + searchData;
             }
         }
@@ -420,9 +510,9 @@
         if (searchVal != '') {
             filterItems.parent().addClass('d-none');
             $('[data-solution-item][data-solution-name*="' + searchVal.toLowerCase() + '"]').parent().removeClass('d-none');
-            $('#search-list').css('display','block');
+            $('#search-list').css('display', 'block');
         } else {
-            $('#search-list').css('display','none');
+            $('#search-list').css('display', 'none');
             filterItems.parent().removeClass('d-none');
         }
     });
@@ -570,7 +660,7 @@
                                 successfullProject += '<div class="info" style=width:150px;>' +
                                     '<div class="name" title="' + resultValue.ResultValue + '">' + resultvalueData + '</div>' +
                                     '<div class="sub">' +
-                                    '<div class="sub-title" title="' + resultValue.ResultKey+'">' + resultKeydescription + '</div>' +
+                                    '<div class="sub-title" title="' + resultValue.ResultKey + '">' + resultKeydescription + '</div>' +
                                     '</div>' +
                                     '</div>';
                             });
@@ -631,15 +721,15 @@
                             }
                             leftreviewSection += '<div class="info">' +
                                 "<div class='name' onclick=openRatingListModal('" + values.FreelancerId + "')>" + values.FreelancerName + " </div>" +
-                                    '<div class="stars" >' +
-                                    '<i class="bi bi-star-fill"> </i>' +
-                                    '<i class="bi bi-star-fill"> </i>' +
-                                    '<i class="bi bi-star-fill"> </i>' +
-                                    '<label> ' + values.Rate + '/ 5 </label>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>';
+                                '<div class="stars" >' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<i class="bi bi-star-fill"> </i>' +
+                                '<label> ' + values.Rate + '/ 5 </label>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
                         });
                         $('#leftReview').html(leftreviewSection);
                     }
@@ -707,7 +797,7 @@
             data: JSON.stringify(data),
             success: function (result) {
                 $("#FreelancerFeedbackModal").modal('show');
-                if (result.Result.length != 0){
+                if (result.Result.length != 0) {
                     var reviewData = "";
                     $.each(result.Result, function (data, value) {
                         reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
@@ -724,13 +814,13 @@
                     });
                     $('#freelancer-feedback-Details').html(reviewData)
                     $(".cls-feedback-temp").remove();
-                }else{
+                } else {
                     $(".cls-feedback-temp").remove();
                     $("<p class='cls-feedback-temp'>No Data Available</p>").insertAfter("#freelancer-feedback-Details");
                     $(".cls-feedback-temp").css("padding-left", "14px");
                     $('#freelancer-feedback-Details').html("");
                 }
-               
+
                 $("#preloader").hide();
             },
             error: function (result) {

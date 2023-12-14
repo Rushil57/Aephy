@@ -41,7 +41,7 @@
                                     <div class="row m-lg-2 pt-4">
                                         <h5 class="section-detail-size" style="text-align:center;">
                                               Project Price & Size
-                                            &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
+                                            @* &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a> *@
                                         </h5>
                                     </div>
                                     <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
@@ -253,7 +253,7 @@
                         <div class="row m-lg-2 pt-4">
                             <h5 class="section-detail-size" style="text-align:center;">
                                Project Price & Size
-                                &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
+                                @* &nbsp;<a data-toggle="popover" class="info-popover" data-bs-content="Prices shown are an estimated average and may vary based on the freelancers' hourly rates and availability."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a> *@
                             </h5>
                         </div>
                         <div class="row m-lg-2 pt-2 pb-2 d-flex justify-content-center align-center border-bottom border-black" style="text-align:center;">
@@ -491,9 +491,9 @@
                             <div class="card-body">
                                 <form class="row g-3 mt-3" name="UploadDocumentForm">
                                     <div class="col-12">
-                                        <label for="Description" class="form-label">Description</label>
+                                        <label for="Description" class="form-label">Document Name</label>
                                         <div class="input-group">
-                                            <textarea class="form-control" id="ActiveProjectDescription" name="activeprojectdescription" rows="4" cols="50"></textarea>
+                                            <input type="text" class="form-control" id="ActiveProjectDescription" name="activeprojectdescription"/>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -903,11 +903,11 @@
                    if(projecttype == 'custom'){
                              $("#milestone-btn-div").show();
                             $(".cls-milestone-edit-pencil").show();
-                       $(".cls-edit-pencil").show();
+                       // $(".cls-edit-pencil").show();
                          }else{
                              $("#milestone-btn-div").hide();
                              $(".cls-milestone-edit-pencil").hide();
-                              $(".cls-edit-pencil").hide()
+                              // $(".cls-edit-pencil").hide()
                          }
 
                  $("#preloader").hide();

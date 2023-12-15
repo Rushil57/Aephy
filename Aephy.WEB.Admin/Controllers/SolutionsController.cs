@@ -998,6 +998,19 @@ namespace Aephy.WEB.Admin.Controllers
             return "Something Went Wrong";
         }
 
+        [HttpPost]
+        public async Task<string> GetFreelancerRating([FromBody] SolutionDefineRequestViewModel model)
+        {
+            if(model.FreelancerId != null)
+            {
+                var freelancerRate = await _apiRepository.MakeApiCallAsync("api/Admin/GetFreelancerRating", HttpMethod.Post, model);
+                return freelancerRate;
+            }
+             
+            
+            return "Freelancer Not found";
+        }
+
 
     }
 }

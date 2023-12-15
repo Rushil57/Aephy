@@ -1536,7 +1536,7 @@ function GetAllSavedProject() {
                         "data": "Title",
                         "render": function (data, type, row) {
                             var title = data.length > 35 ? data.substring(0, 35) + "..." : data;
-                            return "<span title='" + data + "'>" + title + "</span>";
+                            return "<a onclick='GotoProjectPage(" + row.ServiceId + "," + row.SolutionId + "," + row.IndustryId + ")'><span title='" + data + "'>" + title + "</span></a>";
                         }
                     },
 
@@ -1554,7 +1554,13 @@ function GetAllSavedProject() {
                         }
                     },
                     { "data": "Services" },
-                    { "data": "Industries" }
+                    { "data": "Industries" },
+                    {
+                        "data": "SolutionId",
+                        "render": function (data, type, row) {
+                            return '<i class="bi bi-heart-fill solution-saved" onclick="UnSavedSolutionProject(' + row.SolutionId + ',' + row.IndustryId + ')" style="color: var(--brand);cursor:pointer;"> </i>'
+                        }
+                    }
 
                 ]
             });
@@ -1587,6 +1593,7 @@ function UnSavedSolutionProject(solutionId, industryId) {
         success: function (result) {
             showToaster("success", "Success !", result.Message);
             GetSavedProjects();
+            GetAllSavedProject();
             $("#preloader").hide();
         },
         error: function (result) {
@@ -1642,7 +1649,7 @@ function BindSavedProject(projectData) {
             '</div></div>' +
             '<div class="card-footer">' +
             '<div class="like cls-heart-icon">' +
-            '<i class="bi bi-heart-fill solution-saved" onclick=UnSavedSolutionProject(' + value.Id + ',' + value.IndustryId + ') style="color: var(--brand);"> </i>' +
+            '<i class="bi bi-heart-fill solution-saved" onclick=UnSavedSolutionProject(' + value.Id + ',' + value.IndustryId + ') style="color: var(--brand);cursor:pointer;"> </i>' +
             '</div>' +
             '</div>' +
             '</div></div>';

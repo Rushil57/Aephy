@@ -1240,6 +1240,9 @@ namespace Aephy.API.Controllers
                                 solutionsdataStore.Title = solutionData.Title;
                                 solutionsdataStore.Description = solutionData.Description;
                                 solutionsdataStore.ImagePath = solutionData.ImagePath;
+                                solutionsdataStore.SolutionId = data.SolutionId;
+                                solutionsdataStore.IndustryId = data.IndustryId;
+                                solutionsdataStore.ServiceId = serviceId;
                                 solutionsModel.Add(solutionsdataStore);
                                 industrylist.Clear();
                             }

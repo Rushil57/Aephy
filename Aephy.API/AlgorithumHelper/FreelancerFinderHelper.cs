@@ -418,11 +418,175 @@ public class FreelancerFinderHelper
         }
 
 
-        //== Get Project Manager Score From Score Table ==//
+        //=== Get Project Manager Score From Score Table ===//
         var freeLancers = await db.FreelancerDetails.ToListAsync();
         var finalRankedListData = new List<FreelancerDetailModel>();
         var freeLanceWiseScoreList = new List<FreelancerDetailModel>();
+        var freeLanceRankedWiseModelList = new List<FreelancerDetailModel>();
 
+        //=== Genrate Platform Review baised on freelancer hourly rate ===//
+        var freelancerLevels = new[] { "Project Manager", "Expert", "Associate" };
+        int maxRank = 10, minRange = 0, maxRange = 0;
+
+        foreach (var level in freelancerLevels)
+        {
+            var filteredFreelancers = freeLancers
+                .Where(x => x.FreelancerLevel == level)
+                .Select(x => new FreelancerDetailModel
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    FreelancerLevel = x.FreelancerLevel,
+                    HourlyRate = x.HourlyRate
+                }).ToList();
+
+            minRange = 0;
+            maxRange = 0;
+
+            if (filteredFreelancers.Any())
+            {
+                var sortedFreelancers = filteredFreelancers.OrderBy(x => x.HourlyRate).ToList();
+                minRange = Convert.ToInt32(sortedFreelancers.Min(x => x.HourlyRate));
+                maxRange = Convert.ToInt32(sortedFreelancers.Max(x => x.HourlyRate));
+
+                foreach (var item in sortedFreelancers)
+                {
+                    item.Ranking = GetRange(Convert.ToInt32(item.HourlyRate), minRange, maxRange);
+                }
+                freeLanceRankedWiseModelList.AddRange(sortedFreelancers);
+            }
+        }
+
+        var updateList = new List<AdminToFreelancerReview>();
+        var addList = new List<AdminToFreelancerReview>();
+
+        foreach (var freelancerDetailModel in freeLanceRankedWiseModelList)
+        {
+            var existingRecord = db.AdminToFreelancerReview.FirstOrDefault(x => x.FreelancerId == freelancerDetailModel.UserId);
+            if (existingRecord != null)
+            {
+                existingRecord.HourlyRate = freelancerDetailModel.Ranking;
+                updateList.Add(existingRecord);
+            }
+            else
+            {
+                var newRecord = new AdminToFreelancerReview
+                {
+                    FreelancerId = freelancerDetailModel.UserId,
+                    HourlyRate = freelancerDetailModel.Ranking,
+                    UserId = clientId,
+                    Availability = 0,
+                    Professionalism = 0,
+                    ProjectAcceptance = 0,
+                    Education = 0,
+                    SoftSkillsExperience = 0,
+                    HardSkillsExperience = 0,
+                    ProjectSuccessRate = 0,
+                    CreateDateTime = DateTime.Now,
+                };
+                addList.Add(newRecord);
+            }
+        }
+
+        if (updateList.Any())
+        {
+            db.AdminToFreelancerReview.UpdateRange(updateList);
+            await db.SaveChangesAsync();
+            freeLanceRankedWiseModelList.Clear();
+            updateList.Clear();
+        }
+
+        if (addList.Any())
+        {
+            await db.AdminToFreelancerReview.AddRangeAsync(addList);
+            await db.SaveChangesAsync();
+            freeLanceRankedWiseModelList.Clear();
+            addList.Clear();
+        }
+
+        //=== Genrate Project Acceptance score ===//
+        var acceptFreelancerList = db.FreelancerFindProcessDetails.Where(x => x.ApproveStatus == 1)
+            .GroupBy(x => x.FreelancerId)
+            .Select(g => new
+            {
+                FreelancerId = g.Key,
+                Count = g.Count(),
+                FreelancerLevel = g.First().FreelancerType,
+            }).ToList();
+
+        foreach (var level in freelancerLevels)
+        {
+            var filteredFreelancers = acceptFreelancerList
+                .Where(x => x.FreelancerLevel == level)
+                .Select(x => new FreelancerDetailModel
+                {
+                    UserId = x.FreelancerId,
+                    FreelancerLevel = x.FreelancerLevel,
+                    ProjectAcceptance = x.Count
+                }).ToList();
+
+            minRange = 0;
+            maxRange = 0;
+
+            if (filteredFreelancers.Any())
+            {
+                var sortedFreelancers = filteredFreelancers.OrderBy(x => x.ProjectAcceptance).ToList();
+                minRange = Convert.ToInt32(sortedFreelancers.Min(x => x.ProjectAcceptance));
+                maxRange = Convert.ToInt32(sortedFreelancers.Max(x => x.ProjectAcceptance));
+
+                foreach (var item in sortedFreelancers)
+                {
+                    item.Ranking = GetRange(Convert.ToInt32(item.HourlyRate), minRange, maxRange);
+                }
+                freeLanceRankedWiseModelList.AddRange(sortedFreelancers);
+            }
+        }
+
+        foreach (var freelancerDetailModel in freeLanceRankedWiseModelList)
+        {
+            var existingRecord = db.AdminToFreelancerReview.FirstOrDefault(x => x.FreelancerId == freelancerDetailModel.UserId);
+            if (existingRecord != null)
+            {
+                existingRecord.ProjectAcceptance = freelancerDetailModel.Ranking;
+                updateList.Add(existingRecord);
+            }
+            else
+            {
+                var newRecord = new AdminToFreelancerReview
+                {
+                    FreelancerId = freelancerDetailModel.UserId,
+                    HourlyRate = 0,
+                    UserId = clientId,
+                    Availability = 0,
+                    Professionalism = 0,
+                    ProjectAcceptance = freelancerDetailModel.Ranking,
+                    Education = 0,
+                    SoftSkillsExperience = 0,
+                    HardSkillsExperience = 0,
+                    ProjectSuccessRate = 0,
+                    CreateDateTime = DateTime.Now,
+                };
+                addList.Add(newRecord);
+            }
+        }
+
+        if (updateList.Any())
+        {
+            db.AdminToFreelancerReview.UpdateRange(updateList);
+            await db.SaveChangesAsync();
+            freeLanceRankedWiseModelList.Clear();
+            updateList.Clear();
+        }
+
+        if (addList.Any())
+        {
+            await db.AdminToFreelancerReview.AddRangeAsync(addList);
+            await db.SaveChangesAsync();
+            freeLanceRankedWiseModelList.Clear();
+            addList.Clear();
+        }
+
+        //=== Assign score baised on review ===//
         foreach (var freelance in freeLancers)
         {
             var oldScore = await db.FreelancerDetails.Where(x => x.UserId == freelance.UserId).ToListAsync();
@@ -629,5 +793,27 @@ public class FreelancerFinderHelper
         }
         db.FreelancerDetails.UpdateRange(modelList);
         await db.SaveChangesAsync();
+    }
+
+
+    //=== This function use for a genrate upper and lower boundry and assign rank baised on boundry ===//
+    static int GetRange(int number, int minRange, int maxRange)
+    {
+        int min = minRange;
+        int max = maxRange;
+        int maxRank = 10;
+        int rangeSize = (max - min + 1) / maxRank;
+
+        for (int i = 1; i <= maxRank; i++)
+        {
+            int lowerBound = min + (i - 1) * rangeSize;
+            int upperBound = min + i * rangeSize;
+
+            if (number >= lowerBound && number <= upperBound)
+            {
+                return i;
+            }
+        }
+        return 10; // Return 10 if the number doesn't fall into any range.
     }
 }

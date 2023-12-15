@@ -45,4 +45,5 @@ public class FreelancerDetailModel
     public decimal Score { get; set; }
     public int Ranking { get; set; }
     public string Email { get; set; }
+    public int? ProjectAcceptance { get; set; }
 }

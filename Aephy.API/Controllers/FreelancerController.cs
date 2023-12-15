@@ -506,7 +506,7 @@ namespace Aephy.API.Controllers
                 {
                     milestoneList = milestoneList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
                     var solutionFundData = _db.SolutionFund.Where(x => x.CustomProjectDetialsId == model.CustomProjectDetailId).FirstOrDefault();
-                    if(solutionFundData != null)
+                    if (solutionFundData != null)
                     {
                         customPrice = await _clientcontroller.CountFinalProjectPricing(solutionFundData);
                     }
@@ -516,7 +516,8 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = new { 
+                    Result = new
+                    {
                         MileStoneList = milestoneList,
                         Customprice = customPrice
                     }
@@ -2758,17 +2759,55 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var dbModel = await _db.FreelancerFindProcessDetails.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                //=== Getting old data ===//
+                var oldRequestData = await _db.FreelancerFindProcessDetails.ToListAsync();
+
+                //=== Find Current detail data ===//
+                var dbModel = oldRequestData.Where(x => x.Id == model.Id).FirstOrDefault();
                 if (dbModel != null)
                 {
-                    dbModel.ApproveStatus = model.RequestStatus;
-                    _db.FreelancerFindProcessDetails.Update(dbModel);
-                    await _db.SaveChangesAsync();
+                    //=== find if team completed or not ===//
+                    var isTeamCreated = oldRequestData.Where(x => x.FreelancerFindProcessHeaderId == dbModel.FreelancerFindProcessHeaderId && x.ApproveStatus == 0).ToList();
+
+                    if (isTeamCreated.Any())
+                    {
+                        //=== If tem not completed then update approve status ===//
+                        dbModel.ApproveStatus = model.RequestStatus;
+                        _db.FreelancerFindProcessDetails.Update(dbModel);
+                        await _db.SaveChangesAsync();
+
+                        if (model.RequestStatus == 2)
+                        {
+                            var reviewData = await _db.AdminToFreelancerReview.Where(x => x.FreelancerId == dbModel.FreelancerId).FirstOrDefaultAsync();
+                            reviewData.ProjectAcceptance = reviewData.ProjectAcceptance - 1;
+
+                            _db.AdminToFreelancerReview.Update(reviewData);
+                            await _db.SaveChangesAsync();
+                        }
+
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Action Succesfully"
+                        });
+                    }
+                    else
+                    {
+                        //=== change tem completed status true. ===//
+                        var header = await _db.FreelancerFindProcessHeader.Where(x => x.Id == dbModel.FreelancerFindProcessHeaderId).FirstOrDefaultAsync();
+                        if (header != null)
+                        {
+                            header.IsTeamCompleted = true;
+                            _db.FreelancerFindProcessHeader.Update(header);
+                            await _db.SaveChangesAsync();
+                        }
+                    }
                 }
+
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
-                    Message = "Action Succesfully"
+                    Message = "Expire"
                 });
             }
             catch (Exception ex)

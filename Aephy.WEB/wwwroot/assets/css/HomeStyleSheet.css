@@ -601,10 +601,14 @@ h6 {
 
 .reviews .content .stars i {
     flex-shrink: 0;
-    color: var(--brand);
+    color: #a6a6a6;
     margin-right: 2px;
     line-height: 0;
 }
+
+    .reviews .content .stars i.checked_star {
+        color: var(--brand);
+    }
 
 #reviews .float-child {
     float: left;

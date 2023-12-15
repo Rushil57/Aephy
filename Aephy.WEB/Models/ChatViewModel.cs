@@ -11,6 +11,8 @@ public class ChatPopupRequestViewModel
 
     public int IndustryId { get; set; }
 
+    public int SolutionFundId { get; set; }
+
     public string? UserId { get; set; }
 
     public string? UserRole { get; set; }

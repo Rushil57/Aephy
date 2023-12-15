@@ -160,13 +160,7 @@
                                                     <a href="/Home/Dashboard#activeProjects" class="nav-link"> <i class="ri-mail-line cls-navicon nav-link"></i></a>
                                                 </li>
 
-                                                if (Context.Session.GetString("LoggedUserRole") != "Client")
-                                                {
-                                                    <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
-                                                        <i class="bi bi-heart cls-navicon nav-link"></i>
-                                                    </li>
-                                                }
-                                                else
+                                                if (Context.Session.GetString("LoggedUserRole") == "Client")
                                                 {
                                                     <li class="nav-item" data-open-accessibility-text-original="16px" style="font-size: 16px;">
                                                         <a href="/Home/Dashboard#savedProjects"><i class="bi bi-heart cls-navicon nav-link"></i></a>
@@ -1346,12 +1340,12 @@
                                     <form name="ProjectDetailsForm">
                                         <div class="col d-flex flex-column">
                                             <label data-aos="fade-up">Project Outline</label>
-                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Outline" id="custom-ProjectOutline" rows="4" cols="50" name="customprojectoutline"></textarea>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Outline" id="custom-ProjectOutline" rows="4" cols="50" name="customprojectoutline" maxlength="330"></textarea>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2">
                                             <label data-aos="fade-up">Project Description</label>
-                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50" name="customprojectdescription"></textarea>
+                                            <textarea class="form-control cls-textarea" placeholder="Enter Project Description" id="custom-ProjectDescription" rows="4" cols="50" name="customprojectdescription" maxlength="330"></textarea>
                                         </div>
 
                                         <div class="col d-flex flex-column pt-2 d-none">

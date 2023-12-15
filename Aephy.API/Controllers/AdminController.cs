@@ -2071,19 +2071,19 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    if (topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "indexOverflow",
-                        });
-                    }
+                    //if (topProfessionalsList.Count >= 4 && model.IsVisibleOnLandingPage == true)
+                    //{
+                    //    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    //    {
+                    //        StatusCode = StatusCodes.Status200OK,
+                    //        Message = "indexOverflow",
+                    //    });
+                    //}
                     var topProfessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
                     if (topProfessionalData != null)
                     {
                         topProfessionalData.TopProfessionalTitle = model.TopProfessionalTitle;
-                        topProfessionalData.Rate = model.Rate;
+                        //topProfessionalData.Rate = model.Rate;
                         topProfessionalData.Description = model.Description;
                         topProfessionalData.IsVisibleOnLandingPage = model.IsVisibleOnLandingPage;
                         _db.SaveChanges();
@@ -2794,9 +2794,21 @@ namespace Aephy.API.Controllers
                     var topprofessionalData = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
                     if (topprofessionalData != null)
                     {
-                        var freelancerdata = _db.FreelancerDetails.Where(x => x.UserId == topprofessionalData.FreelancerId).FirstOrDefault();
+                        var freelancerdata = await _db.FreelancerDetails.Where(x => x.UserId == topprofessionalData.FreelancerId).FirstOrDefaultAsync();
                         if (freelancerdata != null)
                         {
+                            int? sumofReview = 0;
+                            double finalRate = 0.0;
+                            var freelancerReviewByclient = await _db.FreelancerReview.Where(x => x.FreelancerId == freelancerdata.UserId).ToListAsync();
+                            if (freelancerReviewByclient.Count > 0)
+                            {
+                                foreach (var freelancerReview in freelancerReviewByclient)
+                                {
+                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                }
+                                finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
+                            }
+
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -2804,7 +2816,8 @@ namespace Aephy.API.Controllers
                                 Result = new
                                 {
                                     TopProfessionalData = topprofessionalData,
-                                    FreelancerData = freelancerdata
+                                    FreelancerData = freelancerdata,
+                                    FreelancerRate = finalRate
                                 }
                             });
                         }
@@ -4007,6 +4020,40 @@ namespace Aephy.API.Controllers
                 }
 
 
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+            {
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Data not Found"
+            });
+        }
+
+        //GetFreelancerRating
+        [HttpPost]
+        [Route("GetFreelancerRating")]
+        public async Task<IActionResult> GetFreelancerRating([FromBody] AdminToFreelancerReviewModel model)
+        {
+            if (model.FreelancerId != null)
+            {
+                int? sumofReview = 0;
+                double finalRate = 0.0;
+                var freelancerReviewByclient = await _db.FreelancerReview.Where(x => x.FreelancerId == model.FreelancerId).ToListAsync();
+                if (freelancerReviewByclient.Count > 0)
+                {
+                    foreach (var freelancerReview in freelancerReviewByclient)
+                    {
+                        sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                    }
+                    finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "success",
+                    Result = finalRate
+                });
             }
 
             return StatusCode(StatusCodes.Status200OK, new APIResponseModel

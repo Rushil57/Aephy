@@ -487,7 +487,7 @@
 
         $("#preloader").show();
         GetPopularSolution();
-       // GetSuccessfullProjects();
+        // GetSuccessfullProjects();
         GetTopProfessionalDetails();
         $("#preloader").hide();
     })
@@ -721,11 +721,16 @@
                             }
                             leftreviewSection += '<div class="info">' +
                                 "<div class='name' onclick=openRatingListModal('" + values.FreelancerId + "')>" + values.FreelancerName + " </div>" +
-                                '<div class="stars" >' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<label> ' + values.Rate + '/ 5 </label>' +
+                                '<div class="stars" >';
+                            var ratingCeilCount = Math.ceil(values.Rate);
+                            for (var iterator = 1; iterator <= 10; iterator++) {
+                                if (iterator <= ratingCeilCount) {
+                                    leftreviewSection += '<i class="bi bi-star-fill checked_star"></i>';
+                                } else {
+                                    leftreviewSection += '<i class="bi bi-star-fill"></i>';
+                                }
+                            }
+                            leftreviewSection += '<label> ' + values.Rate + '/ 10 </label>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +
@@ -757,11 +762,16 @@
 
                             rightreviewSection += '<div class="info">' +
                                 "<div class='name' onclick=openRatingListModal('" + values.FreelancerId + "')>" + values.FreelancerName + " </div>" +
-                                '<div class="stars" >' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<i class="bi bi-star-fill"> </i>' +
-                                '<label> ' + values.Rate + ' / 5 </label>' +
+                                '<div class="stars" >';
+                            var ratingCeilCount = Math.ceil(values.Rate);
+                            for (var iterator = 1; iterator <= 10; iterator++) {
+                                if (iterator <= ratingCeilCount) {
+                                    rightreviewSection += '<i class="bi bi-star-fill checked_star"></i>';
+                                } else {
+                                    rightreviewSection += '<i class="bi bi-star-fill"></i>';
+                                }
+                            }
+                            rightreviewSection += '<label> ' + values.Rate + '/ 10 </label>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +

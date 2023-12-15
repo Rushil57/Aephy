@@ -543,6 +543,8 @@ namespace Aephy.API.Models
             public decimal ProjectManagerPlatformFees { get; set; }
 
             public string? ClientFees { get; set; }
+
+            public string? Rate { get; set; }
         }
 
         public class UserDetailsModel

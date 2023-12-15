@@ -470,6 +470,8 @@ namespace Aephy.API.Controllers
                     {
                         foreach (var topdata in topProfessionalData)
                         {
+                            int? sumofReview = 0;
+                            double finalRate = 0.0;
                             SolutionTopProfessionalModel solutionTop = new SolutionTopProfessionalModel();
                             solutionTop.ID = topdata.FreelancerId;
                             solutionTop.Description = topdata.Description;
@@ -478,7 +480,16 @@ namespace Aephy.API.Controllers
 
                             solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
                             solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
-                            solutionTop.Rate = topdata.Rate;
+                            var freelancerReviewByclient = _db.FreelancerReview.Where(x => x.FreelancerId == topdata.FreelancerId).ToList();
+                            if (freelancerReviewByclient.Count > 0)
+                            {
+                                foreach (var freelancerReview in freelancerReviewByclient)
+                                {
+                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                }
+                                finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
+                            }
+                            solutionTop.Rate = finalRate.ToString();
                             professionalData.Add(solutionTop);
                         }
                     }
@@ -724,12 +735,15 @@ namespace Aephy.API.Controllers
                     {
                         foreach (var soltiondata in solutionTeamData)
                         {
+                            int? sumofReview = 0;
+                            double finalRate = 0.0;
                             SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
                             //if (soltiondata.IsProjectManager)
                             //{
                             //    solutionTeam.ProjectManagerPlatformFees = soltiondata.PlatformFees;
                             //}
                             var solutionFunddata = _db.SolutionFund.Where(x => x.Id == soltiondata.SolutionFundId).FirstOrDefault();
+                            solutionTeam.SolutionFundId = solutionFunddata.Id;
                             solutionTeam.SolutionId = solutionFunddata.SolutionId;
                             solutionTeam.IndustryId = solutionFunddata.IndustryId;
                             solutionTeam.ClientId = solutionFunddata.ClientId;
@@ -743,6 +757,16 @@ namespace Aephy.API.Controllers
                                 solutionTeam.ImagePath = freelancerDetails.ImagePath;
                                 solutionTeam.ImageUrlWithSas = freelancerDetails.ImageUrlWithSas;
                             }
+                            var freelancerReviewByclient = _db.FreelancerReview.Where(x => x.FreelancerId == soltiondata.FreelancerId).ToList();
+                            if (freelancerReviewByclient.Count > 0)
+                            {
+                                foreach (var freelancerReview in freelancerReviewByclient)
+                                {
+                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                }
+                                finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
+                            }
+                            solutionTeam.Rate = finalRate.ToString();
                             solutionteamList.Add(solutionTeam);
                         }
                     }

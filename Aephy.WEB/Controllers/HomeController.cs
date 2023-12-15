@@ -2088,7 +2088,7 @@ namespace Aephy.WEB.Controllers
             table1.HorizontalAlignment = Element.ALIGN_LEFT;
 
             // Content 1
-            string content1 = "From\nEphylink\nDimitrios Vamvakas\nEllispontou 39, Patra, 26226\nAchaia, Greece\nVAT ID: 148366653";
+            string content1 = "From\nEphylink\nDimitrios Vamvakas\nAristofanous 5, Patras, 26500\nAchaia, Greece\nVAT ID: 148366653";
 
             // Split content1 into lines
             string[] content1Lines = content1.Split('\n');

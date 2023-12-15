@@ -215,7 +215,7 @@
             error: function (result) {
                 $("#preloader").hide();
                 CloseEditUserModalPopup();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -270,8 +270,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -317,7 +316,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -415,7 +414,7 @@
                 })
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -435,7 +434,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -456,7 +455,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -475,7 +474,7 @@
         }
 
         if($("#drp-solutions").val() == "All" || $("#drp-industries").val() == "All") {
-            alert("Select Proper Details")
+            showToaster("error", "Error !", "Select Proper Details");
             return
         }
         $("#preloader").show();
@@ -498,7 +497,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -535,7 +534,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

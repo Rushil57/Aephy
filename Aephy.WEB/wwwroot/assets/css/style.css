@@ -1730,3 +1730,19 @@ textarea.form-control {
 .cls-revoultonboarding-title {
     font-size: 20px !important;
 }
+
+#grid-invoice{
+    width:800px;
+}
+
+@media only screen and (max-width: 430px) {
+    #grid-invoice {
+        width: 350px;
+    }
+}
+
+@media only screen and (max-width: 280px) {
+    #grid-invoice {
+        width: 270px;
+    }
+}

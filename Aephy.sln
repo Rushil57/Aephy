@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aephy.WEB.Admin", "Aephy.WE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aephy.Helper", "Aephy.Helper\Aephy.Helper.csproj", "{EC5DBF74-065B-4FB7-B313-2581BAA0F6EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aephy.AzureFunction.App", "Aephy.AzureFunction.App\Aephy.AzureFunction.App.csproj", "{67DB67F7-D0B1-44D5-BF7C-D2DBE7B41AA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aephy.AzureFunction.App", "Aephy.AzureFunction.App\Aephy.AzureFunction.App.csproj", "{67DB67F7-D0B1-44D5-BF7C-D2DBE7B41AA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

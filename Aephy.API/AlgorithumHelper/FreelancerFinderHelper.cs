@@ -376,6 +376,15 @@ public class FreelancerFinderHelper
                         {
                             goto Label;
                         }
+                        else
+                        {
+                            // Stop Project freelancer not found.
+                            freelancerFindProcessHeader.IsTeamCompleted = false;
+                            freelancerFindProcessHeader.CurrentStatus = 2; // 2 means stoped.
+
+                            db.FreelancerFindProcessHeader.Update(freelancerFindProcessHeader);
+                            await db.SaveChangesAsync();
+                        }
                     }
                 }
             }

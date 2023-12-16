@@ -551,9 +551,16 @@ function RequestApproveReject(id, status) {
             dataType: "json",
             data: JSON.stringify(data),
             success: function (result) {
-                showToaster("success", "Success", result.Message);
-                GetFreelancerRequestList();
-                $("#preloader").hide();
+                if (result.Message == "Succesfully") {
+                    showToaster("success", "Success", "Action taken successfully.");
+                    GetFreelancerRequestList();
+                    $("#preloader").hide();
+                }
+                else {
+                    showToaster("error", "Error", result.Message);
+                    GetFreelancerRequestList();
+                    $("#preloader").hide();
+                }
             },
             error: function (result) {
                 $("#preloader").hide();

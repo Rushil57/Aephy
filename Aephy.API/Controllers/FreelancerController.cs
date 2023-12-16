@@ -1,4 +1,5 @@
-﻿using Aephy.API.DBHelper;
+﻿using Aephy.API.AlgorithumHelper;
+using Aephy.API.DBHelper;
 using Aephy.API.Models;
 //using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
@@ -2754,7 +2755,6 @@ namespace Aephy.API.Controllers
             });
         }
 
-
         [HttpPost]
         [Route("FreelancerRequest")]
         public async Task<IActionResult> FreelancerRequest([FromBody] FreelancerRequestModel model)
@@ -2774,9 +2774,19 @@ namespace Aephy.API.Controllers
                     if (isTeamCreated.Any())
                     {
                         //=== If tem not completed then update approve status ===//
-                        dbModel.ApproveStatus = model.RequestStatus;
-                        _db.FreelancerFindProcessDetails.Update(dbModel);
-                        await _db.SaveChangesAsync();
+                        var isActiveProject = oldRequestData.Where(x => x.FreelancerId == dbModel.FreelancerId && x.ApproveStatus == 1).Any();
+                        if(!isActiveProject)
+                        {
+                            dbModel.ApproveStatus = model.RequestStatus;
+                            _db.FreelancerFindProcessDetails.Update(dbModel);
+                            await _db.SaveChangesAsync();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Succesfully"
+                            });
+                        }
 
                         if (model.RequestStatus == 2)
                         {
@@ -2785,12 +2795,18 @@ namespace Aephy.API.Controllers
 
                             _db.AdminToFreelancerReview.Update(reviewData);
                             await _db.SaveChangesAsync();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Succesfully"
+                            });
                         }
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Action Succesfully"
+                            Message = "Alrady working on project."
                         });
                     }
                     else
@@ -2821,5 +2837,45 @@ namespace Aephy.API.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("RunAlgorithm")]
+        public async Task RunAlgorithm()
+        {
+            var headerData = await _db.FreelancerFindProcessHeader.Where(x => !x.IsTeamCompleted && x.CurrentStatus == 0).ToListAsync();
+
+            if (headerData != null)
+            {
+                FreelancerFinderHelper helper = new FreelancerFinderHelper();
+                foreach (var item in headerData)
+                {
+                    if (item.ExecuteDate.Hour <= 24)
+                    {
+                        if (item.ProjectType == "Client")
+                        {
+                            await helper.FindFreelancersAsync(_db, item.ClientId, item.ProjectType, item.SolutionId, item.IndustryId, item.TotalProjectManager, item.TotalExpert, item.TotalAssociate);
+                        }
+                        else
+                        {
+                            await helper.FindFreelancersAsync(_db, item.ClientId, item.ProjectType, item.SolutionId, item.IndustryId, 0, 0, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        //=== Check for 24 hourse or not ===//
+        //static bool Is24HoursOrMore(DateTime givenTime)
+        //{
+        //    //DateTime currentTime = DateTime.Now;
+        //    //TimeSpan timeDifference = currentTime - givenTime;
+        //    //TimeSpan twentyFourHours = TimeSpan.FromHours(24);
+
+        //    //return timeDifference >= twentyFourHours;
+        //    givenTime.Hour;
+        //    return givenTime.Hour
+
+        //}
     }
 }

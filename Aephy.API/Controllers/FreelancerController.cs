@@ -28,12 +28,11 @@ namespace Aephy.API.Controllers
     {
         private readonly AephyAppDbContext _db;
         private readonly ClientController _clientcontroller;
-        private readonly AdminController _admincontroller;
-        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller, AdminController adminController)
+        
+        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller)
         {
             _db = dbContext;
             _clientcontroller = clientcontroller;
-            _admincontroller = adminController;
         }
 
         [HttpPost]
@@ -61,14 +60,14 @@ namespace Aephy.API.Controllers
                 var result = _db.SaveChanges();
                 if (result != 0)
                 {
-                    var freelancerType = _db.FreelancerDetails.Where(x => x.UserId == OpenGigRolesData.FreelancerID).Select(x => x.FreelancerLevel).FirstOrDefault();
+                    var freelancerType = _db.FreelancerDetails.Where(x => x.UserId == OpenGigRolesData.FreelancerID).FirstOrDefault();
                     var solutionId = _db.GigOpenRoles.Where(x => x.ID == OpenGigRolesData.GigOpenRoleId).Select(x => x.SolutionId).FirstOrDefault();
                     var solutionName = _db.Solutions.Where(x => x.Id == solutionId).Select(x => x.Title).FirstOrDefault();
 
 
                     List<Notifications> notificationsList = new List<Notifications>();
                     Notifications notifications = new Notifications();
-                    notifications.NotificationText = "Thank you for submitting your application for the (" + freelancerType + ") position in " + solutionName + ". Your application has been received and is currently under review.";
+                    notifications.NotificationText = "Thank you for submitting your application for the (" + freelancerType.FreelancerLevel + ") position in " + solutionName + ". Your application has been received and is currently under review.";
                     notifications.NotificationTitle = "Application Received";
                     notifications.ToUserId = "";
                     notifications.IsRead = false;
@@ -76,7 +75,18 @@ namespace Aephy.API.Controllers
                     notifications.ToUserId = OpenGigRolesData.FreelancerID;
                     notificationsList.Add(notifications);
 
-                    await _admincontroller.SaveNotificationData(notificationsList);
+                    var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                    var fisrtname = _db.Users.Where(x => x.Id == OpenGigRolesData.FreelancerID).FirstOrDefault();
+                    Notifications adminnotifications = new Notifications();
+                    adminnotifications.NotificationText = fisrtname.FirstName + " applied to " + freelancerType.FreelancerLevel;
+                    adminnotifications.NotificationTitle = "Freelancer Application:";
+                    adminnotifications.ToUserId = "";
+                    adminnotifications.IsRead = false;
+                    adminnotifications.NotificationTime = DateTime.Now;
+                    adminnotifications.ToUserId = adminDetails.Id;
+                    notificationsList.Add(adminnotifications);
+
+                    await SaveNotificationData(notificationsList);
 
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2553,7 +2563,21 @@ namespace Aephy.API.Controllers
                     clientnotifications.IsRead = false;
                     notificationsList.Add(clientnotifications);
 
-                    await _admincontroller.SaveNotificationData(notificationsList);
+                    // send to admin
+                    var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                    if(adminDetails != null)
+                    {
+                        Notifications adminnotifications = new Notifications();
+                        adminnotifications.NotificationText = fullname + " removed from " + solutionName;
+                        adminnotifications.NotificationTime = DateTime.Now;
+                        adminnotifications.NotificationTitle = fullname + " removed from a project";
+                        adminnotifications.ToUserId = adminDetails.Id;
+                        adminnotifications.IsRead = false;
+                        notificationsList.Add(adminnotifications);
+                    }
+                   
+
+                    await SaveNotificationData(notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2928,6 +2952,57 @@ namespace Aephy.API.Controllers
                     }
                 }
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
+        {
+            try
+            {
+                if (model.Count > 0)
+                {
+                    foreach (var data in model)
+                    {
+                        var dbModel = new Notifications
+                        {
+                            NotificationText = data.NotificationText,
+                            FromUserId = data.FromUserId,
+                            ToUserId = data.ToUserId,
+                            NotificationTime = data.NotificationTime,
+                            IsRead = data.IsRead,
+                            NotificationTitle = data.NotificationTitle
+                        };
+
+                        await _db.Notifications.AddAsync(dbModel);
+                        _db.SaveChanges();
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Notification Saved Succesfully!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
         }
 
         //=== Check for 24 hourse or not ===//

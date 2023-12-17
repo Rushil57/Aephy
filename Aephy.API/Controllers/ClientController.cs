@@ -35,7 +35,7 @@ namespace Aephy.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRevoultService _revoultService;
-        
+
         public ClientController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
         {
             _db = dbContext;
@@ -1961,6 +1961,8 @@ namespace Aephy.API.Controllers
                 {
                     var ContractProjectPrice = string.Empty;
                     decimal ContractclientFees = 0;
+                    List<Notifications> notificationsList = new List<Notifications>();
+                    var solutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                     if (solutionFundData.FundType == SolutionFund.FundTypes.MilestoneFund)
                     {
                         var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == solutionFundData.MileStoneId).FirstOrDefault();
@@ -1986,12 +1988,40 @@ namespace Aephy.API.Controllers
                                 ContractProjectPrice = solutionFundData.ProjectPrice;
                             }
                         }
+
+                        var industryName = _db.Industries.Where(x => x.Id == solutionFundData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+
+                        Notifications notifications = new Notifications();
+                        notifications.NotificationText = "You've successfully funded the ( " + MileStoneData.Description + " / " + solutionName + "/ " + industryName + "]\". Your funds are now securely held in escrow. Once the designated deliverable is completed successfully, you can proceed to approve the payment.";
+                        notifications.NotificationTime = DateTime.Now;
+                        notifications.NotificationTitle = "( " + MileStoneData.Description + " - " + solutionName + "/ " + industryName + "] funded ";
+                        notifications.ToUserId = solutionFundData.ClientId;
+                        notifications.IsRead = false;
+                        notificationsList.Add(notifications);
+
+                       
                     }
                     else
                     {
                         //var finalPrice = await CountFinalProjectPricing(solutionFundData);
                         ContractProjectPrice = solutionFundData.ProjectPrice.ToString();
                     }
+
+                    var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                    if(adminDetails != null)
+                    {
+                        var clientName = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => x.FirstName).FirstOrDefault();
+                        Notifications adminnotifications = new Notifications();
+                        adminnotifications.NotificationText = solutionName + " funded by " + clientName;
+                        adminnotifications.NotificationTime = DateTime.Now;
+                        adminnotifications.NotificationTitle = "Project Funding:";
+                        adminnotifications.ToUserId = adminDetails.Id;
+                        adminnotifications.IsRead = false;
+                        notificationsList.Add(adminnotifications);
+                    }
+                   
+
+                    await SaveNotificationData(notificationsList);
 
                     // Save to contract Table
                     var contractSave = new Contract()
@@ -2470,8 +2500,8 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
-            FreelancerFinderHelper helper = new FreelancerFinderHelper();
-            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
+            //FreelancerFinderHelper helper = new FreelancerFinderHelper();
+            //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
             try
             {
                 if (model != null)
@@ -2662,9 +2692,10 @@ namespace Aephy.API.Controllers
                             List<Notifications> notificationsList = new List<Notifications>();
                             var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
                             var industryName = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                            var clientEmailId = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserName).FirstOrDefault();
+                            var clientEmailId = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
 
                             var resultMsg = "";
+                            var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
                             if (teambuild == "success")
                             {
                                 Notifications notifications = new Notifications();
@@ -2687,9 +2718,29 @@ namespace Aephy.API.Controllers
                                 notifications.IsRead = false;
                                 notificationsList.Add(notifications);
 
+                              
+                                if(adminDetails != null)
+                                {
+                                    Notifications adminNoTeamnotifications = new Notifications();
+                                    adminNoTeamnotifications.ToUserId = adminDetails.Id;
+                                    adminNoTeamnotifications.NotificationText = "No matches for '["+ solutionName + "]'.";
+                                    adminNoTeamnotifications.NotificationTitle = "No Match found";
+                                    adminNoTeamnotifications.NotificationTime = DateTime.Now;
+                                    adminNoTeamnotifications.IsRead = false;
+                                    notificationsList.Add(adminNoTeamnotifications);
+                                }
+
                                 resultMsg = "Project Initiated Successfully ! without team";
                             }
 
+                            
+                            Notifications adminnotifications = new Notifications();
+                            adminnotifications.ToUserId = adminDetails.Id;
+                            adminnotifications.NotificationText = "[" + clientEmailId.FirstName + "] started [" + solutionName + "]";
+                            adminnotifications.NotificationTitle = "Project Initiation:";
+                            adminnotifications.NotificationTime = DateTime.Now;
+                            adminnotifications.IsRead = false;
+                            notificationsList.Add(adminnotifications);
 
                             //Notifications
                             await SaveNotificationData(notificationsList);
@@ -2700,7 +2751,7 @@ namespace Aephy.API.Controllers
                                 Message = resultMsg,
                                 Result = new
                                 {
-                                    ClientEmailId = clientEmailId,
+                                    ClientEmailId = clientEmailId.UserName,
                                     SolutionName = solutionName,
                                     IndustryName = industryName
                                 }
@@ -3187,7 +3238,7 @@ namespace Aephy.API.Controllers
                                         }
                                     }
 
-
+                                    var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
                                     if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
                                     {
                                         var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
@@ -3196,6 +3247,23 @@ namespace Aephy.API.Controllers
                                             updatemilestonestatus.MilestoneStatus = "Milestone Completed";
                                             _db.SaveChanges();
                                         }
+                                        if (transferredcount != 0)
+                                        {
+                                            List<Notifications> notificationsList = new List<Notifications>();
+                                            var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                            var industryName = _db.Industries.Where(x => x.Id == completedData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+
+                                            Notifications notifications = new Notifications();
+                                            notifications.NotificationText = "You've successfully approved the [ " + solutionName + "/ " + solutionName + "/ " + industryName + "].Payment for this milestone has been released.";
+                                            notifications.NotificationTime = DateTime.Now;
+                                            notifications.NotificationTitle = "[" + SolutionTitle + " - " + solutionName + "/ " + industryName + "] Approved and Payment Released";
+                                            notifications.ToUserId = completedData.ClientId;
+                                            notifications.IsRead = false;
+                                            notificationsList.Add(notifications);
+
+                                            await SaveNotificationData(notificationsList);
+                                        }
+
                                     }
 
                                     // 4 Invoice Generate 
@@ -3210,7 +3278,7 @@ namespace Aephy.API.Controllers
                                     }
 
 
-                                    var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
+
                                     var transfertoFreelancer = false;
                                     if (transferredcount == contract.ContractUsers.Count())
                                     {
@@ -3520,16 +3588,58 @@ namespace Aephy.API.Controllers
                             _db.SolutionDispute.Add(data);
                             _db.SaveChanges();
 
+                            //var solutionName = _db.Solutions.Where(x => x.Id == solutionfundId.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            var milestoneName = _db.SolutionMilestone.Where(x => x.Id == solutionfundId.MileStoneId).Select(x => x.Title).FirstOrDefault();
+
+
+                            var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                            var milestonelist = _db.SolutionMilestone.Where(x => x.SolutionId == solutionfundId.SolutionId && x.IndustryId == solutionfundId.IndustryId && x.ProjectType == solutionfundId.ProjectType).ToList();
+                            var TotalProjectDays = 0;
+                            if(milestonelist.Count > 0)
+                            {
+                                TotalProjectDays = milestonelist.Sum(x => x.Days);
+                            }
+                            var projectSize = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfundId.Id).ToList();
+
                             SolutionDisputeViewModel solutionDisputeView = new SolutionDisputeViewModel();
                             solutionDisputeView.ContractId = contractId;
                             solutionDisputeView.SolutionName = _db.Solutions.Where(x => x.Id == solutionfundId.SolutionId).Select(x => x.Title).FirstOrDefault();
                             solutionDisputeView.IndustryName = _db.Industries.Where(x => x.Id == solutionfundId.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                             var fullname = _db.Users.Where(x => x.Id == model.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             solutionDisputeView.ClientName = fullname.FirstName + " " + fullname.LastName;
-                            solutionDisputeView.AdminEmailId = _db.Users.Where(x => x.UserType == "Admin").Select(x => x.UserName).FirstOrDefault();
+                            solutionDisputeView.ProjectSize = projectSize.Count();
+                            solutionDisputeView.ProjectDuartion = TotalProjectDays + "Days";
+                            solutionDisputeView.ClientEmailId = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserName).FirstOrDefault();
+                            solutionDisputeView.Milestone = milestoneName;
+                            solutionDisputeView.AdminEmailId = adminDetails.UserName;
 
                             solutionfundId.IsDispute = true;
                             _db.SaveChanges();
+
+                            // to client
+                            List<Notifications> notificationList = new List<Notifications>();
+                            Notifications notifications = new Notifications();
+                            notifications.NotificationText = "You've initiated a dispute for the\"[" + milestoneName + "/ " + solutionDisputeView.SolutionName + "]\". The payment is now in escrow until the resolution is finalized. We're here to assist and thank you for your patience.";
+                            notifications.NotificationTitle = "Dispute successfully raised on '[" + solutionDisputeView.SolutionName + "/ " + solutionDisputeView.IndustryName + "]'";
+                            notifications.NotificationTime = DateTime.Now;
+                            notifications.ToUserId = model.ClientId;
+                            notifications.IsRead = false;
+                            notificationList.Add(notifications);
+
+                            // to admin
+                            
+                            if (adminDetails != null)
+                            {
+                                Notifications adminnotifications = new Notifications();
+                                adminnotifications.NotificationText = "Dispute Raised:";
+                                adminnotifications.NotificationTime = DateTime.Now;
+                                adminnotifications.NotificationTitle = "Dispute on '"+ solutionDisputeView.SolutionName + "'.";
+                                adminnotifications.ToUserId = adminDetails.Id;
+                                adminnotifications.IsRead = false;
+                                notificationList.Add(adminnotifications);
+                            }
+
+                            await SaveNotificationData(notificationList);
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -3873,11 +3983,11 @@ namespace Aephy.API.Controllers
                         var industryName = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
 
                         List<SolutionTeamViewModel> solutionTeamList = new List<SolutionTeamViewModel>();
+                        List<Notifications> notificationsList = new List<Notifications>();
                         if (userType == "Freelancer")
                         {
                             if (solutionTeamData.Count > 0)
                             {
-                                List<Notifications> notificationsList = new List<Notifications>();
                                 foreach (var data in solutionTeamData)
                                 {
                                     Notifications notifications = new Notifications();
@@ -3894,16 +4004,10 @@ namespace Aephy.API.Controllers
                                     solutionteam.SolutionName = solutionName;
                                     solutionTeamList.Add(solutionteam);
                                 }
-
-                                if (notificationsList.Count > 0)
-                                {
-                                    await SaveNotificationData(notificationsList);
-                                }
                             }
                         }
                         if (userType == "Client")
                         {
-                            List<Notifications> notificationsList = new List<Notifications>();
                             Notifications notifications = new Notifications();
                             notifications.NotificationTitle = "Project has successfully stopped";
                             notifications.NotificationText = "Your project '[" + solutionName + " / " + industryName + "]' has been successfully stopped.";
@@ -3911,11 +4015,23 @@ namespace Aephy.API.Controllers
                             notifications.IsRead = false;
                             notifications.ToUserId = model.ClientId;
                             notificationsList.Add(notifications);
+                        }
 
-                            if (notificationsList.Count > 0)
-                            {
-                                await SaveNotificationData(notificationsList);
-                            }
+                        var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                        if(adminDetails != null)
+                        {
+                            Notifications adminNoTeamnotifications = new Notifications();
+                            adminNoTeamnotifications.ToUserId = adminDetails.Id;
+                            adminNoTeamnotifications.NotificationText = "Client stopped the " + solutionName;
+                            adminNoTeamnotifications.NotificationTitle = "Project has stopped:";
+                            adminNoTeamnotifications.NotificationTime = DateTime.Now;
+                            adminNoTeamnotifications.IsRead = false;
+                            notificationsList.Add(adminNoTeamnotifications);
+                        }
+
+                        if (notificationsList.Count > 0)
+                        {
+                            await SaveNotificationData(notificationsList);
                         }
 
 
@@ -4021,18 +4137,19 @@ namespace Aephy.API.Controllers
                     var MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
                     if (MilestoneTotalDaysByProjectType.Count > 0)
                     {
-                        SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
-                       .GroupBy(l => l.ProjectType)
-                       .Select(cl => new SolutionMilestone
-                       {
-                           ProjectType = cl.First().ProjectType,
-                           Days = cl.Sum(c => c.Days),
-                       }).FirstOrDefault();
+                        // SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
+                        //.GroupBy(l => l.ProjectType)
+                        //.Select(cl => new SolutionMilestone
+                        //{
+                        //    ProjectType = cl.First().ProjectType,
+                        //    Days = cl.Sum(c => c.Days),
+                        //}).FirstOrDefault();
+                        var mileStoneToTalDays = MilestoneTotalDaysByProjectType.Sum(x => x.Days);
 
-                        if (mileStoneToTalDays.Days > 0)
+                        if (mileStoneToTalDays > 0)
                         {
                             // var finalPrice = await CountFinalProjectPricing(model);
-                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays.Days) * MileStoneData.Days) * 100;
+                            var calculateProjectPrice = ((ProjectPrice / mileStoneToTalDays) * MileStoneData.Days) * 100;
                             model.ProjectPrice = calculateProjectPrice.ToString();
                         }
                     }
@@ -4258,7 +4375,7 @@ namespace Aephy.API.Controllers
                     }
 
 
-
+                    List<Notifications> notificationsList = new List<Notifications>();
                     if (freelancerList.Count > 0)
                     {
                         var clientId = _db.SolutionFund.Where(x => x.Id == model.Id).FirstOrDefault().ClientId;
@@ -4303,16 +4420,6 @@ namespace Aephy.API.Controllers
                                 Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
                             }
 
-
-                            //if (data.FreelancerLevel == "Project Manager")
-                            //{
-                            //    projectManager = true;
-                            //}
-                            //else
-                            //{
-                            //    projectManager = false;
-
-                            //}
                             solutionTeam.Add(new SolutionTeam()
                             {
                                 FreelancerId = data.UserId,
@@ -4322,30 +4429,35 @@ namespace Aephy.API.Controllers
                                 Amount = contractAmount,
                                 PlatformFees = Platformfees
                             });
+
+                            var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
+                            var solutionfunddata = _db.SolutionFund.Where(x => x.Id == model.Id).FirstOrDefault();
+                            var solutionName = "";
+                            if (solutionfunddata != null)
+                            {
+                                solutionName = _db.Solutions.Where(x => x.Id == solutionfunddata.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            }
+
+                            if (freelancerName != null)
+                            {
+                                var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                                
+                                Notifications notifications = new Notifications();
+                                notifications.NotificationTitle = "Freelancer Selection:";
+                                notifications.NotificationText = "\"" + freelancerName.FirstName + " selected for '"+ solutionName + "'.\"";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.IsRead = false;
+                                notifications.ToUserId = adminDetails.Id;
+                                notificationsList.Add(notifications);
+                            }
                         }
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
-                        //var soluionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToList();
-                        //if (soluionTeamData.Count > 0)
-                        //{
-                        //    var projectTypeFee = 0;
-                        //    if (projectType == AppConst.ProjectType.SMALL_PROJECT)
-                        //    {
-                        //        projectTypeFee = AppConst.Commission.PROJECT_MANAGER_SMALL;
-                        //    }
-                        //    if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
-                        //    {
-                        //        projectTypeFee = AppConst.Commission.PROJECT_MANAGER_MEDIUM;
-                        //    }
-                        //    if (projectType == AppConst.ProjectType.LARGE_PROJECT)
-                        //    {
-                        //        projectTypeFee = AppConst.Commission.PROJECT_MANAGER_LARGE;
-                        //    }
-                        //    var projectmanagerPlatformFees = (soluionTeamData.Sum(x => x.Amount)) * projectTypeFee / 100;
-                        //    var projectManagerData = soluionTeamData.Where(x => x.IsProjectManager).FirstOrDefault();
-                        //    projectManagerData.ProjectManagerPlatformFees = projectmanagerPlatformFees;
-                        //    _db.SaveChanges();
-                        //}
+
+                        await SaveNotificationData(notificationsList);
+
+
+
                     }
 
                     return "success";
@@ -4359,8 +4471,6 @@ namespace Aephy.API.Controllers
             {
                 return ex.InnerException + ex.Message;
             }
-
-            return "Something went wrong";
         }
 
         [HttpGet]
@@ -5319,6 +5429,7 @@ namespace Aephy.API.Controllers
 
             }
         }
+
 
         private async Task UpdateInvoiceNumberAsync(int id, string invoicePrefix)
         {

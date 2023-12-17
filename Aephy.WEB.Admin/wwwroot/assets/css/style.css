@@ -1600,3 +1600,9 @@ li {
     padding-bottom: 1%;
 }
 
+#notification-section {
+    /* max-height: 23.5em; */
+    max-height: 33.5em;
+    overflow-y: auto;
+}
+

@@ -837,17 +837,31 @@ namespace Aephy.WEB.Controllers
 
             if (jsonObj["Message"] == "Dispute Raised")
             {
+                // to client
                 string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/DisputeTemplate.html");
                 var result = jsonObj.Result;
-                var receiverEmailId = result.AdminEmailId.Value;
+                var receiverEmailId = result.ClientEmailId.Value;
+                
+                
+                body = body.Replace("{{Project_Name}}", result.SolutionName.Value);
+                body = body.Replace("{{Industry_Name}}", result.IndustryName.Value);
+
+                bool send = SendEmailHelper.SendEmail(receiverEmailId, "Dispute successfully raised ", body);
+
+                // to admin
+                string adminbody = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/DisputeRaiseAdminTemplate.html");
+                var adminEmailId = result.AdminEmailId.Value;
                 var contractId = result.ContractId.Value.ToString();
-                body = body.Replace("{{ contract_Id }}", contractId);
-                body = body.Replace("{{ client_name }}", result.ClientName.Value);
-                body = body.Replace("{{ solution_name }}", result.SolutionName.Value);
-                body = body.Replace("{{ Industry_name }}", result.IndustryName.Value);
+                var projectsize = result.ProjectSize.Value.ToString();
+                adminbody = adminbody.Replace("{{ contract_Id }}", contractId);
+                adminbody = adminbody.Replace("{{ client_name }}", result.ClientName.Value);
+                adminbody = adminbody.Replace("{{ solution_name }}", result.SolutionName.Value);
+                adminbody = adminbody.Replace("{{ Industry_name }}", result.IndustryName.Value);
+                adminbody = adminbody.Replace("{{ Duartion }}", result.ProjectDuartion.Value);
+                adminbody = adminbody.Replace("{{ Size }}", projectsize);
 
-                bool send = SendEmailHelper.SendEmail(receiverEmailId, "Dispute Raised", body);
 
+                bool sendmail = SendEmailHelper.SendEmail(adminEmailId, "Dispute raised ", adminbody);
                 if (!send)
                 {
                     return "Dispute email not send.";

@@ -101,6 +101,21 @@ namespace Aephy.WEB.Admin.Controllers
             return Json(new { message = messageSatus });
         }
 
-      
+        //GetAllUnReadNotification
+        [HttpGet]
+        public async Task<string> GetAllUnReadNotification()
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            SolutionFundModel model = new SolutionFundModel();
+            model.UserId = userId;
+            var notificationdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetAllUnReadNotification", HttpMethod.Post, model);
+            return notificationdata;
+
+        }
+
     }
 }

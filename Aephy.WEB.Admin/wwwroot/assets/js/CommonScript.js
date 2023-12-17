@@ -45,6 +45,7 @@ $(function () {
     $(".chosen-select").chosen();
     BindServices()
     BindIndustries()
+    GetNotificationDetails();
     $(".cls-subtitle").css("display", "none")
 
     //OpenGigRoles
@@ -209,6 +210,59 @@ function BindIndustries() {
         },
         error: function (result) {
             showToaster("error", "Error !", result);
+        }
+    });
+}
+
+function GetNotificationDetails() {
+    $.ajax({
+        type: "Get",
+        url: "/Home/GetAllUnReadNotification",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            if (result.Result != 0) {
+                var data = result.Result;
+                if (data != "") {
+                    var totalLength = data.length;
+                    var notificationSection = ""
+                    $.each(data, function (datas, values) {
+                        var timeAgo = moment(values.NotificationTime).fromNow();
+
+                        notificationSection += '<li class="notification-item" onclick=SetNotificationRead(' + values.Id + ')>' +
+                            '<i class="bi bi-info-circle text-primary" > </i>' +
+                            '<div>' +
+                            '<h4>' + values.NotificationTitle + ' </h4>' +
+                            '<p> ' + values.NotificationText + ' </p>' +
+                            '<p> ' + timeAgo + ' </p>' +
+                            '</div>' +
+                            '</li>' +
+                            '<li>' +
+                            '<hr class="dropdown-divider" >' +
+                            '</li>';
+
+                    })
+                    notificationSection += '<li class="dropdown-footer">' +
+                        '<a onclick=GetAllNotification()> Show all notifications </a>' +
+                        '</li>';
+                    $(notificationSection).appendTo('#notification-section')
+                    $("#total-notification").html(totalLength);
+                    var msg = " You have " + totalLength + " new notifications"
+                    $("#totalnotification-msg").html(msg);
+                    //var msg = $("#totalnotification-msg").text().trim();
+                    //msg.replace("{{ total_notification }}",totalLength)
+
+                }
+
+            } else {
+                var msg = " You have 0 new notifications"
+                $("#totalnotification-msg").html(msg);
+                //var msg = $("#totalnotification-msg").text().trim();
+                //msg.replace("{{ total_notification }}", 0)
+            }
+        },
+        error: function (result) {
+            alert("failure");
         }
     });
 }

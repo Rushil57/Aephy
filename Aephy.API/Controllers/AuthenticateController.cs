@@ -22,13 +22,12 @@ namespace Aephy.API.Controllers
         private Microsoft.AspNetCore.Hosting.IWebHostEnvironment _hostingEnv;
         CommonMethod common;
         private readonly AephyAppDbContext _db;
-        private readonly AdminController _admincontroller;
 
         public AuthenticateController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
-            Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext,AdminController adminController)
+            Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -36,7 +35,6 @@ namespace Aephy.API.Controllers
             _hostingEnv = env;
             _db = dbContext;
             common = new CommonMethod(dbContext);
-            _admincontroller = adminController;
         }
 
 
@@ -326,9 +324,21 @@ namespace Aephy.API.Controllers
                         Welcomenotifications.IsRead = false;
                         notificationsList.Add(Welcomenotifications);
 
-                        var checkFreelancer = _db.FreelancerDetails.Where(x => x.UserId == dbData.Id).FirstOrDefault();
-                        if(checkFreelancer != null)
+                        var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                        if (dbData.UserType == "Freelancer")
                         {
+                            if (adminDetails != null)
+                            {
+                                Notifications adminnotifications = new Notifications();
+                                adminnotifications.FromUserId = "";
+                                adminnotifications.ToUserId = adminDetails.Id;
+                                adminnotifications.NotificationText = "New Freelancer: " + dbData.FirstName;
+                                adminnotifications.NotificationTime = DateTime.Now;
+                                adminnotifications.NotificationTitle = "Freelancer SignUp";
+                                adminnotifications.IsRead = false;
+                                notificationsList.Add(adminnotifications);
+                            }
+
                             var featurenotificationMessage = "Apply for an open gig role to be considered for future projects! Remember, after your successful approval, you'll just need to wait for the right project to come in."; ;
                             var featurenotificationTitle = "Apply & Unlock Future Projects!";
                             Notifications featurenotifications = new Notifications();
@@ -340,11 +350,26 @@ namespace Aephy.API.Controllers
                             featurenotifications.IsRead = false;
                             notificationsList.Add(featurenotifications);
                         }
+                        else if(dbData.UserType == "Client")
+                        {
+                            if (adminDetails != null)
+                            {
+                                Notifications adminnotifications = new Notifications();
+                                adminnotifications.ToUserId = adminDetails.Id;
+                                adminnotifications.NotificationText = "New Client: " + dbData.FirstName;
+                                adminnotifications.NotificationTime = DateTime.Now;
+                                adminnotifications.NotificationTitle = "Client SignUp";
+                                adminnotifications.IsRead = false;
+                                notificationsList.Add(adminnotifications);
+                            }
+                        }
                         
+                       
+                       
 
                         if (notificationsList.Count > 0)
                         {
-                            await _admincontroller.SaveNotificationData(notificationsList);
+                            await SaveNotificationData(notificationsList);
                         }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated",Result = new { EmailId = dbData.UserName } });
                     }
@@ -362,6 +387,57 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
+        {
+            try
+            {
+                if (model.Count > 0)
+                {
+                    foreach (var data in model)
+                    {
+                        var dbModel = new Notifications
+                        {
+                            NotificationText = data.NotificationText,
+                            FromUserId = data.FromUserId,
+                            ToUserId = data.ToUserId,
+                            NotificationTime = data.NotificationTime,
+                            IsRead = data.IsRead,
+                            NotificationTitle = data.NotificationTitle
+                        };
+
+                        await _db.Notifications.AddAsync(dbModel);
+                        _db.SaveChanges();
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Notification Saved Succesfully!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
         }
     }
 }

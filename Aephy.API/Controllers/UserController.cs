@@ -271,6 +271,24 @@ namespace Aephy.API.Controllers
                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
                         if (freelancerDetails != null)
                         {
+                            if(freelancerDetails.HourlyRate != model.freelancerDetail.HourlyRate)
+                            {
+                                var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                                if(adminDetails != null)
+                                {
+                                    List<Notifications> notificationsList = new List<Notifications>();
+                                    Notifications adminNoTeamnotifications = new Notifications();
+                                    adminNoTeamnotifications.ToUserId = adminDetails.Id;
+                                    adminNoTeamnotifications.NotificationText = model.FirstName +"'s hourly rate now " + model.freelancerDetail.HourlyRate;
+                                    adminNoTeamnotifications.NotificationTitle = "Rate Update:";
+                                    adminNoTeamnotifications.NotificationTime = DateTime.Now;
+                                    adminNoTeamnotifications.IsRead = false;
+                                    notificationsList.Add(adminNoTeamnotifications);
+
+                                    await SaveNotificationData(notificationsList);
+                                }
+                               
+                            }
                             freelancerDetails.HourlyRate = model.freelancerDetail.HourlyRate;
                             freelancerDetails.Address = model.freelancerDetail.FreelancerAddress;
                             freelancerDetails.Education = model.freelancerDetail.Education;
@@ -702,6 +720,57 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
+        {
+            try
+            {
+                if (model.Count > 0)
+                {
+                    foreach (var data in model)
+                    {
+                        var dbModel = new Notifications
+                        {
+                            NotificationText = data.NotificationText,
+                            FromUserId = data.FromUserId,
+                            ToUserId = data.ToUserId,
+                            NotificationTime = data.NotificationTime,
+                            IsRead = data.IsRead,
+                            NotificationTitle = data.NotificationTitle
+                        };
+
+                        await _db.Notifications.AddAsync(dbModel);
+                        _db.SaveChanges();
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Notification Saved Succesfully!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
         }
     }
 }

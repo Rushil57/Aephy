@@ -476,6 +476,12 @@ namespace Aephy.API.Models
             public string? RevoultOrderId { get; set; }
 
             public string? PreferredCurrency { get; set; }
+
+            public string? ClientEmailId { get; set; }
+
+            public int ProjectSize { get; set; }
+
+            public string? ProjectDuartion { get; set; }
         }
         public class CustomSolutionsModel
         {

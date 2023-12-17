@@ -266,3 +266,85 @@ function GetNotificationDetails() {
         }
     });
 }
+
+function SetNotificationRead(id) {
+    
+    var data = {
+        Id: id
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/SetNotificationIsRead",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (result) {
+            var totalnotification = $("#total-notification").text();
+            if (totalnotification != 0) {
+                var remaining = totalnotification - 1;
+                $("#total-notification").html(remaining);
+            }
+
+
+        },
+        error: function (result) {
+            alert("failure");
+        }
+    });
+}
+
+function GetAllNotification() {
+    $("#NotificationModal").modal("show");
+    GetAllNotificationDetails()
+}
+
+function GetAllNotificationDetails() {
+    $.ajax({
+        type: "Get",
+        url: "/Home/GetAllNotification",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            if (result.Result != 0) {
+                var data = result.Result;
+                $('#NotificationTable').DataTable({
+                    destroy: true,
+                    data: result.Result,
+                    "columns": [
+                        { "data": "NotificationTitle" },
+                        {
+                            "data": "NotificationText",
+                            "render": function (data, type, row) {
+                                if (data != null) {
+                                    var description = data.length > 35 ? data.substring(0, 35) + "..." : data;
+                                    return "<span title='" + data + "'>" + description + "</span>";
+                                }
+                                else {
+                                    return "<span></span>";
+                                }
+                            }
+                        },
+                        {
+                            "data": "NotificationTime",
+                            "render": function (data, type, row) {
+                                var date = moment(data).format('MM/DD/YYYY h:mm:ss');
+                                return "<span>" + date + "</span>";
+
+                            }
+                        }
+
+                    ]
+                });
+
+            }
+        },
+        error: function (result) {
+            alert(result.responseText);
+        }
+    });
+}
+
+function CloseNotificationModal() {
+    $("#NotificationModal").modal("hide");
+}

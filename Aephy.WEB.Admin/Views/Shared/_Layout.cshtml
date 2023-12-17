@@ -483,6 +483,39 @@
         </div>
     </div>
 
+    <div class="modal" id="NotificationModal" tabindex="-1" aria-labelledby="NotificationModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title main-title">Notification Details</h4>
+                    <a class="close" onclick="CloseNotificationModal();"><i class="bi bi-x-circle"></i></a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table" id="NotificationTable">
+                                        <thead style="border: 1px solid #e8e8e8;">
+                                            <tr>
+                                                <th>Notification Sent From</th>
+                                                <th>Notification Message</th>
+                                                <th>Notification Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Notificationbody">
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <div id="preloader" style="display:none;"></div>

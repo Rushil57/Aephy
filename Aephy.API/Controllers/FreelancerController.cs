@@ -27,12 +27,11 @@ namespace Aephy.API.Controllers
     public class FreelancerController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        private readonly ClientController _clientcontroller;
         
-        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller)
+        
+        public FreelancerController(AephyAppDbContext dbContext)
         {
             _db = dbContext;
-            _clientcontroller = clientcontroller;
         }
 
         [HttpPost]
@@ -539,7 +538,7 @@ namespace Aephy.API.Controllers
                     var solutionFundData = _db.SolutionFund.Where(x => x.CustomProjectDetialsId == model.CustomProjectDetailId).FirstOrDefault();
                     if (solutionFundData != null)
                     {
-                        customPrice = await _clientcontroller.CountFinalProjectPricing(solutionFundData);
+                        customPrice = await CountFinalProjectPricing(solutionFundData);
                     }
                 }
 
@@ -1024,6 +1023,7 @@ namespace Aephy.API.Controllers
                             dataStore.NotificationText = data.NotificationText;
                             dataStore.NotificationTime = data.NotificationTime;
                             dataStore.Id = data.Id;
+                            dataStore.NotificationTitle = data.NotificationTitle;
                             notifications.Add(dataStore);
                         }
                     }
@@ -1474,7 +1474,7 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.ClientFullName = fullname;
                                 InvoiceDetails.TaxType = clientDetails.TaxType;
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
-                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
                                 InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
@@ -1559,7 +1559,7 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.ClientFullName = fullname;
                                 InvoiceDetails.TaxType = clientDetails.TaxType;
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
-                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
                                 InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
@@ -2309,7 +2309,7 @@ namespace Aephy.API.Controllers
                             }
                         }
 
-                        var CurrencySign = await _clientcontroller.ConvertToCurrencySign(model.ClientPreferredCurrency);
+                        var CurrencySign = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2433,7 +2433,7 @@ namespace Aephy.API.Controllers
                                     }
                                 }
 
-                                var CurrencySign = await _clientcontroller.ConvertToCurrencySign(model.ClientPreferredCurrency);
+                                var CurrencySign = await ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                 {
@@ -3003,6 +3003,127 @@ namespace Aephy.API.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        [Route("CountFinalProjectPricing")]
+        public async Task<decimal> CountFinalProjectPricing([FromBody] SolutionFund model)
+        {
+
+            try
+            {
+                var solutionTeamdata = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToListAsync();
+                var ClientPrefferendCurrency = await _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.PreferredCurrency).FirstOrDefaultAsync();
+
+                decimal finalProjectpricing = 0;
+                var HoursPerDay = 8;
+
+                if (solutionTeamdata.Count > 0)
+                {
+                    foreach (var data in solutionTeamdata)
+                    {
+                        var freelancerDetails = _db.FreelancerDetails.Where(q => q.UserId == data.FreelancerId).FirstOrDefault();
+                        if (freelancerDetails != null)
+                        {
+                            var freelancerPrefferedCurrency = _db.Users.Where(x => x.Id == freelancerDetails.UserId).Select(x => x.PreferredCurrency).FirstOrDefault();
+                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPrefferedCurrency && x.ToCurrency == ClientPrefferendCurrency).FirstOrDefault();
+                            var HourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                            decimal ExchangeHourlyRate = 0;
+                            if (exchangeRate != null)
+                            {
+                                ExchangeHourlyRate = (decimal)(HourlyRate * exchangeRate.Rate);
+                            }
+                            else
+                            {
+                                ExchangeHourlyRate = HourlyRate;
+                            }
+                            var solutionMilestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                            if (solutionMilestoneData.Count > 0)
+                            {
+                                var totalMilestoneDays = solutionMilestoneData.Sum(x => x.Days);
+                                finalProjectpricing += HoursPerDay * ExchangeHourlyRate * totalMilestoneDays;
+                            }
+                        }
+                    }
+                }
+
+                decimal clientFees = 0;
+                //decimal projectManagerFees = 0;
+                //var projectFreelancers = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToListAsync();
+                //var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).FirstOrDefault();
+                if (model.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
+                {
+                    clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
+                    //projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_SMALL)) / 100;
+                }
+                if (model.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                {
+                    clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM)) / 100;
+                    //projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_MEDIUM)) / 100;
+                }
+                if (model.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                {
+                    clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_LARGE)) / 100;
+                    //projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_LARGE)) / 100;
+                }
+                if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                {
+                    if (solutionTeamdata.Count <= 3)
+                    {
+                        clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM_LESS_THAN_THREE_GIGS)) / 100;
+                    }
+                    else
+                    {
+                        clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_CUSTOM)) / 100;
+                    }
+                    //projectManagerFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PROJECT_MANAGER_LARGE)) / 100;
+                }
+                // var finalPrice = Convert.ToDecimal(model.ProjectPrice) + projectManagerPlatformFees + clientFees;
+                var finalPrice = finalProjectpricing + clientFees;// + projectManagerFees;
+                return finalPrice;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return 0;
+        }
+
+        [HttpPost]
+        [Route("ConvertToCurrencySign")]
+        public async Task<string> ConvertToCurrencySign(string Currency)
+        {
+
+            try
+            {
+                if (Currency != null)
+                {
+                    if (Currency == "USD")
+                    {
+                        Currency = "$";
+                    }
+                    if (Currency == "EUR")
+                    {
+                        Currency = "€";
+                    }
+                    if (Currency == "GBP")
+                    {
+                        Currency = "£";
+                    }
+                }
+                else
+                {
+                    Currency = "€";
+                }
+
+                return Currency;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+
+            }
         }
 
         //=== Check for 24 hourse or not ===//

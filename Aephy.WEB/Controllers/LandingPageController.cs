@@ -9,6 +9,8 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Aephy.Helper.Helpers;
+using System.Net.Mail;
+using Org.BouncyCastle.Math.EC.Endo;
 
 namespace Aephy.WEB.Controllers
 {
@@ -727,6 +729,41 @@ namespace Aephy.WEB.Controllers
             }
             model.UserId = userId;
             var userData = await _apiRepository.MakeApiCallAsync("api/Client/GetUserSuccessCheckoutDetails", HttpMethod.Post, model);
+            dynamic data = JsonConvert.DeserializeObject(userData);
+
+            if (data.Result != null)
+            {
+                try
+                {
+                    foreach (var service in data.Result)
+                    {
+
+                        #region Send Project Initiated Email
+
+                        var emailAddress = service.FreelancerEmailId;
+                        string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/FreelancerFundTemplate.html");
+                        body = body.Replace("{{Solution_Name}}", service.SolutionName.ToString());
+                        body = body.Replace("{{Milestone_Name}}", service.IndustryName.ToString());
+                        body = body.Replace("{{Industry_Name}}", service.IndustryName.ToString());
+                        body = body.Replace("{{Project_Duration}}", service.ProjectDuration.ToString());
+                        body = body.Replace("{{Project_Size}}", service.ProjectSize.ToString());
+                        body = body.Replace("{{Client_Name}}", service.ClientName.ToString());
+
+                        bool send = SendEmailHelper.SendEmail(emailAddress.ToString(), "Project Confirmed", body);
+                        #endregion
+
+
+
+                    }
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
+
+            }
+
             return userData;
         }
 
@@ -792,7 +829,7 @@ namespace Aephy.WEB.Controllers
                 #endregion
             }
 
-            if(data.Message == "Project Initiated Successfully ! without team")
+            if (data.Message == "Project Initiated Successfully ! without team")
             {
                 #region Send Project Initiated without team Email
 
@@ -841,8 +878,8 @@ namespace Aephy.WEB.Controllers
                 string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/DisputeTemplate.html");
                 var result = jsonObj.Result;
                 var receiverEmailId = result.ClientEmailId.Value;
-                
-                
+
+
                 body = body.Replace("{{Project_Name}}", result.SolutionName.Value);
                 body = body.Replace("{{Industry_Name}}", result.IndustryName.Value);
 

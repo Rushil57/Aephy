@@ -117,5 +117,36 @@ namespace Aephy.WEB.Admin.Controllers
 
         }
 
+        //SetNotificationIsRead
+        [HttpPost]
+        public async Task<string> SetNotificationIsRead([FromBody] SolutionFundModel model)
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            model.UserId = userId;
+            var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/SetNotificationIsRead", HttpMethod.Post, model);
+            return data;
+
+        }
+
+        //GetAllNotification
+        [HttpGet]
+        public async Task<string> GetAllNotification()
+        {
+            var userId = HttpContext.Session.GetString("LoggedAdmin");
+            if (userId == null)
+            {
+                return "No Data Found";
+            }
+            SolutionFundModel model = new SolutionFundModel();
+            model.UserId = userId;
+            var notificationdata = await _apiRepository.MakeApiCallAsync("api/Freelancer/GetAllNotification", HttpMethod.Post, model);
+            return notificationdata;
+
+        }
+
     }
 }

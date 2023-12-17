@@ -34,13 +34,12 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRevoultService _revoultService;
-        private readonly ClientController _clientcontroller;
-        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService, ClientController clientcontroller)
+        
+        public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService)
         {
             _db = dbContext;
             _userManager = userManager;
             _revoultService = revoultService;
-            _clientcontroller = clientcontroller;
         }
         //[HttpPost]
         //[Route("OrderWebhookTest")]
@@ -3001,7 +3000,7 @@ namespace Aephy.API.Controllers
                             {
                                 disputeViewModel.IsDisputeResolved = false;
                             }
-                            var CurrencySign = await _clientcontroller.ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                            var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
                             disputeViewModel.ContractId = data.ContractId;
                             disputeViewModel.ProjectPrice = CurrencySign + solutionFundData.ProjectPrice;
                             disputeList.Add(disputeViewModel);
@@ -3385,7 +3384,7 @@ namespace Aephy.API.Controllers
                             disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                             var ClientDetails = _db.Users.Where(x => x.Id == data.ClientUserId).FirstOrDefault();
                             disputeViewModel.ClientName = ClientDetails.FirstName + " " + ClientDetails.LastName;
-                            var CurrencySign = await _clientcontroller.ConvertToCurrencySign(ClientDetails.PreferredCurrency);
+                            var CurrencySign = await ConvertToCurrencySign(ClientDetails.PreferredCurrency);
                             disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IsClientRefund = data.IsClientRefund;
                             disputeViewModel.IsFreelancerRefund = _db.ContractUser.Where(x => x.ContractId == data.Id).Select(x => x.IsRefund).FirstOrDefault();
@@ -4093,6 +4092,41 @@ namespace Aephy.API.Controllers
             });
         }
 
+        [HttpPost]
+        [Route("ConvertToCurrencySign")]
+        public async Task<string> ConvertToCurrencySign(string Currency)
+        {
+
+            try
+            {
+                if (Currency != null)
+                {
+                    if (Currency == "USD")
+                    {
+                        Currency = "$";
+                    }
+                    if (Currency == "EUR")
+                    {
+                        Currency = "€";
+                    }
+                    if (Currency == "GBP")
+                    {
+                        Currency = "£";
+                    }
+                }
+                else
+                {
+                    Currency = "€";
+                }
+
+                return Currency;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+
+            }
+        }
     }
 }
 

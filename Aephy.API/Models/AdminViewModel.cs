@@ -893,6 +893,25 @@ namespace Aephy.API.Models
 
         }
 
+        public class ProjectDetailsModel
+        {
+            public int Id { get; set; }
+
+            public string? SolutionName { get; set; }
+
+            public string? MilestoneName { get; set; }
+
+            public string? ProjectDuration { get; set; }
+
+            public string? ProjectSize { get; set; }
+
+            public string? IndustryName { get; set; }
+
+            public string? FreelancerEmailId { get; set; }
+
+            public string? ClientName { get; set; }
+        }
+
 
     }
 }

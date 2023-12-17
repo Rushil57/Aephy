@@ -545,6 +545,9 @@ namespace Aephy.API.Models
             public string? ClientFees { get; set; }
 
             public string? Rate { get; set; }
+            public string? SolutionName { get; set; }
+
+            public string? FreelancerEmailId { get; set; }
         }
 
         public class UserDetailsModel

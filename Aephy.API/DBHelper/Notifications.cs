@@ -9,6 +9,7 @@ namespace Aephy.API.DBHelper
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string? NotificationTitle { get; set; }
         public string? NotificationText { get; set; }
 
         public string? FromUserId { get; set;}

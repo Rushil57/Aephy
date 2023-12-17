@@ -251,20 +251,6 @@ namespace Aephy.WEB.Admin.Controllers
             var LoggedInUser = HttpContext.Session.GetString("LoggedAdmin");
             solutionsModel.CurrentLoggedInId = LoggedInUser;
             var applicationdata = await _apiRepository.MakeApiCallAsync("api/Admin/ApproveOrRejectFreelancer", HttpMethod.Post, solutionsModel);
-
-            #region Send Application Status Email
-            dynamic jsonObj = JsonConvert.DeserializeObject(applicationdata);
-
-            string userName = Convert.ToString(jsonObj["Result"]["FirstName"]) + " " + Convert.ToString(jsonObj["Result"]["LastName"]);
-            string emailAddress = Convert.ToString(jsonObj["Result"]["Email"]);
-
-            string templateName = solutionsModel.ApproveOrReject == "Approve" ? "ApproveApplicationTemplate.html" : "RejectApplicationTemplate.html";
-            string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/" + templateName + "");
-            body = body.Replace("{{ user_name }}", userName);
-
-            bool send = SendEmailHelper.SendEmail(emailAddress, "Application Status", body);
-            #endregion
-
             return applicationdata;
         }
 

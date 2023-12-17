@@ -35,6 +35,7 @@ namespace Aephy.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRevoultService _revoultService;
+        
         public ClientController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
         {
             _db = dbContext;
@@ -477,8 +478,11 @@ namespace Aephy.API.Controllers
                             solutionTop.Description = topdata.Description;
                             solutionTop.Title = topdata.TopProfessionalTitle;
                             var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                            if (fullname != null)
+                            {
+                                solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
+                            }
 
-                            solutionTop.FreelancerId = fullname.FirstName + " " + fullname.LastName;
                             solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
                             var freelancerReviewByclient = _db.FreelancerReview.Where(x => x.FreelancerId == topdata.FreelancerId).ToList();
                             if (freelancerReviewByclient.Count > 0)
@@ -1490,8 +1494,11 @@ namespace Aephy.API.Controllers
                         solutionTop.Description = topdata.Description;
                         solutionTop.Title = topdata.TopProfessionalTitle;
                         var fullname = _db.Users.Where(x => x.Id == topdata.FreelancerId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                        if (fullname != null)
+                        {
+                            solutionTop.FreelancerName = fullname.FirstName + " " + fullname.LastName;
+                        }
 
-                        solutionTop.FreelancerName = fullname.FirstName + " " + fullname.LastName;
                         solutionTop.FreelancerId = topdata.FreelancerId;
                         solutionTop.ImagePath = _db.FreelancerDetails.Where(x => x.UserId == topdata.FreelancerId).Select(x => x.ImagePath).FirstOrDefault();
 
@@ -2631,8 +2638,6 @@ namespace Aephy.API.Controllers
                             _db.SaveChanges();
 
 
-                            await SaveSolutionTeamData(solutionfund, 0, 0, 0);
-
                             var clientDetails = _db.Users.Where(x => x.Id == model.ClientId).FirstOrDefault();
                             if (clientDetails != null)
                             {
@@ -2651,10 +2656,54 @@ namespace Aephy.API.Controllers
                                 }
                             }
 
+
+                            //NOTIFICATION PART
+                            var teambuild = await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+                            List<Notifications> notificationsList = new List<Notifications>();
+                            var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
+                            var industryName = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                            var clientEmailId = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserName).FirstOrDefault();
+
+                            var resultMsg = "";
+                            if (teambuild == "success")
+                            {
+                                Notifications notifications = new Notifications();
+                                notifications.ToUserId = model.ClientId;
+                                notifications.NotificationText = "Your project in the " + industryName + " is now live on Ephylink. We're matching top freelancers to your project.";
+                                notifications.NotificationTitle = solutionName + " Initiated!";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.IsRead = false;
+                                notificationsList.Add(notifications);
+
+                                resultMsg = "Project Initiated Successfully ! with team";
+                            }
+                            else
+                            {
+                                Notifications notifications = new Notifications();
+                                notifications.ToUserId = model.ClientId;
+                                notifications.NotificationText = "Regrettably, our search for freelancers suitable for your project '[" + solutionName + " / " + industryName + "]' has concluded without success. Please feel free to try again later.";
+                                notifications.NotificationTitle = "No Match found";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.IsRead = false;
+                                notificationsList.Add(notifications);
+
+                                resultMsg = "Project Initiated Successfully ! without team";
+                            }
+
+
+                            //Notifications
+                            await SaveNotificationData(notificationsList);
+
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
-                                Message = "Project Initiated Successfully !",
+                                Message = resultMsg,
+                                Result = new
+                                {
+                                    ClientEmailId = clientEmailId,
+                                    SolutionName = solutionName,
+                                    IndustryName = industryName
+                                }
                             });
                         }
 
@@ -3114,7 +3163,7 @@ namespace Aephy.API.Controllers
                                                     {
                                                         try
                                                         {
-                                                        paymentFee = (decimal)item["fee"];
+                                                            paymentFee = (decimal)item["fee"];
                                                         }
                                                         catch
                                                         {
@@ -3818,10 +3867,64 @@ namespace Aephy.API.Controllers
                             _db.SaveChanges();
                         }
 
+                        var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfundData.Id).ToList();
+                        var solutionName = _db.Solutions.Where(x => x.Id == solutionfundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        var userType = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserType).FirstOrDefault();
+                        var industryName = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+
+                        List<SolutionTeamViewModel> solutionTeamList = new List<SolutionTeamViewModel>();
+                        if (userType == "Freelancer")
+                        {
+                            if (solutionTeamData.Count > 0)
+                            {
+                                List<Notifications> notificationsList = new List<Notifications>();
+                                foreach (var data in solutionTeamData)
+                                {
+                                    Notifications notifications = new Notifications();
+                                    notifications.NotificationText = "The " + solutionName + " project has been stopped. Thank you for your understanding. Stay tuned for upcoming project opportunities!";
+                                    notifications.NotificationTitle = "Project Stopped";
+                                    notifications.NotificationTime = DateTime.Now;
+                                    notifications.ToUserId = data.FreelancerId;
+                                    notifications.IsRead = false;
+                                    notificationsList.Add(notifications);
+
+                                    var freelancerEmail = _db.Users.Where(x => x.Id == data.FreelancerId).Select(x => x.UserName).FirstOrDefault();
+                                    SolutionTeamViewModel solutionteam = new SolutionTeamViewModel();
+                                    solutionteam.FreelancerEmailId = freelancerEmail;
+                                    solutionteam.SolutionName = solutionName;
+                                    solutionTeamList.Add(solutionteam);
+                                }
+
+                                if (notificationsList.Count > 0)
+                                {
+                                    await SaveNotificationData(notificationsList);
+                                }
+                            }
+                        }
+                        if (userType == "Client")
+                        {
+                            List<Notifications> notificationsList = new List<Notifications>();
+                            Notifications notifications = new Notifications();
+                            notifications.NotificationTitle = "Project has successfully stopped";
+                            notifications.NotificationText = "Your project '[" + solutionName + " / " + industryName + "]' has been successfully stopped.";
+                            notifications.NotificationTime = DateTime.Now;
+                            notifications.IsRead = false;
+                            notifications.ToUserId = model.ClientId;
+                            notificationsList.Add(notifications);
+
+                            if (notificationsList.Count > 0)
+                            {
+                                await SaveNotificationData(notificationsList);
+                            }
+                        }
+
+
+
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
                             StatusCode = StatusCodes.Status200OK,
-                            Message = "Project Stopped"
+                            Message = "Project Stopped",
+                            Result = solutionTeamList
                         });
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -4244,13 +4347,17 @@ namespace Aephy.API.Controllers
                         //    _db.SaveChanges();
                         //}
                     }
+
+                    return "success";
                 }
-                return "success";
+
+                return "No User Found";
+
 
             }
             catch (Exception ex)
             {
-
+                return ex.InnerException + ex.Message;
             }
 
             return "Something went wrong";
@@ -5323,6 +5430,57 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "No data found"
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
+        {
+            try
+            {
+                if (model.Count > 0)
+                {
+                    foreach (var data in model)
+                    {
+                        var dbModel = new Notifications
+                        {
+                            NotificationText = data.NotificationText,
+                            FromUserId = data.FromUserId,
+                            ToUserId = data.ToUserId,
+                            NotificationTime = data.NotificationTime,
+                            IsRead = data.IsRead,
+                            NotificationTitle = data.NotificationTitle
+                        };
+
+                        await _db.Notifications.AddAsync(dbModel);
+                        _db.SaveChanges();
+                    }
+
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    {
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Notification Saved Succesfully!"
+                    });
+
+                }
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Data not found!",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = ex.Message + ex.InnerException,
+                });
+            }
+
+
         }
 
     }

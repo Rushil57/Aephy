@@ -748,7 +748,7 @@ namespace Aephy.WEB.Controllers
         [HttpPost]
         public async Task<string> SaveProjectInitiated([FromBody] SolutionFundModel model)
         {
-            
+
             var userId = HttpContext.Session.GetString("LoggedUser");
             var preferredcurrency = HttpContext.Session.GetString("ClientPreferredCurrency");
             if (userId == null)
@@ -776,13 +776,41 @@ namespace Aephy.WEB.Controllers
                 }
             }
 
+            string emailAddress = data.Result.ClientEmailId;
+            string solutionName = data.Result.SolutionName;
+            string industryName = data.Result.IndustryName;
+
+            if (data.Message == "Project Initiated Successfully ! with team")
+            {
+                #region Send Project Initiated Email
+
+                string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/ProjectInitiateTemplate.html");
+                body = body.Replace("{{Project_Name}}", solutionName);
+                body = body.Replace("{{Industry_Name}}", industryName);
+
+                bool send = SendEmailHelper.SendEmail(emailAddress, "Project Initiate", body);
+                #endregion
+            }
+
+            if(data.Message == "Project Initiated Successfully ! without team")
+            {
+                #region Send Project Initiated without team Email
+
+                string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/ProjectInitiateWithoutTeam.html");
+                body = body.Replace("{{Project_Name}}", solutionName);
+                body = body.Replace("{{Industry_Name}}", industryName);
+
+                bool send = SendEmailHelper.SendEmail(emailAddress, "No Match found", body);
+                #endregion
+            }
+
             return userData;
         }
 
         [HttpPost]
-        public async Task<string> UpdateUserActiveData([FromBody]CalendarData model)
+        public async Task<string> UpdateUserActiveData([FromBody] CalendarData model)
         {
-            
+
             var userId = HttpContext.Session.GetString("LoggedUser");
             if (userId == null)
             {
@@ -978,6 +1006,25 @@ namespace Aephy.WEB.Controllers
             }
             model.ClientId = userId;
             var data = await _apiRepository.MakeApiCallAsync("api/Client/StopActiveProject", HttpMethod.Post, model);
+            dynamic solutionTeamdata = JsonConvert.DeserializeObject(data);
+
+            #region Send Stop Project Email
+
+            if (solutionTeamdata["Message"] == "Project Stopped")
+            {
+                foreach (var service in solutionTeamdata.Result)
+                {
+                    var solutionName = service.SolutionName.Value;
+                    string emailAddress = service.FreelancerEmailId.Value;
+                    string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/StopProjectTemplate.html");
+                    body = body.Replace("{{Project_name}}", solutionName);
+                    bool send = SendEmailHelper.SendEmail(emailAddress, "Project Stopped", body);
+
+                }
+
+            }
+            #endregion
+
             return data;
         }
 
@@ -994,7 +1041,7 @@ namespace Aephy.WEB.Controllers
         public async Task<string> GetClientWorkingHours()
         {
             var userId = HttpContext.Session.GetString("LoggedUser");
-            if(userId == null)
+            if (userId == null)
             {
                 return "Please login to Initiate Project";
             }

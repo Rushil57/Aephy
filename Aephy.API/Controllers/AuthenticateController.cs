@@ -22,12 +22,13 @@ namespace Aephy.API.Controllers
         private Microsoft.AspNetCore.Hosting.IWebHostEnvironment _hostingEnv;
         CommonMethod common;
         private readonly AephyAppDbContext _db;
+        private readonly AdminController _admincontroller;
 
         public AuthenticateController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
-            Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext)
+            Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext,AdminController adminController)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -35,6 +36,7 @@ namespace Aephy.API.Controllers
             _hostingEnv = env;
             _db = dbContext;
             common = new CommonMethod(dbContext);
+            _admincontroller = adminController;
         }
 
 
@@ -311,7 +313,40 @@ namespace Aephy.API.Controllers
                     var status = await _userManager.UpdateAsync(dbData);
                     if (status.Succeeded)
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated" });
+                        List<Notifications> notificationsList = new List<Notifications>();
+
+                        var notificationMessage = "Your Ephylink account is now activated.";
+                        var notificationTitle = "Welcome, " + dbData.FirstName;
+                        Notifications Welcomenotifications = new Notifications();
+                        Welcomenotifications.FromUserId = "";
+                        Welcomenotifications.ToUserId = dbData.Id;
+                        Welcomenotifications.NotificationText = notificationMessage;
+                        Welcomenotifications.NotificationTime = DateTime.Now;
+                        Welcomenotifications.NotificationTitle = notificationTitle;
+                        Welcomenotifications.IsRead = false;
+                        notificationsList.Add(Welcomenotifications);
+
+                        var checkFreelancer = _db.FreelancerDetails.Where(x => x.UserId == dbData.Id).FirstOrDefault();
+                        if(checkFreelancer != null)
+                        {
+                            var featurenotificationMessage = "Apply for an open gig role to be considered for future projects! Remember, after your successful approval, you'll just need to wait for the right project to come in."; ;
+                            var featurenotificationTitle = "Apply & Unlock Future Projects!";
+                            Notifications featurenotifications = new Notifications();
+                            featurenotifications.FromUserId = "";
+                            featurenotifications.ToUserId = dbData.Id;
+                            featurenotifications.NotificationText = featurenotificationMessage;
+                            featurenotifications.NotificationTime = DateTime.Now;
+                            featurenotifications.NotificationTitle = featurenotificationTitle;
+                            featurenotifications.IsRead = false;
+                            notificationsList.Add(featurenotifications);
+                        }
+                        
+
+                        if (notificationsList.Count > 0)
+                        {
+                            await _admincontroller.SaveNotificationData(notificationsList);
+                        }
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated",Result = new { EmailId = dbData.UserName } });
                     }
                     else
                     {

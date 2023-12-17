@@ -1781,6 +1781,13 @@ namespace Aephy.API.Controllers
             try
             {
                 var freelancerData = new OpenGigRolesApplications();
+
+                var solutionName = _db.Solutions.Where(x => x.Id == solutionsModel.SolutionId).Select(x => x.Title).FirstOrDefault();
+                var notificationMessage = "";
+                var notificationTitle = "";
+                var FreelancerType = _db.FreelancerDetails.Where(x => x.UserId == solutionsModel.FreelancerId).Select(x => x.FreelancerLevel).FirstOrDefault();
+                List<Notifications> notificationsList = new List<Notifications>();
+
                 if (solutionsModel.ID != 0)
                 {
                     freelancerData = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
@@ -1805,6 +1812,8 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
                             }
 
+                            notificationTitle = "Application Approved";
+                            notificationMessage = "Congratulations! Your application for the " + FreelancerType + " position in " + solutionName + " has been approved.";
                         }
                         if (solutionsModel.ApproveOrReject == "Reject".Trim())
                         {
@@ -1818,27 +1827,26 @@ namespace Aephy.API.Controllers
                                 _db.FreelancerPool.Remove(data);
                                 _db.SaveChanges();
                             }
+
+                            notificationTitle = "Application Rejected";
+                            notificationMessage = "We regret to inform you that your application for the "+ FreelancerType + " position in "+ solutionName + " has been rejected.";
                         }
                     }
 
                 }
 
-                var CurrentLoggedName = _db.Users.Where(x => x.Id == solutionsModel.CurrentLoggedInId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                var solutionName = _db.Solutions.Where(x => x.Id == solutionsModel.SolutionId).Select(x => x.Title).FirstOrDefault();
-                var industryName = _db.Industries.Where(x => x.Id == solutionsModel.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
-                var fullname = CurrentLoggedName.FirstName + " " + CurrentLoggedName.LastName;
-
-                var notificationMessage = fullname + " has " + solutionsModel.ApproveOrReject + " for SolutionName :" + solutionName + " and IndustryName : " + industryName;
                 Notifications notifications = new Notifications();
                 notifications.FromUserId = solutionsModel.CurrentLoggedInId;
                 notifications.ToUserId = solutionsModel.FreelancerId;
                 notifications.NotificationText = notificationMessage;
+                notifications.NotificationTitle = notificationTitle;
                 notifications.NotificationTime = DateTime.Now;
                 notifications.IsRead = false;
+                notificationsList.Add(notifications);
 
                 if (notifications != null)
                 {
-                    await SaveNotificationData(notifications);
+                     await SaveNotificationData(notificationsList);
                 }
 
                 var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
@@ -1935,6 +1943,23 @@ namespace Aephy.API.Controllers
                     await _db.FreelancerPool.AddAsync(dbModel);
                     _db.SaveChanges();
 
+                    var freelancerType = _db.FreelancerDetails.Where(x => x.UserId == model.FreelancerId).Select(x => x.FreelancerLevel).FirstOrDefault();
+                    var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
+
+                    List<Notifications> notificationsList = new List<Notifications>();
+                    Notifications notifications = new Notifications();
+                    notifications.ToUserId = model.FreelancerId;
+                    notifications.NotificationText = "Congratulations! You have been assigned for the position of "+ freelancerType + " in "+ solutionName + ".";
+                    notifications.NotificationTitle = "New Role Assigned";
+                    notifications.NotificationTime = DateTime.Now;
+                    notifications.IsRead = false;
+                    notificationsList.Add(notifications);
+
+                    if(notificationsList.Count > 0)
+                    {
+                        await SaveNotificationData(notificationsList);
+                    }
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -1998,20 +2023,20 @@ namespace Aephy.API.Controllers
             {
                 var freelancerPoollist = await _db.FreelancerPool.Where(x => x.SolutionID == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
                 List<UserModel> userList = new List<UserModel>();
-                if(freelancerPoollist.Count > 0)
+                if (freelancerPoollist.Count > 0)
                 {
-                    foreach(var data in freelancerPoollist)
+                    foreach (var data in freelancerPoollist)
                     {
                         UserModel userData = new UserModel();
                         var freelancerDetails = _db.Users.Where(x => x.Id == data.FreelancerID).FirstOrDefault();
-                        if(freelancerDetails != null)
+                        if (freelancerDetails != null)
                         {
                             userData.UserName = freelancerDetails.FirstName + " " + freelancerDetails.LastName;
                             userData.Id = freelancerDetails.Id;
                             userList.Add(userData);
                         }
                     }
-                    
+
 
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2894,23 +2919,28 @@ namespace Aephy.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SaveNotificationData(Notifications model)
+        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
         {
             try
             {
-                if (model != null)
+                if (model.Count > 0)
                 {
-                    var dbModel = new Notifications
+                    foreach (var data in model)
                     {
-                        NotificationText = model.NotificationText,
-                        FromUserId = model.FromUserId,
-                        ToUserId = model.ToUserId,
-                        NotificationTime = model.NotificationTime,
-                        IsRead = model.IsRead
-                    };
+                        var dbModel = new Notifications
+                        {
+                            NotificationText = data.NotificationText,
+                            FromUserId = data.FromUserId,
+                            ToUserId = data.ToUserId,
+                            NotificationTime = data.NotificationTime,
+                            IsRead = data.IsRead,
+                            NotificationTitle = data.NotificationTitle
+                        };
 
-                    await _db.Notifications.AddAsync(dbModel);
-                    _db.SaveChanges();
+                        await _db.Notifications.AddAsync(dbModel);
+                        _db.SaveChanges();
+                    }
+
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {

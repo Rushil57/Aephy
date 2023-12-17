@@ -28,10 +28,12 @@ namespace Aephy.API.Controllers
     {
         private readonly AephyAppDbContext _db;
         private readonly ClientController _clientcontroller;
-        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller)
+        private readonly AdminController _admincontroller;
+        public FreelancerController(AephyAppDbContext dbContext, ClientController clientcontroller, AdminController adminController)
         {
             _db = dbContext;
             _clientcontroller = clientcontroller;
+            _admincontroller = adminController;
         }
 
         [HttpPost]
@@ -59,6 +61,24 @@ namespace Aephy.API.Controllers
                 var result = _db.SaveChanges();
                 if (result != 0)
                 {
+                    var freelancerType = _db.FreelancerDetails.Where(x => x.UserId == OpenGigRolesData.FreelancerID).Select(x => x.FreelancerLevel).FirstOrDefault();
+                    var solutionId = _db.GigOpenRoles.Where(x => x.ID == OpenGigRolesData.GigOpenRoleId).Select(x => x.SolutionId).FirstOrDefault();
+                    var solutionName = _db.Solutions.Where(x => x.Id == solutionId).Select(x => x.Title).FirstOrDefault();
+
+
+                    List<Notifications> notificationsList = new List<Notifications>();
+                    Notifications notifications = new Notifications();
+                    notifications.NotificationText = "Thank you for submitting your application for the (" + freelancerType + ") position in " + solutionName + ". Your application has been received and is currently under review.";
+                    notifications.NotificationTitle = "Application Received";
+                    notifications.ToUserId = "";
+                    notifications.IsRead = false;
+                    notifications.NotificationTime = DateTime.Now;
+                    notifications.ToUserId = OpenGigRolesData.FreelancerID;
+                    notificationsList.Add(notifications);
+
+                    await _admincontroller.SaveNotificationData(notificationsList);
+
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
@@ -930,10 +950,15 @@ namespace Aephy.API.Controllers
                         {
                             Notifications dataStore = new Notifications();
                             var fullname = _db.Users.Where(x => x.Id == data.FromUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            if (fullname != null)
+                            {
+                                dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            }
+
                             dataStore.NotificationText = data.NotificationText;
                             dataStore.NotificationTime = data.NotificationTime;
                             dataStore.Id = data.Id;
+                            dataStore.NotificationTitle = data.NotificationTitle;
                             notifications.Add(dataStore);
                         }
                     }
@@ -981,7 +1006,11 @@ namespace Aephy.API.Controllers
                         {
                             Notifications dataStore = new Notifications();
                             var fullname = _db.Users.Where(x => x.Id == data.FromUserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            if (fullname != null)
+                            {
+                                dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
+                            }
+
                             dataStore.NotificationText = data.NotificationText;
                             dataStore.NotificationTime = data.NotificationTime;
                             dataStore.Id = data.Id;
@@ -2497,10 +2526,46 @@ namespace Aephy.API.Controllers
                         _db.SaveChanges();
                     }
 
+                    var solutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                    var industryName = _db.Industries.Where(x => x.Id == solutionFundData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                    var freelancerName = _db.Users.Where(x => x.Id == model.UserId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
+                    var clientEmailId = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => x.UserName).FirstOrDefault();
+
+                    List<Notifications> notificationsList = new List<Notifications>();
+
+
+                    // send to freelancer
+                    Notifications notifications = new Notifications();
+                    notifications.NotificationText = "You have successfully left the " + solutionName;
+                    notifications.NotificationTime = DateTime.Now;
+                    notifications.NotificationTitle = "Freelancer Assignment Update";
+                    notifications.ToUserId = model.UserId;
+                    notifications.IsRead = false;
+                    notificationsList.Add(notifications);
+
+                    // send to client
+                    var fullname = freelancerName.FirstName + " " + freelancerName.LastName;
+                    Notifications clientnotifications = new Notifications();
+                    clientnotifications.NotificationText = "Regrettably, " + fullname + ", the assigned freelancer for “[" + solutionName + " / " + industryName + "],” has left the project. You have the option to continue, and we'll search for a new match.";
+                    clientnotifications.NotificationTime = DateTime.Now;
+                    clientnotifications.NotificationTitle = "Update on Your Project – Action Required";
+                    clientnotifications.ToUserId = solutionFundData.ClientId;
+                    clientnotifications.IsRead = false;
+                    notificationsList.Add(clientnotifications);
+
+                    await _admincontroller.SaveNotificationData(notificationsList);
+
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
-                        Message = "Project leave Successfully !"
+                        Message = "Project leave Successfully !",
+                        Result = new
+                        {
+                            ClientEmailId = clientEmailId,
+                            FreelancerFullName = fullname,
+                            SolutionName = solutionName,
+                            IndustryName = industryName
+                        }
                     });
                 }
 
@@ -2775,7 +2840,7 @@ namespace Aephy.API.Controllers
                     {
                         //=== If tem not completed then update approve status ===//
                         var isActiveProject = oldRequestData.Where(x => x.FreelancerId == dbModel.FreelancerId && x.ApproveStatus == 1).Any();
-                        if(!isActiveProject)
+                        if (!isActiveProject)
                         {
                             dbModel.ApproveStatus = model.RequestStatus;
                             _db.FreelancerFindProcessDetails.Update(dbModel);

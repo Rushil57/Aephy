@@ -562,6 +562,11 @@ namespace Aephy.WEB.Controllers
                     if (jsonObj["StatusCode"] == 200)
                     {
                         ViewBag.Active = true;
+                        var emailId = jsonObj.Result.EmailId;
+                        var sendmail = await SendUnclockFeatureMail(emailId);
+
+                        return View();
+
                     }
                 }
             }
@@ -571,6 +576,25 @@ namespace Aephy.WEB.Controllers
                 ViewBag.Active = false;
             }
             return View();
+        }
+
+        public async Task<string> SendUnclockFeatureMail(object email)
+        {
+            #region SendNewFeature Email
+
+            string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/ApplyAndUnlockTemplate.html");
+
+            bool send = SendEmailHelper.SendEmail(email.ToString(), "Apply & Unlock Future Projects", body);
+            
+
+            if (!send)
+            {
+                return "Registration Success but email not send.";
+            }
+            return "success";
+
+            #endregion
+          
         }
 
         [HttpPost]
@@ -2832,7 +2856,7 @@ namespace Aephy.WEB.Controllers
                 }
                 AddNonRevolutCounterpartyReq model = new AddNonRevolutCounterpartyReq();
                 model.UserId = userId;
-                var data = await _apiRepository.MakeApiCallAsync("api/Revoult/DeleteFreelancerRevolutAccount", HttpMethod.Post,model);
+                var data = await _apiRepository.MakeApiCallAsync("api/Revoult/DeleteFreelancerRevolutAccount", HttpMethod.Post, model);
                 return data;
             }
             catch (Exception ex)
@@ -2907,6 +2931,27 @@ namespace Aephy.WEB.Controllers
                     var userId = HttpContext.Session.GetString("LoggedUser");
                     model.UserId = userId;
                     var data = await _apiRepository.MakeApiCallAsync("api/Freelancer/FreelancerLeaveProject", HttpMethod.Post, model);
+                    dynamic clientdata = JsonConvert.DeserializeObject(data);
+
+                    #region Send freelancer leave Email
+
+                    string emailAddress = clientdata.Result.ClientEmailId;
+                    string solutionName = clientdata.Result.SolutionName;
+                    string industryName = clientdata.Result.IndustryName;
+                    string freelancername = clientdata.Result.FreelancerFullName;
+
+                    if (clientdata.Message == "Project leave Successfully !")
+                    {
+                        string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/FreelancerLeaveTemplate.html");
+                        body = body.Replace("{{Project_Name}}", solutionName);
+                        body = body.Replace("{{Industry_Name}}", industryName);
+                        body = body.Replace("{{Freelancer_Name}}", freelancername);
+
+                        bool send = SendEmailHelper.SendEmail(emailAddress, "Update on Your Project – Action Required", body);
+                       
+                    }
+
+                    #endregion
                     return data;
                 }
                 catch (Exception ex)

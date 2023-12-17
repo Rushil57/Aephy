@@ -1402,7 +1402,7 @@
                 url: "@Url.Action("SaveProjectInitiated", "LandingPage")",
                 data: JSON.stringify(data),
                 success: function (result) {
-                   if(result.Message == "Project Initiated Successfully !"){
+                   if(result.Message == "Project Initiated Successfully ! with team" || "Project Initiated Successfully ! without team"){
                       window.location.href = '/Home/Dashboard#activeProjects'
                    }
                    if(result.Message == "EmptyMilestoneData"){

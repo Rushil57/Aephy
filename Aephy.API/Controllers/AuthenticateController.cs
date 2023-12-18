@@ -1,5 +1,6 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.NotificationMethod;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Aephy.API.Controllers
         private Microsoft.AspNetCore.Hosting.IWebHostEnvironment _hostingEnv;
         CommonMethod common;
         private readonly AephyAppDbContext _db;
+        NotificationHelper notificationHelper = new NotificationHelper();
 
         public AuthenticateController(
             UserManager<ApplicationUser> userManager,
@@ -99,7 +101,7 @@ namespace Aephy.API.Controllers
                         else
                         {
                             strError = "User does not exists with this email address";
-                        }  
+                        }
                     }
                     else
                     {
@@ -337,6 +339,18 @@ namespace Aephy.API.Controllers
                                 adminnotifications.NotificationTitle = "Freelancer SignUp";
                                 adminnotifications.IsRead = false;
                                 notificationsList.Add(adminnotifications);
+
+                                //=== Code for getting notify when any profile pending for update ===//
+                                var pendingFreelancer = new Notifications
+                                {
+                                    FromUserId = "",
+                                    ToUserId = adminDetails.Id,
+                                    NotificationText = $"{dbData.FirstName} has not complete there profile. || {dbData.Id}",
+                                    NotificationTitle = "Profile Completion Reminder",
+                                    IsRead = false,
+                                    NotificationTime = DateTime.Now,
+                                };
+                                notificationsList.Add(pendingFreelancer);
                             }
 
                             var featurenotificationMessage = "Apply for an open gig role to be considered for future projects! Remember, after your successful approval, you'll just need to wait for the right project to come in."; ;
@@ -358,7 +372,7 @@ namespace Aephy.API.Controllers
                             completeProfilenotifications.IsRead = false;
                             notificationsList.Add(completeProfilenotifications);
                         }
-                        else if(dbData.UserType == "Client")
+                        else if (dbData.UserType == "Client")
                         {
                             if (adminDetails != null)
                             {
@@ -369,17 +383,27 @@ namespace Aephy.API.Controllers
                                 adminnotifications.NotificationTitle = "Client SignUp";
                                 adminnotifications.IsRead = false;
                                 notificationsList.Add(adminnotifications);
+
+
+                                //=== Code for getting notify when any profile pending for update ===//
+                                var pendingFreelancer = new Notifications
+                                {
+                                    FromUserId = "",
+                                    ToUserId = adminDetails.Id,
+                                    NotificationText = $"{dbData.FirstName} has not complete there profile. || {dbData.Id}",
+                                    NotificationTitle = "Client Profile Completion Reminder",
+                                    IsRead = false,
+                                    NotificationTime = DateTime.Now,
+                                };
+                                notificationsList.Add(pendingFreelancer);
                             }
                         }
-                        
-                       
-                       
 
                         if (notificationsList.Count > 0)
                         {
-                            await SaveNotificationData(notificationsList);
+                            await notificationHelper.SaveNotificationData(_db, notificationsList);
                         }
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated",Result = new { EmailId = dbData.UserName, UserType = dbData.UserType } });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated", Result = new { EmailId = dbData.UserName, UserType = dbData.UserType } });
                     }
                     else
                     {
@@ -395,57 +419,6 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
-        {
-            try
-            {
-                if (model.Count > 0)
-                {
-                    foreach (var data in model)
-                    {
-                        var dbModel = new Notifications
-                        {
-                            NotificationText = data.NotificationText,
-                            FromUserId = data.FromUserId,
-                            ToUserId = data.ToUserId,
-                            NotificationTime = data.NotificationTime,
-                            IsRead = data.IsRead,
-                            NotificationTitle = data.NotificationTitle
-                        };
-
-                        await _db.Notifications.AddAsync(dbModel);
-                        _db.SaveChanges();
-                    }
-
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Notification Saved Succesfully!"
-                    });
-
-                }
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
-
-
         }
     }
 }

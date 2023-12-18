@@ -2558,8 +2558,8 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
-            //FreelancerFinderHelper helper = new FreelancerFinderHelper();
-            //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
+            FreelancerFinderHelper helper = new FreelancerFinderHelper();
+            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
             try
             {
                 if (model != null)

@@ -60,10 +60,10 @@ namespace Aephy.API.Controllers
                     var IsUsField = false;
                     if (user != null)
                     {
-                        if(user.CountryId != 0)
+                        if (user.CountryId != 0)
                         {
                             var CountryData = _db.Country.Where(x => x.Id == user.CountryId).FirstOrDefault();
-                            if(CountryData != null)
+                            if (CountryData != null)
                             {
                                 Countryname = CountryData.CountryName;
                                 Countrycode = CountryData.Code;
@@ -271,15 +271,15 @@ namespace Aephy.API.Controllers
                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == model.Id.Trim()).FirstOrDefault();
                         if (freelancerDetails != null)
                         {
-                            if(freelancerDetails.HourlyRate != model.freelancerDetail.HourlyRate)
+                            if (freelancerDetails.HourlyRate != model.freelancerDetail.HourlyRate)
                             {
                                 var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                                if(adminDetails != null)
+                                if (adminDetails != null)
                                 {
                                     List<Notifications> notificationsList = new List<Notifications>();
                                     Notifications adminNoTeamnotifications = new Notifications();
                                     adminNoTeamnotifications.ToUserId = adminDetails.Id;
-                                    adminNoTeamnotifications.NotificationText = model.FirstName +"'s hourly rate now " + model.freelancerDetail.HourlyRate;
+                                    adminNoTeamnotifications.NotificationText = model.FirstName + "'s hourly rate now " + model.freelancerDetail.HourlyRate;
                                     adminNoTeamnotifications.NotificationTitle = "Rate Update:";
                                     adminNoTeamnotifications.NotificationTime = DateTime.Now;
                                     adminNoTeamnotifications.IsRead = false;
@@ -287,7 +287,7 @@ namespace Aephy.API.Controllers
 
                                     await SaveNotificationData(notificationsList);
                                 }
-                               
+
                             }
                             freelancerDetails.HourlyRate = model.freelancerDetail.HourlyRate;
                             freelancerDetails.Address = model.freelancerDetail.FreelancerAddress;
@@ -335,7 +335,13 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-
+                        //=== Remove notification for reminder update profile for admin ===//
+                        var notificationData = await _db.Notifications.Where(x => x.NotificationTitle == "Profile Completion Reminder" && x.NotificationText.Contains(user.Id)).FirstOrDefaultAsync();
+                        if (notificationData != null)
+                        {
+                            _db.Remove(notificationData);
+                            await _db.SaveChangesAsync();
+                        }
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "User Updated successfully!" });
                     }
                 }

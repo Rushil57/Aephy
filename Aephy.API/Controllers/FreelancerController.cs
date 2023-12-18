@@ -1,6 +1,8 @@
 ﻿using Aephy.API.AlgorithumHelper;
 using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.NotificationMethod;
+
 //using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +29,9 @@ namespace Aephy.API.Controllers
     public class FreelancerController : ControllerBase
     {
         private readonly AephyAppDbContext _db;
-        
-        
+        NotificationHelper notificationHelper = new NotificationHelper();
+
+
         public FreelancerController(AephyAppDbContext dbContext)
         {
             _db = dbContext;
@@ -85,8 +88,7 @@ namespace Aephy.API.Controllers
                     adminnotifications.ToUserId = adminDetails.Id;
                     notificationsList.Add(adminnotifications);
 
-                    await SaveNotificationData(notificationsList);
-
+                    await notificationHelper.SaveNotificationData(_db,notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -964,7 +966,7 @@ namespace Aephy.API.Controllers
                                 dataStore.FromUserId = fullname.FirstName + " " + fullname.LastName;
                             }
 
-                            dataStore.NotificationText = data.NotificationText;
+                            dataStore.NotificationText = data.NotificationText.Split("||")[0];
                             dataStore.NotificationTime = data.NotificationTime;
                             dataStore.Id = data.Id;
                             dataStore.NotificationTitle = data.NotificationTitle;
@@ -2565,7 +2567,7 @@ namespace Aephy.API.Controllers
 
                     // send to admin
                     var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                    if(adminDetails != null)
+                    if (adminDetails != null)
                     {
                         Notifications adminnotifications = new Notifications();
                         adminnotifications.NotificationText = fullname + " removed from " + solutionName;
@@ -2575,9 +2577,9 @@ namespace Aephy.API.Controllers
                         adminnotifications.IsRead = false;
                         notificationsList.Add(adminnotifications);
                     }
-                   
 
-                    await SaveNotificationData(notificationsList);
+
+                    await notificationHelper.SaveNotificationData(_db,notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2908,6 +2910,24 @@ namespace Aephy.API.Controllers
                             _db.FreelancerFindProcessHeader.Update(header);
                             await _db.SaveChangesAsync();
                         }
+
+                        List<Notifications> notificationsList = new List<Notifications>();
+                        var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                        var solutionName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
+
+                        if (adminDetails != null)
+                        {
+                            var assembleTeam = new Notifications
+                            {
+                                NotificationTitle = "Team Assembled",
+                                NotificationText = $"Team ready for [{solutionName}]",
+                                NotificationTime = DateTime.Now,
+                                IsRead = false,
+                                ToUserId = adminDetails.Id
+                            };
+                            notificationsList.Add(assembleTeam);
+                            await notificationHelper.SaveNotificationData(_db, notificationsList);
+                        }
                     }
                 }
 
@@ -2952,57 +2972,6 @@ namespace Aephy.API.Controllers
                     }
                 }
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
-        {
-            try
-            {
-                if (model.Count > 0)
-                {
-                    foreach (var data in model)
-                    {
-                        var dbModel = new Notifications
-                        {
-                            NotificationText = data.NotificationText,
-                            FromUserId = data.FromUserId,
-                            ToUserId = data.ToUserId,
-                            NotificationTime = data.NotificationTime,
-                            IsRead = data.IsRead,
-                            NotificationTitle = data.NotificationTitle
-                        };
-
-                        await _db.Notifications.AddAsync(dbModel);
-                        _db.SaveChanges();
-                    }
-
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Notification Saved Succesfully!"
-                    });
-
-                }
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
-
-
         }
 
         [HttpPost]

@@ -1199,7 +1199,7 @@ progress::-webkit-progress-value {
     border-radius: 5px 0 0 5px;
 }
 
-.ratingBreakdown #tableRatingBreakdown i {
+.ratingBreakdown .tableRatingBreakdown i {
     flex-shrink: 0;
     font-size: 16px;
     padding: 7px;
@@ -1207,13 +1207,13 @@ progress::-webkit-progress-value {
     line-height: 0;
 }
 
-.ratingBreakdown #tableRatingBreakdown {
+.ratingBreakdown .tableRatingBreakdown {
     color: var(--font-title);
     width: 100%;
     font-size: 14px !important;
 }
 
-    .ratingBreakdown #tableRatingBreakdown .rating {
+    .ratingBreakdown .tableRatingBreakdown .rating {
         color: var(--font-title);
         text-align: end;
     }
@@ -1966,7 +1966,7 @@ progress::-webkit-progress-value {
     padding-left: 5%;
 }
 
-i.bi.bi-star-fill {
+i.bi.bi-star-fill.unchecked_star {
     color: #a6a6a6;
     margin-right: 2px;
     line-height: 0;
@@ -1975,3 +1975,13 @@ i.bi.bi-star-fill {
     i.bi.bi-star-fill.checked_star {
         color: var(--brand);
     }
+
+.freelancerlblTotalReviews {
+    margin-left: 10%;
+}
+
+.cls-freelancerReviewbar {
+    accent-color: var(--brand) !important;
+    background-color: white;
+}
+

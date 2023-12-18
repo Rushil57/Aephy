@@ -490,7 +490,7 @@ namespace Aephy.API.Controllers
                             {
                                 foreach (var freelancerReview in freelancerReviewByclient)
                                 {
-                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating;
                                 }
                                 finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
                             }
@@ -533,12 +533,15 @@ namespace Aephy.API.Controllers
                     }
 
                     var solutionFeedback = _db.ProjectReview.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToList();
-                    List<ProjectReview> projectReviewList = new List<ProjectReview>();
+                    List<ProjectReviewViewModel> projectReviewList = new List<ProjectReviewViewModel>();
                     if (solutionFeedback.Count > 0)
                     {
                         foreach (var feedbackdata in solutionFeedback)
                         {
-                            ProjectReview projectReview = new ProjectReview();
+                            ProjectReviewViewModel projectReview = new ProjectReviewViewModel();
+                            var Rate = feedbackdata.AdherenceToBudget + feedbackdata.WellDefinedProjectScope + feedbackdata.AdherenceToProjectScope + feedbackdata.DeliverablesQuality + feedbackdata.MeetingTimeliness + feedbackdata.Clientsatisfaction;
+                            var totalRate = Rate / 10;
+
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             projectReview.ClientId = clientname.FirstName + " " + clientname.LastName;
                             projectReview.AdherenceToBudget = feedbackdata.AdherenceToBudget;
@@ -548,12 +551,11 @@ namespace Aephy.API.Controllers
                             projectReview.MeetingTimeliness = feedbackdata.MeetingTimeliness;
                             projectReview.Clientsatisfaction = feedbackdata.Clientsatisfaction;
                             projectReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            projectReview.Rate = totalRate.ToString();
+                            projectReview.CreateDateTime = feedbackdata.CreateDateTime;
                             projectReview.ID = feedbackdata.ID;
                             projectReviewList.Add(projectReview);
-
-
                         }
-
 
                     }
 
@@ -2484,7 +2486,7 @@ namespace Aephy.API.Controllers
                     clientDetails.IndustryName = industryname;
                     clientDetails.ClientEmailId = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => x.UserName).FirstOrDefault();
 
-                    await SaveNotificationData(notificationsList);
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2823,7 +2825,7 @@ namespace Aephy.API.Controllers
                                 notificationsList.Add(adminactivenotification);
                             }
 
-                            await SaveNotificationData(notificationsList);
+                            await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -3386,8 +3388,6 @@ namespace Aephy.API.Controllers
                                         notificationsList.Add(admininvoicenotifications);
                                     }
 
-
-                                    // await SaveNotificationData(notificationsList);
                                     await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                                     // 4 Invoice Generate 
@@ -3799,7 +3799,7 @@ namespace Aephy.API.Controllers
                                 }
                             }
 
-                            await SaveNotificationData(notificationList);
+                            await notificationHelper.SaveNotificationData(_db, notificationList);
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
@@ -4195,7 +4195,7 @@ namespace Aephy.API.Controllers
 
                         if (notificationsList.Count > 0)
                         {
-                            await SaveNotificationData(notificationsList);
+                            await notificationHelper.SaveNotificationData(_db, notificationsList);
                         }
 
 
@@ -4241,15 +4241,20 @@ namespace Aephy.API.Controllers
                 try
                 {
                     var feedbackData = await _db.ProjectReview.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).ToListAsync();
-                    List<ProjectReview> projectReviewList = new List<ProjectReview>();
+                    List<ProjectReviewViewModel> projectReviewList = new List<ProjectReviewViewModel>();
                     if (feedbackData.Count > 0)
                     {
                         foreach (var feedbackdata in feedbackData)
                         {
-                            ProjectReview projectReview = new ProjectReview();
+                            var Rate = feedbackdata.AdherenceToBudget + feedbackdata.WellDefinedProjectScope + feedbackdata.AdherenceToProjectScope + feedbackdata.DeliverablesQuality + feedbackdata.MeetingTimeliness + feedbackdata.Clientsatisfaction;
+                            var totalRate = Rate / 10;
+
+                            ProjectReviewViewModel projectReview = new ProjectReviewViewModel();
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             projectReview.ClientId = clientname.FirstName + " " + clientname.LastName;
                             projectReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            projectReview.Rate = totalRate.ToString();
+                            projectReview.CreateDateTime = feedbackdata.CreateDateTime;
                             projectReview.ID = feedbackdata.ID;
                             projectReviewList.Add(projectReview);
                         }
@@ -4618,7 +4623,7 @@ namespace Aephy.API.Controllers
                         _db.SolutionTeam.AddRange(solutionTeam);
                         _db.SaveChanges();
 
-                        await SaveNotificationData(notificationsList);
+                        await notificationHelper.SaveNotificationData(_db, notificationsList);
 
 
 
@@ -5705,57 +5710,6 @@ namespace Aephy.API.Controllers
                 StatusCode = StatusCodes.Status200OK,
                 Message = "No data found"
             });
-        }
-
-        [HttpPost]
-        [Route("SaveNotificationData")]
-        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
-        {
-            try
-            {
-                if (model.Count > 0)
-                {
-                    foreach (var data in model)
-                    {
-                        var dbModel = new Notifications
-                        {
-                            NotificationText = data.NotificationText,
-                            FromUserId = data.FromUserId,
-                            ToUserId = data.ToUserId,
-                            NotificationTime = data.NotificationTime,
-                            IsRead = data.IsRead,
-                            NotificationTitle = data.NotificationTitle
-                        };
-
-                        await _db.Notifications.AddAsync(dbModel);
-                        _db.SaveChanges();
-                    }
-
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Notification Saved Succesfully!"
-                    });
-
-                }
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
-
         }
 
     }

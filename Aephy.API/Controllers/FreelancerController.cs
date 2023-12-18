@@ -2763,8 +2763,24 @@ namespace Aephy.API.Controllers
                         {
                             TopProfessionalReviews freelanceReview = new TopProfessionalReviews();
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
+                            if(clientname != null)
+                            {
+                                freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
+                            }
+
+                            var rate = feedbackdata.CommunicationRating + feedbackdata.CollaborationRating + feedbackdata.ProfessionalismRating + feedbackdata.TechnicalRating + feedbackdata.SatisfactionRating + feedbackdata.ResponsivenessRating;
+                            double totalRate = (double)rate / 10;
+
+
                             freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            freelanceReview.CommunicationRating = feedbackdata.CommunicationRating;
+                            freelanceReview.CollaborationRating = feedbackdata.CollaborationRating;
+                            freelanceReview.ProfessionalismRating = feedbackdata.ProfessionalismRating;
+                            freelanceReview.TechnicalRating = feedbackdata.TechnicalRating;
+                            freelanceReview.SatisfactionRating = feedbackdata.SatisfactionRating;
+                            freelanceReview.ResponsivenessRating = feedbackdata.ResponsivenessRating;
+                            freelanceReview.ReviewDateTime = feedbackdata.CreateDateTime;
+                            freelanceReview.Rate = totalRate.ToString();
                             if (freelanceReview.Feedback_Message != null && freelanceReview.Feedback_Message != "")
                             {
                                 freelancerReviewList.Add(freelanceReview);

@@ -87,5 +87,15 @@
         public string? ClientName { get; set; }
 
         public string? FreelancerName { get; set; }
+
+        public int? CommunicationRating { get; set; }
+
+        public int? CollaborationRating { get; set; }
+        public int? ProfessionalismRating { get; set; }
+        public int? TechnicalRating { get; set; }
+        public int? SatisfactionRating { get; set; }
+        public int? ResponsivenessRating { get; set; }
+        public DateTime? ReviewDateTime { get; set; }
+        public string? Rate { get; set; }
     }
 }

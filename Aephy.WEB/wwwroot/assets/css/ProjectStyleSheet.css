@@ -1885,7 +1885,8 @@ progress::-webkit-progress-value {
 
 .cls-mainreviewdiv-card {
     margin-top: 3%;
-    border: 1px solid #d38b4e;
+    border-bottom: 1px solid #d38b4e !important;
+    border-radius: 0;
 }
 
 .cls-review-card {
@@ -1964,3 +1965,13 @@ progress::-webkit-progress-value {
     font-size: 13px;
     padding-left: 5%;
 }
+
+i.bi.bi-star-fill {
+    color: #a6a6a6;
+    margin-right: 2px;
+    line-height: 0;
+}
+
+    i.bi.bi-star-fill.checked_star {
+        color: var(--brand);
+    }

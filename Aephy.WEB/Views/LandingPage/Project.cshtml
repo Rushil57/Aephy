@@ -647,6 +647,7 @@
                     <a class="close" onclick="CloseFreelancerFeedbackPopUp();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
                 </div>
                 <div class="modal-body p-0">
+
                     <div class="row">
                         <div class="col">
                             <div class="card">
@@ -1564,7 +1565,22 @@
                     '<div class="d-flex align-items-center">' +
                     '<div class="ps-3">' +
                     '<h6 class="cls-feedback-clientname">'+value.ClientId +'</h6>' +
-                    '<div>' +
+                    '<div class="stars">';
+                     var ratingCeilCount = Math.ceil(value.Rate);
+                      for (var iterator = 1; iterator <= 10; iterator++) {
+                          if (iterator <= ratingCeilCount) {
+                              reviewData += '<i class="bi bi-star-fill checked_star"></i>';
+                          } else {
+                              reviewData += '<i class="bi bi-star-fill"></i>';
+                          }
+                      }
+                     reviewData +='</div>' +
+                     '<div class="row">' +
+                     '<label class="col-4">' +value.Rate+'/10</label>' + 
+                     '<label class="col" style="color:gray;">' + moment(value.CreateDateTime).format('DD-MM-YYYY') + '</label>' + 
+                     '</div>' +
+                     
+                    '<div style="padding-top: 10%;">' +
                     '<p>'+value.Feedback_Message+'</p>' +
                     '</div>' +
                     '</div>' +
@@ -1656,7 +1672,21 @@
                          '<div class="d-flex align-items-center">' +
                          '<div class="ps-3">' +
                          '<h6 class="cls-feedback-clientname">' + value.ClientId + '</h6>' +
-                         '<div>' +
+                         '<div class="stars">';
+                     var ratingCeilCount = Math.ceil(value.Rate);
+                      for (var iterator = 1; iterator <= 10; iterator++) {
+                          if (iterator <= ratingCeilCount) {
+                              reviewData += '<i class="bi bi-star-fill checked_star"></i>';
+                          } else {
+                              reviewData += '<i class="bi bi-star-fill"></i>';
+                          }
+                      }
+                     reviewData +='</div>' +
+                     '<div class="row">' +
+                     '<label class="col-4">' +value.Rate+'/10</label>' + 
+                     '<label class="col" style="color:gray;">' + moment(value.CreateDateTime).format('DD-MM-YYYY') + '</label>' + 
+                     '</div>' +
+                         '<div style="padding-top: 10%;">' +
                          '<p>' + value.Feedback_Message + '</p>' +
                          '</div>' +
                          '</div>' +

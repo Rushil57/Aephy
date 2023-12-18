@@ -1465,7 +1465,7 @@ function GetNotificationDetails() {
                         notificationSection += '<li class="notification-item">' +
                             '<i class="bi bi-info-circle text-primary" > </i>' +
                             '<div>' +
-                            '<h4>' + values.FromUserId + ' </h4>' +
+                            '<h4>' + values.NotificationTitle + ' </h4>' +
                             '<p> ' + values.NotificationText + ' </p>' +
                             '<p> ' + timeAgo + ' </p>' +
                             '</div>' +

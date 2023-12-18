@@ -349,6 +349,14 @@ namespace Aephy.API.Controllers
                             featurenotifications.NotificationTitle = featurenotificationTitle;
                             featurenotifications.IsRead = false;
                             notificationsList.Add(featurenotifications);
+
+                            Notifications completeProfilenotifications = new Notifications();
+                            completeProfilenotifications.ToUserId = dbData.Id;
+                            completeProfilenotifications.NotificationText = "Boost your opportunities by finalizing your Ephylink profile. A full profile leads to better project matches.";
+                            completeProfilenotifications.NotificationTime = DateTime.Now;
+                            completeProfilenotifications.NotificationTitle = "Almost There! Complete Your Profile";
+                            completeProfilenotifications.IsRead = false;
+                            notificationsList.Add(completeProfilenotifications);
                         }
                         else if(dbData.UserType == "Client")
                         {
@@ -371,7 +379,7 @@ namespace Aephy.API.Controllers
                         {
                             await SaveNotificationData(notificationsList);
                         }
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated",Result = new { EmailId = dbData.UserName } });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Successfully Activated",Result = new { EmailId = dbData.UserName, UserType = dbData.UserType } });
                     }
                     else
                     {

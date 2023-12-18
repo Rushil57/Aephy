@@ -482,6 +482,10 @@ namespace Aephy.API.Models
             public int ProjectSize { get; set; }
 
             public string? ProjectDuartion { get; set; }
+
+            public string? ProjectName { get; set; }
+
+            public string? FreelancerEmailId { get; set; }
         }
         public class CustomSolutionsModel
         {
@@ -910,6 +914,8 @@ namespace Aephy.API.Models
             public string? FreelancerEmailId { get; set; }
 
             public string? ClientName { get; set; }
+
+            public string? ClientEmailId { get; set; }
         }
 
 

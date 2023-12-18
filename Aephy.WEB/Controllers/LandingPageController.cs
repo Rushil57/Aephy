@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Aephy.Helper.Helpers;
 using System.Net.Mail;
 using Org.BouncyCastle.Math.EC.Endo;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Stripe;
 
 namespace Aephy.WEB.Controllers
 {
@@ -735,7 +737,8 @@ namespace Aephy.WEB.Controllers
             {
                 try
                 {
-                    foreach (var service in data.Result)
+                    // to freelancer
+                    foreach (var service in data.Result.FreelancerNotificationData)
                     {
 
                         #region Send Project Initiated Email
@@ -752,15 +755,23 @@ namespace Aephy.WEB.Controllers
                         bool send = SendEmailHelper.SendEmail(emailAddress.ToString(), "Project Confirmed", body);
                         #endregion
 
-
-
                     }
+
+                    // to client
+                    var clientData = data.Result.ClientNotificationData;
+
+                    var clientemailAddress = clientData.ClientEmailId.ToString();
+                    string clientbody = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/ClientInvoiceFundTemplate.html");
+                    clientbody = clientbody.Replace("{{Project_Name}}", clientData.SolutionName.ToString());
+                    clientbody = clientbody.Replace("{{Industry_Name}}", clientData.IndustryName.ToString());
+
+                    bool clientmailsend = SendEmailHelper.SendEmail(clientemailAddress.ToString(), "Invoice", clientbody);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
-                
+
 
             }
 
@@ -876,7 +887,7 @@ namespace Aephy.WEB.Controllers
             {
                 // to client
                 string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/DisputeTemplate.html");
-                var result = jsonObj.Result;
+                var result = jsonObj.Result.ClientAdminNotiicationData;
                 var receiverEmailId = result.ClientEmailId.Value;
 
 
@@ -897,8 +908,25 @@ namespace Aephy.WEB.Controllers
                 adminbody = adminbody.Replace("{{ Duartion }}", result.ProjectDuartion.Value);
                 adminbody = adminbody.Replace("{{ Size }}", projectsize);
 
-
                 bool sendmail = SendEmailHelper.SendEmail(adminEmailId, "Dispute raised ", adminbody);
+
+                // to freelancer
+                if (jsonObj.Result.FreelancerData != null)
+                {
+                    foreach (var service in jsonObj.Result.FreelancerData)
+                    {
+                        var freelancermailId = service.FreelancerEmailId.ToString();
+
+                        string freelancerbody = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/FreelancerDisputeTemplate.html");
+                        freelancerbody = freelancerbody.Replace("{{Project_Name}}", service.ProjectName.ToString());
+                        freelancerbody = freelancerbody.Replace("{{Client_Name}}", service.ClientName.ToString());
+
+                        bool sendfreelancermail = SendEmailHelper.SendEmail(freelancermailId, "Dispute Initiated ", freelancerbody);
+
+                    }
+
+                }
+
                 if (!send)
                 {
                     return "Dispute email not send.";

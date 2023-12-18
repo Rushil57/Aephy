@@ -1,6 +1,7 @@
 ﻿using Aephy.API.AlgorithumHelper;
 using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.NotificationMethod;
 using Aephy.API.Revoult;
 using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +36,7 @@ namespace Aephy.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRevoultService _revoultService;
-
+        NotificationHelper notificationHelper = new NotificationHelper();
         public ClientController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IConfiguration configuration, IRevoultService revoultService)
         {
             _db = dbContext;
@@ -2017,6 +2018,14 @@ namespace Aephy.API.Controllers
                         adminnotifications.ToUserId = adminDetails.Id;
                         adminnotifications.IsRead = false;
                         notificationsList.Add(adminnotifications);
+
+                        Notifications admininvoicenotifications = new Notifications();
+                        admininvoicenotifications.NotificationText = "New Invoices have been issued on '[" + solutionName + "]'.";
+                        admininvoicenotifications.NotificationTime = DateTime.Now;
+                        admininvoicenotifications.NotificationTitle = "Invoice issued:";
+                        admininvoicenotifications.ToUserId = adminDetails.Id;
+                        admininvoicenotifications.IsRead = false;
+                        notificationsList.Add(admininvoicenotifications);
                     }
 
                     // to freelancer
@@ -2049,9 +2058,6 @@ namespace Aephy.API.Controllers
                         }
 
                     }
-
-
-                    await SaveNotificationData(notificationsList);
 
                     // Save to contract Table
                     var contractSave = new Contract()
@@ -2455,19 +2461,40 @@ namespace Aephy.API.Controllers
                         _db.InvoiceListDetails.Add(invoiceTotalPlatformFeesDetail_vat);
                         _db.SaveChanges();
                         #endregion
+
+
+                        // to client
+                        Notifications invoiceNotification = new Notifications();
+                        invoiceNotification.ToUserId = solutionFundData.ClientId;
+                        invoiceNotification.NotificationText = "Your invoice for the project \"[" + solutionName + " / " + industryname + "]\" has been issued.";
+                        invoiceNotification.NotificationTime = DateTime.Now;
+                        invoiceNotification.NotificationTitle = "Invoice for '[" + solutionName + "/" + industryname + "]'";
+                        invoiceNotification.IsRead = false;
+                        notificationsList.Add(invoiceNotification);
+
+
                     }
                     catch (Exception ex)
                     {
                         invoiceErr = ex.Message;
                     }
 
+                    ProjectDetailsModel clientDetails = new ProjectDetailsModel();
+                    clientDetails.SolutionName = solutionName;
+                    clientDetails.IndustryName = industryname;
+                    clientDetails.ClientEmailId = _db.Users.Where(x => x.Id == solutionFundData.ClientId).Select(x => x.UserName).FirstOrDefault();
 
+                    await SaveNotificationData(notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
                         StatusCode = StatusCodes.Status200OK,
                         Message = "Your payment has been received and securely held in escrow. Upon your approval of the deliverable, the funds will be disbursed to the Freelancers, with a designated commission retained by the Platform.Relavant Invoices will be generated after 2 days. " + invoiceErr,
-                        Result = projectDetailsList
+                        Result = new
+                        {
+                            FreelancerNotificationData = projectDetailsList,
+                            ClientNotificationData = clientDetails,
+                        }
                     });
                 }
 
@@ -2773,7 +2800,29 @@ namespace Aephy.API.Controllers
                             adminnotifications.IsRead = false;
                             notificationsList.Add(adminnotifications);
 
-                            //Notifications
+
+                            //=== Notification for Active Project Count Update ===//
+                            var projectCount = await _db.SolutionFund.Where(x => !x.IsDispute && !x.IsStoppedProject).CountAsync();
+                            var activeProject = await _db.Notifications.Where(x => x.NotificationTitle == "Active project overview").FirstOrDefaultAsync();
+                            if (activeProject != null)
+                            {
+                                activeProject.NotificationText = $"{projectCount} Project are active.";
+                                activeProject.IsRead = false;
+                                activeProject.NotificationTime = DateTime.Now;
+                                _db.Notifications.Update(activeProject);
+                                await _db.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                Notifications adminactivenotification = new Notifications();
+                                adminactivenotification.ToUserId = adminDetails.Id;
+                                adminactivenotification.NotificationText = projectCount + " Project are active.";
+                                adminactivenotification.NotificationTitle = "Active project overview";
+                                adminactivenotification.NotificationTime = DateTime.Now;
+                                adminactivenotification.IsRead = false;
+                                notificationsList.Add(adminactivenotification);
+                            }
+
                             await SaveNotificationData(notificationsList);
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -3281,11 +3330,12 @@ namespace Aephy.API.Controllers
 
                                     }
 
+                                    List<Notifications> notificationsList = new List<Notifications>();
+                                    var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                                    var industryName = _db.Industries.Where(x => x.Id == completedData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+
                                     if (transferredcount != 0)
                                     {
-                                        List<Notifications> notificationsList = new List<Notifications>();
-                                        var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
-                                        var industryName = _db.Industries.Where(x => x.Id == completedData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
 
                                         Notifications notifications = new Notifications();
                                         notifications.NotificationText = "You've successfully approved the [ " + solutionName + "/ " + solutionName + "/ " + industryName + "].Payment for this milestone has been released.";
@@ -3312,8 +3362,33 @@ namespace Aephy.API.Controllers
                                             }
 
                                         }
-                                        await SaveNotificationData(notificationsList);
+
                                     }
+
+                                    // to client
+                                    Notifications clientnotifications = new Notifications();
+                                    clientnotifications.NotificationText = "Your invoice for the project [" + solutionName + "/" + industryName + "] has been issued.";
+                                    clientnotifications.NotificationTime = DateTime.Now;
+                                    clientnotifications.NotificationTitle = "Invoice for '[" + solutionName + "/ " + industryName + "]'";
+                                    clientnotifications.ToUserId = completedData.ClientId;
+                                    clientnotifications.IsRead = false;
+                                    notificationsList.Add(clientnotifications);
+
+                                    var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                                    if (adminDetails != null)
+                                    {
+                                        Notifications admininvoicenotifications = new Notifications();
+                                        admininvoicenotifications.NotificationText = "New Invoices have been issued on '[" + solutionName + "]'.";
+                                        admininvoicenotifications.NotificationTime = DateTime.Now;
+                                        admininvoicenotifications.NotificationTitle = "Invoice issued:";
+                                        admininvoicenotifications.ToUserId = adminDetails.Id;
+                                        admininvoicenotifications.IsRead = false;
+                                        notificationsList.Add(admininvoicenotifications);
+                                    }
+
+
+                                    // await SaveNotificationData(notificationsList);
+                                    await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                                     // 4 Invoice Generate 
                                     try
@@ -3661,7 +3736,7 @@ namespace Aephy.API.Controllers
                             solutionDisputeView.ClientEmailId = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserName).FirstOrDefault();
                             solutionDisputeView.Milestone = milestoneName;
                             solutionDisputeView.AdminEmailId = adminDetails.UserName;
-                            
+
 
                             solutionfundId.IsDispute = true;
                             _db.SaveChanges();
@@ -3699,17 +3774,28 @@ namespace Aephy.API.Controllers
                             {
                                 solutionTitle = _db.SolutionMilestone.Where(x => x.Id == solutionfundId.MileStoneId).Select(x => x.Description).FirstOrDefault();
                             }
+
+
+                            List<SolutionDisputeViewModel> freelancernotificationList = new List<SolutionDisputeViewModel>();
                             if(solutionTeam.Count > 0)
                             {
+
                                 foreach(var teamdata in solutionTeam)
                                 {
+                                    SolutionDisputeViewModel freelancerList = new SolutionDisputeViewModel();
+
                                     Notifications freelancernotifications = new Notifications();
                                     freelancernotifications.NotificationText = "A dispute has been initiated by " + solutionDisputeView.ClientName + " for the \"" + solutionTitle + "\". Your payment is currently held in escrow. Stay tuned for updates.";
                                     freelancernotifications.NotificationTime = DateTime.Now;
-                                    freelancernotifications.NotificationTitle = "Dispute Alert for " + solutionTitle; 
+                                    freelancernotifications.NotificationTitle = "Dispute Alert for " + solutionTitle;
                                     freelancernotifications.ToUserId = teamdata.FreelancerId;
                                     freelancernotifications.IsRead = false;
                                     notificationList.Add(freelancernotifications);
+
+                                    freelancerList.ProjectName = solutionTitle;
+                                    freelancerList.FreelancerEmailId = _db.Users.Where(x => x.Id == teamdata.FreelancerId).Select(x => x.UserName).FirstOrDefault();
+                                    freelancerList.ClientName = solutionDisputeView.ClientName;
+                                    freelancernotificationList.Add(freelancerList);
                                 }
                             }
 
@@ -3719,7 +3805,11 @@ namespace Aephy.API.Controllers
                             {
                                 StatusCode = StatusCodes.Status200OK,
                                 Message = "Dispute Raised",
-                                Result = solutionDisputeView
+                                Result = new
+                                {
+                                    ClientAdminNotiicationData = solutionDisputeView,
+                                    FreelancerData = freelancernotificationList
+                                }
                             });
                         }
                     }
@@ -5618,6 +5708,7 @@ namespace Aephy.API.Controllers
         }
 
         [HttpPost]
+        [Route("SaveNotificationData")]
         public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
         {
             try
@@ -5664,7 +5755,6 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException,
                 });
             }
-
 
         }
 

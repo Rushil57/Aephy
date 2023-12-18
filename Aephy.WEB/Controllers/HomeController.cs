@@ -562,8 +562,13 @@ namespace Aephy.WEB.Controllers
                     if (jsonObj["StatusCode"] == 200)
                     {
                         ViewBag.Active = true;
-                        var emailId = jsonObj.Result.EmailId;
-                        var sendmail = await SendUnclockFeatureMail(emailId);
+                        if(jsonObj.Result.UserType.ToString() == "Freelancer")
+                        {
+                            var emailId = jsonObj.Result.EmailId.ToString();
+                            var sendmail = await SendUnclockFeatureMail(emailId);
+                            var compeleteprofilemail = await SendCompleteProfileMail(emailId);
+                        }
+                      
 
                         return View();
 
@@ -578,13 +583,13 @@ namespace Aephy.WEB.Controllers
             return View();
         }
 
-        public async Task<string> SendUnclockFeatureMail(object email)
+        public async Task<string> SendUnclockFeatureMail(string email)
         {
             #region SendNewFeature Email
 
             string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/ApplyAndUnlockTemplate.html");
 
-            bool send = SendEmailHelper.SendEmail(email.ToString(), "Apply & Unlock Future Projects", body);
+            bool send = SendEmailHelper.SendEmail(email, "Apply & Unlock Future Projects", body);
             
 
             if (!send)
@@ -595,6 +600,25 @@ namespace Aephy.WEB.Controllers
 
             #endregion
           
+        }
+
+        public async Task<string> SendCompleteProfileMail(string email)
+        {
+            #region SendCompleteProfileMail Email
+
+            string body = System.IO.File.ReadAllText(_rootPath + "/EmailTemplates/FreelancerCompleteProfileTemplate.html");
+
+            bool send = SendEmailHelper.SendEmail(email, "Complete Your Profile", body);
+
+
+            if (!send)
+            {
+                return "Registration Success but email not send.";
+            }
+            return "success";
+
+            #endregion
+
         }
 
         [HttpPost]

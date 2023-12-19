@@ -144,7 +144,7 @@ namespace Aephy.WEB.Controllers
                         HttpContext.Session.SetString("ClientPreferredCurrency", ClientCurrency);
 
                     string imagepath = jsonObj.Result.ImagePath;
-                    if (imagepath != null)
+                    if (imagepath != null && imagepath != "")
                     {
                         string sasToken = GenerateImageSasToken(imagepath);
                         imageUrlWithSas = $"{jsonObj.Result.ImagePath}?{sasToken}";

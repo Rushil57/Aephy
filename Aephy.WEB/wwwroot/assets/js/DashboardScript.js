@@ -878,7 +878,13 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 if (data.ClientAddress == null) {
                     data.ClientAddress = "";
                 }
-                $("#ClientAddress").html("Address : " + data.ClientAddress)
+                $("#ClientAddress").html(data.ClientAddress)
+
+                if (data.ClientCompanyName == null) {
+                    data.ClientCompanyName = "";
+                }
+                $("#ClientCompanyName").html("Company Name : " + data.ClientCompanyName)
+
                 if (data.InvoicelistDetails.length != 0) {
                     var index = 0;
                     var subObj = '';
@@ -919,7 +925,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -936,7 +942,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -953,7 +959,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -970,7 +976,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -1011,7 +1017,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-Title").html("Ephylink");
                     $("#from-vatId").css("display", "block");
@@ -1115,7 +1121,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -1132,7 +1138,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -1149,7 +1155,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -1166,7 +1172,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
 
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-vatId").css("display", "block");
                     $("#from-vatId").html("VAT ID: 148366653");
@@ -1207,7 +1213,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#from-country").css("display", "block");
                     $("#from-name").html("Dimitrios Vamvakas");
-                    $("#from-address").html(" Ellispontou 39, Patra, 26226");
+                    $("#from-address").html(" Aristofanous 5, Patras, 26500");
                     $("#from-country").css("Achaia, Greece");
                     $("#from-Title").html("Ephylink");
                     $("#from-vatId").css("display", "block");

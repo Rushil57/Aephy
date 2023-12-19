@@ -152,7 +152,7 @@
                 <div id="gigLevelsCarousel" class="carousel slide" data-interval="false">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Project Manager
@@ -167,7 +167,7 @@
                             </div><!-- End Card Item -->
                         </div>
                         <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Expert
@@ -182,7 +182,7 @@
                             </div><!-- End Card Item -->
                         </div>
                         <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Associate
@@ -221,7 +221,7 @@
                 <div id="gigLevelsCompensation" class="carousel slide" data-interval="false">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkcompensationactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Project Manager
@@ -236,7 +236,7 @@
                             </div><!-- End Card Item -->
                         </div>
                         <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkcompensationactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Expert
@@ -251,7 +251,7 @@
                             </div><!-- End Card Item -->
                         </div>
                         <div class="carousel-item">
-                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-3 col-md-6 cls-gigopening-m-carousel cls-checkcompensationactiveItem" data-aos="fade-up" data-aos-delay="100">
                                 <div class="box">
                                     <div class="title border-bottom">
                                         Associate
@@ -286,21 +286,21 @@
                     @{
                         if (Context.Session.GetString("LoggedUser") != null)
                         {
-                            <div style="text-align:center;">
-                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Dashboard">Dashboard</a>
-                            </div>
+                                                <div style="text-align:center;">
+                                                    <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Dashboard">Dashboard</a>
+                                                </div>
                         }
                         else
                         {
-                            <div style="text-align:center;">
-                                <h3>
-                                    Join Us
-                                </h3>
-                            </div>
-                            <div style="text-align:center;">
-                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
-                                <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
-                            </div>
+                                                <div style="text-align:center;">
+                                                    <h3>
+                                                        Join Us
+                                                    </h3>
+                                                </div>
+                                                <div style="text-align:center;">
+                                                    <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Login">Login</a>
+                                                    <a class="btn btn-brand ms-lg-3 m-4" href="~/Home/Register">Sign Up</a>
+                                                </div>
                         }
                     }
                 </div>
@@ -310,3 +310,23 @@
     </section><!-- End Services Section -->
 
 </main>
+<script>
+    $(document).ready(function () {
+        try {
+            $("#gigLevelsCarousel").hide();
+            $("#gigLevelsCompensation").hide();
+            setTimeout(function () { 
+                $($("#gigLevelsCarousel").find(".cls-checkactiveItem")[3]).hide();
+                $($("#gigLevelsCarousel").find(".cls-checkactiveItem")[4]).hide();
+                $("#gigLevelsCarousel").show();
+
+                $($("#gigLevelsCompensation").find(".cls-checkcompensationactiveItem")[3]).hide();
+                $($("#gigLevelsCompensation").find(".cls-checkcompensationactiveItem")[4]).hide();
+                $("#gigLevelsCompensation").show();
+            }, 1000);
+            
+        }
+        catch { }
+        
+    });
+    </script>

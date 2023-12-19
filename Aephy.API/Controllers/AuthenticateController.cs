@@ -72,26 +72,50 @@ namespace Aephy.API.Controllers
                             if (user.IsActive)
                             {
                                 FreelancerDetails freelancer = new FreelancerDetails();
+                                ClientDetails clientDetails = new ClientDetails();
                                 if (user.UserType == "Freelancer")
                                 {
                                     freelancer = _db.FreelancerDetails.Where(x => x.UserId == user.Id).FirstOrDefault();
-                                }
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Message = "Login Success",
-                                    Result = new
+
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                     {
-                                        UserId = user.Id,
-                                        FirstName = user.FirstName,
-                                        LastName = user.LastName,
-                                        Role = user.UserType,
-                                        Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none",
-                                        ImagePath = freelancer.ImagePath,
-                                        ImageUrlWithSas = freelancer.ImageUrlWithSas,
-                                        ClientPreferredCurrency = user.PreferredCurrency
-                                    }
-                                });
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = "Login Success",
+                                        Result = new
+                                        {
+                                            UserId = user.Id,
+                                            FirstName = user.FirstName,
+                                            LastName = user.LastName,
+                                            Role = user.UserType,
+                                            Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none",
+                                            ImagePath = freelancer.ImagePath,
+                                            ImageUrlWithSas = freelancer.ImageUrlWithSas,
+                                            ClientPreferredCurrency = user.PreferredCurrency
+                                        }
+                                    });
+                                }
+                                if(user.UserType == "Client")
+                                {
+                                    clientDetails = _db.ClientDetails.Where(x => x.UserId == user.Id).FirstOrDefault();
+
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = "Login Success",
+                                        Result = new
+                                        {
+                                            UserId = user.Id,
+                                            FirstName = user.FirstName,
+                                            LastName = user.LastName,
+                                            Role = user.UserType,
+                                            Level = "Client",
+                                            ImagePath = clientDetails.ImagePath,
+                                            ImageUrlWithSas = clientDetails.ImageUrlWithSas,
+                                            ClientPreferredCurrency = user.PreferredCurrency
+                                        }
+                                    });
+                                }
+                                
                             }
                             else
                             {

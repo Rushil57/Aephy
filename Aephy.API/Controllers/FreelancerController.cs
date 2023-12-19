@@ -1465,10 +1465,11 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
                                 InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
-                            var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).Select(x => x.Address).FirstOrDefault();
+                            var clientaddressDetails = _db.ClientDetails.Where(x => x.UserId == invoicelistDetails.BillToClientId).FirstOrDefault();
                             if (clientaddressDetails != null)
                             {
-                                InvoiceDetails.ClientAddress = clientaddressDetails;
+                                InvoiceDetails.ClientCompanyName = clientaddressDetails.CompanyName;
+                                InvoiceDetails.ClientAddress = clientaddressDetails.Address;
                             }
                             if (invoicelistDetails.FreelancerId != null)
                             {

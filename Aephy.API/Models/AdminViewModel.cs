@@ -858,6 +858,8 @@ namespace Aephy.API.Models
             public string? FreelancerCountry { get; set; }
 
             public string? ClientCountry { get; set; }
+
+            public string? ClientCompanyName { get; set; }
         }
 
         public class CustomSolutionModel

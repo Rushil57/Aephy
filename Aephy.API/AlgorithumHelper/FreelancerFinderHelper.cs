@@ -378,12 +378,16 @@ public class FreelancerFinderHelper
                         }
                         else
                         {
-                            // Stop Project freelancer not found.
-                            freelancerFindProcessHeader.IsTeamCompleted = false;
-                            freelancerFindProcessHeader.CurrentStatus = 2; // 2 means stoped.
+                            if(freelancerFindProcessHeader != null)
+                            {
+                                // Stop Project freelancer not found.
+                                freelancerFindProcessHeader.IsTeamCompleted = false;
+                                freelancerFindProcessHeader.CurrentStatus = 2; // 2 means stoped.
 
-                            db.FreelancerFindProcessHeader.Update(freelancerFindProcessHeader);
-                            await db.SaveChangesAsync();
+                                db.FreelancerFindProcessHeader.Update(freelancerFindProcessHeader);
+                                await db.SaveChangesAsync();
+                            }
+                           
                         }
                     }
                 }

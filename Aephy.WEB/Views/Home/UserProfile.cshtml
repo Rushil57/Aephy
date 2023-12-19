@@ -182,24 +182,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3 cls-revtagSection">
-                                        @* style="display:none;" *@
-                                        <label for="RevTag" class="col-lg-4 col-md-6 col-form-label">Rev Tag</label>
-                                        <div class="col-md-8 col-lg-8">
-                                            <input name="RevTag" type="text" class="form-control cls-revTag" readonly />
-                                        </div>
-                                    </div>
-
                                     <div class="RevoultStatusSection">
                                         <div class="row RevolutPending" style="display:none;">
-                                            <div class="col-lg-4 col-md-6 label">Other Bank Account</div>
+                                            <div class="col-lg-4 col-md-6 label">Bank Details</div>
                                             <div class="col-md-8 col-lg-8">
                                                 <span class="badge bg-danger">PENDING</span>
                                             </div>
                                         </div>
 
                                         <div class="row RevolutCompleted" style="display:none;">
-                                            <div class="col-lg-4 col-md-6 label">Other Bank Account</div>
+                                            <div class="col-lg-4 col-md-6 label">Bank Details</div>
                                             <div class="col-md-8 col-lg-8">
                                                 <span class="badge bg-success">COMPLETED</span>
                                             </div>
@@ -413,31 +405,24 @@
                                                 <a data-toggle="popover" style="color: #c37814;" class="revolute-popover" data-bs-content="Revolut account is recommended for lower fees and faster transfers."><i class="bi bi-info-circle-fill cls-team-info-icon"></i></a>
                                             </label>
                                             <div class="col-md-8 col-lg-8">
-                                                <input type="radio" id="revoultBankYes" name="revoult_BankAccount" value="YES" onclick="ShowRevField()" class="cls-bankaccount_Yes">
+                                                <input type="radio" id="revoultBankYes" name="revoult_BankAccount" value="YES" class="cls-bankaccount_Yes">
                                                 <label for="yes">Yes</label>&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" id="revoultBankNo" name="revoult_BankAccount" value="NO" onclick="ShowRevField()" class="cls-bankaccount_No">
+                                                <input type="radio" id="revoultBankNo" name="revoult_BankAccount" value="NO" class="cls-bankaccount_No">
                                                 <label for="no">No</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3 cls-revtagSection">
-                                            <label for="RevTag" class="col-md-6 col-lg-4 col-form-label">Rev Tag</label>
-                                            <div class="col-md-8 col-lg-8">
-                                                <input name="RevTag" type="text" class="form-control cls-revTag" id="RevTag" disabled="true" />
                                             </div>
                                         </div>
 
                                         <div class="RevoultStatusSection">
                                             <div class="row mb-3 RevolutPending" style="display:none;">
-                                                <label for="StripeStatus" class="col-md-6 col-lg-4 col-form-label">Other Bank Account</label>
+                                                <label for="StripeStatus" class="col-md-6 col-lg-4 col-form-label">Bank Details</label>
                                                 <div class="col-md-8 col-lg-8">
                                                     <span class="badge bg-danger">PENDING</span>
-                                                    <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Click here to Register to Revolut</a></span>
+                                                    <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Click here</a></span>
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3 RevolutCompleted" style="display:none;">
-                                                <label for="StripeStatus" class="col-md-6 col-lg-4 col-form-label">Other Bank Account</label>
+                                                <label for="StripeStatus" class="col-md-6 col-lg-4 col-form-label">Bank Details</label>
                                                 <div class="col-md-8 col-lg-8">
                                                     <span class="badge bg-success">COMPLETED</span>
                                                     <span style="padding-left: 2%"><a onclick="RevolutRegister()" class="cls-stripe-link">Edit</a></span>
@@ -1191,7 +1176,7 @@
                     } else {
                         $(".cls-bankaccount_No").prop("checked", true);
                     }
-                    ShowRevField();
+                    
 
                     //revoultBankYes
 
@@ -1472,11 +1457,6 @@
             var RevoultBankAccount = false;
             var RevoultBank = $('input[name="revoult_BankAccount"]:checked').val();
             if (RevoultBank == "YES" || RevoultBank == "NO") {
-                var RevData = $("#RevTag").val();
-                if (RevData == "") {
-                    showToaster("error", "Error !", "Please fill rev tag field!");
-                    return
-                }
                 RevoultBankAccount = true;
             }
         }
@@ -1757,19 +1737,6 @@
                 showToaster("error", "Error !", "Failure");
             }
         });
-    }
-
-    function ShowRevField() {
-        var Revoultbankaccount = $('input[name="revoult_BankAccount"]:checked').val();
-        if (Revoultbankaccount == "YES") {
-            //$(".cls-revtagSection").show();
-            //$(".RevoultStatusSection").hide();
-            $("#RevTag").removeAttr("disabled");
-        } else {
-            // $(".cls-revtagSection").hide();
-            // $(".RevoultStatusSection").show();
-            $("#RevTag").attr("disabled", "true");
-        }
     }
 
     let excludeData = [];

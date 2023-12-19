@@ -668,6 +668,10 @@ namespace Aephy.API.Models
 
             public bool? onSunday { get; set; }
 
+            public string? ClientImagePath { get; set; }
+
+            public string? ClientImageUrlWithSas { get; set; }
+
         }
 
         public class InvoiceViewModel

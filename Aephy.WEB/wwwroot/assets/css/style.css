@@ -534,7 +534,7 @@ h6 {
     .header-nav .nav-profile img {
         height: 46px;
         width: 46px;
-        border: 4px solid grey;
+        border: 4px solid #012970;
     }
 
     .header-nav .nav-profile span {
@@ -1745,4 +1745,8 @@ textarea.form-control {
     #grid-invoice {
         width: 270px;
     }
+}
+
+.cls-ModelInvoiceMainTitle{
+    font-size : 20px;
 }

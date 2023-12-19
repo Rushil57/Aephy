@@ -24,6 +24,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using RevolutAPI.Models.BusinessApi.Payment;
 using Aephy.API.Revoult;
+using System.IO.Hashing;
 
 namespace Aephy.API.Controllers
 {
@@ -34,7 +35,7 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRevoultService _revoultService;
-        
+
         public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService)
         {
             _db = dbContext;
@@ -1828,7 +1829,7 @@ namespace Aephy.API.Controllers
                             }
 
                             notificationTitle = "Application Rejected";
-                            notificationMessage = "We regret to inform you that your application for the "+ FreelancerType + " position in "+ solutionName + " has been rejected.";
+                            notificationMessage = "We regret to inform you that your application for the " + FreelancerType + " position in " + solutionName + " has been rejected.";
                         }
                     }
 
@@ -1845,7 +1846,7 @@ namespace Aephy.API.Controllers
 
                 if (notifications != null)
                 {
-                     await SaveNotificationData(notificationsList);
+                    await SaveNotificationData(notificationsList);
                 }
 
                 var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
@@ -1948,13 +1949,13 @@ namespace Aephy.API.Controllers
                     List<Notifications> notificationsList = new List<Notifications>();
                     Notifications notifications = new Notifications();
                     notifications.ToUserId = model.FreelancerId;
-                    notifications.NotificationText = "Congratulations! You have been assigned for the position of "+ freelancerType + " in "+ solutionName + ".";
+                    notifications.NotificationText = "Congratulations! You have been assigned for the position of " + freelancerType + " in " + solutionName + ".";
                     notifications.NotificationTitle = "New Role Assigned";
                     notifications.NotificationTime = DateTime.Now;
                     notifications.IsRead = false;
                     notificationsList.Add(notifications);
 
-                    if(notificationsList.Count > 0)
+                    if (notificationsList.Count > 0)
                     {
                         await SaveNotificationData(notificationsList);
                     }
@@ -2217,22 +2218,56 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var UpdateImage = _db.FreelancerDetails.Where(x => x.UserId == solutionImage.FreelancerId).FirstOrDefault();
-                if (UpdateImage != null)
+                var checkUserType = _db.Users.Where(x => x.Id == solutionImage.FreelancerId).Select(x => x.UserType).FirstOrDefault();
+                if (checkUserType != null)
                 {
-
-                    UpdateImage.ImageBlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
-                    UpdateImage.ImagePath = solutionImage.ImagePath;
-                    UpdateImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
-
-                    _db.SaveChanges();
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                    if (checkUserType == "Client")
                     {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Data Save Sucessfully !"
-                    });
+                        var UpdateClientImage = await _db.ClientDetails.Where(x => x.UserId == solutionImage.FreelancerId).FirstOrDefaultAsync();
+                        if (UpdateClientImage != null)
+                        {
+
+                            UpdateClientImage.ImageBlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
+                            UpdateClientImage.ImagePath = solutionImage.ImagePath;
+                            UpdateClientImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
+
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Data Save Sucessfully !"
+                            });
+                        }
+                    }
+                    else if (checkUserType == "Freelancer")
+                    {
+                        var UpdateFreelancerImage = await _db.FreelancerDetails.Where(x => x.UserId == solutionImage.FreelancerId).FirstOrDefaultAsync();
+                        if (UpdateFreelancerImage != null)
+                        {
+
+                            UpdateFreelancerImage.ImageBlobStorageBaseUrl = solutionImage.BlobStorageBaseUrl;
+                            UpdateFreelancerImage.ImagePath = solutionImage.ImagePath;
+                            UpdateFreelancerImage.ImageUrlWithSas = solutionImage.ImageUrlWithSas;
+
+                            _db.SaveChanges();
+
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Data Save Sucessfully !"
+                            });
+                        }
+                    }
                 }
+
+
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "User Not Found !"
+                });
+
             }
             catch (Exception ex)
             {
@@ -2242,11 +2277,6 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException
                 });
             }
-            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Something Went Wrong"
-            });
         }
 
         [HttpPost]

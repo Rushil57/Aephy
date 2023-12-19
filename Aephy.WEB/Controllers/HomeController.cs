@@ -467,6 +467,15 @@ namespace Aephy.WEB.Controllers
                                 HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
                             }
 
+                            string clientimagepath = data.Result.ClientImagePath;
+                            if (clientimagepath != null)
+                            {
+                                string sasToken = GenerateImageSasToken(clientimagepath);
+                                string imageUrlWithSas = $"{data.Result.ClientImagePath}?{sasToken}";
+                                data.Result.ImageUrlWithSas = imageUrlWithSas;
+                                HttpContext.Session.SetString("UserProfileImage", imageUrlWithSas);
+                            }
+
                             string updatedCurrency = data.Result.PreferredCurrency;
                             if (updatedCurrency != null)
                             {

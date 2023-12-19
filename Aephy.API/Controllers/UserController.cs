@@ -151,6 +151,8 @@ namespace Aephy.API.Controllers
                         UserDetails.onFriday = user.onFriday;
                         UserDetails.onSaturday = user.onSaturday;
                         UserDetails.onSunday = user.onSunday;
+                        UserDetails.ClientImagePath = clientDetails.ImagePath;
+                        UserDetails.ClientImageUrlWithSas = clientDetails.ImageUrlWithSas;
 
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel

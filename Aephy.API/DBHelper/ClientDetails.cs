@@ -14,5 +14,9 @@
         public string? City { get; set; }
 
         public string? PostCode { get; set; }
+
+        public string? ImagePath { get; set; }
+        public string? ImageBlobStorageBaseUrl { get; set; }
+        public string? ImageUrlWithSas { get; set; }
     }
 }

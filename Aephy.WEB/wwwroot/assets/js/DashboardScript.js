@@ -690,7 +690,12 @@ function getClientProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.Projects);
-                $('#expense_amount').html(Data.CurrentCurrency + formatNumber(Data.Expense.toFixed()));
+                if (Data.Expense == 0) {
+                    $('#expense_amount').html(0);
+                } else {
+                    $('#expense_amount').html(Data.CurrentCurrency + formatNumber(Data.Expense.toFixed()));
+                }
+                
                 $('#Project_Duartion').html(Data.ProjectDuartion + " Days");
             }
             $("#preloader").hide();
@@ -714,7 +719,12 @@ function getFreelancerProjectExpense() {
                 var Data = result.Result
 
                 $("#ContractUser-Value").html(Data.FreelancerActiveProject);
-                $('#revenue_amount').html(Data.FreelancerCurrency + formatNumber(Data.RevenueAmount));
+                if (Data.RevenueAmount == 0) {
+                    $('#revenue_amount').html(0);
+                } else {
+                    $('#revenue_amount').html(Data.FreelancerCurrency + formatNumber(Data.RevenueAmount));
+                }
+                
                 $('#Project_Duartion').html(Data.ProjectDuration + " Days");
             } else {
                 $("#ContractUser-Value").html(0);
@@ -903,6 +913,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#ContractDueDate").css("display", "none");
                     $("#ProjectTotalDueAmount").css("display", "none");
                     $("#invoice-mainTitle").html("RECEIPT");
+                    $(".cls-ModelInvoiceMainTitle").html("RECEIPT");
                     $("#billTo-tile").html("Received From");
                     $("#InvoiceNumber").html("Receipt # " + data.InvoiceNumber);
 
@@ -919,6 +930,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#invoice-mainTitle").html("Invoice");
+                    $(".cls-ModelInvoiceMainTitle").html("Invoice");
                     $("#billTo-tile").html("Bill to");
                     $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
 
@@ -933,6 +945,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 if (data.TransactionType == "Invoice3 - Total platform fees") {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#invoice-mainTitle").html("PROFORMA INVOICE");
+                    $(".cls-ModelInvoiceMainTitle").html("PROFORMA INVOICE");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#billTo-tile").html("Bill to");
@@ -949,6 +962,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
                 if (data.TransactionType == "CREDIT MEMO") {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#invoice-mainTitle").html("CREDIT MEMO");
+                    $(".cls-ModelInvoiceMainTitle").html("CREDIT MEMO");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "none");
                     $("#billTo-tile").html("Bill to");
@@ -974,6 +988,7 @@ function OpenInvoiceModalPopUp(invoiceId) {
 
                     $("#from-Title").html(data.FreelancerFullName);
                     $("#invoice-mainTitle").html("INVOICE");
+                    $(".cls-ModelInvoiceMainTitle").html("INVOICE");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#billTo-tile").html("Bill to");
@@ -1094,6 +1109,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
                     $("#ContractDueDate").css("display", "none");
                     $("#ProjectTotalDueAmount").css("display", "none");
                     $("#invoice-mainTitle").html("RECEIPT");
+                    $(".cls-ModelInvoiceMainTitle").html("RECEIPT");
                     $("#billTo-tile").html("Received From");
                     $("#InvoiceNumber").html("Receipt # " + data.InvoiceNumber);
 
@@ -1110,6 +1126,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#invoice-mainTitle").html("Invoice");
+                    $(".cls-ModelInvoiceMainTitle").html("Invoice");
                     $("#billTo-tile").html("Bill to");
                     $("#InvoiceNumber").html("Invoice # " + data.InvoiceNumber);
 
@@ -1124,6 +1141,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
                 if (data.TransactionType == "Invoice3 - Total platform fees") {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#invoice-mainTitle").html("PROFORMA INVOICE");
+                    $(".cls-ModelInvoiceMainTitle").html("PROFORMA INVOICE");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#billTo-tile").html("Bill to");
@@ -1140,6 +1158,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
                 if (data.TransactionType == "CREDIT MEMO") {
                     $("#invoiceCeated-title").css("display", "none");
                     $("#invoice-mainTitle").html("CREDIT MEMO");
+                    $(".cls-ModelInvoiceMainTitle").html("CREDIT MEMO");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "none");
                     $("#billTo-tile").html("Bill to");
@@ -1165,6 +1184,7 @@ function OpenFreelancerInvoiceModalPopUp(invoiceId) {
 
                     $("#from-Title").html(data.FreelancerFullName);
                     $("#invoice-mainTitle").html("INVOICE");
+                    $(".cls-ModelInvoiceMainTitle").html("INVOICE");
                     $("#ContractDueDate").css("display", "block");
                     $("#ProjectTotalDueAmount").css("display", "block");
                     $("#billTo-tile").html("Bill to");

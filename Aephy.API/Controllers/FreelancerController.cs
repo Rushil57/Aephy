@@ -4,23 +4,12 @@ using Aephy.API.Models;
 using Aephy.API.NotificationMethod;
 
 //using Aephy.API.Stripe;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 using System.Xml.Linq;
 using static Aephy.API.Models.AdminViewModel;
-using static Azure.Core.HttpHeader;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aephy.API.Controllers
 {
@@ -88,7 +77,7 @@ namespace Aephy.API.Controllers
                     adminnotifications.ToUserId = adminDetails.Id;
                     notificationsList.Add(adminnotifications);
 
-                    await notificationHelper.SaveNotificationData(_db,notificationsList);
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2579,7 +2568,7 @@ namespace Aephy.API.Controllers
                     }
 
 
-                    await notificationHelper.SaveNotificationData(_db,notificationsList);
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
@@ -2763,7 +2752,7 @@ namespace Aephy.API.Controllers
                         {
                             TopProfessionalReviews freelanceReview = new TopProfessionalReviews();
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
-                            if(clientname != null)
+                            if (clientname != null)
                             {
                                 freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
                             }
@@ -2888,6 +2877,18 @@ namespace Aephy.API.Controllers
                             _db.FreelancerFindProcessDetails.Update(dbModel);
                             await _db.SaveChangesAsync();
 
+                            var updatedRequestData = await _db.FreelancerFindProcessDetails.ToListAsync();
+                            var dbModelUpdated = updatedRequestData.Where(x => x.Id == model.Id).FirstOrDefault();
+
+                            if (updatedRequestData != null)
+                            {
+                                var isPendingCompleted = updatedRequestData.Where(x => x.FreelancerFindProcessHeaderId == dbModelUpdated.FreelancerFindProcessHeaderId && x.ApproveStatus == 0).ToList();
+                                if (!isPendingCompleted.Any())
+                                {
+                                    await TeamCompleteCheck(dbModelUpdated, updatedRequestData);
+                                }
+                            }
+
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                             {
                                 StatusCode = StatusCodes.Status200OK,
@@ -2918,32 +2919,7 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-                        //=== change tem completed status true. ===//
-                        var header = await _db.FreelancerFindProcessHeader.Where(x => x.Id == dbModel.FreelancerFindProcessHeaderId).FirstOrDefaultAsync();
-                        if (header != null)
-                        {
-                            header.IsTeamCompleted = true;
-                            _db.FreelancerFindProcessHeader.Update(header);
-                            await _db.SaveChangesAsync();
-                        }
-
-                        List<Notifications> notificationsList = new List<Notifications>();
-                        var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                        var solutionName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
-
-                        if (adminDetails != null)
-                        {
-                            var assembleTeam = new Notifications
-                            {
-                                NotificationTitle = "Team Assembled",
-                                NotificationText = $"Team ready for [{solutionName}]",
-                                NotificationTime = DateTime.Now,
-                                IsRead = false,
-                                ToUserId = adminDetails.Id
-                            };
-                            notificationsList.Add(assembleTeam);
-                            await notificationHelper.SaveNotificationData(_db, notificationsList);
-                        }
+                        await TeamCompleteCheck(dbModel, oldRequestData);
                     }
                 }
 
@@ -2961,8 +2937,56 @@ namespace Aephy.API.Controllers
                     Message = ex.Message + ex.InnerException
                 });
             }
-        }
 
+            async Task TeamCompleteCheck(FreelancerFindProcessDetails? dbModel, List<FreelancerFindProcessDetails> detailList)
+            {
+                //=== change tem completed status true. ===//
+                var header = await _db.FreelancerFindProcessHeader.Where(x => x.Id == dbModel.FreelancerFindProcessHeaderId).FirstOrDefaultAsync();
+                List<SolutionTeamViewModel> teamList = new List<SolutionTeamViewModel>();
+
+                if (header != null)
+                {
+                    header.IsTeamCompleted = true;
+                    _db.FreelancerFindProcessHeader.Update(header);
+                    await _db.SaveChangesAsync();
+
+                    if (detailList.Any())
+                    {
+                        var listOfFreelancer = detailList.Where(x => x.FreelancerFindProcessHeaderId == header.Id && x.ApproveStatus == 1).ToList();
+                        foreach (var data in listOfFreelancer)
+                        {
+                            SolutionTeamViewModel teamData = new SolutionTeamViewModel();
+                            teamData.FreelancerId = data.FreelancerId;
+                            teamData.SolutionFundId = _db.SolutionFund.Where(x => x.SolutionId == header.SolutionId && x.IndustryId == header.IndustryId && x.ClientId == header.ClientId && x.ProjectType == header.ProjectType).Select(x => x.Id).FirstOrDefault();
+                            teamList.Add(teamData);
+                        }
+                    }
+                }
+
+                if (teamList.Count > 0)
+                {
+                    await SaveSolutionTeamData(teamList);
+                }
+
+                List<Notifications> notificationsList = new List<Notifications>();
+                var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                var solutionName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
+
+                if (adminDetails != null)
+                {
+                    var assembleTeam = new Notifications
+                    {
+                        NotificationTitle = "Team Assembled",
+                        NotificationText = $"Team ready for [{solutionName}]",
+                        NotificationTime = DateTime.Now,
+                        IsRead = false,
+                        ToUserId = adminDetails.Id
+                    };
+                    notificationsList.Add(assembleTeam);
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
+                }
+            }
+        }
 
         [HttpGet]
         [Route("RunAlgorithm")]
@@ -3111,17 +3135,105 @@ namespace Aephy.API.Controllers
             }
         }
 
-        //=== Check for 24 hourse or not ===//
-        //static bool Is24HoursOrMore(DateTime givenTime)
-        //{
-        //    //DateTime currentTime = DateTime.Now;
-        //    //TimeSpan timeDifference = currentTime - givenTime;
-        //    //TimeSpan twentyFourHours = TimeSpan.FromHours(24);
+        //=== This function use when team created then add team in solution team ==//
+        [HttpPost]
+        [Route("SaveSolutionTeamData")]
+        public async Task<string> SaveSolutionTeamData(List<SolutionTeamViewModel> teamList)
+        {
+            List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
+            try
+            {
+                List<Notifications> notificationsList = new List<Notifications>();
+                if (teamList.Count > 0)
+                {
+                    foreach (var data in teamList)
+                    {
+                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == data.SolutionFundId).FirstOrDefault();
 
-        //    //return timeDifference >= twentyFourHours;
-        //    givenTime.Hour;
-        //    return givenTime.Hour
+                        var totalMileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == solutionFundData.ProjectType).ToListAsync();
+                        var totalMilestoneDays = totalMileStoneData.Sum(x => x.Days);
 
-        //}
+                        var freelancerPreferedCurrency = "";
+                        var freelancerData = _db.Users.Where(x => x.Id == data.FreelancerId).FirstOrDefault();
+                        var freelancerDetailsData = _db.FreelancerDetails.Where(x => x.UserId == data.FreelancerId).FirstOrDefault();
+
+                        if (string.IsNullOrEmpty(freelancerData.PreferredCurrency))
+                        {
+                            freelancerPreferedCurrency = "EUR";
+                        }
+
+                        var clientPreferedCurrency = _db.Users.Where(x => x.Id == data.ClientId).Select(x => x.PreferredCurrency).FirstOrDefault();
+
+                        var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                        && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                        var HourlyRate = Convert.ToDecimal(freelancerDetailsData.HourlyRate);
+                        decimal ExchangeHourlyRate = HourlyRate;
+                        if (exchangeRate != null)
+                        {
+                            ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
+                        }
+
+                        //var projectManager = false;
+                        decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
+                        decimal Platformfees = 0;
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
+                        }
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
+                        }
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                        }
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+                        }
+
+                        solutionTeam.Add(new SolutionTeam()
+                        {
+                            FreelancerId = data.UserId,
+                            SolutionFundId = solutionFundData.Id,
+                            IsProjectManager = false,
+                            Amount = contractAmount,
+                            PlatformFees = Platformfees
+                        });
+
+                        var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
+                        var solutionName = "";
+                        if (solutionFundData != null)
+                        {
+                            solutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        }
+
+                        if (freelancerName != null)
+                        {
+                            var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+
+                            Notifications notifications = new Notifications();
+                            notifications.NotificationTitle = "Freelancer Selection:";
+                            notifications.NotificationText = "\"" + freelancerName.FirstName + " selected for '" + solutionName + "'.\"";
+                            notifications.NotificationTime = DateTime.Now;
+                            notifications.IsRead = false;
+                            notifications.ToUserId = adminDetails.Id;
+                            notificationsList.Add(notifications);
+                        }
+                    }
+                    _db.SolutionTeam.AddRange(solutionTeam);
+                    _db.SaveChanges();
+
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
+                }
+
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return ex.InnerException + ex.Message;
+            }
+        }
     }
 }

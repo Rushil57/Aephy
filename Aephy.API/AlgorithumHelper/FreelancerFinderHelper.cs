@@ -48,9 +48,9 @@ public class FreelancerFinderHelper
                     if (projectType == "small")
                     {
                         associate = 1;
-                        expert = 1;
+                        projectManager = 1;
                         associateOld = 1;
-                        expertOld = 1;
+                        projectManagerOld = 1;
                     }
                     else if (projectType == "medium")
                     {

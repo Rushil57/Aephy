@@ -896,7 +896,6 @@ function GetMiletoneList() {
             $("#MileStoneTable").find("tr:gt(0)").remove();
             $("#MileStoneTable tbody").append(htm);
             $("#customProjectDuration").val(TotalDaysCount);
-            $("#custom-price").val(result.Result.Customprice);
             $("#preloader").hide();
         },
         error: function (result) {
@@ -1212,7 +1211,7 @@ function ResetCustomeForm() {
     $("#custom-ProjectOutline").val("");
     $("#custom-ProjectDescription").val("");
     $("#Customproject-Duartion").val("");
-    $("#custom-price").val("");
+    $("#custom-price").val(0);
     $("#Customstart-date").val("");
     $("#Customend-date").val("");
     $('#CustomexcludeWeekends').prop('checked', false);;
@@ -1235,7 +1234,7 @@ function CloseCustomisePopUp() {
 
     $("#custom-ProjectOutline").val('');
     $("#custom-ProjectDescription").val('');
-    $("#custom-price").val('');
+    $("#custom-price").val(0);
 }
 
 let excludeData = [];

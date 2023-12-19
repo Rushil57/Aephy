@@ -647,6 +647,10 @@ namespace Aephy.API.Controllers
                         solutionMilesData = _db.SolutionMilestone.Where(x => x.Id == fundProgress.MileStoneId).FirstOrDefault();
                     }
 
+                    // CHECK TEAM COMPLETE
+                    var checkTeamCompleted = _db.FreelancerFindProcessHeader.Where(x => x.SolutionId == fundProgress.SolutionId && x.IndustryId == fundProgress.IndustryId && x.ClientId == fundProgress.ClientId && x.ProjectType == fundProgress.ProjectType).Select(x => x.IsTeamCompleted).FirstOrDefault();
+                    // CHECK TEAM COMPLETE
+
                     var CheckInCompeleteFund = _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.Id == model.SolutionFundId && x.ProjectStatus == "INPROGRESS").FirstOrDefault();
                     if (CheckInCompeleteFund != null)
                     {
@@ -671,31 +675,33 @@ namespace Aephy.API.Controllers
                             decimal calculateProjectPrice = 0;
                             if (MilestoneTotalDaysByProjectType.Count > 0)
                             {
-                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
-                               .GroupBy(l => l.ProjectType)
-                               .Select(cl => new SolutionMilestone
-                               {
-                                   ProjectType = cl.First().ProjectType,
-                                   Days = cl.Sum(c => c.Days),
-                               }).FirstOrDefault();
+                                var mileStoneToTalDays = MilestoneTotalDaysByProjectType.Sum(x => x.Days);
 
-                                if (mileStoneToTalDays.Days > 0)
+                                if (mileStoneToTalDays > 0)
                                 {
-                                    calculateProjectPrice = (Convert.ToDecimal(fundProgress.ProjectPrice) / mileStoneToTalDays.Days) * solutionMilesData.Days;
+                                    calculateProjectPrice = (Convert.ToDecimal(fundProgress.ProjectPrice) / mileStoneToTalDays) * solutionMilesData.Days;
                                     fundProgress.ProjectPrice = calculateProjectPrice.ToString();
                                 }
                             }
                         }
                         else
                         {
-                            if (!fundProgress.IsProjectPriceAlreadyCount)
+                            if (checkTeamCompleted)
                             {
-                                var finalPrice = await CountFinalProjectPricing(fundProgress);
-                                projectFinalPrice = finalPrice;
-                                fundProgress.ProjectPrice = finalPrice.ToString();
-                                fundProgress.IsProjectPriceAlreadyCount = true;
-                                _db.SaveChanges();
+                                if (!fundProgress.IsProjectPriceAlreadyCount)
+                                {
+                                    var finalPrice = await CountFinalProjectPricing(fundProgress);
+                                    projectFinalPrice = finalPrice;
+                                    fundProgress.ProjectPrice = finalPrice.ToString();
+                                    fundProgress.IsProjectPriceAlreadyCount = true;
+                                    _db.SaveChanges();
+                                }
                             }
+                            else
+                            {
+                                fundProgress.ProjectPrice = "TBD";
+                            }
+
                         }
                     }
                     else
@@ -711,13 +717,6 @@ namespace Aephy.API.Controllers
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
                     if (milestoneData.Count > 0)
                     {
-                        // SolutionMilestone mileStoneToTalDays = milestoneData
-                        //.GroupBy(l => l.ProjectType)
-                        //.Select(cl => new SolutionMilestone
-                        //{
-                        //    ProjectType = cl.First().ProjectType,
-                        //    Days = cl.Sum(c => c.Days),
-                        //}).FirstOrDefault();
                         var mileStoneToTalDays = milestoneData.Sum(x => x.Days);
 
                         foreach (var stonedata in milestoneData)
@@ -745,10 +744,7 @@ namespace Aephy.API.Controllers
                             int? sumofReview = 0;
                             double finalRate = 0.0;
                             SolutionTeamViewModel solutionTeam = new SolutionTeamViewModel();
-                            //if (soltiondata.IsProjectManager)
-                            //{
-                            //    solutionTeam.ProjectManagerPlatformFees = soltiondata.PlatformFees;
-                            //}
+
                             var solutionFunddata = _db.SolutionFund.Where(x => x.Id == soltiondata.SolutionFundId).FirstOrDefault();
                             solutionTeam.SolutionFundId = solutionFunddata.Id;
                             solutionTeam.SolutionId = solutionFunddata.SolutionId;
@@ -2093,202 +2089,203 @@ namespace Aephy.API.Controllers
                     var projectmanagertotal = 0;
 
                     CustomProjectDetials? teamData = null;
-                    var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                    if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
-                    {
-                        var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
-                        if (solutionIndustryData != null)
-                        {
-                            var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
-                            if (solutionDefineData != null)
-                            {
-                                teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
-                            }
-                        }
-                        experttotal = Convert.ToInt32(teamData.Expert);
-                        assosiatetotal = Convert.ToInt32(teamData.Associate);
-                        projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
-                    }
-
-
-                    if (Userslist.Count > 0)
-                    {
-                        foreach (var data in Userslist)
-                        {
-                            if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
-                            {
-                                //var teamSize = "1 Project Manager + 1 Associate";
-                                if (!associateDetailsAdded)
-                                {
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                    if (associateDetails != null)
-                                    {
-                                        freelancerList.Add(associateDetails);
-                                        associateDetailsAdded = true;
-                                    }
-                                }
-
-                                if (!projectManagerAdded)
-                                {
-                                    var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                    if (projectManagerDetails != null)
-                                    {
-                                        freelancerList.Add(projectManagerDetails);
-                                        projectManagerAdded = true;
-                                    }
-                                }
-
-                            }
-                            if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
-                            {
-                                //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
-                                if (!expertDetailsAdded)
-                                {
-                                    var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                    if (expertDetails != null)
-                                    {
-                                        freelancerList.Add(expertDetails);
-                                        expertDetailsAdded = true;
-                                    }
-                                }
-
-                                if (!associateDetailsAdded)
-                                {
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                    if (associateDetails != null)
-                                    {
-                                        freelancerList.Add(associateDetails);
-                                        associateDetailsAdded = true;
-                                    }
-                                }
-
-                                if (!projectManagerAdded)
-                                {
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                    if (projectManager != null)
-                                    {
-                                        freelancerList.Add(projectManager);
-                                        projectManagerAdded = true;
-                                    }
-                                }
-
-                            }
-                            if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
-                            {
-                                //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-                                if (exprtcount <= 1)
-                                {
-                                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                    if (expertsDetails != null)
-                                    {
-                                        freelancerList.Add(expertsDetails);
-                                        exprtcount++;
-                                    }
-                                }
-
-                                if (associatecount <= 1)
-                                {
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                    if (associateDetails != null)
-                                    {
-                                        freelancerList.Add(associateDetails);
-                                        associatecount++;
-                                    }
-                                }
-
-                                if (!projectManagerAdded)
-                                {
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                    if (projectManager != null)
-                                    {
-                                        freelancerList.Add(projectManager);
-                                        projectManagerAdded = true;
-                                    }
-                                }
-
-                            }
-                            if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
-                            {
-                                //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-
-                                if (!expertDetailsAdded)
-                                {
-                                    if (exprtcount < experttotal)
-                                    {
-                                        var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                        if (expertsDetails != null)
-                                        {
-                                            freelancerList.Add(expertsDetails);
-                                            exprtcount++;
-                                        }
-                                    }
-                                    if (exprtcount == experttotal)
-                                    {
-                                        expertDetailsAdded = true;
-                                    }
-                                }
-
-
-                                if (!associateDetailsAdded)
-                                {
-                                    if (associatecount < assosiatetotal)
-                                    {
-                                        var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                        if (associateDetails != null)
-                                        {
-                                            freelancerList.Add(associateDetails);
-                                            associatecount++;
-                                        }
-                                    }
-                                    if (associatecount == assosiatetotal)
-                                    {
-                                        associateDetailsAdded = true;
-                                    }
-                                }
-
-
-                                if (!projectManagerAdded)
-                                {
-                                    if (projectmanagercount < projectmanagertotal)
-                                    {
-                                        var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                        if (projectManager != null)
-                                        {
-                                            freelancerList.Add(projectManager);
-                                            //
-                                            projectmanagercount++;
-                                        }
-                                    }
-                                    if (projectmanagercount == projectmanagertotal)
-                                    {
-                                        projectManagerAdded = true;
-                                    }
-
-                                }
-
-                            }
-                        }
-                    }
-
-
-                    foreach (var item in freelancerList)
-                    {
-                        contractUsers.Add(new ContractUser()
-                        {
-                            Percentage = 0, // this field is not in use
-                            StripeTranferId = string.Empty,
-                            IsTransfered = false,
-                            ApplicationUserId = item.UserId,
-                            ContractId = contractSave.Id
-                        });
-                    }
-                    //var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" ).FirstOrDefault();
-                    //if (projectManager != null)
+                    //var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
+                    //if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                     //{
-                    //    contractUsers.Add(new ContractUser() { Percentage = 0, StripeTranferId = string.Empty, IsTransfered = false, ApplicationUserId = projectManager.UserId, ContractId = contractSave.Id });
+                    //    var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId).FirstOrDefault();
+                    //    if (solutionIndustryData != null)
+                    //    {
+                    //        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == solutionFundData.ProjectType).FirstOrDefault();
+                    //        if (solutionDefineData != null)
+                    //        {
+                    //            teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                    //        }
+                    //    }
+                    //    experttotal = Convert.ToInt32(teamData.Expert);
+                    //    assosiatetotal = Convert.ToInt32(teamData.Associate);
+                    //    projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
                     //}
-                    _db.ContractUser.AddRange(contractUsers);
-                    _db.SaveChanges();
+
+
+                    //if (Userslist.Count > 0)
+                    //{
+                    //    foreach (var data in Userslist)
+                    //    {
+                    //        if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
+                    //        {
+                    //            //var teamSize = "1 Project Manager + 1 Associate";
+                    //            if (!associateDetailsAdded)
+                    //            {
+                    //                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (associateDetails != null)
+                    //                {
+                    //                    freelancerList.Add(associateDetails);
+                    //                    associateDetailsAdded = true;
+                    //                }
+                    //            }
+
+                    //            if (!projectManagerAdded)
+                    //            {
+                    //                var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (projectManagerDetails != null)
+                    //                {
+                    //                    freelancerList.Add(projectManagerDetails);
+                    //                    projectManagerAdded = true;
+                    //                }
+                    //            }
+
+                    //        }
+                    //        if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                    //        {
+                    //            //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
+                    //            if (!expertDetailsAdded)
+                    //            {
+                    //                var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (expertDetails != null)
+                    //                {
+                    //                    freelancerList.Add(expertDetails);
+                    //                    expertDetailsAdded = true;
+                    //                }
+                    //            }
+
+                    //            if (!associateDetailsAdded)
+                    //            {
+                    //                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (associateDetails != null)
+                    //                {
+                    //                    freelancerList.Add(associateDetails);
+                    //                    associateDetailsAdded = true;
+                    //                }
+                    //            }
+
+                    //            if (!projectManagerAdded)
+                    //            {
+                    //                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (projectManager != null)
+                    //                {
+                    //                    freelancerList.Add(projectManager);
+                    //                    projectManagerAdded = true;
+                    //                }
+                    //            }
+
+                    //        }
+                    //        if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                    //        {
+                    //            //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
+                    //            if (exprtcount <= 1)
+                    //            {
+                    //                var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (expertsDetails != null)
+                    //                {
+                    //                    freelancerList.Add(expertsDetails);
+                    //                    exprtcount++;
+                    //                }
+                    //            }
+
+                    //            if (associatecount <= 1)
+                    //            {
+                    //                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (associateDetails != null)
+                    //                {
+                    //                    freelancerList.Add(associateDetails);
+                    //                    associatecount++;
+                    //                }
+                    //            }
+
+                    //            if (!projectManagerAdded)
+                    //            {
+                    //                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                    //                if (projectManager != null)
+                    //                {
+                    //                    freelancerList.Add(projectManager);
+                    //                    projectManagerAdded = true;
+                    //                }
+                    //            }
+
+                    //        }
+                    //        if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                    //        {
+                    //            //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
+
+                    //            if (!expertDetailsAdded)
+                    //            {
+                    //                if (exprtcount < experttotal)
+                    //                {
+                    //                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                    //                    if (expertsDetails != null)
+                    //                    {
+                    //                        freelancerList.Add(expertsDetails);
+                    //                        exprtcount++;
+                    //                    }
+                    //                }
+                    //                if (exprtcount == experttotal)
+                    //                {
+                    //                    expertDetailsAdded = true;
+                    //                }
+                    //            }
+
+
+                    //            if (!associateDetailsAdded)
+                    //            {
+                    //                if (associatecount < assosiatetotal)
+                    //                {
+                    //                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                    //                    if (associateDetails != null)
+                    //                    {
+                    //                        freelancerList.Add(associateDetails);
+                    //                        associatecount++;
+                    //                    }
+                    //                }
+                    //                if (associatecount == assosiatetotal)
+                    //                {
+                    //                    associateDetailsAdded = true;
+                    //                }
+                    //            }
+
+
+                    //            if (!projectManagerAdded)
+                    //            {
+                    //                if (projectmanagercount < projectmanagertotal)
+                    //                {
+                    //                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                    //                    if (projectManager != null)
+                    //                    {
+                    //                        freelancerList.Add(projectManager);
+                    //                        //
+                    //                        projectmanagercount++;
+                    //                    }
+                    //                }
+                    //                if (projectmanagercount == projectmanagertotal)
+                    //                {
+                    //                    projectManagerAdded = true;
+                    //                }
+
+                    //            }
+
+                    //        }
+                    //    }
+                    //}
+
+                    var solutionTeamList = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
+                    if (solutionTeamList.Count > 0)
+                    {
+                        foreach (var item in solutionTeamList)
+                        {
+                            contractUsers.Add(new ContractUser()
+                            {
+                                Percentage = 0, // this field is not in use
+                                StripeTranferId = string.Empty,
+                                IsTransfered = false,
+                                ApplicationUserId = item.FreelancerId,
+                                ContractId = contractSave.Id
+                            });
+                        }
+                        _db.ContractUser.AddRange(contractUsers);
+                        _db.SaveChanges();
+                    }
+
+
+
 
 
                     // Save to SolutionFund Table
@@ -2560,15 +2557,15 @@ namespace Aephy.API.Controllers
         [Route("SaveProjectInitiated")]
         public async Task<IActionResult> SaveProjectInitiated([FromBody] solutionFundViewModel model)
         {
-            FreelancerFinderHelper helper = new FreelancerFinderHelper();
-            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
+
             try
             {
                 if (model != null)
                 {
                     if (model.GetNextMileStoneData)
                     {
-                        var mileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
+                        var NextmileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.Id > model.MileStoneId).FirstOrDefaultAsync();
+
                         var milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                         var checkType = _db.SolutionFund.Where(x => x.MileStoneId == model.MileStoneId).FirstOrDefault();
                         var Currency = await ConvertToCurrencySign(model.ClientPreferredCurrency);
@@ -2591,7 +2588,7 @@ namespace Aephy.API.Controllers
                                 milestoneList.Add(milestonData);
                             }
                         }
-                        if (mileStoneData != null)
+                        if (NextmileStoneData != null)
                         {
                             var solutionfund = new SolutionFund()
                             {
@@ -2602,7 +2599,7 @@ namespace Aephy.API.Controllers
                                 ProjectPrice = checkType.ProjectPrice,
                                 ProjectStatus = "INITIATED",
                                 FundType = checkType.FundType,
-                                MileStoneId = mileStoneData.Id
+                                MileStoneId = NextmileStoneData.Id
                             };
                             _db.SolutionFund.Add(solutionfund);
                             _db.SaveChanges();
@@ -2612,33 +2609,25 @@ namespace Aephy.API.Controllers
                             var projectType = model.ProjectType.ToLower();
                             try
                             {
-                                var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                                if (Userslist.Count > 0)
+                                var getpreviousClientFundData = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType && x.ProjectStatus == "COMPLETED" && x.FundType == SolutionFund.FundTypes.MilestoneFund).OrderBy(e => e.Id).LastOrDefault();
+                                var solutionList = _db.SolutionTeam.Where(x => x.SolutionFundId == getpreviousClientFundData.Id).ToList();
+                                if (solutionList.Count > 0)
                                 {
-                                    if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                                    List<SolutionTeamViewModel> SolutionteamList = new List<SolutionTeamViewModel>();
+                                    foreach (var teamdata in solutionList)
                                     {
-                                        CustomProjectDetials? teamData = null;
-                                        var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == solutionfund.SolutionId && x.IndustryId == solutionfund.IndustryId).FirstOrDefault();
-                                        if (solutionIndustryData != null)
-                                        {
-                                            var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ProjectType == projectType).FirstOrDefault();
-                                            if (solutionDefineData != null)
-                                            {
-                                                teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
-                                            }
-                                        }
-                                        var experttotal = Convert.ToInt32(teamData.Expert);
-                                        var assosiatetotal = Convert.ToInt32(teamData.Associate);
-                                        var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
-                                        await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
+                                        SolutionTeamViewModel team = new SolutionTeamViewModel();
+                                        team.FreelancerId = teamdata.FreelancerId;
+                                        team.SolutionFundId = solutionfund.Id;
+                                        team.ClientId = getpreviousClientFundData.ClientId;
+                                        SolutionteamList.Add(team);
                                     }
 
-                                    else
-                                    {
-                                        await SaveSolutionTeamData(solutionfund, 0, 0, 0);
-                                    }
-
+                                    await SaveSolutionTeamData(SolutionteamList);
                                 }
+
+
+
                             }
                             catch (Exception ex)
                             {
@@ -2650,24 +2639,18 @@ namespace Aephy.API.Controllers
                             decimal calculateProjectPrice = 0;
                             if (MilestoneTotalDaysByProjectType.Count > 0)
                             {
-                                SolutionMilestone mileStoneToTalDays = MilestoneTotalDaysByProjectType
-                               .GroupBy(l => l.ProjectType)
-                               .Select(cl => new SolutionMilestone
-                               {
-                                   ProjectType = cl.First().ProjectType,
-                                   Days = cl.Sum(c => c.Days),
-                               }).FirstOrDefault();
+                                var mileStoneToTalDays = MilestoneTotalDaysByProjectType.Sum(x => x.Days);
 
-                                if (mileStoneToTalDays.Days > 0)
+                                if (mileStoneToTalDays > 0)
                                 {
 
                                     //var finalPrice = await CountFinalProjectPricing(solutionfund);
-                                    calculateProjectPrice = (Convert.ToDecimal(solutionfund.ProjectPrice) / mileStoneToTalDays.Days) * mileStoneData.Days;
+                                    calculateProjectPrice = (Convert.ToDecimal(solutionfund.ProjectPrice) / mileStoneToTalDays) * NextmileStoneData.Days;
                                 }
                             }
 
-                            var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == mileStoneData.Id).FirstOrDefault();
-                            var mileStone = _db.SolutionMilestone.Where(x => x.Id == mileStoneData.Id).FirstOrDefault();
+                            var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.MileStoneId == NextmileStoneData.Id).FirstOrDefault();
+                            var mileStone = _db.SolutionMilestone.Where(x => x.Id == NextmileStoneData.Id).FirstOrDefault();
                             var Funddecided = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.IsCheckOutDone == true).Count();
 
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2748,7 +2731,10 @@ namespace Aephy.API.Controllers
 
 
                             //NOTIFICATION PART
-                            var teambuild = await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+
+                            FreelancerFinderHelper helper = new FreelancerFinderHelper();
+                            await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
+
                             List<Notifications> notificationsList = new List<Notifications>();
                             var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
                             var industryName = _db.Industries.Where(x => x.Id == model.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
@@ -2756,42 +2742,42 @@ namespace Aephy.API.Controllers
 
                             var resultMsg = "";
                             var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                            if (teambuild == "success")
-                            {
-                                Notifications notifications = new Notifications();
-                                notifications.ToUserId = model.ClientId;
-                                notifications.NotificationText = "Your project in the " + industryName + " is now live on Ephylink. We're matching top freelancers to your project.";
-                                notifications.NotificationTitle = solutionName + " Initiated!";
-                                notifications.NotificationTime = DateTime.Now;
-                                notifications.IsRead = false;
-                                notificationsList.Add(notifications);
+                            //if (teambuild == "success")
+                            //{
+                            //    Notifications notifications = new Notifications();
+                            //    notifications.ToUserId = model.ClientId;
+                            //    notifications.NotificationText = "Your project in the " + industryName + " is now live on Ephylink. We're matching top freelancers to your project.";
+                            //    notifications.NotificationTitle = solutionName + " Initiated!";
+                            //    notifications.NotificationTime = DateTime.Now;
+                            //    notifications.IsRead = false;
+                            //    notificationsList.Add(notifications);
 
-                                resultMsg = "Project Initiated Successfully ! with team";
-                            }
-                            else
-                            {
-                                Notifications notifications = new Notifications();
-                                notifications.ToUserId = model.ClientId;
-                                notifications.NotificationText = "Regrettably, our search for freelancers suitable for your project '[" + solutionName + " / " + industryName + "]' has concluded without success. Please feel free to try again later.";
-                                notifications.NotificationTitle = "No Match found";
-                                notifications.NotificationTime = DateTime.Now;
-                                notifications.IsRead = false;
-                                notificationsList.Add(notifications);
+                            //    resultMsg = "Project Initiated Successfully ! with team";
+                            //}
+                            //else
+                            //{
+                            //    Notifications notifications = new Notifications();
+                            //    notifications.ToUserId = model.ClientId;
+                            //    notifications.NotificationText = "Regrettably, our search for freelancers suitable for your project '[" + solutionName + " / " + industryName + "]' has concluded without success. Please feel free to try again later.";
+                            //    notifications.NotificationTitle = "No Match found";
+                            //    notifications.NotificationTime = DateTime.Now;
+                            //    notifications.IsRead = false;
+                            //    notificationsList.Add(notifications);
 
 
-                                if (adminDetails != null)
-                                {
-                                    Notifications adminNoTeamnotifications = new Notifications();
-                                    adminNoTeamnotifications.ToUserId = adminDetails.Id;
-                                    adminNoTeamnotifications.NotificationText = "No matches for '[" + solutionName + "]'.";
-                                    adminNoTeamnotifications.NotificationTitle = "No Match found";
-                                    adminNoTeamnotifications.NotificationTime = DateTime.Now;
-                                    adminNoTeamnotifications.IsRead = false;
-                                    notificationsList.Add(adminNoTeamnotifications);
-                                }
+                            //    if (adminDetails != null)
+                            //    {
+                            //        Notifications adminNoTeamnotifications = new Notifications();
+                            //        adminNoTeamnotifications.ToUserId = adminDetails.Id;
+                            //        adminNoTeamnotifications.NotificationText = "No matches for '[" + solutionName + "]'.";
+                            //        adminNoTeamnotifications.NotificationTitle = "No Match found";
+                            //        adminNoTeamnotifications.NotificationTime = DateTime.Now;
+                            //        adminNoTeamnotifications.IsRead = false;
+                            //        notificationsList.Add(adminNoTeamnotifications);
+                            //    }
 
-                                resultMsg = "Project Initiated Successfully ! without team";
-                            }
+                            //    resultMsg = "Project Initiated Successfully ! without team";
+                            //}
 
 
                             Notifications adminnotifications = new Notifications();
@@ -3429,14 +3415,15 @@ namespace Aephy.API.Controllers
                                         _db.Contract.Update(contract);
                                         _db.SaveChanges();
                                         var message = string.Format("Amount is transferred to {0} users(freelancers) and its status is Partially Splitted Now. Please press transfer again and make sure all users are onboard(revoult)", transferredcount);
-                                        transfertoFreelancer = true;
+                                        //transfertoFreelancer = true;
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {
                                             StatusCode = StatusCodes.Status200OK,
                                             Message = message,
                                             Result = new
                                             {
-                                                IsTransfer = transfertoFreelancer
+                                                IsTransfer = transfertoFreelancer,
+                                                FundType = completedData.FundType
                                             }
 
                                         });
@@ -3450,7 +3437,8 @@ namespace Aephy.API.Controllers
                                             Message = message,
                                             Result = new
                                             {
-                                                IsTransfer = transfertoFreelancer
+                                                IsTransfer = transfertoFreelancer,
+                                                FundType = completedData.FundType
                                             }
 
                                         });
@@ -3766,7 +3754,7 @@ namespace Aephy.API.Controllers
                             // to freelancer
                             var solutionTeam = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfundId.Id).ToList();
                             var solutionTitle = "";
-                            if(solutionfundId.FundType == SolutionFund.FundTypes.ProjectFund)
+                            if (solutionfundId.FundType == SolutionFund.FundTypes.ProjectFund)
                             {
                                 solutionTitle = _db.Solutions.Where(x => x.Id == solutionfundId.SolutionId).Select(x => x.Title).FirstOrDefault();
                             }
@@ -3777,10 +3765,10 @@ namespace Aephy.API.Controllers
 
 
                             List<SolutionDisputeViewModel> freelancernotificationList = new List<SolutionDisputeViewModel>();
-                            if(solutionTeam.Count > 0)
+                            if (solutionTeam.Count > 0)
                             {
 
-                                foreach(var teamdata in solutionTeam)
+                                foreach (var teamdata in solutionTeam)
                                 {
                                     SolutionDisputeViewModel freelancerList = new SolutionDisputeViewModel();
 
@@ -4361,280 +4349,100 @@ namespace Aephy.API.Controllers
 
         }
 
-        //SaveSolutionTeamData
+        //=== This function use when team created then add team in solution team ==//
         [HttpPost]
         [Route("SaveSolutionTeamData")]
-        public async Task<string> SaveSolutionTeamData([FromBody] SolutionFund model, int assosiate, int expert, int projectmanager)
+        public async Task<string> SaveSolutionTeamData(List<SolutionTeamViewModel> teamList)
         {
             List<SolutionTeam> solutionTeam = new List<SolutionTeam>();
-
-            var projectType = model.ProjectType.ToLower();
-            var totalMileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == projectType).ToListAsync();
-            var totalMilestoneDays = totalMileStoneData.Sum(x => x.Days);
-            bool associateDetailsAdded = false;
-            bool projectManagerAdded = false;
-            bool expertDetailsAdded = false;
-            var exprtcount = 0;
-            var associatecount = 0;
-            var projectmanagercount = 0;
-
             try
             {
-                var Userslist = _db.Users.Where(x => x.UserType == "Freelancer" && x.RevolutStatus == true && !string.IsNullOrEmpty(x.RevolutConnectId)).ToList();
-                if (Userslist.Count > 0)
+                List<Notifications> notificationsList = new List<Notifications>();
+                if (teamList.Count > 0)
                 {
-                    List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
-                    foreach (var data in Userslist)
+                    foreach (var data in teamList)
                     {
-                        if (projectType == AppConst.ProjectType.SMALL_PROJECT)
+                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == data.SolutionFundId).FirstOrDefault();
+
+                        var totalMileStoneData = await _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == solutionFundData.ProjectType).ToListAsync();
+                        var totalMilestoneDays = totalMileStoneData.Sum(x => x.Days);
+
+                        var freelancerPreferedCurrency = "";
+                        var freelancerData = _db.Users.Where(x => x.Id == data.FreelancerId).FirstOrDefault();
+                        var freelancerDetailsData = _db.FreelancerDetails.Where(x => x.UserId == data.FreelancerId).FirstOrDefault();
+
+                        if (string.IsNullOrEmpty(freelancerData.PreferredCurrency))
                         {
-                            //var teamSize = "1 Project Manager + 1 Associate";
-                            if (!associateDetailsAdded)
-                            {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                if (associateDetails != null)
-                                {
-                                    freelancerList.Add(associateDetails);
-                                    associateDetailsAdded = true;
-                                }
-                            }
-
-                            if (!projectManagerAdded)
-                            {
-                                var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                if (projectManagerDetails != null)
-                                {
-                                    freelancerList.Add(projectManagerDetails);
-                                    projectManagerAdded = true;
-                                }
-                            }
-
+                            freelancerPreferedCurrency = "EUR";
                         }
-                        if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
+
+                        var clientPreferedCurrency = _db.Users.Where(x => x.Id == data.ClientId).Select(x => x.PreferredCurrency).FirstOrDefault();
+
+                        var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
+                        && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
+                        var HourlyRate = Convert.ToDecimal(freelancerDetailsData.HourlyRate);
+                        decimal ExchangeHourlyRate = HourlyRate;
+                        if (exchangeRate != null)
                         {
-                            //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
-                            if (!expertDetailsAdded)
-                            {
-                                var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                if (expertDetails != null)
-                                {
-                                    freelancerList.Add(expertDetails);
-                                    expertDetailsAdded = true;
-                                }
-                            }
-
-                            if (!associateDetailsAdded)
-                            {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                if (associateDetails != null)
-                                {
-                                    freelancerList.Add(associateDetails);
-                                    associateDetailsAdded = true;
-                                }
-                            }
-
-                            if (!projectManagerAdded)
-                            {
-                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                if (projectManager != null)
-                                {
-                                    freelancerList.Add(projectManager);
-                                    projectManagerAdded = true;
-                                }
-                            }
-
+                            ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
                         }
-                        if (projectType == AppConst.ProjectType.LARGE_PROJECT)
+
+                        //var projectManager = false;
+                        decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
+                        decimal Platformfees = 0;
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                         {
-                            //var teamsize = "1 Project Manager + 2 Experts + 2 Associates";
-
-                            if (exprtcount <= 1)
-                            {
-                                var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                if (expertsDetails != null)
-                                {
-                                    //if(exprtcount == 1)
-                                    //{
-                                    //    expertDetailsAdded = true;
-                                    //}
-                                    freelancerList.Add(expertsDetails);
-                                    exprtcount++;
-                                }
-                            }
-
-                            if (associatecount <= 1)
-                            {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                if (associateDetails != null)
-                                {
-                                    freelancerList.Add(associateDetails);
-                                    associatecount++;
-                                }
-                            }
-
-                            if (!projectManagerAdded)
-                            {
-                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                if (projectManager != null)
-                                {
-                                    freelancerList.Add(projectManager);
-                                    projectManagerAdded = true;
-                                }
-                            }
-
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
                         }
-                        if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
                         {
-                            if (!expertDetailsAdded)
-                            {
-                                if (exprtcount < expert)
-                                {
-                                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
-                                    if (expertsDetails != null)
-                                    {
-                                        freelancerList.Add(expertsDetails);
-                                        exprtcount++;
-                                    }
-                                }
-                                if (exprtcount == expert)
-                                {
-                                    expertDetailsAdded = true;
-                                }
-                            }
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
+                        }
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.LARGE_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
+                        }
+                        if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                        {
+                            Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+                        }
 
+                        solutionTeam.Add(new SolutionTeam()
+                        {
+                            FreelancerId = data.FreelancerId,
+                            SolutionFundId = solutionFundData.Id,
+                            IsProjectManager = false,
+                            Amount = contractAmount,
+                            PlatformFees = Platformfees
+                        });
 
-                            if (!associateDetailsAdded)
-                            {
-                                if (associatecount < assosiate)
-                                {
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
-                                    if (associateDetails != null)
-                                    {
-                                        freelancerList.Add(associateDetails);
-                                        associatecount++;
-                                    }
-                                }
-                                if (associatecount == assosiate)
-                                {
-                                    associateDetailsAdded = true;
-                                }
-                            }
+                        //var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
+                        var solutionName = "";
+                        if (solutionFundData != null)
+                        {
+                            solutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        }
 
+                        if (freelancerData.FirstName != null)
+                        {
+                            var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
 
-                            if (!projectManagerAdded)
-                            {
-                                if (projectmanagercount < projectmanager)
-                                {
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
-                                    if (projectManager != null)
-                                    {
-                                        freelancerList.Add(projectManager);
-                                        //
-                                        projectmanagercount++;
-                                    }
-                                }
-                                if (projectmanagercount == projectmanager)
-                                {
-                                    projectManagerAdded = true;
-                                }
-
-                            }
-
+                            Notifications notifications = new Notifications();
+                            notifications.NotificationTitle = "Freelancer Selection:";
+                            notifications.NotificationText = "\"" + freelancerData.FirstName + " selected for '" + solutionName + "'.\"";
+                            notifications.NotificationTime = DateTime.Now;
+                            notifications.IsRead = false;
+                            notifications.ToUserId = adminDetails.Id;
+                            notificationsList.Add(notifications);
                         }
                     }
+                    _db.SolutionTeam.AddRange(solutionTeam);
+                    _db.SaveChanges();
 
-
-                    List<Notifications> notificationsList = new List<Notifications>();
-                    if (freelancerList.Count > 0)
-                    {
-                        var clientId = _db.SolutionFund.Where(x => x.Id == model.Id).FirstOrDefault().ClientId;
-                        var clientPreferedCurrency = _db.Users.Where(x => x.Id == clientId).FirstOrDefault().PreferredCurrency;
-                        if (string.IsNullOrEmpty(clientPreferedCurrency))
-                        {
-                            clientPreferedCurrency = "EUR";
-                        }
-                        foreach (var data in freelancerList)
-                        {
-                            var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault().PreferredCurrency;
-                            if (string.IsNullOrEmpty(freelancerPreferedCurrency))
-                            {
-                                freelancerPreferedCurrency = "EUR";
-                            }
-                            var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency
-                            && x.ToCurrency == clientPreferedCurrency).FirstOrDefault();
-                            var HourlyRate = Convert.ToDecimal(data.HourlyRate);
-                            decimal ExchangeHourlyRate = HourlyRate;
-                            if (exchangeRate != null)
-                            {
-                                ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
-                            }
-
-                            //var projectManager = false;
-                            decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
-                            decimal Platformfees = 0;
-                            if (projectType == AppConst.ProjectType.SMALL_PROJECT)
-                            {
-                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_SMALL) / 100;
-                            }
-                            if (projectType == AppConst.ProjectType.MEDIUM_PROJECT)
-                            {
-                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_MEDIUM) / 100;
-                            }
-                            if (projectType == AppConst.ProjectType.LARGE_PROJECT)
-                            {
-                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_LARGE) / 100;
-                            }
-                            if (projectType == AppConst.ProjectType.CUSTOM_PROJECT)
-                            {
-                                Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
-                            }
-
-                            solutionTeam.Add(new SolutionTeam()
-                            {
-                                FreelancerId = data.UserId,
-                                SolutionFundId = model.Id,
-                                //IsProjectManager = projectManager,
-                                IsProjectManager = false,
-                                Amount = contractAmount,
-                                PlatformFees = Platformfees
-                            });
-
-                            var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
-                            var solutionfunddata = _db.SolutionFund.Where(x => x.Id == model.Id).FirstOrDefault();
-                            var solutionName = "";
-                            if (solutionfunddata != null)
-                            {
-                                solutionName = _db.Solutions.Where(x => x.Id == solutionfunddata.SolutionId).Select(x => x.Title).FirstOrDefault();
-                            }
-
-                            if (freelancerName != null)
-                            {
-                                var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-
-                                Notifications notifications = new Notifications();
-                                notifications.NotificationTitle = "Freelancer Selection:";
-                                notifications.NotificationText = "\"" + freelancerName.FirstName + " selected for '" + solutionName + "'.\"";
-                                notifications.NotificationTime = DateTime.Now;
-                                notifications.IsRead = false;
-                                notifications.ToUserId = adminDetails.Id;
-                                notificationsList.Add(notifications);
-                            }
-                        }
-                        _db.SolutionTeam.AddRange(solutionTeam);
-                        _db.SaveChanges();
-
-                        await notificationHelper.SaveNotificationData(_db, notificationsList);
-
-
-
-                    }
-
-                    return "success";
+                    await notificationHelper.SaveNotificationData(_db, notificationsList);
                 }
 
-                return "No User Found";
-
-
+                return "success";
             }
             catch (Exception ex)
             {
@@ -5515,8 +5323,8 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    //FreelancerFinderHelper helper = new FreelancerFinderHelper();
-                    //await helper.FindFreelancersAsync(_db, model.UserId, model.ProjectType, model.SolutionId, model.IndustryId, Convert.ToInt32(model.TotalProjectManager), Convert.ToInt32(model.TotalExpert), Convert.ToInt32(model.TotalAssociate));
+                    FreelancerFinderHelper helper = new FreelancerFinderHelper();
+                    await helper.FindFreelancersAsync(_db, model.UserId, model.ProjectType, model.SolutionId, model.IndustryId, Convert.ToInt32(model.TotalProjectManager), Convert.ToInt32(model.TotalExpert), Convert.ToInt32(model.TotalAssociate));
 
 
                     var teamSize = Convert.ToInt16(model.TotalAssociate) + Convert.ToInt16(model.TotalExpert) + Convert.ToInt16(model.TotalProjectManager);
@@ -5571,16 +5379,12 @@ namespace Aephy.API.Controllers
                     _db.SolutionFund.Add(solutionfund);
                     _db.SaveChanges();
 
-                    var solutionstatus = await SaveSolutionTeamData(solutionfund, Convert.ToInt32(model.TotalAssociate), Convert.ToInt32(model.TotalExpert), Convert.ToInt32(model.TotalProjectManager));
-                    if (solutionstatus == "success")
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                        {
-                            StatusCode = StatusCodes.Status200OK,
-                            Message = "Project Initated Successfully!",
-                            Result = customDetail.Entity.Id
-                        });
-                    }
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "Project Initated Successfully!",
+                        Result = customDetail.Entity.Id
+                    });
                 }
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {

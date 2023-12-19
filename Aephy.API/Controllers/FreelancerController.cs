@@ -527,10 +527,7 @@ namespace Aephy.API.Controllers
                 {
                     milestoneList = milestoneList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
                     var solutionFundData = _db.SolutionFund.Where(x => x.CustomProjectDetialsId == model.CustomProjectDetailId).FirstOrDefault();
-                    if (solutionFundData != null)
-                    {
-                        customPrice = await CountFinalProjectPricing(solutionFundData);
-                    }
+                    
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -540,7 +537,6 @@ namespace Aephy.API.Controllers
                     Result = new
                     {
                         MileStoneList = milestoneList,
-                        Customprice = customPrice
                     }
                 });
             }
@@ -3057,9 +3053,7 @@ namespace Aephy.API.Controllers
                 }
 
                 decimal clientFees = 0;
-                //decimal projectManagerFees = 0;
-                //var projectFreelancers = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.Id).ToListAsync();
-                //var projectManagerPlatformFees = projectFreelancers.Where(x => x.IsProjectManager).Select(x => x.ProjectManagerPlatformFees).FirstOrDefault();
+              
                 if (model.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                 {
                     clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;
@@ -3195,27 +3189,27 @@ namespace Aephy.API.Controllers
 
                         solutionTeam.Add(new SolutionTeam()
                         {
-                            FreelancerId = data.UserId,
+                            FreelancerId = data.FreelancerId,
                             SolutionFundId = solutionFundData.Id,
                             IsProjectManager = false,
                             Amount = contractAmount,
                             PlatformFees = Platformfees
                         });
 
-                        var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
+                        //var freelancerName = _db.Users.Where(x => x.Id == data.UserId).FirstOrDefault();
                         var solutionName = "";
                         if (solutionFundData != null)
                         {
                             solutionName = _db.Solutions.Where(x => x.Id == solutionFundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                         }
 
-                        if (freelancerName != null)
+                        if (freelancerData.FirstName != null)
                         {
                             var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
 
                             Notifications notifications = new Notifications();
                             notifications.NotificationTitle = "Freelancer Selection:";
-                            notifications.NotificationText = "\"" + freelancerName.FirstName + " selected for '" + solutionName + "'.\"";
+                            notifications.NotificationText = "\"" + freelancerData.FirstName + " selected for '" + solutionName + "'.\"";
                             notifications.NotificationTime = DateTime.Now;
                             notifications.IsRead = false;
                             notifications.ToUserId = adminDetails.Id;

@@ -584,7 +584,7 @@
 
                     $(".cls-aisection").remove();
 
-                    var popularSearchData = data.slice(0, 3);
+                    var popularSearchData = data.slice(0, 2);
                     var popularSearchSection = "";
                     $.each(popularSearchData, function (searchdata, searchvalue) {
                         var title = searchvalue.Title.length > 50 ? searchvalue.Title.substring(0, 50) + "..." : searchvalue.Title;
@@ -706,6 +706,13 @@
                             var name = values.FreelancerName.split(" ");
                             var firstname = name[0].charAt(0);
                             var lastname = name[1].charAt(0);
+                            var RateValue = 0;
+                            if (values.Rate == 0) {
+                                RateValue = "-";
+                            }else{
+                                RateValue = values.Rate;
+                            }
+
 
                             leftreviewSection += '<div class="col my-4" data-aos="fade-up" data - aos - delay="100" >' +
                                 '<div class="box" style="min-height:200px";>' +
@@ -719,7 +726,7 @@
                             else {
                                 leftreviewSection += '<div class="image"><div>' + firstname + '' + lastname + '</div></div>';
                             }
-                            leftreviewSection += '<div class="info">' +
+                            leftreviewSection += '<div class="info" style="width:82%;">' +
                                 "<div class='name' onclick=openRatingListModal('" + values.FreelancerId + "')>" + values.FreelancerName + " </div>" +
                                 '<div class="stars" >';
                             var ratingCeilCount = Math.ceil(values.Rate);
@@ -730,7 +737,7 @@
                                     leftreviewSection += '<i class="bi bi-star-fill"></i>';
                                 }
                             }
-                            leftreviewSection += '<label> ' + values.Rate + '/ 10 </label>' +
+                            leftreviewSection += '<label style="padding-left:2%;"> ' + RateValue + ' / 10 </label>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +

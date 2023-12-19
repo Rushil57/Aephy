@@ -661,17 +661,17 @@
                                             <tbody style="color:#d49255">
                                                 <tr>
                                                     <td>9 To 10 Stars</td>
-                                                    <td><progress id="clientfivestarprogress" value="101" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                    <td><progress id="clientfivestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientfivestar"></label></td>
                                                 </tr>
                                                 <tr>
                                                     <td>7 To 8 Stars</td>
-                                                    <td><progress id="clientfourstarprogress" value="7" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                    <td><progress id="clientfourstarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientfourstar"></label></td>
                                                 </tr>
                                                 <tr>
                                                     <td>5 To 6 Stars</td>
-                                                    <td><progress id="clientthreestarprogress" value="1" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                    <td><progress id="clientthreestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientthreestar"></label></td>
                                                 </tr>
                                                 <tr> 
@@ -697,15 +697,15 @@
                                         <table class="tableRatingBreakdown">
                                             <tbody>
                                                 <tr>
-                                                    <td>Communication Rating</td>
+                                                    <td>Communication</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="communicationrating"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Collaboration Rating</td>
+                                                    <td>Collaboration</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="collaborationrating"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Professionalism Rating</td>
+                                                    <td>Professionalism</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="professionalismrating"></label></td>
                                                 </tr>
                                             </tbody>
@@ -716,15 +716,15 @@
                                         <table class="tableRatingBreakdown">
                                             <tbody>
                                                 <tr>
-                                                    <td>Technical Rating</td>
+                                                    <td>Technical</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="technicalrating"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Satisfaction Rating</td>
+                                                    <td>Satisfaction</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="satisfactionrating"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Responsiveness Rating</td>
+                                                    <td>Responsiveness</td>
                                                     <td class="rating"><i class="bi bi-star-fill"></i><label id="responsivenessrating"></label></td>
                                                 </tr>
                                             </tbody>
@@ -1796,6 +1796,7 @@
 
     
     function CloseFreelancerFeedbackPopUp(){
+        ResetFreelancerReview();
         $("#FreelancerFeedbackModal").modal('hide');
     }
 
@@ -1931,7 +1932,7 @@
                       }
                      reviewData +='</div>' +
                      '<div class="row">' +
-                     '<label class="col-1">' +value.Rate+'/10</label>' + 
+                     '<label class="col-1">' +value.Rate+' / 10</label>' + 
                      '<label class="col" style="color:gray;">' + moment(value.ReviewDateTime).format('DD-MM-YYYY') + '</label>' + 
                      '</div>' +
                          '<div>' +
@@ -1969,7 +1970,7 @@
         var twostar = 0;
         var onestar = 0;
 
-        if (totalLength.length != 0) {
+        if (totalLength != 0) {
             $.each(freelancerData, function (data, value) {
                 totalcommunicationRating += value.CommunicationRating;
                 totalcollaborationRating += value.CollaborationRating;
@@ -2010,9 +2011,7 @@
             var finalReviews = totalFeedbackValues / totalLength / 10;
             if (totalLength != 0) {
                 $(".freelancerlblTotalRatings").html(finalReviews.toFixed(1))
-            } else {
-                $(".freelancerlblTotalRatings").html("0.0")
-            }
+            } 
 
             // Binding Reviews for all
             $("#communicationrating").html(totalcommunicationRating.toFixed(1))
@@ -2048,7 +2047,30 @@
                 var fivestarProgress = (fivestar / totalLength) * 100;
                 $('#clientfivestarprogress').attr('value',fivestarProgress);
             // Binding progress for solutions
+        }else{
+            ResetFreelancerReview();
+
         }
+    }
+
+    function ResetFreelancerReview(){
+         $("#communicationrating").html(0.0);
+           $("#collaborationrating").html(0.0);
+           $("#professionalismrating").html(0.0);
+           $("#technicalrating").html(0.0);
+           $("#satisfactionrating").html(0.0);
+           $("#responsivenessrating").html(0.0);
+           $(".freelancerlblTotalRatings").html("0.0")
+           $("#clientfivestar").html(0)
+           $("#clientfourstar").html(0)
+           $("#clientthreestar").html(0)
+           $("#clienttwostar").html(0)
+           $("#clientonestar").html(0)
+           $('#clientonestarprogress').attr('value',0);
+           $('#clienttwostarprogress').attr('value',0);
+           $('#clientthreestarprogress').attr('value',0);
+           $('#clientfourstarprogress').attr('value',0);
+           $('#clientfivestarprogress').attr('value',0);
     }
     
 </script>

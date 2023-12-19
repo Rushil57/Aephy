@@ -1985,3 +1985,11 @@ i.bi.bi-star-fill.unchecked_star {
     background-color: white;
 }
 
+.freelancerlblTotalRatings {
+    padding-left: 2%;
+}
+
+.freelancerlblTotalReviews {
+    padding-right: 1%;
+}
+

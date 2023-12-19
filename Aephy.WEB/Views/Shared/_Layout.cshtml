@@ -13,7 +13,7 @@
 
     <!-- Vendor CSS Files -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-     <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link href="~/assets/vendor/boxicons/css/boxicons.css" rel="stylesheet" />
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -94,7 +94,7 @@
 
                 </li>
 
-              
+
 
                 <li class="nav-item dropdown pe-3">
 
@@ -273,7 +273,8 @@
                     var data = result.Result;
                     if (data != "") {
                         var totalLength = data.length;
-                        var notificationSection = ""
+                        var notificationSection = "";
+                        var msgHtml = "";
                         $.each(data, function (datas, values) {
                             var timeAgo = moment(values.NotificationTime).fromNow();
 
@@ -289,6 +290,9 @@
                                 '<hr class="dropdown-divider" >' +
                                 '</li>';
 
+                            msgHtml += "<div class='activity-item d-flex'><div class='activite-label'> " + timeAgo + " </div> " +
+                                "<i class='bi bi-circle-fill activity-badge text-danger align-self-start'> </i>" +
+                                "<div class='activity-content'>" + values.NotificationText + "</div></div>";
                         })
                         notificationSection += '<li class="dropdown-footer">' +
                             '<a onclick=GetAllNotification()> Show all notifications </a>' +
@@ -299,6 +303,9 @@
                         $("#totalnotification-msg").html(msg);
                         //var msg = $("#totalnotification-msg").text().trim();
                         //msg.replace("{{ total_notification }}",totalLength)
+
+                        // Dashboard Notification
+                        $("#divActivity").html(msgHtml);
 
                     }
 
@@ -368,29 +375,29 @@
         });
     }
 
-    function CloseNotificationModal(){
+    function CloseNotificationModal() {
         $("#NotificationModal").modal("hide");
     }
 
-    function SetNotificationRead(id){
+    function SetNotificationRead(id) {
         event.stopPropagation();
-        var data ={
-            Id : id
+        var data = {
+            Id: id
         }
 
-         $.ajax({
+        $.ajax({
             type: "POST",
             url: "@Url.Action("SetNotificationIsRead", "Home")",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-           data: JSON.stringify(data),
+            data: JSON.stringify(data),
             success: function (result) {
                 var totalnotification = $("#total-notification").text();
-                if(totalnotification != 0){
+                if (totalnotification != 0) {
                     var remaining = totalnotification - 1;
                     $("#total-notification").html(remaining);
                 }
-               
+
 
             },
             error: function (result) {

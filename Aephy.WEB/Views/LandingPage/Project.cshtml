@@ -1263,10 +1263,26 @@
                    if(data.SolutionFund != null)
                    {
                        if(data.SolutionFund.ProjectType == "custom"){
-                           $('#freelancerRadioButton').attr('disabled','disabled');
-                           $('.btn-CustomizeProject').attr('disabled', 'disabled');
-                           $('#freelancerRadioButton').attr('disabled','disabled');
-                             $("#customizedradioButton").attr('disabled','disabled');
+                           // if(data.SolutionFund.IsStoppedProject == false){
+                           //     $('#freelancerRadioButton').attr('disabled','disabled');
+                           //      $('.btn-CustomizeProject').attr('disabled', 'disabled');
+                           //      $('#freelancerRadioButton').attr('disabled','disabled');
+                           //      $("#customizedradioButton").attr('disabled','disabled');
+                           // }
+                           if(data.SolutionFund.IsStoppedProject == true){
+                               
+                                 $('#freelancerRadioButton').prop("disabled", false); 
+                                $('.btn-CustomizeProject').prop("disabled", false); 
+                                $('#freelancerRadioButton').prop("disabled", false); 
+                                $("#customizedradioButton").prop("disabled", false); 
+                           }else{
+                                $('#freelancerRadioButton').attr('disabled','disabled');
+                                $('.btn-CustomizeProject').attr('disabled', 'disabled');
+                                $('#freelancerRadioButton').attr('disabled','disabled');
+                                $("#customizedradioButton").attr('disabled','disabled');
+                           }
+                           
+                          
                        }
                         $(".btn-contract").addClass('disabled');
                        $(".btn-contract").css("background-color", "var(--brand)");
@@ -1298,6 +1314,13 @@
                 $('.team-popover').popover({
                     content:newContent,
                 });
+
+                if(data.CheckCustomProjectInProgress != "" && data.CheckCustomProjectInProgress != null){
+                    if(projecttype != "custom"){
+                        $("#customizedradioButton").attr('disabled','disabled');
+                    }
+                }
+                
                  $("#preloader").hide();
             },
             error: function (result) {

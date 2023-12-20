@@ -475,7 +475,8 @@ namespace Aephy.API.Controllers
                         ProjectType = model.ProjectType,
                         Duration = model.Duration,
                         TeamSize = model.TeamSize,
-                        IsActive = true
+                        IsActive = true,
+                        ClientId = model.UserId
                     };
 
                     if (solutionDefineData != null)

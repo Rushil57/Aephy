@@ -961,8 +961,13 @@ namespace Aephy.WEB.Admin.Controllers
             {
                 try
                 {
-                    var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateIndustryOutline", HttpMethod.Post, model);
-                    return test;
+                    var userId = HttpContext.Session.GetString("LoggedAdmin");
+                    if (userId != null)
+                    {
+                        model.UserId = userId;
+                        var test = await _apiRepository.MakeApiCallAsync("api/Freelancer/UpdateIndustryOutline", HttpMethod.Post, model);
+                        return test;
+                    }
                 }
                 catch (Exception ex)
                 {

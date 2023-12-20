@@ -468,7 +468,7 @@ namespace Aephy.WEB.Controllers
                             }
 
                             string clientimagepath = data.Result.ClientImagePath;
-                            if (clientimagepath != null)
+                            if (clientimagepath != null && clientimagepath != "")
                             {
                                 string sasToken = GenerateImageSasToken(clientimagepath);
                                 string imageUrlWithSas = $"{data.Result.ClientImagePath}?{sasToken}";

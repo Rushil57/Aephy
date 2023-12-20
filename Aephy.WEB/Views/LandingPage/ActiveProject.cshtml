@@ -811,6 +811,7 @@
 
                 if(data.SolutionTeam.length != 0){
                      BindSolutionTeamData(data.SolutionTeam);
+                    $(".cls-team-size").html(data.SolutionTeam.length);
                      $(".cls-team").remove();
                 }
                 else{

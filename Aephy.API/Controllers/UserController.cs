@@ -1,5 +1,6 @@
 ﻿using Aephy.API.DBHelper;
 using Aephy.API.Models;
+using Aephy.API.NotificationMethod;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace Aephy.API.Controllers
         public string UserImgPath;
         private readonly IConfiguration _configuration;
         private readonly AephyAppDbContext _db;
+        NotificationHelper notificationHelper = new NotificationHelper();
 
         CommonMethod common;
         public UserController(UserManager<ApplicationUser> userManager, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, AephyAppDbContext dbContext)
@@ -287,7 +289,7 @@ namespace Aephy.API.Controllers
                                     adminNoTeamnotifications.IsRead = false;
                                     notificationsList.Add(adminNoTeamnotifications);
 
-                                    await SaveNotificationData(notificationsList);
+                                    await notificationHelper.SaveNotificationData(_db,notificationsList);
                                 }
 
                             }
@@ -728,57 +730,6 @@ namespace Aephy.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Something Went Wrong" });
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
-        {
-            try
-            {
-                if (model.Count > 0)
-                {
-                    foreach (var data in model)
-                    {
-                        var dbModel = new Notifications
-                        {
-                            NotificationText = data.NotificationText,
-                            FromUserId = data.FromUserId,
-                            ToUserId = data.ToUserId,
-                            NotificationTime = data.NotificationTime,
-                            IsRead = data.IsRead,
-                            NotificationTitle = data.NotificationTitle
-                        };
-
-                        await _db.Notifications.AddAsync(dbModel);
-                        _db.SaveChanges();
-                    }
-
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Notification Saved Succesfully!"
-                    });
-
-                }
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
-
-
         }
     }
 }

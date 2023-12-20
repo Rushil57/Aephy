@@ -25,6 +25,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using RevolutAPI.Models.BusinessApi.Payment;
 using Aephy.API.Revoult;
 using System.IO.Hashing;
+using Aephy.API.NotificationMethod;
 
 namespace Aephy.API.Controllers
 {
@@ -35,6 +36,7 @@ namespace Aephy.API.Controllers
         private readonly AephyAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRevoultService _revoultService;
+        NotificationHelper notificationHelper = new NotificationHelper();
 
         public AdminController(AephyAppDbContext dbContext, UserManager<ApplicationUser> userManager, IRevoultService revoultService)
         {
@@ -1844,9 +1846,9 @@ namespace Aephy.API.Controllers
                 notifications.IsRead = false;
                 notificationsList.Add(notifications);
 
-                if (notifications != null)
+                if (notificationsList.Count > 0)
                 {
-                    await SaveNotificationData(notificationsList);
+                    await notificationHelper.SaveNotificationData(_db,notificationsList);
                 }
 
                 var userData = await _userManager.FindByIdAsync(freelancerData.FreelancerID);
@@ -1957,7 +1959,7 @@ namespace Aephy.API.Controllers
 
                     if (notificationsList.Count > 0)
                     {
-                        await SaveNotificationData(notificationsList);
+                        await notificationHelper.SaveNotificationData(_db,notificationsList);
                     }
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2947,57 +2949,6 @@ namespace Aephy.API.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> SaveNotificationData(List<Notifications> model)
-        {
-            try
-            {
-                if (model.Count > 0)
-                {
-                    foreach (var data in model)
-                    {
-                        var dbModel = new Notifications
-                        {
-                            NotificationText = data.NotificationText,
-                            FromUserId = data.FromUserId,
-                            ToUserId = data.ToUserId,
-                            NotificationTime = data.NotificationTime,
-                            IsRead = data.IsRead,
-                            NotificationTitle = data.NotificationTitle
-                        };
-
-                        await _db.Notifications.AddAsync(dbModel);
-                        _db.SaveChanges();
-                    }
-
-
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Notification Saved Succesfully!"
-                    });
-
-                }
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Data not found!",
-                });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = ex.Message + ex.InnerException,
-                });
-            }
-
-
-        }
-
         [HttpGet]
         [Route("GetDisputeList")]
         public async Task<IActionResult> GetDisputeList()
@@ -3030,7 +2981,7 @@ namespace Aephy.API.Controllers
                             {
                                 disputeViewModel.IsDisputeResolved = false;
                             }
-                            var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                            var CurrencySign = await notificationHelper.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                             disputeViewModel.ContractId = data.ContractId;
                             disputeViewModel.ProjectPrice = CurrencySign + solutionFundData.ProjectPrice;
                             disputeList.Add(disputeViewModel);
@@ -3414,7 +3365,7 @@ namespace Aephy.API.Controllers
                             disputeViewModel.IndustryName = _db.Industries.Where(x => x.Id == data.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                             var ClientDetails = _db.Users.Where(x => x.Id == data.ClientUserId).FirstOrDefault();
                             disputeViewModel.ClientName = ClientDetails.FirstName + " " + ClientDetails.LastName;
-                            var CurrencySign = await ConvertToCurrencySign(ClientDetails.PreferredCurrency);
+                            var CurrencySign = await notificationHelper.ConvertToCurrencySign(ClientDetails.PreferredCurrency);
                             disputeViewModel.Milestone = _db.SolutionMilestone.Where(x => x.Id == data.MilestoneDataId).Select(x => x.Title).FirstOrDefault();
                             disputeViewModel.IsClientRefund = data.IsClientRefund;
                             disputeViewModel.IsFreelancerRefund = _db.ContractUser.Where(x => x.ContractId == data.Id).Select(x => x.IsRefund).FirstOrDefault();
@@ -4122,41 +4073,7 @@ namespace Aephy.API.Controllers
             });
         }
 
-        [HttpPost]
-        [Route("ConvertToCurrencySign")]
-        public async Task<string> ConvertToCurrencySign(string Currency)
-        {
-
-            try
-            {
-                if (Currency != null)
-                {
-                    if (Currency == "USD")
-                    {
-                        Currency = "$";
-                    }
-                    if (Currency == "EUR")
-                    {
-                        Currency = "€";
-                    }
-                    if (Currency == "GBP")
-                    {
-                        Currency = "£";
-                    }
-                }
-                else
-                {
-                    Currency = "€";
-                }
-
-                return Currency;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message + ex.InnerException;
-
-            }
-        }
+       
     }
 }
 

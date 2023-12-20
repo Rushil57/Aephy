@@ -1461,7 +1461,7 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.ClientFullName = fullname;
                                 InvoiceDetails.TaxType = clientDetails.TaxType;
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
-                                var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                var CurrencySign = await notificationHelper.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
                                 InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
@@ -1547,7 +1547,7 @@ namespace Aephy.API.Controllers
                                 InvoiceDetails.ClientFullName = fullname;
                                 InvoiceDetails.TaxType = clientDetails.TaxType;
                                 InvoiceDetails.TaxId = clientDetails.TaxNumber;
-                                var CurrencySign = await ConvertToCurrencySign(clientDetails.PreferredCurrency);
+                                var CurrencySign = await notificationHelper.ConvertToCurrencySign(clientDetails.PreferredCurrency);
                                 InvoiceDetails.PreferredCurrency = CurrencySign.ToString();
                                 InvoiceDetails.ClientCountry = _db.Country.Where(x => x.Id == clientDetails.CountryId).Select(x => x.Code).FirstOrDefault();
                             }
@@ -2297,7 +2297,7 @@ namespace Aephy.API.Controllers
                             }
                         }
 
-                        var CurrencySign = await ConvertToCurrencySign(model.ClientPreferredCurrency);
+                        var CurrencySign = await notificationHelper.ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
@@ -2421,7 +2421,7 @@ namespace Aephy.API.Controllers
                                     }
                                 }
 
-                                var CurrencySign = await ConvertToCurrencySign(model.ClientPreferredCurrency);
+                                var CurrencySign = await notificationHelper.ConvertToCurrencySign(model.ClientPreferredCurrency);
 
                                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                 {
@@ -3092,42 +3092,6 @@ namespace Aephy.API.Controllers
             }
 
             return 0;
-        }
-
-        [HttpPost]
-        [Route("ConvertToCurrencySign")]
-        public async Task<string> ConvertToCurrencySign(string Currency)
-        {
-
-            try
-            {
-                if (Currency != null)
-                {
-                    if (Currency == "USD")
-                    {
-                        Currency = "$";
-                    }
-                    if (Currency == "EUR")
-                    {
-                        Currency = "€";
-                    }
-                    if (Currency == "GBP")
-                    {
-                        Currency = "£";
-                    }
-                }
-                else
-                {
-                    Currency = "€";
-                }
-
-                return Currency;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message + ex.InnerException;
-
-            }
         }
 
         //=== This function use when team created then add team in solution team ==//

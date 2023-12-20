@@ -45,5 +45,41 @@ namespace Aephy.API.NotificationMethod
 
 
         }
+
+        [HttpPost]
+        [Route("ConvertToCurrencySign")]
+        public async Task<string> ConvertToCurrencySign(string Currency)
+        {
+
+            try
+            {
+                if (Currency != null)
+                {
+                    if (Currency == "USD")
+                    {
+                        Currency = "$";
+                    }
+                    if (Currency == "EUR")
+                    {
+                        Currency = "€";
+                    }
+                    if (Currency == "GBP")
+                    {
+                        Currency = "£";
+                    }
+                }
+                else
+                {
+                    Currency = "€";
+                }
+
+                return Currency;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.InnerException;
+
+            }
+        }
     }
 }

@@ -126,7 +126,7 @@
             error: function (result) {   
                 $("#preloader").hide();
                 //alert("Enter Correct EmailId or Password");
-                showToaster("error", "Error !", "Enter Correct EmailId or Password");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

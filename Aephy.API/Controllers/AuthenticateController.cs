@@ -115,6 +115,23 @@ namespace Aephy.API.Controllers
                                         }
                                     });
                                 }
+                                if(user.UserType == "Admin")
+                                {
+                                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                    {
+                                        StatusCode = StatusCodes.Status200OK,
+                                        Message = "Login Success",
+                                        Result = new
+                                        {
+                                            UserId = user.Id,
+                                            FirstName = user.FirstName,
+                                            LastName = user.LastName,
+                                            Role = user.UserType,
+                                            Level = !String.IsNullOrEmpty(freelancer.FreelancerLevel) ? freelancer.FreelancerLevel : "none",
+                                            ClientPreferredCurrency = user.PreferredCurrency
+                                        }
+                                    });
+                                }
                                 
                             }
                             else

@@ -96,7 +96,7 @@ namespace Aephy.WEB.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { message = "Something went wrong!" });
+                return Json(new { message = ex.Message + ex.InnerException });
             }
             return Json(new { message = messageSatus });
         }

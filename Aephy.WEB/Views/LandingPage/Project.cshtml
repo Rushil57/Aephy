@@ -183,7 +183,7 @@
                                 <div class="row justify-content-center" style="display: flex;align-items: center;justify-content: center;background:#2E1F47;letter-spacing: 0.6px;">
                                 <!-- first row -->
                                 <div class="progressContainer d-flex flex-column px-0">
-                                    <h3 class="pt-2 label-title-size title-path" style="padding:0 0 0 0.5em;">Custome Project</h3>
+                                    <h3 class="pt-2 label-title-size title-path" style="padding:0 0 0 0.5em;">Custom Project</h3>
                                     <ul class="progress" id="progress-div">
                                         <li>Customize the Project Outline to meet your specific needs.</li>
                                     </ul>
@@ -318,13 +318,14 @@
 
                                 </div>
                                 <div id="reviewn-btn">
-                                    <div class="view_action_Link d-flex" id="fullFeedbackShowButton">
+                                   @*  <div class="view_action_Link d-flex" id="fullFeedbackShowButton">
                                                 <span style="background-color:#d38b4e; width:1rem;"></span>
                                                 <div class="d-flex justify-content-center align-items-center">
                                                 <a onclick="OpenFeedbackProjectModalPop()">View All Feedbacks</a>
                                             <img src="/assets/img/dashboard/icons-send.png">
                                         </div>
-                                    </div>
+                                    </div> *@
+                                    <a class="cls-viewRolebtn" onclick="OpenFeedbackProjectModalPop()">View All Feedbacks > </a>
                                 </div>
                             </div>
                         </div>
@@ -1264,6 +1265,8 @@
                        if(data.SolutionFund.ProjectType == "custom"){
                            $('#freelancerRadioButton').attr('disabled','disabled');
                            $('.btn-CustomizeProject').attr('disabled', 'disabled');
+                           $('#freelancerRadioButton').attr('disabled','disabled');
+                             $("#customizedradioButton").attr('disabled','disabled');
                        }
                         $(".btn-contract").addClass('disabled');
                        $(".btn-contract").css("background-color", "var(--brand)");
@@ -1279,11 +1282,6 @@
                        $(".btn-contract").css("background-color", "var(--brand)");
                        $(".btn-contract").css("color","black");
                     }
-
-                     if(data.SingleFreelancerCustomData != null){
-                     $('#freelancerRadioButton').attr('disabled','disabled');
-                     $("#customizedradioButton").attr('disabled','disabled');
-                }
                 }
 
                 var newContent = "";

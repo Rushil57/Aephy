@@ -740,7 +740,17 @@ namespace Aephy.API.Controllers
                             milestoneList.Add(milestonData);
                         }
                     }
-                    var pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
+
+                    List<SolutionPoints> pointsData = new List<SolutionPoints>();
+                    if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                    {
+                        pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == fundProgress.ClientId).ToListAsync();
+                    }
+                    else
+                    {
+                        pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
+                    }
+                    
                     var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
                     List<SolutionTeamViewModel> solutionteamList = new List<SolutionTeamViewModel>();
                     if (solutionTeamData.Count > 0)

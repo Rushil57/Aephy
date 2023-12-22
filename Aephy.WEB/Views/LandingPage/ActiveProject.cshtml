@@ -306,7 +306,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="progressContainer d-flex flex-column">
-                        <div class="form-group pt-3" id="milestone-btn-div" style="display:none;">
+                        <div class="form-group pt-3" id="milestone-btn-div">
                              <button type="button" class="btn btn-primary" onclick="OpenMileStonePopup()" id="btn-milestone">Add Milestones</button>
                         </div>
 
@@ -835,7 +835,7 @@
                       //  }
                       //  if(projecttype == "large"){
                       //    teamsize = 5;
-                      //  }
+                      //  }f
                       //  if(projecttype == "small"){
                       //           teamsize = 2;
                       //  }
@@ -844,12 +844,17 @@
                        var mileStoneData;
                        if(data.MileStoneProgressData != null){
                            mileStoneData = data.MileStoneProgressData;
+                          
                        }else{
                            mileStoneData = data.MileStone[0];
                        }
-                      
-                      $("#solutionFundMileStoneId").val(mileStoneData.Id);
-                      $("#solutionFundId").val(data.SolutionFund.Id);
+
+                       if(mileStoneData  != null){
+                             $("#solutionFundMileStoneId").val(mileStoneData.Id);
+                            $("#solutionFundId").val(data.SolutionFund.Id);
+                       }
+                       
+                    
                       BindSolutionFundData(data.SolutionFund,mileStoneData,data.FundDecided,data.FundCompleted,data.IsProjectStop,data.SolutionFund.ProjectPrice,data.FundStopByClient,data.ContractData,data.ClientCurrency);
                    }
                 
@@ -903,12 +908,12 @@
                   }
 
                    if(projecttype == 'custom'){
-                             $("#milestone-btn-div").show();
-                            $(".cls-milestone-edit-pencil").show();
+                             //$("#milestone-btn-div").show();
+                            //$(".cls-milestone-edit-pencil").show();
                        // $(".cls-edit-pencil").show();
                          }else{
-                             $("#milestone-btn-div").hide();
-                             $(".cls-milestone-edit-pencil").hide();
+                             //$("#milestone-btn-div").hide();
+                             //$(".cls-milestone-edit-pencil").hide();
                               // $(".cls-edit-pencil").hide()
                          }
 
@@ -1404,6 +1409,8 @@
             SolutionId: solutionid,
             IndustryId:Industryid,
             ProjectType: $("#projSize").val().toUpperCase(),
+            MilestoneSaveProjectIsActivePage : true,
+            SolutionFundId :$("#solutionFundId").val()
         };
         $("#preloader").show();
         $.ajax({
@@ -1415,8 +1422,9 @@
             success: function (result) {
                 $("#preloader").hide();
                 showToaster("success", "Success", result.Message);
-                GetProjectTypeValue()
-                ResetActiveMileStoneForm()
+                 GetProjectTypeValue()
+                 ResetActiveMileStoneForm()
+                // window.location.href = '/Home/Dashboard#activeProjects'
             },
             error: function (result) {
                 showToaster("error", "Error !", result);
@@ -1513,7 +1521,7 @@
                       $("#preloader").hide();
                 },
                 error: function (result) {
-                    showToaster("error", "Error !",result);
+                    showToaster("error", "Error !",result.responseText);
                 }
             });
         }
@@ -1614,7 +1622,7 @@
                '</li>'
 
               milestonePopupsection +=  '<li class="progress__item">' +
-                 '<p class="progress__title">'+ values.Title+'<i class="bi bi-pencil-fill cls-milestone-edit-pencil" title="Click To Edit" onclick="EditActiveMileStoneDetailsByFreelancer('+values.Id+')" style="padding-left:2%;display:none;"></i></p>' +
+                 '<p class="progress__title">'+ values.Title+'<i class="bi bi-pencil-fill cls-milestone-edit-pencil" title="Click To Edit" onclick="EditActiveMileStoneDetailsByFreelancer('+values.Id+')" style="padding-left:2%;"></i></p>' +
                  '<p class="progress__info">'+values.Description+'</p>' +
                  '<p class="progress__info__date"><i class="bi bi-calendar-week"></i>'+values.Days+' (Days)</p>'+
               '</li>';

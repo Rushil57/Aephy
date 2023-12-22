@@ -2146,3 +2146,15 @@ li.notification-item p {
 .cls-viewRolebtn {
     color: #012970 !important;
 }
+
+.cls-profilebar {
+    min-width: 240px;
+    padding-bottom: 0;
+    top: 8px !important;
+}
+
+.cls-profile-item {
+    font-size: 14px !important;
+    padding: 10px 15px !important;
+    transition: 0.3s !important;
+}

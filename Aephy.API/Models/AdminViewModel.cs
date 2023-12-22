@@ -243,6 +243,9 @@ namespace Aephy.API.Models
 
             public int CustomProjectDetailId { get; set; }
 
+            public bool MilestoneSaveProjectIsActivePage { get; set; }
+
+            public int SolutionFundId { get; set; }
         }
 
         public class SolutionIndustryDetailsModel

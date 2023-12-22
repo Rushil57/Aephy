@@ -24,6 +24,8 @@
 
         public int CustomProjectDetailId { get; set; }
 
+        public bool MilestoneSaveProjectIsActivePage { get; set; }
+
     }
 
     public class MileStoneDetailsViewModel

@@ -727,16 +727,25 @@ namespace Aephy.API.Controllers
                     if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
                         solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType && x.ClientId == model.UserId).FirstOrDefault();
-                        var CustomProjectData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefine.Id && x.ClientId == model.UserId).FirstOrDefault();
-                        if(CustomProjectData != null){
-                            milestoneData = _db.SolutionMilestone.Where(x => x.CustomProjectDetialsId == CustomProjectData.Id).ToList();
+                        if(solutionDefine != null)
+                        {
+                            var CustomProjectData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefine.Id && x.ClientId == model.UserId).FirstOrDefault();
+                            if (CustomProjectData != null)
+                            {
+                                milestoneData = _db.SolutionMilestone.Where(x => x.CustomProjectDetialsId == CustomProjectData.Id).ToList();
+                            }
                         }
+                       
                         
                     }
                     else
                     {
                         solutionDefine = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == data.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
-                        milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                        if(solutionDefine != null)
+                        {
+                            milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
+                        }
+                        
                     }
                     
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();

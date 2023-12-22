@@ -1498,3 +1498,16 @@ function GetNotificationDetails() {
         }
     });
 }
+
+function SignOut() {
+    $.ajax({
+        type: "Get",
+        url: "/Home/LogOut",
+        success: function (result) {
+            window.location.href = '/Home/Login'
+        },
+        error: function (result) {
+            alert("Something Went Wrong!");
+        }
+    });
+}

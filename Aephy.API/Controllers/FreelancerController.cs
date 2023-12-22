@@ -1610,6 +1610,16 @@ namespace Aephy.API.Controllers
             {
                 // [-- Method Needs To Be Update --]
                 // [-- This Method Needs to be updated for generating freelancers list --]
+
+                if(model.SolutionFundId == 0)
+                {
+                    var solutionFund = _db.SolutionFund.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionID && x.ClientId == model.LoginFreelancerId).FirstOrDefault();
+                    if(solutionFund != null)
+                    {
+                        model.SolutionFundId = solutionFund.Id;
+                    }
+                }
+
                 var userList = await _db.Users.ToListAsync();
                 var ids = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).Select(x => x.FreelancerId).ToListAsync();
 

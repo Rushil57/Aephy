@@ -2679,10 +2679,46 @@ namespace Aephy.API.Controllers
                                                 teamData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
                                             }
                                         }
-                                        var experttotal = Convert.ToInt32(teamData.Expert);
-                                        var assosiatetotal = Convert.ToInt32(teamData.Associate);
-                                        var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
-                                        await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
+
+                                        if(teamData.Expert == null && teamData.Associate == null && teamData.ProjectManager == null)
+                                        {
+                                            var getpreviousClientFundData = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.ClientId && x.ProjectType == model.ProjectType && x.ProjectStatus == "COMPLETED" && x.FundType == SolutionFund.FundTypes.MilestoneFund).OrderBy(e => e.Id).LastOrDefault();
+                                            var solutionteamList = _db.SolutionTeam.Where(x => x.SolutionFundId == getpreviousClientFundData.Id).ToList();
+                                            if(solutionteamList.Count > 0)
+                                            {
+                                                var assosiciate = 0;
+                                                var expert = 0;
+                                                var manager = 0;
+                                                foreach (var teamdatas in solutionteamList)
+                                                {
+                                                    var userlevel = _db.FreelancerDetails.Where(x => x.UserId == teamdatas.FreelancerId).Select(x => x.FreelancerLevel).FirstOrDefault();
+                                                    if (userlevel != null)
+                                                    {
+                                                        if (userlevel == "Associate")
+                                                        {
+                                                            assosiciate += 1;
+                                                        }
+                                                        if (userlevel == "Project Manager")
+                                                        {
+                                                            manager += 1;
+                                                        }
+                                                        if (userlevel == "Expert")
+                                                        {
+                                                            expert += 1;
+                                                        }
+                                                    }
+                                                }
+                                                await SaveSolutionTeamData(solutionfund, assosiciate, expert, manager);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var experttotal = Convert.ToInt32(teamData.Expert);
+                                            var assosiatetotal = Convert.ToInt32(teamData.Associate);
+                                            var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
+                                            await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
+                                        }
+                                       
                                     }
 
                                     else

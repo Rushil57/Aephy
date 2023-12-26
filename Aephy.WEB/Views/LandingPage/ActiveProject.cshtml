@@ -1179,6 +1179,13 @@
                $(".cls-fundPopOver").hide();
                $(".cls-fundProgress").show();
 
+               // to prevent edit functionality after fund
+               $(".cls-edit-pencil").hide();
+               $(".cls-milestone-edit-pencil").hide();
+               $("#milestone-btn-div").hide();
+               // to prevent edit functionality after fund
+
+
               if(data.FundType == 1)
               {
                   if(IsFundCompleted)

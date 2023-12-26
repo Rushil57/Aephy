@@ -202,7 +202,7 @@ namespace Aephy.API.Controllers
                     if (services != null)
                     {
                         _db.Services.Remove(services);
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
                     }
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Delete Succesfully !" });
                 }
@@ -278,14 +278,14 @@ namespace Aephy.API.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message });
                     }
                 }
                 else
                 {
                     try
                     {
-                        var solutiondata = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
+                        var solutiondata = await _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                         if (solutiondata != null)
                         {
                             solutiondata.Title = model.Title;
@@ -390,7 +390,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                List<Solutions> solutionList = _db.Solutions.ToList();
+                List<Solutions> solutionList = await _db.Solutions.ToListAsync();
                 List<SolutionsModel> solutionsModel = new List<SolutionsModel>();
                 List<string> industrylist = new List<string>();
 
@@ -445,7 +445,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var list = _db.Solutions.ToList();
+                var list = await _db.Solutions.ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -472,7 +472,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var solutionindustryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                    var solutionindustryList = await _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToListAsync();
                     if (solutionindustryList.Count > 0)
                     {
                         _db.SolutionIndustry.RemoveRange(solutionindustryList);
@@ -628,7 +628,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                Industries industryRecord = _db.Industries.Where(x => x.Id == IndustryData.Id).FirstOrDefault();
+                Industries industryRecord = await _db.Industries.Where(x => x.Id == IndustryData.Id).FirstOrDefaultAsync();
                 if (industryRecord != null)
                 {
                     _db.Industries.Remove(industryRecord);
@@ -658,28 +658,32 @@ namespace Aephy.API.Controllers
         [Route("SolutionDataById")]
         public async Task<IActionResult> SolutionDataById([FromBody] SolutionIdModel solutionsModel)
         {
-            try
+            if(solutionsModel != null)
             {
-                Solutions solution = _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefault();
-                List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-                List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
-
-                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                try
                 {
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "success",
-                    Result = new
+                    Solutions solution = await _db.Solutions.Where(x => x.Id == solutionsModel.Id).FirstOrDefaultAsync();
+                    List<SolutionServices> solutionservice = _db.SolutionServices.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+                    List<SolutionIndustry> solutionindustry = _db.SolutionIndustry.Where(x => x.SolutionId == solutionsModel.Id).ToList();
+
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                     {
-                        Solution = solution,
-                        IndustryResult = solutionindustry,
-                        ServiceResult = solutionservice,
-                    }
-                });
+                        StatusCode = StatusCodes.Status200OK,
+                        Message = "success",
+                        Result = new
+                        {
+                            Solution = solution,
+                            IndustryResult = solutionindustry,
+                            ServiceResult = solutionservice,
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+                }
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Data not found" });
         }
 
 
@@ -693,7 +697,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var UpdateImage = _db.Solutions.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
+                        var UpdateImage = await _db.Solutions.Where(x => x.Id == solutionImage.Id).FirstOrDefaultAsync();
                         if (UpdateImage != null)
                         {
 
@@ -993,7 +997,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var listDB = _db.GigOpenRoles.Where(x => x.isActive == true).ToList();
+                var listDB = await _db.GigOpenRoles.Where(x => x.isActive == true).ToListAsync();
                 var listSolution = _db.Solutions.ToList();
                 var listServiceSol = _db.SolutionServices.ToList();
                 var listService = _db.Services.ToList();
@@ -1087,7 +1091,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var openRolesdata = _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                        var openRolesdata = await _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefaultAsync();
                         if (openRolesdata != null)
                         {
                             openRolesdata.SolutionId = model.SolutionId;
@@ -1123,7 +1127,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                GigOpenRoles openRoles = _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefault();
+                GigOpenRoles openRoles = await _db.GigOpenRoles.Where(x => x.ID == model.ID).FirstOrDefaultAsync();
                 FreelancerDetails freelancerDetail = _db.FreelancerDetails.Where(x => x.UserId == model.FreelancerID).FirstOrDefault();
                 if (openRoles != null)
                 {
@@ -1155,7 +1159,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                GigOpenRoles openRolesRecord = _db.GigOpenRoles.Where(x => x.ID == rolesData.ID).FirstOrDefault();
+                GigOpenRoles openRolesRecord = await _db.GigOpenRoles.Where(x => x.ID == rolesData.ID).FirstOrDefaultAsync();
                 if (openRolesRecord != null)
                 {
                     _db.GigOpenRoles.Remove(openRolesRecord);
@@ -1187,7 +1191,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var listDB = _db.GigOpenRoles.ToList();
+                var listDB = await _db.GigOpenRoles.ToListAsync();
                 var listSolution = _db.Solutions.ToList();
                 var listServiceSol = _db.SolutionServices.ToList();
                 var listService = _db.Services.ToList();
@@ -1266,7 +1270,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var UpdateImage = _db.SolutionIndustryDetails.Where(x => x.Id == solutionImage.Id).FirstOrDefault();
+                        var UpdateImage = await _db.SolutionIndustryDetails.Where(x => x.Id == solutionImage.Id).FirstOrDefaultAsync();
                         if (UpdateImage != null)
                         {
 
@@ -1711,7 +1715,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                OpenGigRolesApplications openGigRoles = _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefault();
+                OpenGigRolesApplications openGigRoles = await _db.OpenGigRolesApplications.Where(x => x.ID == solutionsModel.ID).FirstOrDefaultAsync();
                 GigOpenRoles gigOpenRoles = new GigOpenRoles();
 
                 var freelancerName = string.Empty;
@@ -2175,7 +2179,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var data = _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var data = await _db.SolutionTopProfessionals.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (data != null)
                     {
                         _db.SolutionTopProfessionals.Remove(data);
@@ -2289,7 +2293,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != null)
                 {
-                    var userDetails = _db.Users.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var userDetails = await _db.Users.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (userDetails != null && userDetails.IsInvited != false && userDetails.IsInvitedRemoved == false)
                     {
                         userDetails.IsInvitedRemoved = true;
@@ -2472,7 +2476,7 @@ namespace Aephy.API.Controllers
                 //        }
                 //    }
                 //}
-                var resultList = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToList();
+                var resultList = await _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status200OK,
@@ -2499,7 +2503,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var data = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var data = await _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (data != null)
                     {
                         _db.SolutionSuccessfullProjectResult.Remove(data);
@@ -2543,7 +2547,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var data = _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToList();
+                    var data = await _db.SolutionSuccessfullProjectResult.Where(x => x.SolutionSuccessfullProjectId == model.Id).ToListAsync();
                     if (data.Count > 0)
                     {
                         _db.SolutionSuccessfullProjectResult.RemoveRange(data);
@@ -2587,7 +2591,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var projectData = _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var projectData = await _db.SolutionSuccessfullProject.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (projectData != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -2630,7 +2634,7 @@ namespace Aephy.API.Controllers
             {
                 if (model.Id != 0)
                 {
-                    var resultData = _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var resultData = await _db.SolutionSuccessfullProjectResult.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     if (resultData != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -3455,7 +3459,7 @@ namespace Aephy.API.Controllers
             try
             {
                 //var listDB = _db.GigOpenRoles.Where(x => x.isActive == true).ToList();
-                var RoleslistDB = _db.EmployeeOpenRole.ToList();
+                var RoleslistDB = await _db.EmployeeOpenRole.ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
@@ -3547,7 +3551,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                EmployeeOpenRole EmployeeopenRoles = _db.EmployeeOpenRole.Where(x => x.Id == model.Id).FirstOrDefault();
+                EmployeeOpenRole EmployeeopenRoles = await _db.EmployeeOpenRole.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                 if (EmployeeopenRoles != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -3559,12 +3563,12 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Data not found." });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
 
@@ -3574,7 +3578,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                EmployeeOpenRole openRolesRecord = _db.EmployeeOpenRole.Where(x => x.Id == rolesData.Id).FirstOrDefault();
+                EmployeeOpenRole openRolesRecord = await _db.EmployeeOpenRole.Where(x => x.Id == rolesData.Id).FirstOrDefaultAsync();
                 if (openRolesRecord != null)
                 {
                     _db.EmployeeOpenRole.Remove(openRolesRecord);
@@ -3606,7 +3610,7 @@ namespace Aephy.API.Controllers
         {
             try
             {
-                var EmployeeopenRolesList = _db.EmployeeOpenRole.ToList();
+                var EmployeeopenRolesList = await _db.EmployeeOpenRole.ToListAsync();
                 if (EmployeeopenRolesList != null)
                 {
                     if (model.Department != "0" && model.Department != null)
@@ -3776,7 +3780,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                        var checkExistance = await _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
                         if (checkExistance != null)
                         {
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You have already submitted review for this freelancer..!!" });
@@ -3832,7 +3836,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var checkExistance = _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                        var checkExistance = await _db.ProjectReview.Where(x => x.ClientId == model.ClientId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
                         if (checkExistance != null)
                         {
                             return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "You have already submitted review..!!" });
@@ -3911,7 +3915,7 @@ namespace Aephy.API.Controllers
             {
                 if (model != null)
                 {
-                    FreelancerReview checkExistance = _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                    FreelancerReview checkExistance = await _db.FreelancerReview.Where(x => x.ClientId == model.ClientId && x.FreelancerId == model.FreelancerId && x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefaultAsync();
                     if (checkExistance != null)
                     {
                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status200OK, Message = "Success", Result = checkExistance });
@@ -3939,7 +3943,7 @@ namespace Aephy.API.Controllers
                 {
                     try
                     {
-                        var ReviewRecord = _db.AdminToFreelancerReview.Where(x => x.UserId == model.UserId && x.FreelancerId == model.FreelancerId).FirstOrDefault();
+                        var ReviewRecord = await _db.AdminToFreelancerReview.Where(x => x.UserId == model.UserId && x.FreelancerId == model.FreelancerId).FirstOrDefaultAsync();
                         if (ReviewRecord != null)
                         {
                             DateTime createdDate = (DateTime)model.CreateDateTime;

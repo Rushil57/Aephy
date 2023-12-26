@@ -393,32 +393,11 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                    if (model.MilestoneSaveProjectIsActivePage)
+                    if (model.MilestoneSaveProjectIsActivePage && model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                     {
-                        if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
-                        {
 
-                            await ConvertPredefineProjectToCustom(model);
-                        }
-                        else
-                        {
-                            var milestone = new SolutionMilestone()
-                            {
-                                Title = model.Title,
-                                Description = model.Description,
-                                IndustryId = model.IndustryId,
-                                SolutionId = model.SolutionId,
-                                DueDate = DateTime.MinValue,
-                                FreelancerId = model.UserId,
-                                ProjectType = model.ProjectType,
-                                Days = model.Days,
-                                CustomProjectDetialsId = customProjectId,
-                                ClientId = model.UserId
-                            };
+                        await ConvertPredefineProjectToCustom(model);
 
-                            _db.SolutionMilestone.Add(milestone);
-                            _db.SaveChanges();
-                        }
                     }
                     else
                     {
@@ -1159,7 +1138,7 @@ namespace Aephy.API.Controllers
             {
                 try
                 {
-                    var solutionData = _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefault();
+                    var solutionData = await _db.Solutions.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                     List<Industries> industryDetailList = new List<Industries>();
 
                     var industryList = _db.SolutionIndustry.Where(x => x.SolutionId == solutionData.Id).Select(x => x.IndustryId).ToList();

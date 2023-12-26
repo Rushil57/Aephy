@@ -467,6 +467,34 @@ namespace Aephy.API.Controllers
 
                             await ConvertPredefineProjectToCustom(model);
                         }
+                        else
+                        {
+                            var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                            if (data.Days != model.Days)
+                            {
+                                if (model.ProjectType.ToLower() == AppConst.ProjectType.CUSTOM_PROJECT)
+                                {
+                                    if (model.MilestoneSaveProjectIsActivePage)
+                                    {
+                                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
+                                        if (solutionFundData != null)
+                                        {
+                                            solutionFundData.IsProjectPriceAlreadyCount = false;
+                                            _db.SaveChanges();
+                                        }
+                                    }
+                                }
+                            }
+                            if (data != null)
+                            {
+                                data.Description = model.Description;
+                                data.DueDate = DateTime.MinValue;
+                                data.Title = model.Title;
+                                data.ProjectType = model.ProjectType;
+                                data.Days = model.Days;
+                                _db.SaveChanges();
+                            }
+                        }
                     }
                     else
                     {
@@ -565,24 +593,66 @@ namespace Aephy.API.Controllers
                                 {
                                     foreach (var data in milestoneData)
                                     {
-                                        var milestone = new SolutionMilestone()
+                                        SolutionMilestone? milestone = null;
+                                        if (data.Id == model.Id)
                                         {
-                                            Title = data.Title,
-                                            Description = data.Description,
-                                            IndustryId = data.IndustryId,
-                                            SolutionId = data.SolutionId,
-                                            DueDate = DateTime.MinValue,
-                                            FreelancerId = solutionFundData.ClientId,
-                                            ProjectType = "custom",
-                                            Days = model.Days,
-                                            CustomProjectDetialsId = customProject.Id,
-                                            ClientId = solutionFundData.ClientId
-                                        };
+                                            milestone = new SolutionMilestone()
+                                            {
+                                                Title = model.Title,
+                                                Description = model.Description,
+                                                IndustryId = data.IndustryId,
+                                                SolutionId = data.SolutionId,
+                                                DueDate = DateTime.MinValue,
+                                                FreelancerId = solutionFundData.ClientId,
+                                                ProjectType = "custom",
+                                                Days = model.Days,
+                                                CustomProjectDetialsId = customProject.Id,
+                                                ClientId = solutionFundData.ClientId
+                                            };
+                                        }
+                                        else
+                                        {
+                                            milestone = new SolutionMilestone()
+                                            {
+                                                Title = data.Title,
+                                                Description = data.Description,
+                                                IndustryId = data.IndustryId,
+                                                SolutionId = data.SolutionId,
+                                                DueDate = DateTime.MinValue,
+                                                FreelancerId = solutionFundData.ClientId,
+                                                ProjectType = "custom",
+                                                Days = data.Days,
+                                                CustomProjectDetialsId = customProject.Id,
+                                                ClientId = solutionFundData.ClientId
+                                            };
+                                        }
+
 
                                         _db.SolutionMilestone.Add(milestone);
                                         _db.SaveChanges();
                                     }
 
+                                }
+
+                                // when new mileston is added then add to custom project
+                                if (model.Id == 0)
+                                {
+                                    var newmilestone = new SolutionMilestone()
+                                    {
+                                        Title = model.Title,
+                                        Description = model.Description,
+                                        IndustryId = model.IndustryId,
+                                        SolutionId = model.SolutionId,
+                                        DueDate = DateTime.MinValue,
+                                        FreelancerId = solutionFundData.ClientId,
+                                        ProjectType = "custom",
+                                        Days = model.Days,
+                                        CustomProjectDetialsId = customProject.Id,
+                                        ClientId = solutionFundData.ClientId
+                                    };
+
+                                    _db.SolutionMilestone.Add(newmilestone);
+                                    _db.SaveChanges();
                                 }
 
                                 var solutionPointsData = _db.SolutionPoints.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == model.ProjectType).ToList();

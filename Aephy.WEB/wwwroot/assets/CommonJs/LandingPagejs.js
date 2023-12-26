@@ -1364,7 +1364,7 @@ function OpenClientWorkingHoursPopUp(data) {
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
         bindFreelancerExcludeGrid();
@@ -1433,7 +1433,7 @@ function InitiateOrUpdate() {
             },
             error: function (result) {
                 $('#preloader').hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1507,7 +1507,7 @@ function SignOut() {
             window.location.href = '/Home/Login'
         },
         error: function (result) {
-            alert("Something Went Wrong!");
+            alert(result.responseText);
         }
     });
 }

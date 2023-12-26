@@ -380,24 +380,44 @@ namespace Aephy.API.Controllers
                 {
                     var customProjectId = 0;
                     var IndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
-                    if(IndustryDetails != null)
+                    if (IndustryDetails != null)
                     {
                         var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == model.ProjectType && x.ClientId == model.UserId).FirstOrDefault();
-                        if(solutionDefineData != null)
+                        if (solutionDefineData != null)
                         {
                             var customProjectDetails = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
-                            if(customProjectDetails != null)
+                            if (customProjectDetails != null)
                             {
                                 customProjectId = customProjectDetails.Id;
                             }
                         }
                     }
 
-                    if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
+                    if (model.MilestoneSaveProjectIsActivePage)
                     {
-                        if (model.MilestoneSaveProjectIsActivePage)
+                        if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                         {
+
                             await ConvertPredefineProjectToCustom(model);
+                        }
+                        else
+                        {
+                            var milestone = new SolutionMilestone()
+                            {
+                                Title = model.Title,
+                                Description = model.Description,
+                                IndustryId = model.IndustryId,
+                                SolutionId = model.SolutionId,
+                                DueDate = DateTime.MinValue,
+                                FreelancerId = model.UserId,
+                                ProjectType = model.ProjectType,
+                                Days = model.Days,
+                                CustomProjectDetialsId = customProjectId,
+                                ClientId = model.UserId
+                            };
+
+                            _db.SolutionMilestone.Add(milestone);
+                            _db.SaveChanges();
                         }
                     }
                     else
@@ -424,7 +444,7 @@ namespace Aephy.API.Controllers
                         if (model.MilestoneSaveProjectIsActivePage)
                         {
                             var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
-                            if(solutionFundData != null)
+                            if (solutionFundData != null)
                             {
                                 solutionFundData.IsProjectPriceAlreadyCount = false;
                                 _db.SaveChanges();
@@ -440,17 +460,18 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
+                    if (model.MilestoneSaveProjectIsActivePage)
                     {
-                        if (model.MilestoneSaveProjectIsActivePage)
+                        if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                         {
+
                             await ConvertPredefineProjectToCustom(model);
                         }
                     }
                     else
                     {
                         var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                        if(data.Days != model.Days)
+                        if (data.Days != model.Days)
                         {
                             if (model.ProjectType.ToLower() == AppConst.ProjectType.CUSTOM_PROJECT)
                             {
@@ -494,20 +515,20 @@ namespace Aephy.API.Controllers
         [Route("ConvertPredefineProjectToCustom")]
         public async Task<string> ConvertPredefineProjectToCustom(MileStoneModel model)
         {
-            if(model != null)
+            if (model != null)
             {
-                if(model.SolutionFundId != 0)
+                if (model.SolutionFundId != 0)
                 {
-                    var solutionFundData = await  _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
-                    if(solutionFundData != null)
+                    var solutionFundData = await _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefaultAsync();
+                    if (solutionFundData != null)
                     {
                         var ClientDetails = _db.Users.Where(x => x.Id == solutionFundData.ClientId).FirstOrDefault();
 
                         var solutionndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
-                        if(solutionndustryDetails != null)
+                        if (solutionndustryDetails != null)
                         {
                             var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionndustryDetails.Id && x.ProjectType == model.ProjectType).FirstOrDefault();
-                            if(solutionDefineData != null)
+                            if (solutionDefineData != null)
                             {
                                 var defineData = new SolutionDefine()
                                 {
@@ -516,7 +537,7 @@ namespace Aephy.API.Controllers
                                     ProjectDetails = solutionDefineData.ProjectDetails,
                                     ProjectType = "custom",
                                     CreatedDateTime = DateTime.Now,
-                                    IsActive = true ,
+                                    IsActive = true,
                                     Duration = solutionDefineData.Duration,
                                     TeamSize = solutionDefineData.TeamSize,
                                     ClientId = solutionFundData.ClientId
@@ -540,9 +561,9 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
 
                                 var milestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == model.ProjectType).ToList();
-                                if(milestoneData.Count > 0)
+                                if (milestoneData.Count > 0)
                                 {
-                                    foreach(var data in milestoneData)
+                                    foreach (var data in milestoneData)
                                     {
                                         var milestone = new SolutionMilestone()
                                         {
@@ -561,11 +582,11 @@ namespace Aephy.API.Controllers
                                         _db.SolutionMilestone.Add(milestone);
                                         _db.SaveChanges();
                                     }
-                                    
+
                                 }
 
                                 var solutionPointsData = _db.SolutionPoints.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == model.ProjectType).ToList();
-                                if(solutionPointsData.Count > 0)
+                                if (solutionPointsData.Count > 0)
                                 {
                                     foreach (var data in solutionPointsData)
                                     {
@@ -586,7 +607,7 @@ namespace Aephy.API.Controllers
                                     }
                                 }
 
-                                
+
                             }
                         }
 
@@ -705,7 +726,7 @@ namespace Aephy.API.Controllers
                 {
                     milestoneList = milestoneList.Where(x => x.CustomProjectDetialsId != 0 && x.CustomProjectDetialsId == model.CustomProjectDetailId && x.ClientId == model.UserId).ToList();
                     var solutionFundData = _db.SolutionFund.Where(x => x.CustomProjectDetialsId == model.CustomProjectDetailId).FirstOrDefault();
-                    
+
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -1788,10 +1809,10 @@ namespace Aephy.API.Controllers
                 // [-- Method Needs To Be Update --]
                 // [-- This Method Needs to be updated for generating freelancers list --]
 
-                if(model.SolutionFundId == 0)
+                if (model.SolutionFundId == 0)
                 {
                     var solutionFund = _db.SolutionFund.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionID && x.ClientId == model.LoginFreelancerId).FirstOrDefault();
-                    if(solutionFund != null)
+                    if (solutionFund != null)
                     {
                         model.SolutionFundId = solutionFund.Id;
                     }
@@ -3242,7 +3263,7 @@ namespace Aephy.API.Controllers
                 }
 
                 decimal clientFees = 0;
-              
+
                 if (model.ProjectType == AppConst.ProjectType.SMALL_PROJECT)
                 {
                     clientFees = (finalProjectpricing * Convert.ToDecimal(AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_SMALL)) / 100;

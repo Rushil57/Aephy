@@ -2401,7 +2401,7 @@ namespace Aephy.API.Controllers
                         {
                             clientFees = (teamList.Sum(y => y.Amount) * AppConst.Commission.PLATFORM_COMM_FROM_CLIENT_MEDIUM) / 100;
                         }
-                        else if (solutionFundData.ProjectType == AppConst.ProjectType.MEDIUM_PROJECT)
+                        else if (solutionFundData.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
                         {
                             if (teamList.Count <= 3)
                             {

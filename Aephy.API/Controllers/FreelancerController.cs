@@ -656,6 +656,41 @@ namespace Aephy.API.Controllers
                                 }
 
 
+                                var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
+                                if(solutionTeamData.Count > 0)
+                                {
+                                    foreach(var teamdata in solutionTeamData)
+                                    {
+                                        var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamdata.FreelancerId).FirstOrDefault().PreferredCurrency;
+                                        var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamdata.FreelancerId).FirstOrDefault();
+
+                                        if (string.IsNullOrEmpty(freelancerPreferedCurrency))
+                                        {
+                                            freelancerPreferedCurrency = "EUR";
+                                        }
+                                        if (string.IsNullOrEmpty(ClientDetails.PreferredCurrency))
+                                        {
+                                            ClientDetails.PreferredCurrency = "EUR";
+                                        }
+                                        var exchangeRate = _db.ExchangeRates.Where(x => x.FromCurrency == freelancerPreferedCurrency && x.ToCurrency == ClientDetails.PreferredCurrency).FirstOrDefault();
+
+                                        var HourlyRate = Convert.ToDecimal(freelancerDetails.HourlyRate);
+                                        decimal ExchangeHourlyRate = HourlyRate;
+                                        if (exchangeRate != null)
+                                        {
+                                            ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
+                                        }
+
+                                        var totalMilestoneDays = milestoneData.Sum(x => x.Days) + model.Days;
+                                        decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
+                                        var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
+
+                                        teamdata.Amount = contractAmount;
+                                        teamdata.PlatformFees = Platformfees;
+                                        _db.SaveChanges();
+
+                                    }
+                                }
                             }
                         }
 

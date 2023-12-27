@@ -387,7 +387,7 @@ namespace Aephy.WEB.Controllers
                 dynamic data = JsonConvert.DeserializeObject(Solutiondata);
                 try
                 {
-                    if (data.Result != null)
+                    if (data.Message == "Success")
                     {
                         foreach (var service in data.Result)
                         {
@@ -652,7 +652,7 @@ namespace Aephy.WEB.Controllers
             var Professionaldata = await _apiRepository.MakeApiCallAsync("api/Client/GetTopProfessionalDetails", HttpMethod.Get);
             dynamic data = JsonConvert.DeserializeObject(Professionaldata);
 
-            if (data.Result != null)
+            if (data.Message == "Success")
             {
                 foreach (var service in data.Result)
                 {

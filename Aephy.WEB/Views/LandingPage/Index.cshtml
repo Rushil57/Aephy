@@ -753,6 +753,12 @@
                             var name = values.FreelancerName.split(" ");
                             var firstname = name[0].charAt(0);
                             var lastname = name[1].charAt(0);
+                            var RateValue = 0;
+                            if (values.Rate == 0) {
+                                RateValue = "-";
+                            } else {
+                                RateValue = values.Rate;
+                            }
 
                             rightreviewSection += '<div class="col my-4" data-aos="fade-up" data-aos-delay="100" >' +
                                 '<div class="box" style="min-height:200px";>' +
@@ -778,7 +784,7 @@
                                     rightreviewSection += '<i class="bi bi-star-fill"></i>';
                                 }
                             }
-                            rightreviewSection += '<label> ' + values.Rate + '/ 10 </label>' +
+                            rightreviewSection += '<label  style="padding-left:3%;"> ' + RateValue + '/ 10 </label>' +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +

@@ -2856,7 +2856,7 @@ namespace Aephy.API.Controllers
 
                             //FreelancerFinderHelper helper = new FreelancerFinderHelper();
                             //await helper.FindFreelancersAsync(_db, model.ClientId, model.ProjectType, model.SolutionId, model.IndustryId, 0, 0, 0);
-                            await SaveSolutionTeamData(solutionfund, 0, 0, 0);
+                            var teambuild = await SaveSolutionTeamData(solutionfund, 0, 0, 0);
 
                             List<Notifications> notificationsList = new List<Notifications>();
                             var solutionName = _db.Solutions.Where(x => x.Id == model.SolutionId).Select(x => x.Title).FirstOrDefault();
@@ -2865,42 +2865,42 @@ namespace Aephy.API.Controllers
 
                             var resultMsg = "";
                             var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                            //if (teambuild == "success")
-                            //{
-                            //    Notifications notifications = new Notifications();
-                            //    notifications.ToUserId = model.ClientId;
-                            //    notifications.NotificationText = "Your project in the " + industryName + " is now live on Ephylink. We're matching top freelancers to your project.";
-                            //    notifications.NotificationTitle = solutionName + " Initiated!";
-                            //    notifications.NotificationTime = DateTime.Now;
-                            //    notifications.IsRead = false;
-                            //    notificationsList.Add(notifications);
+                            if (teambuild == "success")
+                            {
+                                Notifications notifications = new Notifications();
+                                notifications.ToUserId = model.ClientId;
+                                notifications.NotificationText = "Your project in the " + industryName + " is now live on Ephylink. We're matching top freelancers to your project.";
+                                notifications.NotificationTitle = solutionName + " Initiated!";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.IsRead = false;
+                                notificationsList.Add(notifications);
 
-                            //    resultMsg = "Project Initiated Successfully ! with team";
-                            //}
-                            //else
-                            //{
-                            //    Notifications notifications = new Notifications();
-                            //    notifications.ToUserId = model.ClientId;
-                            //    notifications.NotificationText = "Regrettably, our search for freelancers suitable for your project '[" + solutionName + " / " + industryName + "]' has concluded without success. Please feel free to try again later.";
-                            //    notifications.NotificationTitle = "No Match found";
-                            //    notifications.NotificationTime = DateTime.Now;
-                            //    notifications.IsRead = false;
-                            //    notificationsList.Add(notifications);
+                                resultMsg = "Project Initiated Successfully ! with team";
+                            }
+                            else
+                            {
+                                Notifications notifications = new Notifications();
+                                notifications.ToUserId = model.ClientId;
+                                notifications.NotificationText = "Regrettably, our search for freelancers suitable for your project '[" + solutionName + " / " + industryName + "]' has concluded without success. Please feel free to try again later.";
+                                notifications.NotificationTitle = "No Match found";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.IsRead = false;
+                                notificationsList.Add(notifications);
 
 
-                            //    if (adminDetails != null)
-                            //    {
-                            //        Notifications adminNoTeamnotifications = new Notifications();
-                            //        adminNoTeamnotifications.ToUserId = adminDetails.Id;
-                            //        adminNoTeamnotifications.NotificationText = "No matches for '[" + solutionName + "]'.";
-                            //        adminNoTeamnotifications.NotificationTitle = "No Match found";
-                            //        adminNoTeamnotifications.NotificationTime = DateTime.Now;
-                            //        adminNoTeamnotifications.IsRead = false;
-                            //        notificationsList.Add(adminNoTeamnotifications);
-                            //    }
+                                if (adminDetails != null)
+                                {
+                                    Notifications adminNoTeamnotifications = new Notifications();
+                                    adminNoTeamnotifications.ToUserId = adminDetails.Id;
+                                    adminNoTeamnotifications.NotificationText = "No matches for '[" + solutionName + "]'.";
+                                    adminNoTeamnotifications.NotificationTitle = "No Match found";
+                                    adminNoTeamnotifications.NotificationTime = DateTime.Now;
+                                    adminNoTeamnotifications.IsRead = false;
+                                    notificationsList.Add(adminNoTeamnotifications);
+                                }
 
-                            //    resultMsg = "Project Initiated Successfully ! without team";
-                            //}
+                                resultMsg = "Project Initiated Successfully ! without team";
+                            }
 
 
                             Notifications adminnotifications = new Notifications();
@@ -3192,6 +3192,10 @@ namespace Aephy.API.Controllers
                                             if (user.PreferredCurrency == null)
                                             {
                                                 user.PreferredCurrency = "EUR";
+                                            }
+                                            if(model.ClientPreferredCurrency == null)
+                                            {
+                                                model.ClientPreferredCurrency = "EUR";
                                             }
                                             double priceToTransfer = 0;
                                             var teamMember = _db.SolutionTeam.Where(m => m.FreelancerId == contractUser.ApplicationUserId && m.SolutionFundId == model.Id).FirstOrDefault();
@@ -3499,17 +3503,7 @@ namespace Aephy.API.Controllers
 
                                     await notificationHelper.SaveNotificationData(_db, notificationsList);
 
-                                    // 4 Invoice Generate 
-                                    try
-                                    {
-                                        await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, completedData.ProjectType);
-                                    }
-                                    catch (Exception exInvoice)
-                                    {
-
-                                        //#####
-                                    }
-
+                                    
 
 
                                     var transfertoFreelancer = false;
@@ -3520,6 +3514,19 @@ namespace Aephy.API.Controllers
                                         _db.SaveChanges();
                                         var message = string.Format("Amount is transferred to all {0} users(freelancers) and its status is splitted Now.", transferredcount);
                                         transfertoFreelancer = true;
+
+                                        // 4 Invoice Generate 
+                                        try
+                                        {
+                                            await GenerateInvoiceAfterPayAmount(contract, SolutionTitle, completedData.ProjectType);
+                                        }
+                                        catch (Exception exInvoice)
+                                        {
+
+                                            //#####
+                                        }
+
+
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {
                                             StatusCode = StatusCodes.Status200OK,
@@ -4639,7 +4646,7 @@ namespace Aephy.API.Controllers
                             //var teamSize = "1 Project Manager + 1 Associate";
                             if (!associateDetailsAdded)
                             {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (associateDetails != null)
                                 {
                                     freelancerList.Add(associateDetails);
@@ -4649,7 +4656,7 @@ namespace Aephy.API.Controllers
 
                             if (!projectManagerAdded)
                             {
-                                var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                                var projectManagerDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (projectManagerDetails != null)
                                 {
                                     freelancerList.Add(projectManagerDetails);
@@ -4663,7 +4670,7 @@ namespace Aephy.API.Controllers
                             //var teamsize = "1 Project Manager + 1 Expert + 1 Associate";
                             if (!expertDetailsAdded)
                             {
-                                var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                                var expertDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (expertDetails != null)
                                 {
                                     freelancerList.Add(expertDetails);
@@ -4673,7 +4680,7 @@ namespace Aephy.API.Controllers
 
                             if (!associateDetailsAdded)
                             {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (associateDetails != null)
                                 {
                                     freelancerList.Add(associateDetails);
@@ -4683,7 +4690,7 @@ namespace Aephy.API.Controllers
 
                             if (!projectManagerAdded)
                             {
-                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (projectManager != null)
                                 {
                                     freelancerList.Add(projectManager);
@@ -4698,7 +4705,7 @@ namespace Aephy.API.Controllers
 
                             if (exprtcount <= 1)
                             {
-                                var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                                var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (expertsDetails != null)
                                 {
                                     //if(exprtcount == 1)
@@ -4712,7 +4719,7 @@ namespace Aephy.API.Controllers
 
                             if (associatecount <= 1)
                             {
-                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                                var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (associateDetails != null)
                                 {
                                     freelancerList.Add(associateDetails);
@@ -4722,7 +4729,7 @@ namespace Aephy.API.Controllers
 
                             if (!projectManagerAdded)
                             {
-                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                                var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                 if (projectManager != null)
                                 {
                                     freelancerList.Add(projectManager);
@@ -4737,7 +4744,7 @@ namespace Aephy.API.Controllers
                             {
                                 if (exprtcount < expert)
                                 {
-                                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id).FirstOrDefault();
+                                    var expertsDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Expert" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                     if (expertsDetails != null)
                                     {
                                         freelancerList.Add(expertsDetails);
@@ -4755,7 +4762,7 @@ namespace Aephy.API.Controllers
                             {
                                 if (associatecount < assosiate)
                                 {
-                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id).FirstOrDefault();
+                                    var associateDetails = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Associate" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                     if (associateDetails != null)
                                     {
                                         freelancerList.Add(associateDetails);
@@ -4773,7 +4780,7 @@ namespace Aephy.API.Controllers
                             {
                                 if (projectmanagercount < projectmanager)
                                 {
-                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id).FirstOrDefault();
+                                    var projectManager = _db.FreelancerDetails.Where(x => x.FreelancerLevel == "Project Manager" && x.UserId == data.Id && !string.IsNullOrEmpty(x.HourlyRate)).FirstOrDefault();
                                     if (projectManager != null)
                                     {
                                         freelancerList.Add(projectManager);

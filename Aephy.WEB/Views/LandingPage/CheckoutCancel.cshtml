@@ -34,7 +34,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });

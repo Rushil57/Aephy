@@ -257,7 +257,7 @@
                 window.location.href = '/Home/Login'
             },
             error: function (result) {
-                alert("Something Went Wrong!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -317,7 +317,7 @@
                 }
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -370,7 +370,7 @@
                 }
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -401,7 +401,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

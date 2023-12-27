@@ -643,8 +643,7 @@
 
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -759,7 +758,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -778,8 +777,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -798,8 +796,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -899,8 +896,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -947,14 +943,12 @@
                 },
                 error: function (err) {
                     $("#preloader").hide();
-                    //alert("Something Went Wrong!");
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", err.responseText);
                 }
             });
         }
         catch (err) {
-            //alert(err);
-            showToaster("error", "Error !", err);
+            showToaster("error", "Error !", err.responseText);
         }
     }
 
@@ -1004,7 +998,7 @@
                 });
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
 
         });
@@ -1081,7 +1075,7 @@
                 CheckArchitect();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1178,8 +1172,7 @@
                 }
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -1212,7 +1205,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -1257,7 +1250,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -1322,7 +1315,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -1354,7 +1347,7 @@
 
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -1419,7 +1412,7 @@
 
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1455,7 +1448,7 @@
 
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1517,7 +1510,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -1565,7 +1558,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", err.responseText);
             }
         });
     }
@@ -1597,7 +1590,7 @@
                     $("#preloader").hide();
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -1631,7 +1624,7 @@
                     $("#preloader").hide();
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -1664,7 +1657,7 @@
                 }
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1700,7 +1693,7 @@
                 }
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1731,7 +1724,7 @@
                     $("#preloader").hide();
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -1764,7 +1757,7 @@
                     $("#preloader").hide();
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         });
@@ -1816,7 +1809,7 @@
                 }
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

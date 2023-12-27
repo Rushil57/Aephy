@@ -1255,7 +1255,7 @@
             },
             error: function (result) {
                 $('#preloader').hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1433,7 +1433,7 @@
             },
             error: function (result) {
                 $('#preloader').hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1528,7 +1528,7 @@
             },
             error: function (result) {
                 $('#preloader').hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1552,7 +1552,7 @@
                 $('#preloader').hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1593,7 +1593,7 @@
             error: function (result) {
                 $('#preloader').hide();
                 return false;
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1687,7 +1687,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1736,7 +1736,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1769,7 +1769,7 @@
                 },
                 error: function (result) {
                     $("#preloader").hide();
-                    showToaster("error", "Error !", "Failure");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         }
@@ -1811,7 +1811,7 @@
                 $("#table-excludeDate").removeAttr("style");
             },
             error: function (result) {
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -1831,7 +1831,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

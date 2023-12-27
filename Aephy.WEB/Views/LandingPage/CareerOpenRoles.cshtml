@@ -245,8 +245,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -300,8 +299,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -338,8 +336,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });

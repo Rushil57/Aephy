@@ -134,8 +134,7 @@
 
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -182,35 +181,12 @@
 
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
 
     function DeleteServices(id) {
-        //if (confirm('Are you sure want to delete services?')) {
-        //    var ServiceData = {
-        //        Id: id,
-        //    };
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "@Url.Action("DeleteServices", "Lookup")",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify(ServiceData),
-        //        success: function (result) {
-        //            //alert(result.Message)
-        //            showToaster("success", "Success", result.Message);
-        //            GetServiceList()
-
-        //        },
-        //        error: function (result) {
-        //            //alert("Error occured..");
-        //            showToaster("error", "Error !", "Something went wrong !!");
-        //        }
-        //    });
-        //}
 
         Swal.fire({
             title: 'Are you sure?',
@@ -239,7 +215,7 @@
 
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -277,8 +253,7 @@
                     }
                 },
                 error: function (result) {
-                    //alert("Error occured..");
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         }

@@ -243,7 +243,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -294,7 +294,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -491,7 +491,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

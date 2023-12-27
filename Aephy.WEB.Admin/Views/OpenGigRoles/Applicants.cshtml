@@ -132,8 +132,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -172,8 +171,7 @@
 
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
 
@@ -206,7 +204,7 @@
                     GetApplicationDetails()
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         });
@@ -251,8 +249,7 @@
 
                 },  
                 error: function (result) {
-                    //alert("Error occured..");
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         }

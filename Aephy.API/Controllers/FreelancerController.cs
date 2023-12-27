@@ -88,12 +88,12 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Data not found" });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = "Something Went Wrong." });
+                return StatusCode(StatusCodes.Status200OK, new APIResponseModel { StatusCode = StatusCodes.Status403Forbidden, Message = ex.Message + ex.InnerException });
             }
         }
 
@@ -356,7 +356,6 @@ namespace Aephy.API.Controllers
                 {
                     StatusCode = StatusCodes.Status200OK,
                     Message = "Success",
-                    Result = null
                 });
             }
             catch (Exception ex)

@@ -125,7 +125,6 @@
             },
             error: function (result) {   
                 $("#preloader").hide();
-                //alert("Enter Correct EmailId or Password");
                 showToaster("error", "Error !", result.responseText);
             }
         });
@@ -149,8 +148,7 @@
                 ResetForm()
             },
             error: function (result) {
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

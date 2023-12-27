@@ -159,8 +159,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -176,8 +175,7 @@
             },
             error: function (err) {
                 $("#preloader").hide();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -213,8 +211,7 @@
             error: function (err) {
                 $("#preloader").hide();
                 CloseAddRolesModalPopup();
-                //alert("Something Went Wrong!");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
 
@@ -311,8 +308,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -347,7 +343,7 @@
                 },
                 error: function (result) {
                     $("#preloader").hide();
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -377,8 +373,7 @@
                 $('#drp-Solutions').trigger('chosen:updated');
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -417,8 +412,7 @@
                     $('#Industry').css("display", "block");
             },
             error: function (result) {
-                //alert("Error occured..");
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
             }
         });
         }
@@ -462,8 +456,7 @@
                 }
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

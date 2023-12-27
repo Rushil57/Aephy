@@ -94,38 +94,11 @@
 
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
     function DeleteSolution(ImageUrlWithSas, ImagePath, Id) {
-
-        //if (confirm('Are you sure want to delete solution?')) {
-        //    var ServiceData = {
-        //        Id: Id,
-        //        ImagePath: ImagePath,
-        //        ImageUrlWithSas: ImageUrlWithSas
-
-        //    };
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "@Url.Action("DeleteSolutions", "Solutions")",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify(ServiceData),
-        //        success: function (result) {
-        //            //alert(result.Message);
-        //            showToaster("success", "Success", result.Message);
-        //            GetSolutionList();
-
-        //        },
-        //        error: function (result) {
-        //            //alert("Error occured..");
-        //            showToaster("error", "Error !", "Something went wrong !!");
-        //        }
-        //    });
-        //}
 
         Swal.fire({
             title: 'Are you sure?',
@@ -156,7 +129,7 @@
 
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", "Something went wrong !!");
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -209,8 +182,7 @@
 
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

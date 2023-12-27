@@ -532,8 +532,7 @@
 
             },
             error: function (result) {
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -587,7 +586,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", result.Message);
+               showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -630,7 +629,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -676,7 +675,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+               showToaster("error", "Error !", result.responseText);
                 $("#preloader").hide();
             }
         });
@@ -710,7 +709,7 @@
                 ResetMileStoneForm()
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -758,7 +757,7 @@
                 ResetPointsForm()
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -797,7 +796,7 @@
                     GetPointsList()
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", result);
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
         });
@@ -827,7 +826,7 @@
                     GetMiletoneList()
                 },
                 error: function (result) {
-                    showToaster("error", "Error !", result);
+                    showToaster("error", "Error !", result.responseText);
                 }
             });
 
@@ -856,8 +855,7 @@
                 }
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -882,7 +880,7 @@
                 }
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -914,8 +912,7 @@
                 $("#preloader").hide();
             },
             error: function (result) {
-                //alert("Error occured..");
-                showToaster("error", "Error !", result);
+               showToaster("error", "Error !", result.responseText);
             }
         });
     }

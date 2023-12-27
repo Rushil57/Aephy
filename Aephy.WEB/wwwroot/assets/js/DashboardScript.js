@@ -37,7 +37,7 @@
         },
         error: function (result) {
             $("#preloader").hide();
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -68,8 +68,7 @@ function openFreelancerToFreelancerFeedbackPopup(freelancerId, solutionId, indus
         },
         error: function (result) {
             $('#preloader').hide();
-            //showToaster("success", "Success", "Review submitted successfully !");
-            showToaster("error", "Error !", "Failed to submit !!");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -127,7 +126,7 @@ function SubmitFreelancerToFreelancerReview() {
         },
         error: function (result) {
             $('#preloader').hide();
-            showToaster("error", "Error !", "Failed to submit !!");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -227,8 +226,7 @@ function SubmitFreelancerFeedback() {
         },
         error: function (result) {
             $('#preloader').hide();
-            //showToaster("success", "Success", "Review submitted successfully !");
-            showToaster("error", "Error !", "Failed to submit !!");
+            showToaster("error", "Error !", result.responseText);
         }
     });
     $('#preloader').hide();
@@ -279,8 +277,7 @@ function SubmitSolutionFeedback() {
         },
         error: function (result) {
             $('#preloader').hide();
-            //showToaster("success", "Success", "Review submitted successfully !");
-            showToaster("error", "Error !", "Failed to submit !!");
+            showToaster("error", "Error !", result.responseText);
         }
     });
     $('#preloader').hide();
@@ -329,8 +326,7 @@ function GigOpenRolesApply() {
             error: function (result) {
                 clearApplyForm();
                 $('#preloader').hide();
-                //alert("failure");
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
 
             }
         });
@@ -361,8 +357,7 @@ function GigApply(Id) {
             }
         },
         error: function (result) {
-            //alert(result.Message)
-            showToaster("error", "Error !", result.Message);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -430,7 +425,7 @@ function GetApprovedList() {
             var htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
             $("#ApprovedList").find("tr:gt(0)").remove();
             $("#ApprovedList tbody").append(htm);
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
     });
@@ -484,7 +479,7 @@ function GetFreelancerRequestList() {
             var htm = '<tr><td colspan="7"><center>No Data Available</center></td><tr>';
             $("#ApprovedList").find("tr:gt(0)").remove();
             $("#ApprovedList tbody").append(htm);
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
     });
@@ -521,7 +516,7 @@ function DeleteFreelancerAppliedSolution(data, SolutionId, IndustryId) {
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     });

@@ -203,7 +203,7 @@
                     },
                     error: function (result) {
                         $('#preloader').hide();
-                        showToaster("error", "Error !", "Failure");
+                            showToaster("error", "Error !", result.responseText);
                         bindLevelsRangeData();
                     }
                 });

@@ -181,13 +181,13 @@ function getBusinessDays() {
                     }
                 },
                 error: function (result) {
-                    alert("failure");
+                    showToaster("error", "Error !", result.responseText);
                     $('#labelWorkDays').css('display', 'none');
                     sessionStorage.setItem("BusinessDays", 0);
                 }
             });
         } else {
-            alert("'End-Date' must be larger than 'Start-Date'..");
+            showToaster("error", "Error !", "'End-Date' must be larger than 'Start-Date'..");
             $('#labelWorkDays').css('display', 'none');
             sessionStorage.setItem("BusinessDays", 0);
         }
@@ -240,7 +240,7 @@ function SaveRequestedProposal() {
             if (result.Message != null || result.Message != "") {
                 showToaster("error", "Error !", result.Message);
             } else {
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         }
     });
@@ -523,7 +523,7 @@ function BindIndustries() {
 
         },
         error: function (result) {
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -544,7 +544,7 @@ function BindServices() {
 
         },
         error: function (result) {
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -565,7 +565,7 @@ function BindSolution() {
 
         },
         error: function (result) {
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -602,7 +602,7 @@ function ServicesValue() {
         },
         error: function (result) {
             $("#preloader").hide();
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -635,7 +635,7 @@ function SolutionValues() {
         },
         error: function (result) {
             $("#preloader").hide();
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -704,7 +704,7 @@ function GetPopularSolutionLandingPage() {
             }
         },
         error: function (result) {
-            alert("failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 
@@ -824,7 +824,7 @@ function SaveMilStoneData() {
             ResetMileStoneForm()
         },
         error: function (result) {
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -899,7 +899,6 @@ function GetMiletoneList() {
             $("#preloader").hide();
         },
         error: function (result) {
-            //alert("failure");
             showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
@@ -930,7 +929,7 @@ function DeleteMileStoneById(Id) {
                 GetMiletoneList()
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
 
@@ -959,8 +958,7 @@ function EditMiletoneData(id) {
             }
         },
         error: function (result) {
-            //alert("Error occured..");
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -1011,7 +1009,7 @@ function SavePointsData() {
             ResetPointsForm()
         },
         error: function (result) {
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -1076,7 +1074,7 @@ function GetPointsList() {
             $("#preloader").hide();
         },
         error: function (result) {
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
     });
@@ -1102,7 +1100,7 @@ function GetPointsDataById(id) {
             }
         },
         error: function (result) {
-            showToaster("error", "Error !", result);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -1133,7 +1131,7 @@ function DeletePointsById(Id) {
                 GetPointsList()
             },
             error: function (result) {
-                showToaster("error", "Error !", result);
+                showToaster("error", "Error !", result.responseText);
             }
         });
     });
@@ -1265,7 +1263,7 @@ $("#btnAddDate").click(function () {
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -1307,7 +1305,7 @@ function bindFreelancerExcludeGrid() {
             $("#table-excludeDate").removeAttr("style");
         },
         error: function (result) {
-            showToaster("error", "Error !", "Failure");
+            showToaster("error", "Error !", result.responseText);
             $("#preloader").hide();
         }
     });
@@ -1327,7 +1325,7 @@ function removeFreelancerExclude(id) {
         },
         error: function (result) {
             $("#preloader").hide();
-            showToaster("error", "Error !", "Failure");
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -1494,7 +1492,7 @@ function GetNotificationDetails() {
             }
         },
         error: function (result) {
-            alert(result.responseText);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }
@@ -1507,7 +1505,7 @@ function SignOut() {
             window.location.href = '/Home/Login'
         },
         error: function (result) {
-            alert(result.responseText);
+            showToaster("error", "Error !", result.responseText);
         }
     });
 }

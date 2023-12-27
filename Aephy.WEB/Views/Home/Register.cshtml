@@ -927,7 +927,7 @@ While using our Site, we may ask you to provide us with certain personally ident
             error: function (result) {
                 $("#preloader").hide();
                 //alert("Error !");
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

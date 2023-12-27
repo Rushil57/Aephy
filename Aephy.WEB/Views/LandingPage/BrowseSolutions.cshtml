@@ -184,7 +184,7 @@
                 $('#preloader').hide();
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
                 $('#preloader').hide();
             }
         });
@@ -207,7 +207,7 @@
             },
             error: function (result) {
                 $('#preloader').hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -229,7 +229,7 @@
             },
             error: function (result) {
                 $('#preloader').hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -240,7 +240,7 @@
         var ServiceId = $("#confirm-services").val();
 
         if (IndustryId == null || SolutionId == null || ServiceId == null) {
-            alert("Enter Proper Details")
+            showToaster("warning", "Required !", "Enter Proper Details");
             return
         }
         sessionStorage.setItem("IndustryId", IndustryId)
@@ -267,7 +267,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -363,7 +363,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -480,7 +480,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -593,7 +593,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -627,7 +627,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -664,7 +664,7 @@
 
             },
             error: function (result) {
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -739,7 +739,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                alert("failure");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -785,7 +785,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -808,7 +808,7 @@
             },
             error: function (result) {
                 $("#preloader").hide();
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }
@@ -840,7 +840,7 @@
             },
             error: function (result) {
                 $(curitag).removeClass('cls-noevent');
-                showToaster("error", "Error !", "Something went wrong !!");
+                showToaster("error", "Error !", result.responseText);
             }
         });
     }

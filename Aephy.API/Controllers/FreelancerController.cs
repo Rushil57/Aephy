@@ -567,6 +567,8 @@ namespace Aephy.API.Controllers
                                 _db.SaveChanges();
 
                                 var milestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == solutionFundData.SolutionId && x.IndustryId == solutionFundData.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                                var totalMilestoneDays = 0;
+
                                 if (milestoneData.Count > 0)
                                 {
                                     foreach (var data in milestoneData)
@@ -605,7 +607,7 @@ namespace Aephy.API.Controllers
                                             };
                                         }
 
-
+                                        totalMilestoneDays += milestone.Days;
                                         _db.SolutionMilestone.Add(milestone);
                                         _db.SaveChanges();
                                     }
@@ -629,6 +631,7 @@ namespace Aephy.API.Controllers
                                         ClientId = solutionFundData.ClientId
                                     };
 
+                                    totalMilestoneDays += newmilestone.Days;
                                     _db.SolutionMilestone.Add(newmilestone);
                                     _db.SaveChanges();
                                 }
@@ -681,7 +684,6 @@ namespace Aephy.API.Controllers
                                             ExchangeHourlyRate = Convert.ToDecimal((decimal)(HourlyRate * exchangeRate.Rate));
                                         }
 
-                                        var totalMilestoneDays = milestoneData.Sum(x => x.Days) + model.Days;
                                         decimal contractAmount = contractAmount = (totalMilestoneDays * 8 * ExchangeHourlyRate);
                                         var Platformfees = (contractAmount * AppConst.Commission.PLATFORM_COMM_FROM_FREELANCER_CUSTOM) / 100;
 

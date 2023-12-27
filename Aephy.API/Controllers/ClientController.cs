@@ -5000,7 +5000,28 @@ namespace Aephy.API.Controllers
                             {
                                 ExchangeHourlyRate = HourlyRate;
                             }
-                            var solutionMilestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+
+                            List<SolutionMilestone> solutionMilestoneData = new List<SolutionMilestone>();
+                            if (model.ProjectType == AppConst.ProjectType.CUSTOM_PROJECT)
+                            {
+                                var solutionIndustryData = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                                if(solutionIndustryData != null)
+                                {
+                                    var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == solutionIndustryData.Id && x.ClientId == model.ClientId).FirstOrDefault();
+                                    if(solutionDefineData != null)
+                                    {
+                                        var customProjectData = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                                        if(customProjectData != null)
+                                        {
+                                            solutionMilestoneData = _db.SolutionMilestone.Where(x => x.CustomProjectDetialsId == customProjectData.Id).ToList();
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                solutionMilestoneData = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
+                            }
                             if (solutionMilestoneData.Count > 0)
                             {
                                 var totalMilestoneDays = solutionMilestoneData.Sum(x => x.Days);

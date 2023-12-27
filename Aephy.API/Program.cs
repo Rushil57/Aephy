@@ -8,9 +8,10 @@ using System.Text;
 using Aephy.API.Stripe;
 using Stripe;
 using Aephy.API.Revoult;
+using Aephy.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-
+//var _env = builder.Environment;
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
@@ -49,7 +50,10 @@ builder.Services.AddAuthentication(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//if (_env.IsDevelopment())
+//{
+    builder.Services.AddSwaggerGen();
+//}
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers()
@@ -78,9 +82,11 @@ StripeConfiguration.ApiKey = "sk_test_51NaxGxLHv0zYK8g4ZEh9KncjP5T6hbERI8VIn5bKU
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-app.UseSwagger();
+//if (_env.IsDevelopment())
+//{
+    app.UseSwagger();
     app.UseSwaggerUI();
-    
+//}
     app.UseCors(x => x
            .AllowAnyOrigin()
            .AllowAnyMethod()
@@ -92,7 +98,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<ApiKeyMiddleware>();
 app.MapControllers();
 
 app.Run();

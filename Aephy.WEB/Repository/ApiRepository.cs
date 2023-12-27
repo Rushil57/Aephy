@@ -3,6 +3,7 @@ using System.Net.Security;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Aephy.WEB.Provider;
+using System.Linq;
 
 namespace Aephy.WEB.Repository
 {
@@ -21,6 +22,7 @@ namespace Aephy.WEB.Repository
                 return true;
             };
             var baseApiUrl = _configuration.GetValue<string>("BaseApiUrl:ApiUrl");
+            var xApiKey = _configuration.GetValue<string>("XApiKey");
             HttpContent content = null;
             if (payload != null)
             {
@@ -36,6 +38,8 @@ namespace Aephy.WEB.Repository
                 Method = httpMethod,
                 Content = content
             };
+            httpRequest.Headers.Add("XApiKey", xApiKey);
+            
             HttpClient httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromMinutes(240);
             var httpResponseMessage = await httpClient.SendAsync(httpRequest);

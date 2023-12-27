@@ -33,25 +33,25 @@
             // On click open payment pop-up
             payButton.addEventListener("click", function () {
                 RC.payWithPopup({
-                    name: "First Last",  // (mandatory!) name of the cardholder
+                    name: "Client Test Name",  // (mandatory!) name of the cardholder
                     email: "customer@example.com", // (optional) email of the customer
-                    phone: "+447950630319", // (optional) phone of the customer
-                    billingAddress: {    // (optional) billing address of the customer
-                        countryCode: "GB", // if sending billing address, this field is mandatory
-                        postcode: "EC2V 6DN", // if sending billing address, this field is mandatory
-                        region: "Greater London",
-                        city: "London",
-                        streetLine1: "Revolut",
-                        streetLine2: "1 Canada Square",
-                    },
-                    shippingAddress: {   // (optional) shipping address of the customer
-                        countryCode: "GB", // if sending shipping address, this field is mandatory
-                        postcode: "EC2V 6DN", // if sending shipping address, this field is mandatory
-                        region: "Greater London",
-                        city: "London",
-                        streetLine1: "Revolut",
-                        streetLine2: "1 Canada Square",
-                    },
+                    // phone: "+447950630319", // (optional) phone of the customer
+                    // billingAddress: {    // (optional) billing address of the customer
+                    //     countryCode: "GB", // if sending billing address, this field is mandatory
+                    //     postcode: "EC2V 6DN", // if sending billing address, this field is mandatory
+                    //     region: "Greater London",
+                    //     city: "London",
+                    //     streetLine1: "Revolut",
+                    //     streetLine2: "1 Canada Square",
+                    // },
+                    // shippingAddress: {   // (optional) shipping address of the customer
+                    //     countryCode: "GB", // if sending shipping address, this field is mandatory
+                    //     postcode: "EC2V 6DN", // if sending shipping address, this field is mandatory
+                    //     region: "Greater London",
+                    //     city: "London",
+                    //     streetLine1: "Revolut",
+                    //     streetLine2: "1 Canada Square",
+                    // },
                     onSuccess() {  // Callback called when payment finished successfully
                         window.alert('Payment Done.');
                         GetUserSuccessCheckoutDetails();

@@ -78,7 +78,7 @@
                 Token: token,
                 SolutionFundId: fundId
             }
-
+            $("#preloader").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("GetUserSuccessCheckoutDetails", "LandingPage")",

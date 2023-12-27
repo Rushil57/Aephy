@@ -2960,7 +2960,7 @@ namespace Aephy.API.Controllers
                     }
                     else
                     {
-                        var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED").FirstOrDefault();
+                        var data = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.ClientId && x.ProjectStatus != "COMPLETED" && x.IsProjectPriceAlreadyCount).FirstOrDefault();
                         if (data != null)
                         {
                             bool mileStoneCheckout = false;

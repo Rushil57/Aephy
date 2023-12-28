@@ -875,8 +875,9 @@
                         }
                         $("#table-DocumentDetails").find("tr:gt(0)").remove();
                         $("#table-DocumentDetails tbody").append(htm);
-                        $(".cls-documentTemp").hide();
+                       $(".cls-documentTemp").remove();
                 }else{
+                    $(".cls-documentTemp").remove();
                     $("#DoumentsSection").hide();
                     $( "<p class='cls-documentTemp'>No Data Available</p>" ).insertAfter("#DoumentsSection");
                     $(".cls-documentTemp").css("padding-top","10px");

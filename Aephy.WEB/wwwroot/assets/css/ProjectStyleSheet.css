@@ -1199,49 +1199,6 @@ progress::-webkit-progress-value {
     border-radius: 5px 0 0 5px;
 }
 
-.ratingBreakdown .tableRatingBreakdown i {
-    flex-shrink: 0;
-    font-size: 16px;
-    padding: 7px;
-    color: var(--brand);
-    line-height: 0;
-}
-
-.ratingBreakdown .tableRatingBreakdown {
-    color: var(--font-title);
-    width: 100%;
-    font-size: 14px !important;
-}
-
-    .ratingBreakdown .tableRatingBreakdown .rating {
-        color: var(--font-title);
-        text-align: end;
-    }
-
-.ratingBreakdown h4 {
-    color: var(--font-title);
-    font-weight: 700;
-    font-size: 18px;
-    padding: 5px;
-    margin: 5px 0;
-}
-
-.ratingProgress .clientReviews .box {
-    background: #fff;
-    /*  margin: 10px !important;*/
-    margin-top: 0;
-    padding: 1rem !important;
-    width: 100%;
-}
-
-.clientReviews .content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: left;
-    padding-top: 10px;
-}
-
 .clientReviews .info .name {
     font-weight: 600;
     font-size: 18px !important;
@@ -1883,24 +1840,6 @@ progress::-webkit-progress-value {
     padding-left: 1% !important;
 }
 
-.cls-mainreviewdiv-card {
-    margin-top: 3%;
-    border-bottom: 1px solid #d38b4e !important;
-    border-radius: 0;
-}
-
-.cls-review-card {
-    padding-top: 2%;
-}
-
-.cls-feedback-clientname {
-    margin-bottom: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--brand);
-    padding-bottom: 10px;
-}
-
 .view_action_Link {
     margin: 5px 5px 15px 5px;
     padding: 5px;
@@ -1965,31 +1904,3 @@ progress::-webkit-progress-value {
     font-size: 13px;
     padding-left: 5%;
 }
-
-i.bi.bi-star-fill.unchecked_star {
-    color: #a6a6a6;
-    margin-right: 2px;
-    line-height: 0;
-}
-
-    i.bi.bi-star-fill.checked_star {
-        color: var(--brand);
-    }
-
-.freelancerlblTotalReviews {
-    margin-left: 10%;
-}
-
-.cls-freelancerReviewbar {
-    accent-color: var(--brand) !important;
-    background-color: white;
-}
-
-.freelancerlblTotalRatings {
-    padding-left: 2%;
-}
-
-.freelancerlblTotalReviews {
-    padding-right: 1%;
-}
-

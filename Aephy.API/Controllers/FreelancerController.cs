@@ -376,6 +376,8 @@ namespace Aephy.API.Controllers
             if (model != null)
             {
                 var customProjectId = 0;
+
+                // check for custom project
                 var IndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
                 if (IndustryDetails != null)
                 {
@@ -389,25 +391,32 @@ namespace Aephy.API.Controllers
                         }
                     }
                 }
-                if (model.Id == 0)
+
+                // check for custom project already exists with same client
+                var convertProject = false;
+                if (model.MilestoneSaveProjectIsActivePage && model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                 {
-                    if (model.MilestoneSaveProjectIsActivePage && model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
+                    var checkCustomProjectExists = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == "custom" && x.ClientId == model.UserId).FirstOrDefault();
+                    if (checkCustomProjectExists != null)
                     {
-                        var checkCustomProjectExists = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == "custom" && x.ClientId == model.UserId).FirstOrDefault();
-                        if (checkCustomProjectExists != null)
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                         {
-                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                            {
-                                StatusCode = StatusCodes.Status200OK,
-                                Message = "Custom Project already exists."
-                            });
-                        }
-                        else
-                        {
-                            await ConvertPredefineProjectToCustom(model);
-                        }
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Custom Project already exists."
+                        });
                     }
                     else
+                    {
+                        var projectConverstatus = await ConvertPredefineProjectToCustom(model);
+                        if(projectConverstatus == "Successfully Converted")
+                        {
+                            convertProject = true;
+                        }
+                    }
+                }
+                if (model.Id == 0)
+                {
+                    if (!convertProject)
                     {
                         var milestone = new SolutionMilestone()
                         {
@@ -426,6 +435,8 @@ namespace Aephy.API.Controllers
                         _db.SolutionMilestone.Add(milestone);
                         _db.SaveChanges();
                     }
+                   
+
                     if (model.ProjectType.ToLower() == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
                         if (model.MilestoneSaveProjectIsActivePage)
@@ -447,56 +458,7 @@ namespace Aephy.API.Controllers
                 }
                 else
                 {
-                    if (model.MilestoneSaveProjectIsActivePage)
-                    {
-                        if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
-                        {
-                            var checkCustomProjectExists = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == "custom" && x.ClientId == model.UserId).FirstOrDefault();
-                            if(checkCustomProjectExists != null)
-                            {
-                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                                {
-                                    StatusCode = StatusCodes.Status200OK,
-                                    Message = "Custom Project already exists."
-                                });
-                            }
-                            else
-                            {
-                                await ConvertPredefineProjectToCustom(model);
-                            }
-
-                            
-                        }
-                        else
-                        {
-                            var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-                            if (data.Days != model.Days)
-                            {
-                                if (model.ProjectType.ToLower() == AppConst.ProjectType.CUSTOM_PROJECT)
-                                {
-                                    if (model.MilestoneSaveProjectIsActivePage)
-                                    {
-                                        var solutionFundData = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId).FirstOrDefault();
-                                        if (solutionFundData != null)
-                                        {
-                                            solutionFundData.IsProjectPriceAlreadyCount = false;
-                                            _db.SaveChanges();
-                                        }
-                                    }
-                                }
-                            }
-                            if (data != null)
-                            {
-                                data.Description = model.Description;
-                                data.DueDate = DateTime.MinValue;
-                                data.Title = model.Title;
-                                data.ProjectType = model.ProjectType;
-                                data.Days = model.Days;
-                                _db.SaveChanges();
-                            }
-                        }
-                    }
-                    else
+                    if (!convertProject)
                     {
                         var data = await _db.SolutionMilestone.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
                         if (data.Days != model.Days)
@@ -523,13 +485,13 @@ namespace Aephy.API.Controllers
                             data.Days = model.Days;
                             _db.SaveChanges();
                         }
-                    }
-                    return StatusCode(StatusCodes.Status200OK, new APIResponseModel
-                    {
-                        StatusCode = StatusCodes.Status200OK,
-                        Message = "Data Updated Succesfully!."
-                    });
 
+                        return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                        {
+                            StatusCode = StatusCodes.Status200OK,
+                            Message = "Data Updated Succesfully!."
+                        });
+                    }
                 }
 
             }
@@ -682,9 +644,9 @@ namespace Aephy.API.Controllers
 
 
                                 var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToList();
-                                if(solutionTeamData.Count > 0)
+                                if (solutionTeamData.Count > 0)
                                 {
-                                    foreach(var teamdata in solutionTeamData)
+                                    foreach (var teamdata in solutionTeamData)
                                     {
                                         var freelancerPreferedCurrency = _db.Users.Where(x => x.Id == teamdata.FreelancerId).FirstOrDefault().PreferredCurrency;
                                         var freelancerDetails = _db.FreelancerDetails.Where(x => x.UserId == teamdata.FreelancerId).FirstOrDefault();
@@ -3129,10 +3091,23 @@ namespace Aephy.API.Controllers
                     {
                         foreach (var feedbackdata in feedbackData)
                         {
+                            var rate = feedbackdata.CommunicationRating + feedbackdata.CollaborationRating + feedbackdata.ProfessionalismRating + feedbackdata.TechnicalRating + feedbackdata.SatisfactionRating + feedbackdata.ResponsivenessRating;
+                            double totalRate = (double)rate / 10;
+
                             TopProfessionalReviews freelanceReview = new TopProfessionalReviews();
                             var clientname = _db.Users.Where(x => x.Id == feedbackdata.ClientId).Select(x => new { x.FirstName, x.LastName }).FirstOrDefault();
                             freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
                             freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
+                            freelanceReview.ReviewDateTime = feedbackdata.CreateDateTime;
+                         
+                            freelanceReview.CommunicationRating = feedbackdata.CommunicationRating;
+                            freelanceReview.CollaborationRating = feedbackdata.CollaborationRating;
+                            freelanceReview.ProfessionalismRating = feedbackdata.ProfessionalismRating;
+                            freelanceReview.TechnicalRating = feedbackdata.TechnicalRating;
+                            freelanceReview.SatisfactionRating = feedbackdata.SatisfactionRating;
+                            freelanceReview.ResponsivenessRating = feedbackdata.ResponsivenessRating;
+                            freelanceReview.ReviewDateTime = feedbackdata.CreateDateTime;
+                            freelanceReview.Rate = totalRate.ToString();
                             if (freelanceReview.Feedback_Message != null && freelanceReview.Feedback_Message != "")
                             {
                                 freelancerReviewList.Add(freelanceReview);

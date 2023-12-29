@@ -809,7 +809,7 @@ namespace Aephy.API.Controllers
                             {
                                 foreach (var freelancerReview in freelancerReviewByclient)
                                 {
-                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                    sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating;
                                 }
                                 finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
                             }
@@ -1550,7 +1550,7 @@ namespace Aephy.API.Controllers
                         {
                             foreach (var freelancerReview in freelancerReviewByclient)
                             {
-                                sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating + freelancerReview.LikeToWorkRating;
+                                sumofReview += freelancerReview.CommunicationRating + freelancerReview.CollaborationRating + freelancerReview.ProfessionalismRating + freelancerReview.TechnicalRating + freelancerReview.SatisfactionRating + freelancerReview.ResponsivenessRating;
                             }
                             finalRate = (double)sumofReview / freelancerReviewByclient.Count() / 10;
                         }

@@ -325,7 +325,7 @@
                                             <img src="/assets/img/dashboard/icons-send.png">
                                         </div>
                                     </div> *@
-                                    <a class="cls-viewRolebtn" onclick="OpenFeedbackProjectModalPop()">View All Feedbacks > </a>
+                                    <a class="cls-viewRolebtn" onclick="OpenFeedbackProjectModalPop()">View All Reviews > </a>
                                 </div>
                             </div>
                         </div>
@@ -653,7 +653,7 @@
                             <!--col 1-->
                             <div class="col-6 left-content">
                                 <div class="row px-3">
-                                    <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill checked_star"></i><label class="freelancerlblTotalRatings"></label><label class="freelancerlblTotalReviews"></label><label> reviews</label></div>
+                                    <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill checked_star"></i><label class="freelancerlblTotalRatings"></label><label class="freelancerlblTotalReviews"></label><label> Reviews</label></div>
                                 </div>
                                 <div class="row my-2">
                                     <div class="col ProgressTable">
@@ -661,27 +661,27 @@
                                             <thead></thead>
                                             <tbody style="color:#d49255">
                                                 <tr>
-                                                    <td>9 To 10 Stars</td>
+                                                    <td>9 - 10 Stars</td>
                                                     <td><progress id="clientfivestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientfivestar"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>7 To 8 Stars</td>
+                                                    <td>7 - 8 Stars</td>
                                                     <td><progress id="clientfourstarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientfourstar"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>5 To 6 Stars</td>
+                                                    <td>5 - 6 Stars</td>
                                                     <td><progress id="clientthreestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientthreestar"></label></td>
                                                 </tr>
                                                 <tr> 
-                                                    <td>3 To 4 Stars</td>
+                                                    <td>3 - 4 Stars</td>
                                                     <td><progress id="clienttwostarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clienttwostar"></label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>1 To 2 Stars</td>
+                                                    <td>1 - 2 Stars</td>
                                                     <td><progress id="clientonestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
                                                     <td><label id="clientonestar"></label></td>
                                                 </tr>
@@ -2002,7 +2002,7 @@
 
                 totalFeedbackValues += value.CommunicationRating + value.CollaborationRating + value.ProfessionalismRating + value.TechnicalRating + value.SatisfactionRating + value.ResponsivenessRating;
 
-                totalFeedback = Math.floor((value.CommunicationRating + value.CollaborationRating + value.ProfessionalismRating + value.TechnicalRating + value.SatisfactionRating + value.ResponsivenessRating) / 6);
+                totalFeedback = Math.floor((value.CommunicationRating + value.CollaborationRating + value.ProfessionalismRating + value.TechnicalRating + value.SatisfactionRating + value.ResponsivenessRating) / 10);
 
                 if (totalFeedback == 1 || totalFeedback == 2) {
                     onestar += 1;

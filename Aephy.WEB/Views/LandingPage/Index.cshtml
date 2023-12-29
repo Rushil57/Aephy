@@ -441,14 +441,103 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title main-title">Client Feedback List</h4>
+                <h4 class="modal-title main-title">Client Feedback</h4>
                 <a class="close" onclick="CloseFreelancerFeedbackPopUp();" style="cursor:pointer;"><i class="bi bi-x-circle"></i></a>
             </div>
             <div class="modal-body p-0">
+                <div class="col-12 d-flex px-0">
+                    <div class="row" style="width:100%;padding: 4%;">
+                        <!--col 1-->
+                        <div class="col-6 left-content">
+                            <div class="row px-3">
+                                <div class="col approxRating d-flex flex-row align-items-center"><i class="bi bi-star-fill checked_star"></i><label class="freelancerlblTotalRatings"></label><label class="freelancerlblTotalReviews"></label><label> Reviews</label></div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col ProgressTable">
+                                    <table style="width:100%;">
+                                        <thead></thead>
+                                        <tbody style="color:#d49255">
+                                            <tr>
+                                                <td>9 - 10 Stars</td>
+                                                <td><progress id="clientfivestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                <td><label id="clientfivestar"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>7 - 8 Stars</td>
+                                                <td><progress id="clientfourstarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                <td><label id="clientfourstar"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>5 - 6 Stars</td>
+                                                <td><progress id="clientthreestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                <td><label id="clientthreestar"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>3 - 4 Stars</td>
+                                                <td><progress id="clienttwostarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                <td><label id="clienttwostar"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1 - 2 Stars</td>
+                                                <td><progress id="clientonestarprogress" value="0" max="100" class="cls-freelancerReviewbar"></progress></td>
+                                                <td><label id="clientonestar"></label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--col 2-->
+                        <div class="col-6 right-content ratingBreakdown px-lg-0 px-4">
+                            <div class="row mx-lg-0 mx-2 label-title-size title-path"><h4>Rating breakdown</h4></div>
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <table class="tableRatingBreakdown">
+                                        <tbody>
+                                            <tr>
+                                                <td>Communication</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="communicationrating"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Collaboration</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="collaborationrating"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Professionalism</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="professionalismrating"></label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-lg-6 col-12">
+                                    <table class="tableRatingBreakdown">
+                                        <tbody>
+                                            <tr>
+                                                <td>Technical</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="technicalrating"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Satisfaction</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="satisfactionrating"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Responsiveness</td>
+                                                <td class="rating"><i class="bi bi-star-fill"></i><label id="responsivenessrating"></label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col">
                         <div class="card">
                             <div class="card-body" id="freelancer-feedback-Details">
+                                No Data Available
                             </div>
                         </div>
                     </div>
@@ -821,13 +910,28 @@
             success: function (result) {
                 $("#FreelancerFeedbackModal").modal('show');
                 if (result.Result.length != 0) {
+                    BindFreelancerReview(result.Result);
                     var reviewData = "";
                     $.each(result.Result, function (data, value) {
                         reviewData += '<div class="card info-card cls-mainreviewdiv-card">' +
                             '<div class="cls-review-card">' +
-                            '<div class="d-flex align-items-center">' +
+                            '<div class="align-items-center">' +
                             '<div class="ps-3">' +
                             '<h6 class="cls-feedback-clientname">' + value.ClientName + '</h6>' +
+                            '<div class="stars">';
+                        var ratingCeilCount = Math.ceil(value.Rate);
+                        for (var iterator = 1; iterator <= 10; iterator++) {
+                            if (iterator <= ratingCeilCount) {
+                                reviewData += '<i class="bi bi-star-fill checked_star"></i>';
+                            } else {
+                                reviewData += '<i class="bi bi-star-fill unchecked_star"></i>';
+                            }
+                        }
+                        reviewData += '</div>' +
+                            '<div class="row">' +
+                            '<label class="col-1">' + value.Rate + ' / 10</label>' +
+                            '<label class="col" style="color:gray;">' + moment(value.ReviewDateTime).format('DD-MM-YYYY') + '</label>' +
+                            '</div>' +
                             '<div>' +
                             '<p>' + value.Feedback_Message + '</p>' +
                             '</div>' +
@@ -842,6 +946,7 @@
                     $("<p class='cls-feedback-temp'>No Data Available</p>").insertAfter("#freelancer-feedback-Details");
                     $(".cls-feedback-temp").css("padding-left", "14px");
                     $('#freelancer-feedback-Details').html("");
+                    ResetFreelancerReview();
                 }
 
                 $("#preloader").hide();
@@ -855,6 +960,128 @@
 
     function CloseFreelancerFeedbackPopUp() {
         $("#FreelancerFeedbackModal").modal('hide');
+    }
+
+    function BindFreelancerReview(freelancerData) {
+        var totalLength = freelancerData.length;
+        $(".freelancerlblTotalReviews").html(totalLength);
+
+        var totalcommunicationRating = 0;
+        var totalcollaborationRating = 0;
+        var totalprofessionalismRating = 0;
+        var totaltechnicalRating = 0;
+        var totalsatisfactionRating = 0;
+        var totalresponsivenessRating = 0;
+        var totalFeedbackValues = 0;
+        var totalFeedback = 0.0;
+        var fivestar = 0;
+        var fourstar = 0;
+        var threestar = 0;
+        var twostar = 0;
+        var onestar = 0;
+
+        if (totalLength != 0) {
+            $.each(freelancerData, function (data, value) {
+                totalcommunicationRating += value.CommunicationRating;
+                totalcollaborationRating += value.CollaborationRating;
+                totalprofessionalismRating += value.ProfessionalismRating;
+                totaltechnicalRating += value.TechnicalRating;
+                totalsatisfactionRating += value.SatisfactionRating;
+                totalresponsivenessRating += value.ResponsivenessRating
+
+                totalFeedbackValues += value.CommunicationRating + value.CollaborationRating + value.ProfessionalismRating + value.TechnicalRating + value.SatisfactionRating + value.ResponsivenessRating;
+
+                totalFeedback = Math.floor((value.CommunicationRating + value.CollaborationRating + value.ProfessionalismRating + value.TechnicalRating + value.SatisfactionRating + value.ResponsivenessRating) / totalLength / 6);
+
+                if (totalFeedback == 1 || totalFeedback == 2) {
+                    onestar += 1;
+                }
+                if (totalFeedback == 3 || totalFeedback == 4) {
+                    twostar += 1;
+                }
+                if (totalFeedback == 5 || totalFeedback == 6) {
+                    threestar += 1;
+                }
+                if (totalFeedback == 7 || totalFeedback == 8) {
+                    fourstar += 1;
+                }
+                if (totalFeedback == 9 || totalFeedback == 10) {
+                    fivestar += 1;
+                }
+            });
+
+            totalcommunicationRating = totalcommunicationRating / totalLength;
+            totalcollaborationRating = totalcollaborationRating / totalLength;
+            totalprofessionalismRating = totalprofessionalismRating / totalLength;
+            totaltechnicalRating = totaltechnicalRating / totalLength;
+            totalsatisfactionRating = totalsatisfactionRating / totalLength;
+            totalresponsivenessRating = totalresponsivenessRating / totalLength;
+
+            // Binding Reviews for all
+            var finalReviews = totalFeedbackValues / totalLength / 10;
+            if (totalLength != 0) {
+                $(".freelancerlblTotalRatings").html(finalReviews.toFixed(1))
+            }
+
+            // Binding Reviews for all
+            $("#communicationrating").html(totalcommunicationRating.toFixed(1))
+            $("#collaborationrating").html(totalcollaborationRating.toFixed(1));
+            $("#professionalismrating").html(totalprofessionalismRating.toFixed(1));
+            $("#technicalrating").html(totaltechnicalRating.toFixed(1));
+            $("#satisfactionrating").html(totalsatisfactionRating.toFixed(1));
+            $("#responsivenessrating").html(totalresponsivenessRating.toFixed(1));
+            // Binding Reviews for all
+
+
+            // Binding stars for solutions
+            $("#clientfivestar").html(fivestar)
+            $("#clientfourstar").html(fourstar)
+            $("#clientthreestar").html(threestar)
+            $("#clienttwostar").html(twostar)
+            $("#clientonestar").html(onestar)
+            // Binding stars for solutions
+
+            // Binding progress for solutions
+            var onestarProgress = (onestar / totalLength) * 100;
+            $('#clientonestarprogress').attr('value', onestarProgress);
+
+            var twostarProgress = (twostar / totalLength) * 100;
+            $('#clienttwostarprogress').attr('value', twostarProgress);
+
+            var threeProgress = (threestar / totalLength) * 100;
+            $('#clientthreestarprogress').attr('value', threeProgress);
+
+            var fourProgress = (fourstar / totalLength) * 100;
+            $('#clientfourstarprogress').attr('value', fourProgress);
+
+            var fivestarProgress = (fivestar / totalLength) * 100;
+            $('#clientfivestarprogress').attr('value', fivestarProgress);
+            // Binding progress for solutions
+        } else {
+            ResetFreelancerReview();
+
+        }
+    }
+
+    function ResetFreelancerReview() {
+        $("#communicationrating").html(0.0);
+        $("#collaborationrating").html(0.0);
+        $("#professionalismrating").html(0.0);
+        $("#technicalrating").html(0.0);
+        $("#satisfactionrating").html(0.0);
+        $("#responsivenessrating").html(0.0);
+        $(".freelancerlblTotalRatings").html("0.0")
+        $("#clientfivestar").html(0)
+        $("#clientfourstar").html(0)
+        $("#clientthreestar").html(0)
+        $("#clienttwostar").html(0)
+        $("#clientonestar").html(0)
+        $('#clientonestarprogress').attr('value', 0);
+        $('#clienttwostarprogress').attr('value', 0);
+        $('#clientthreestarprogress').attr('value', 0);
+        $('#clientfourstarprogress').attr('value', 0);
+        $('#clientfivestarprogress').attr('value', 0);
+        $(".freelancerlblTotalReviews").html(0.0);
     }
 </script>
 

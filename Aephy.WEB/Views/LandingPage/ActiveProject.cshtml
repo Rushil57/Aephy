@@ -1429,8 +1429,14 @@
             data: JSON.stringify(ActiveMileStoneData),
             success: function (result) {
                 $("#preloader").hide();
-                showToaster("success", "Success", result.Message);
-                 GetProjectTypeValue()
+                if(result.Message == "Data Updated Succesfully!." || result.Message == "Data Saved Succesfully!."){
+                    showToaster("success", "Success", result.Message);
+                    GetProjectTypeValue()
+                }else{
+                    showToaster("error", "Error !", result.Message);
+                }
+                
+                 
                  ResetActiveMileStoneForm()
                 // window.location.href = '/Home/Dashboard#activeProjects'
             },

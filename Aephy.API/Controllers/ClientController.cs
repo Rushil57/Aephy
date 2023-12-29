@@ -660,14 +660,14 @@ namespace Aephy.API.Controllers
                     var checkTeamCompleted = _db.FreelancerFindProcessHeader.Where(x => x.SolutionId == fundProgress.SolutionId && x.IndustryId == fundProgress.IndustryId && x.ClientId == fundProgress.ClientId && x.ProjectType == fundProgress.ProjectType).Select(x => x.IsTeamCompleted).FirstOrDefault();
                     // CHECK TEAM COMPLETE
 
-                    var CheckInCompeleteFund = _db.SolutionFund.Where(x => x.ClientId == model.UserId && x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.Id == model.SolutionFundId && x.ProjectStatus == "INPROGRESS").FirstOrDefault();
+                    var CheckInCompeleteFund = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId && x.ProjectStatus == "INPROGRESS").FirstOrDefault();
                     if (CheckInCompeleteFund != null)
                     {
                         //var solutionFundData = _db.SolutionFund.Where(x => x.Id == CheckInCompeleteFund.SolutionFundId).FirstOrDefault();
                         //if (solutionFundData != null)
                         //{
                         CheckInCompeleteFund.ProjectStatus = "INITIATED";
-                        var milestoneFundCompleted = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType && x.ClientId == model.UserId && x.IsCheckOutDone == true).Count();
+                        var milestoneFundCompleted = _db.SolutionFund.Where(x => x.Id == model.SolutionFundId && x.IsCheckOutDone == true).Count();
                         if (milestoneFundCompleted == 0)
                         {
                             CheckInCompeleteFund.FundType = SolutionFund.FundTypes.ProjectFund;
@@ -3444,16 +3444,7 @@ namespace Aephy.API.Controllers
                                     }
 
                                     var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
-                                    if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
-                                    {
-                                        var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
-                                        if (updatemilestonestatus != null)
-                                        {
-                                            updatemilestonestatus.MilestoneStatus = "Milestone Completed";
-                                            _db.SaveChanges();
-                                        }
-
-                                    }
+                                   
 
                                     List<Notifications> notificationsList = new List<Notifications>();
                                     var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
@@ -3536,7 +3527,16 @@ namespace Aephy.API.Controllers
                                             //#####
                                         }
 
+                                        if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)
+                                        {
+                                            var updatemilestonestatus = _db.ActiveSolutionMilestoneStatus.Where(x => x.MilestoneId == contract.MilestoneDataId && x.UserId == completedData.ClientId).FirstOrDefault();
+                                            if (updatemilestonestatus != null)
+                                            {
+                                                updatemilestonestatus.MilestoneStatus = "Milestone Completed";
+                                                _db.SaveChanges();
+                                            }
 
+                                        }
                                         return StatusCode(StatusCodes.Status200OK, new APIResponseModel
                                         {
                                             StatusCode = StatusCodes.Status200OK,

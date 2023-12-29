@@ -375,28 +375,37 @@ namespace Aephy.API.Controllers
         {
             if (model != null)
             {
-                if (model.Id == 0)
+                var customProjectId = 0;
+                var IndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
+                if (IndustryDetails != null)
                 {
-                    var customProjectId = 0;
-                    var IndustryDetails = _db.SolutionIndustryDetails.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId).FirstOrDefault();
-                    if (IndustryDetails != null)
+                    var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == model.ProjectType && x.ClientId == model.UserId).FirstOrDefault();
+                    if (solutionDefineData != null)
                     {
-                        var solutionDefineData = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == model.ProjectType && x.ClientId == model.UserId).FirstOrDefault();
-                        if (solutionDefineData != null)
+                        var customProjectDetails = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
+                        if (customProjectDetails != null)
                         {
-                            var customProjectDetails = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id).FirstOrDefault();
-                            if (customProjectDetails != null)
-                            {
-                                customProjectId = customProjectDetails.Id;
-                            }
+                            customProjectId = customProjectDetails.Id;
                         }
                     }
-
+                }
+                if (model.Id == 0)
+                {
                     if (model.MilestoneSaveProjectIsActivePage && model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                     {
-
-                        await ConvertPredefineProjectToCustom(model);
-
+                        var checkCustomProjectExists = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == "custom" && x.ClientId == model.UserId).FirstOrDefault();
+                        if (checkCustomProjectExists != null)
+                        {
+                            return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                            {
+                                StatusCode = StatusCodes.Status200OK,
+                                Message = "Custom Project already exists."
+                            });
+                        }
+                        else
+                        {
+                            await ConvertPredefineProjectToCustom(model);
+                        }
                     }
                     else
                     {
@@ -442,8 +451,21 @@ namespace Aephy.API.Controllers
                     {
                         if (model.ProjectType.ToLower() != AppConst.ProjectType.CUSTOM_PROJECT)
                         {
+                            var checkCustomProjectExists = _db.SolutionDefine.Where(x => x.SolutionIndustryDetailsId == IndustryDetails.Id && x.ProjectType == "custom" && x.ClientId == model.UserId).FirstOrDefault();
+                            if(checkCustomProjectExists != null)
+                            {
+                                return StatusCode(StatusCodes.Status200OK, new APIResponseModel
+                                {
+                                    StatusCode = StatusCodes.Status200OK,
+                                    Message = "Custom Project already exists."
+                                });
+                            }
+                            else
+                            {
+                                await ConvertPredefineProjectToCustom(model);
+                            }
 
-                            await ConvertPredefineProjectToCustom(model);
+                            
                         }
                         else
                         {

@@ -2,6 +2,7 @@
 using Aephy.API.DBHelper;
 using Aephy.API.Models;
 using Aephy.API.NotificationMethod;
+using Aephy.Helper.Helpers;
 
 //using Aephy.API.Stripe;
 using Microsoft.AspNetCore.Mvc;
@@ -3231,7 +3232,7 @@ namespace Aephy.API.Controllers
                 //=== change tem completed status true. ===//
                 var header = await _db.FreelancerFindProcessHeader.Where(x => x.Id == dbModel.FreelancerFindProcessHeaderId).FirstOrDefaultAsync();
                 List<SolutionTeamViewModel> teamList = new List<SolutionTeamViewModel>();
-
+                List<Notifications> notificationsList = new List<Notifications>();
                 if (header != null)
                 {
                     header.IsTeamCompleted = true;
@@ -3249,6 +3250,46 @@ namespace Aephy.API.Controllers
                             teamList.Add(teamData);
                         }
                     }
+
+                   
+                    if (header.IsTeamCompleted)
+                    {
+                        var projectName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
+                        var IndustryName = _db.Industries.Where(x => x.Id == header.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
+                        int projectCompletedTime = _db.SolutionMilestone.Where(x => x.IndustryId == header.IndustryId && x.SolutionId == header.SolutionId && x.ProjectType == header.ProjectType).Select(x => x.Days).Sum();
+                        var clientName = _db.Users.Where(x => x.Id == header.ClientId).Select(x => x.FirstName).FirstOrDefault();
+
+                        string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                        string fileName = "ProjectCompletedTemplate.html";
+                        string filePath = Path.Combine(currentDirectory.Replace("\\bin\\Debug\\net7.0", "\\AlgorithumHelper"), fileName);
+                        string body = System.IO.File.ReadAllText(filePath);
+                        body = body.Replace("{{ project_name }}", projectName);
+                        body = body.Replace("{{ industry_name }}", IndustryName);
+                        body = body.Replace("{{ duration }}", Convert.ToString(projectCompletedTime) + "Days");
+                        body = body.Replace("{{ size }}", header.ProjectType);
+                        body = body.Replace("{{ Client_Name }}", clientName);
+
+                        foreach (var item in teamList)
+                        {
+                            var freelancerEmail = _db.Users.Where(x => x.Id == item.FreelancerId).Select(x => x.Email).FirstOrDefault();
+                            if(freelancerEmail != null)
+                            {
+                                bool send = SendEmailHelper.SendEmail(freelancerEmail, "Project Team Completed", body);
+                                var teamCompleted = new Notifications
+                                {
+                                    NotificationTitle = "Project Team Completed",
+                                    NotificationText = "You're now part of the team for "+ projectName + " led by "+ clientName + ". Initiate communication with the team and stay responsive to client requests",
+                                    NotificationTime = DateTime.Now,
+                                    IsRead = false,
+                                    ToUserId = item.FreelancerId
+                                };
+                                notificationsList.Add(teamCompleted);
+
+                            }
+                            
+                        }
+                    }
+
                 }
 
                 if (teamList.Count > 0)
@@ -3256,7 +3297,7 @@ namespace Aephy.API.Controllers
                     await SaveSolutionTeamData(teamList);
                 }
 
-                List<Notifications> notificationsList = new List<Notifications>();
+                
                 var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
                 var solutionName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
 

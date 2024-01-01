@@ -266,6 +266,17 @@ public class FreelancerFinderHelper
                                 await db.FreelancerFindProcessDetails.AddRangeAsync(detailModelList);
                                 await db.SaveChangesAsync();
 
+                                if(emailIds.Count > 0)
+                                {
+                                    if(emailIds.Count() == 1)
+                                    {
+                                        body = body.Replace("{{ Freelancer_Message }}", "Please note that accepting the project significantly enhances your prospects of collaborating with the client, though it does not guarantee final selection.");
+                                    }
+                                    else
+                                    {
+                                        body = body.Replace("{{ Freelancer_Message }}", "Please note that the first freelancer to respond and accept will be given priority for project allocation. While acceptance significantly enhances your prospects, it does not guarantee final selection.");
+                                    }
+                                }
                                 //After save send mail to freelancer.
                                 foreach (var item in emailIds)
                                 {

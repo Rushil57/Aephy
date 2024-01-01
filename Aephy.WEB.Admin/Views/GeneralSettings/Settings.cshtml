@@ -229,7 +229,7 @@
                         if (item.Level != "Project Manager / Project Architect"){
                             var level = res + 1;
                             htm += '<div class="row mb-3 d-flex justify-content-center">';
-                            htm += '<label class= "col-md-4 col-lg-5 col-form-label">' + item.Level + '</label>';
+                            htm += '<label class= "col-md-4 col-lg-5 col-form-label">' + item.Level + ' [EUR]</label>';
                             htm += '<input name = "LevelID" type = "text" class="form-control d-none" value = "' + item.ID + '" id = "architect_LevelID">';
                             htm += '<div class="col-3">';
                             htm += '<input name="minLevel" id="minLevel' + level + '" type = "text" class="form-control" value="' + item.minLevel + '" id = "architect_minLevel">';

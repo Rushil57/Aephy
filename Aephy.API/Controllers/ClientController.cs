@@ -577,7 +577,7 @@ namespace Aephy.API.Controllers
                             singleFreelancerCustomProject = _db.CustomProjectDetials.Where(x => x.SolutionDefineId == solutionDefineData.Id && x.IsSingleFreelancer).ToList();
                         }
                     }
-                    var checkCustomProjectInProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId && x.ProjectType == "custom"  && x.IsStoppedProject == false).FirstOrDefault();
+                    var checkCustomProjectInProgress = _db.SolutionFund.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ClientId == model.UserId && x.ProjectType == "custom"&& x.IsStoppedProject == false).FirstOrDefault();
 
 
                     return StatusCode(StatusCodes.Status200OK, new APIResponseModel
@@ -697,14 +697,14 @@ namespace Aephy.API.Controllers
                         {
                             //if (checkTeamCompleted)
                             //{
-                                if (!fundProgress.IsProjectPriceAlreadyCount)
-                                {
-                                    var finalPrice = await CountFinalProjectPricing(fundProgress);
-                                    projectFinalPrice = finalPrice;
-                                    fundProgress.ProjectPrice = finalPrice.ToString();
-                                    fundProgress.IsProjectPriceAlreadyCount = true;
-                                    _db.SaveChanges();
-                                }
+                            if (!fundProgress.IsProjectPriceAlreadyCount)
+                            {
+                                var finalPrice = await CountFinalProjectPricing(fundProgress);
+                                projectFinalPrice = finalPrice;
+                                fundProgress.ProjectPrice = finalPrice.ToString();
+                                fundProgress.IsProjectPriceAlreadyCount = true;
+                                _db.SaveChanges();
+                            }
                             //}
                             //else
                             //{
@@ -735,8 +735,8 @@ namespace Aephy.API.Controllers
                                 milestoneData = _db.SolutionMilestone.Where(x => x.CustomProjectDetialsId == CustomProjectData.Id).ToList();
                             }
                         }
-                       
-                        
+
+
                     }
                     else
                     {
@@ -745,9 +745,9 @@ namespace Aephy.API.Controllers
                         {
                             milestoneData = await _db.SolutionMilestone.Where(x => x.IndustryId == model.IndustryId && x.SolutionId == model.SolutionId && x.ProjectType == model.ProjectType).ToListAsync();
                         }
-                        
+
                     }
-                    
+
                     List<MileStoneModel> milestoneList = new List<MileStoneModel>();
                     if (milestoneData.Count > 0)
                     {
@@ -778,7 +778,7 @@ namespace Aephy.API.Controllers
                     {
                         pointsData = await _db.SolutionPoints.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToListAsync();
                     }
-                    
+
                     var solutionTeamData = await _db.SolutionTeam.Where(x => x.SolutionFundId == model.SolutionFundId).ToListAsync();
                     List<SolutionTeamViewModel> solutionteamList = new List<SolutionTeamViewModel>();
                     if (solutionTeamData.Count > 0)
@@ -2136,7 +2136,7 @@ namespace Aephy.API.Controllers
                     _db.SaveChanges();
 
 
-                    
+
                     List<ContractUser> contractUsers = new List<ContractUser>();
                     //List<FreelancerDetails> freelancerList = new List<FreelancerDetails>();
                     //bool associateDetailsAdded = false;
@@ -2728,7 +2728,7 @@ namespace Aephy.API.Controllers
                                             var projectmanagertotal = Convert.ToInt32(teamData.ProjectManager);
                                             await SaveSolutionTeamData(solutionfund, assosiatetotal, experttotal, projectmanagertotal);
                                         }
-                                       
+
                                     }
 
                                     else
@@ -3444,7 +3444,7 @@ namespace Aephy.API.Controllers
                                     }
 
                                     var transferredcount = contract.ContractUsers.Where(x => x.IsTransfered).Count();
-                                   
+
 
                                     List<Notifications> notificationsList = new List<Notifications>();
                                     var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
@@ -3454,7 +3454,7 @@ namespace Aephy.API.Controllers
                                     {
 
                                         Notifications notifications = new Notifications();
-                                        notifications.NotificationText = "You've successfully approved the [ " + solutionName + "/ " + solutionName + "/ " + industryName + "].Payment for this milestone has been released.";
+                                        notifications.NotificationText = "You've successfully approved the [ " + SolutionTitle + "/ " + solutionName + "/ " + industryName + "].Payment for this milestone has been released.";
                                         notifications.NotificationTime = DateTime.Now;
                                         notifications.NotificationTitle = "[" + SolutionTitle + " - " + solutionName + "/ " + industryName + "] Approved and Payment Released";
                                         notifications.ToUserId = completedData.ClientId;
@@ -3504,7 +3504,7 @@ namespace Aephy.API.Controllers
 
                                     await notificationHelper.SaveNotificationData(_db, notificationsList);
 
-                                    
+
 
 
                                     var transfertoFreelancer = false;
@@ -4303,7 +4303,7 @@ namespace Aephy.API.Controllers
                                 }
                             }
                         }
-                       
+
                         var solutionTeamData = _db.SolutionTeam.Where(x => x.SolutionFundId == solutionfundData.Id).ToList();
                         var solutionName = _db.Solutions.Where(x => x.Id == solutionfundData.SolutionId).Select(x => x.Title).FirstOrDefault();
                         var userType = _db.Users.Where(x => x.Id == model.ClientId).Select(x => x.UserType).FirstOrDefault();
@@ -4311,28 +4311,27 @@ namespace Aephy.API.Controllers
 
                         List<SolutionTeamViewModel> solutionTeamList = new List<SolutionTeamViewModel>();
                         List<Notifications> notificationsList = new List<Notifications>();
-                        if (userType == "Freelancer")
-                        {
-                            if (solutionTeamData.Count > 0)
-                            {
-                                foreach (var data in solutionTeamData)
-                                {
-                                    Notifications notifications = new Notifications();
-                                    notifications.NotificationText = "The " + solutionName + " project has been stopped. Thank you for your understanding. Stay tuned for upcoming project opportunities!";
-                                    notifications.NotificationTitle = "Project Stopped";
-                                    notifications.NotificationTime = DateTime.Now;
-                                    notifications.ToUserId = data.FreelancerId;
-                                    notifications.IsRead = false;
-                                    notificationsList.Add(notifications);
 
-                                    var freelancerEmail = _db.Users.Where(x => x.Id == data.FreelancerId).Select(x => x.UserName).FirstOrDefault();
-                                    SolutionTeamViewModel solutionteam = new SolutionTeamViewModel();
-                                    solutionteam.FreelancerEmailId = freelancerEmail;
-                                    solutionteam.SolutionName = solutionName;
-                                    solutionTeamList.Add(solutionteam);
-                                }
+                        if (solutionTeamData.Count > 0)
+                        {
+                            foreach (var data in solutionTeamData)
+                            {
+                                Notifications notifications = new Notifications();
+                                notifications.NotificationText = "The " + solutionName + " project has been stopped. Thank you for your understanding. Stay tuned for upcoming project opportunities!";
+                                notifications.NotificationTitle = "Project Stopped";
+                                notifications.NotificationTime = DateTime.Now;
+                                notifications.ToUserId = data.FreelancerId;
+                                notifications.IsRead = false;
+                                notificationsList.Add(notifications);
+
+                                var freelancerEmail = _db.Users.Where(x => x.Id == data.FreelancerId).Select(x => x.UserName).FirstOrDefault();
+                                SolutionTeamViewModel solutionteam = new SolutionTeamViewModel();
+                                solutionteam.FreelancerEmailId = freelancerEmail;
+                                solutionteam.SolutionName = solutionName;
+                                solutionTeamList.Add(solutionteam);
                             }
                         }
+
                         if (userType == "Client")
                         {
                             Notifications notifications = new Notifications();
@@ -4487,7 +4486,7 @@ namespace Aephy.API.Controllers
                         MilestoneTotalDaysByProjectType = _db.SolutionMilestone.Where(x => x.SolutionId == model.SolutionId && x.IndustryId == model.IndustryId && x.ProjectType == model.ProjectType).ToList();
                     }
 
-                   
+
                     if (MilestoneTotalDaysByProjectType.Count > 0)
                     {
                         var MileStoneData = _db.SolutionMilestone.Where(x => x.Id == model.MileStoneId).FirstOrDefault();

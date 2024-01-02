@@ -1525,7 +1525,7 @@ function BindActiveProject(Activedata) {
             '</h3>' +
             '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
             '<div class="icon-image">' +
-            '<i class="bi bi-shop-window"></i>' +
+            '<img src="/assets/img/industryicon.svg" />' +
             '<label> ' + value.Industries + ' </label>' +
 
             '</div></div>' +

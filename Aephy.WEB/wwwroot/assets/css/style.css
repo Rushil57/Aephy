@@ -1755,3 +1755,9 @@ textarea.form-control {
     color: #012970;
 
 }
+
+.cls-industryIcon {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 15px;
+}

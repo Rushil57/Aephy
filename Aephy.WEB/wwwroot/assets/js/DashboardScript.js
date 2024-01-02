@@ -1524,7 +1524,7 @@ function BindActiveProject(Activedata) {
             '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
             '</h3>' +
             '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
-            '<div class="icon-image">' +
+            '<div class="icon-image cls-industryIcon">' +
             '<img src="/assets/img/industryicon.svg" />' +
             '<label> ' + value.Industries + ' </label>' +
 
@@ -1670,8 +1670,8 @@ function BindSavedProject(projectData) {
             '<a class="cls-saveproject-title" title="' + value.Title + '">' + title + '</a>' +
             '</h3>' +
             '<p class="cls-saveProject-description" title="' + value.Description + '">' + description + '</p>' +
-            '<div class="icon-image">' +
-            '<i class="bi bi-shop-window"></i>' +
+            '<div class="icon-image cls-industryIcon">' +
+            '<img src="/assets/img/industryicon.svg" />' +
             '<label> ' + value.Industries + ' </label>' +
 
             '</div></div>' +

@@ -2086,6 +2086,14 @@ namespace Aephy.API.Controllers
                         admininvoicenotifications.ToUserId = adminDetails.Id;
                         admininvoicenotifications.IsRead = false;
                         notificationsList.Add(admininvoicenotifications);
+
+                        Notifications adminpaymentnotifications = new Notifications();
+                        adminpaymentnotifications.NotificationText = "Payment from ["+ clientName + "] for '["+ solutionName + "]' received.";
+                        adminpaymentnotifications.NotificationTime = DateTime.Now;
+                        adminpaymentnotifications.NotificationTitle = "Project Payment : ";
+                        adminpaymentnotifications.ToUserId = adminDetails.Id;
+                        adminpaymentnotifications.IsRead = false;
+                        notificationsList.Add(adminpaymentnotifications);
                     }
 
                     // to freelancer

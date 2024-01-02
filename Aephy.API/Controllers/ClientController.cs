@@ -4,6 +4,7 @@ using Aephy.API.Models;
 using Aephy.API.NotificationMethod;
 using Aephy.API.Revoult;
 using Aephy.API.Stripe;
+using Aephy.Helper.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -3450,7 +3451,7 @@ namespace Aephy.API.Controllers
                                     var solutionName = _db.Solutions.Where(x => x.Id == completedData.SolutionId).Select(x => x.Title).FirstOrDefault();
                                     var industryName = _db.Industries.Where(x => x.Id == completedData.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
 
-                                    if (transferredcount != 0)
+                                    if (transferredcount == contract.ContractUsers.Count())
                                     {
 
                                         Notifications notifications = new Notifications();
@@ -3463,47 +3464,65 @@ namespace Aephy.API.Controllers
 
                                         //to freelancer
                                         var solutionTeam = await _db.SolutionTeam.Where(x => x.SolutionFundId == contract.SolutionFundId).ToListAsync();
+                                        var clientDetails = _db.Users.Where(x => x.Id == completedData.ClientId).FirstOrDefault();
                                         if (solutionTeam.Count > 0)
                                         {
-                                            var clientName = _db.Users.Where(x => x.Id == completedData.ClientId).Select(x => x.FirstName).FirstOrDefault();
                                             foreach (var teamdata in solutionTeam)
                                             {
                                                 Notifications freelancernotifications = new Notifications();
-                                                freelancernotifications.NotificationText = "The " + SolutionTitle + " has been confirmed by " + clientName + ". Payment is on the way. Well done on your delivery!";
+                                                freelancernotifications.NotificationText = "The " + SolutionTitle + " has been confirmed by " + clientDetails.FirstName + ". Payment is on the way. Well done on your delivery!";
                                                 freelancernotifications.NotificationTime = DateTime.Now;
                                                 freelancernotifications.NotificationTitle = "Milestone Approved!";
                                                 freelancernotifications.ToUserId = teamdata.FreelancerId;
                                                 freelancernotifications.IsRead = false;
                                                 notificationsList.Add(freelancernotifications);
                                             }
-
                                         }
 
+
+                                        // to client
+                                        Notifications clientnotifications = new Notifications();
+                                        clientnotifications.NotificationText = "Your invoice for the project [" + solutionName + "/" + industryName + "] has been issued.";
+                                        clientnotifications.NotificationTime = DateTime.Now;
+                                        clientnotifications.NotificationTitle = "Invoice for '[" + solutionName + "/ " + industryName + "]'";
+                                        clientnotifications.ToUserId = completedData.ClientId;
+                                        clientnotifications.IsRead = false;
+                                        notificationsList.Add(clientnotifications);
+
+                                        // to admin
+                                        var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
+                                        if (adminDetails != null)
+                                        {
+                                            Notifications admininvoicenotifications = new Notifications();
+                                            admininvoicenotifications.NotificationText = "New Invoices have been issued on '[" + solutionName + "]'.";
+                                            admininvoicenotifications.NotificationTime = DateTime.Now;
+                                            admininvoicenotifications.NotificationTitle = "Invoice issued:";
+                                            admininvoicenotifications.ToUserId = adminDetails.Id;
+                                            admininvoicenotifications.IsRead = false;
+                                            notificationsList.Add(admininvoicenotifications);
+                                        }
+
+                                        // to client for feedback
+                                        string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                                        string fileName = "ClientFeedbackTemplate.html";
+                                        string filePath = Path.Combine(currentDirectory.Replace("\\bin\\Debug\\net7.0", "\\AlgorithumHelper"), fileName);
+                                        string body = System.IO.File.ReadAllText(filePath);
+                                        body = body.Replace("{{project_name}}", solutionName);
+                                        body = body.Replace("{{Industry_name}}", industryName);
+                                        bool send = SendEmailHelper.SendEmail(clientDetails.Email, "We Value Your Feedback", body);
+
+                                        var clientFeedbacknotification = new Notifications
+                                        {
+                                            NotificationTitle = "Feedback Request for '["+ solutionName + " / "+ industryName + "]'",
+                                            NotificationText = "We value your experience with the '['"+ solutionName + " / "+ industryName + "]' and Ephylink. Kindly take a moment to share your feedback. Your insights help us improve and offer better collaboration experiences.",
+                                            NotificationTime = DateTime.Now,
+                                            IsRead = false,
+                                            ToUserId = completedData.ClientId
+                                        };
+                                        notificationsList.Add(clientFeedbacknotification);
+
+
                                     }
-
-                                    // to client
-                                    Notifications clientnotifications = new Notifications();
-                                    clientnotifications.NotificationText = "Your invoice for the project [" + solutionName + "/" + industryName + "] has been issued.";
-                                    clientnotifications.NotificationTime = DateTime.Now;
-                                    clientnotifications.NotificationTitle = "Invoice for '[" + solutionName + "/ " + industryName + "]'";
-                                    clientnotifications.ToUserId = completedData.ClientId;
-                                    clientnotifications.IsRead = false;
-                                    notificationsList.Add(clientnotifications);
-
-                                    var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
-                                    if (adminDetails != null)
-                                    {
-                                        Notifications admininvoicenotifications = new Notifications();
-                                        admininvoicenotifications.NotificationText = "New Invoices have been issued on '[" + solutionName + "]'.";
-                                        admininvoicenotifications.NotificationTime = DateTime.Now;
-                                        admininvoicenotifications.NotificationTitle = "Invoice issued:";
-                                        admininvoicenotifications.ToUserId = adminDetails.Id;
-                                        admininvoicenotifications.IsRead = false;
-                                        notificationsList.Add(admininvoicenotifications);
-                                    }
-
-                                    await notificationHelper.SaveNotificationData(_db, notificationsList);
-
 
 
 
@@ -3525,6 +3544,11 @@ namespace Aephy.API.Controllers
                                         {
 
                                             //#####
+                                        }
+
+                                        if(notificationsList.Count > 0)
+                                        {
+                                            await notificationHelper.SaveNotificationData(_db, notificationsList);
                                         }
 
                                         if (completedData.FundType == SolutionFund.FundTypes.MilestoneFund)

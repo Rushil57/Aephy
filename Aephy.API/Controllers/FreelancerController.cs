@@ -436,7 +436,7 @@ namespace Aephy.API.Controllers
                         _db.SolutionMilestone.Add(milestone);
                         _db.SaveChanges();
                     }
-                   
+
 
                     if (model.ProjectType.ToLower() == AppConst.ProjectType.CUSTOM_PROJECT)
                     {
@@ -3100,7 +3100,7 @@ namespace Aephy.API.Controllers
                             freelanceReview.ClientName = clientname.FirstName + " " + clientname.LastName;
                             freelanceReview.Feedback_Message = feedbackdata.Feedback_Message;
                             freelanceReview.ReviewDateTime = feedbackdata.CreateDateTime;
-                         
+
                             freelanceReview.CommunicationRating = feedbackdata.CommunicationRating;
                             freelanceReview.CollaborationRating = feedbackdata.CollaborationRating;
                             freelanceReview.ProfessionalismRating = feedbackdata.ProfessionalismRating;
@@ -3251,23 +3251,24 @@ namespace Aephy.API.Controllers
                         }
                     }
 
-                   
+
                     if (header.IsTeamCompleted)
                     {
                         var projectName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
                         var IndustryName = _db.Industries.Where(x => x.Id == header.IndustryId).Select(x => x.IndustryName).FirstOrDefault();
                         int projectCompletedTime = _db.SolutionMilestone.Where(x => x.IndustryId == header.IndustryId && x.SolutionId == header.SolutionId && x.ProjectType == header.ProjectType).Select(x => x.Days).Sum();
-                        var clientName = _db.Users.Where(x => x.Id == header.ClientId).Select(x => x.FirstName).FirstOrDefault();
+                        var clientDetails = _db.Users.Where(x => x.Id == header.ClientId).FirstOrDefault();
 
+                        // email and notification to freelancer
                         string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
                         string fileName = "ProjectCompletedTemplate.html";
                         string filePath = Path.Combine(currentDirectory.Replace("\\bin\\Debug\\net7.0", "\\AlgorithumHelper"), fileName);
                         string body = System.IO.File.ReadAllText(filePath);
                         body = body.Replace("{{ project_name }}", projectName);
                         body = body.Replace("{{ industry_name }}", IndustryName);
-                        body = body.Replace("{{ duration }}", Convert.ToString(projectCompletedTime) + "Days");
+                        body = body.Replace("{{ duration }}", Convert.ToString(projectCompletedTime) + " Days");
                         body = body.Replace("{{ size }}", header.ProjectType);
-                        body = body.Replace("{{ Client_Name }}", clientName);
+                        body = body.Replace("{{ Client_Name }}", clientDetails.FirstName);
 
                         foreach (var item in teamList)
                         {
@@ -3278,7 +3279,7 @@ namespace Aephy.API.Controllers
                                 var teamCompleted = new Notifications
                                 {
                                     NotificationTitle = "Project Team Completed",
-                                    NotificationText = "You're now part of the team for "+ projectName + " led by "+ clientName + ". Initiate communication with the team and stay responsive to client requests",
+                                    NotificationText = "You're now part of the team for "+ projectName + " led by " + clientDetails.FirstName + ". Initiate communication with the team and stay responsive to client requests",
                                     NotificationTime = DateTime.Now,
                                     IsRead = false,
                                     ToUserId = item.FreelancerId
@@ -3286,8 +3287,33 @@ namespace Aephy.API.Controllers
                                 notificationsList.Add(teamCompleted);
 
                             }
-                            
                         }
+                        // email and notification to freelancer
+
+                        // email and notification to client
+
+                        string clientfileName = "ClientTemplateForTeamComplete.html";
+                        string clientfilePath = Path.Combine(currentDirectory.Replace("\\bin\\Debug\\net7.0", "\\AlgorithumHelper"), clientfileName);
+                        string clientbody = System.IO.File.ReadAllText(clientfilePath);
+                        clientbody = clientbody.Replace("{{ project_name }}", projectName);
+                        clientbody = clientbody.Replace("{{ industry_name }}", IndustryName);
+                        clientbody = clientbody.Replace("{{ duration }}", Convert.ToString(projectCompletedTime) + " Days");
+                        clientbody = clientbody.Replace("{{ size }}", header.ProjectType);
+                        clientbody = clientbody.Replace("{{ Client_Name }}", clientDetails.FirstName);
+                        bool sendEmailtoclient = SendEmailHelper.SendEmail(clientDetails.Email, "Your Project Team is Assembled", clientbody);
+
+
+                        var clientnotificationteamCompleted = new Notifications
+                        {
+                            NotificationTitle = "Team Ready for [" + projectName + " / " + IndustryName + "]!",
+                            NotificationText = "Your freelance team for ["+ projectName + "] is assembled and ready to start. Connect with them and provide funding for a smooth project kickoff.",
+                            NotificationTime = DateTime.Now,
+                            IsRead = false,
+                            ToUserId = header.ClientId
+                        };
+                        notificationsList.Add(clientnotificationteamCompleted);
+
+                        // email and notification to client
                     }
 
                 }
@@ -3297,7 +3323,7 @@ namespace Aephy.API.Controllers
                     await SaveSolutionTeamData(teamList);
                 }
 
-                
+
                 var adminDetails = _db.Users.Where(x => x.UserType == "Admin").FirstOrDefault();
                 var solutionName = _db.Solutions.Where(x => x.Id == header.SolutionId).Select(x => x.Title).FirstOrDefault();
 
